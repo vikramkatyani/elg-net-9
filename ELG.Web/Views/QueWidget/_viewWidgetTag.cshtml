@@ -1,0 +1,52 @@
+﻿
+<div class="modal fade" id="viewWidgetTagModal" tabindex="-1" aria-labelledby="viewWidgetTagTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary" id="viewWidgetTagTitle">Script Generator</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div class="alert alert-info mb-4">
+                    Each section below contains a script tag for the corresponding widget. You may copy and place them in your course footer.
+                </div>
+
+                <div id="tag-widget-container" class="gy-4">
+                    <!-- TIW Script -->
+                    <div class="script-holder mb-4" id="div-scr-tiw">
+                        <label for="viewtxtQue" class="form-label">Accept FIRST RESPONSE from user</label>
+                        <textarea disabled id="viewtxtQue" rows="6" class="form-control" placeholder="Script for first response"></textarea>
+
+                        <label for="viewtxtQueAfter" class="form-label mt-3">Display FIRST RESPONSE and Accept FINAL RESPONSE from user</label>
+                        <textarea disabled id="viewtxtQueAfter" rows="6" class="form-control" placeholder="Script for final response"></textarea>
+                    </div>
+
+                    <!-- MAC Script -->
+                    <div class="script-holder mb-4" id="div-scr-mac">
+                        <label for="viewtxtQue_mac" class="form-label">Display "Model Answer Compare" widget</label>
+                        <textarea disabled id="viewtxtQue_mac" rows="6" class="form-control" placeholder="Model answer script"></textarea>
+                    </div>
+
+                    <!-- BPC Script -->
+                    <div class="script-holder mb-4" id="div-scr-bpc">
+                        <label for="viewtxtQue_bpc" class="form-label">Accept THREE RESPONSE from user</label>
+                        <textarea disabled id="viewtxtQue_bpc" rows="6" class="form-control" placeholder="Initial script block"></textarea>
+
+                        <label for="viewtxtQueAfter_bpc" class="form-label mt-3">Display THREE RESPONSE and Accept FINAL RESPONSE from user</label>
+                        <textarea disabled id="viewtxtQueAfter_bpc" rows="6" class="form-control" placeholder="Final response script block"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

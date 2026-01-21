@@ -1,0 +1,123 @@
+
+
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Add spacing between cards */
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    background-color: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+    /* Alternate layout for every even card */
+    .card:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+.card-content {
+    width: 50%;
+    padding: 20px;
+}
+
+.card-image {
+    width: 50%;
+}
+
+    /* Image Styles */
+    .card-image img {
+        width: 100%; /* Ensure the image takes full width */
+        height: auto; /* Keep the aspect ratio */
+        display: block;
+    }
+
+/* Text Content Styles */
+.card-content h2 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.card-content p {
+    color: #7f8c8d;
+}
+
+.card-content .status {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+    .card-content .status.in-progress {
+        color: #e67e22;
+    }
+
+.card-button-container {
+    width: 100%;
+}
+
+    .card-button-container button {
+        width: auto !important;
+        padding: 0 25px !important;
+        margin: 5px 0px;
+    }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column !important; /* Stack content vertically */
+                align-items: center; /* Center align elements */
+            }
+
+            .card-image {
+                order: -1; /* Move the image to the top */
+                width: 100%;
+            }
+
+                .card-image img {
+                    width: 100%; /* Ensure full width */
+                    height: auto; /* Maintain aspect ratio */
+                    display: block;
+                }
+
+            .card-content {
+                width: 100%;
+            }
+
+            .card-button-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center; /* Center align buttons */
+                gap: 10px; /* Provide spacing */
+            }
+
+                .card-button-container .elg-course-card-primary {
+                    width: 100% !important
+                }
+
+                .card-button-container .elg-course-card-secondary {
+                    flex: 1; /* Allow other buttons to align in one row */
+                    min-width: 120px; /* Ensure button size consistency */
+                }
+
+
+            #courseSearchForm .row {
+                display: flex;
+                flex-wrap: nowrap; /* Prevent wrapping */
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            #txtSearchCoure {
+                flex: 1; /* Allow input field to take up available space */
+                min-width: 0; /* Prevent overflow */
+            }
+
+            #btnSeachCourse {
+                flex-shrink: 0; /* Prevent the button from shrinking */
+                margin-left: 10px; /* Add some space between input and button */
+            }
+        }

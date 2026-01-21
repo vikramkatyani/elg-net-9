@@ -1,0 +1,61 @@
+
+@{
+    ViewBag.Title = "Course Widgets";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="x_panel tile">
+    <div class="x_title d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 text-primary fw-bold mb-0">Course Widgets</h1>
+        <button id="btnAddCoursePopUp" class="btn btn-primary">
+            <i class="fa fa-plus-circle me-1"></i> Add Course
+        </button>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-6 col-md-8 col-sm-12">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="txtCourse" placeholder="Course Name">
+                        <label for="txtCourse">Course Name</label>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 d-flex justify-content-end gap-2">
+                    <button id="searchCourse" class="btn btn-primary">
+                        <i class="fa fa-search me-1"></i> Search
+                    </button>
+                    <button id="clearSearchCourse" class="btn btn-secondary">
+                        <i class="fa fa-times me-1"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="x_content">
+        <div id="divMessage_widgetcourse" class="mb-3"></div>
+        <div class="table-responsive p-3">
+            <table class="table table-striped table-hover table-bordered align-middle" id="widgetCourseList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Course</th>
+                        <th>Widgets</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <!-- Table body gets dynamically rendered -->
+            </table>
+        </div>
+    </div>
+</div>
+@{
+    Html.Partial("_addWidgetCourse");
+}
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Widgets/ManageWidgets.js"></script>
+}

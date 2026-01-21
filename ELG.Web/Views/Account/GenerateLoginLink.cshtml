@@ -1,0 +1,54 @@
+@model ELG.Web.Models.ForgetPasswordViewModel
+@{
+    ViewBag.Title = "Generate Login link";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div class="login-page-container">
+    <div class="left-section">
+        <div class="image-overlay"></div>
+        <div class="content">
+            <div class="branding">
+                <img src="" alt="LMS Logo">
+            </div>
+            <div class="line-partition"></div>
+            <h1 id="introTxt">Fraud Compliance <br />Training Solutions</h1>
+            <div class="footer-branding">
+                <p>Powered by:</p>
+                <img src="" alt="LMS Logo">
+            </div>
+        </div>
+    </div>
+    <div class="right-section">
+        <div class="brand-content">
+            <div class="branding">
+                <img src="" alt="LMS Logo">
+            </div>
+        </div>
+        <h1 id="page-title"><span class="txt-highlight">Generate</span> Login Link</h1>
+        <p>Just enter your email address below and we'll send you a link to login!</p>
+        <form id="adminForgetpwd">
+            <div role="alert" id="divErrorMessage" class="alert d-none" aria-live="polite" aria-atomic="true">
+                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <span class="text-danger">@ViewBag.Message</span>
+                }
+            </div>
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Enter Email Address...", type = "email", required = "required", autocomplete = "email" })
+            <button type="button" data-loading-text="Sending Link..." data-original-text="Generate Login Link" class="btn btn-primary btn-user btn-block" id="btnGenerateLink">
+                Generate Login Link
+            </button>
+            <p id="wait-message">Email Sent! Waiting for confirmation (5:00)</p>
+            <div class="line-partition mb-2"></div>
+            <p class="change_link mt-4">
+                <a href="@Url.Action("Login" , "Account")" class="txt-highlight mt-3">Back</a>
+            </p>
+        </form>
+
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Accounts/generateLoginLink.js"></script>
+}

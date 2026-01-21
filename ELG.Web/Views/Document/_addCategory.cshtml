@@ -1,0 +1,70 @@
+﻿<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="addCategoryModalLabel">Add Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div class="alert alert-danger d-none" role="alert" id="addCategoryMessage"></div>
+
+                <!-- Form -->
+                <form id="addCategoryForm" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3 w-100">
+                        <textarea class="form-control" placeholder="Enter category name" id="txtCategoryName" style="height: 80px" required></textarea>
+                        <label for="txtCategoryName">Category Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <textarea class="form-control" placeholder="Enter description" id="txtCategoryDesc" style="height: 100px"></textarea>
+                        <label for="txtCategoryDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAddNewCategory" data-loading-text="Creating..." data-original-text="Add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--update Modal-->
+
+<div class="modal fade" id="updateCategoryModal" tabindex="-1" aria-labelledby="updateCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="updateCategoryModalLabel">Update Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div class="alert alert-danger d-none" role="alert" id="updateCategoryMessage"></div>
+
+                <!-- Form -->
+                <form id="updateCategoryForm" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtUpdateCategoryName" class="form-control" placeholder="Category name" required />
+                        <label for="txtUpdateCategoryName">Category Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtUpdateCategoryDesc" class="form-control" placeholder="Description" />
+                        <label for="txtUpdateCategoryDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateCategory" data-loading-text="Updating..." data-original-text="Update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

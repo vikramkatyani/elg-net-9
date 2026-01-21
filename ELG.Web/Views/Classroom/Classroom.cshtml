@@ -1,0 +1,76 @@
+
+@{
+    ViewBag.Title = "Classrooms";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Classroom Sessions</h1>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-inline">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Classroom Session</span>
+                        </div>
+                        <input type="text" id="txtClassroom" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="Classroom Session name">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Status</label>
+                        </div>
+                        <select id="classroomStatus" class="custom-select">
+                            <option value="0" selected>Select All</option>
+                            <option value="2">Active</option>
+                            <option value="1">Archived</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <button id="searchClassroom" class="btn btn-primary" type="button">
+                            <i class="fa fa-search fa-sm"></i> Search
+                        </button>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="clearSearchClassroom" class="btn btn-secondary" type="button">
+                            <i class="fa fa-times fa-sm"></i> Clear
+                        </button>
+                    </div>
+
+                    <div class="mb-3 ml-auto float-right">
+                        <button id="btnAddClassroom" class="btn btn-secondary" type="button">
+                            <i class="fa fa-plus-circle fa-sm"></i> Add Classroom
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="orgClassroomList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Classroom</th>
+                        <th>Description</th>
+                        <th>Created on</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+    Html.RenderPartial("_addClassroom");
+}
+
+ @Html.Partial("_addClassroom")
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Classroom/manageClassroom.js"></script>
+}

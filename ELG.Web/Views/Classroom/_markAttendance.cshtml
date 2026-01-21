@@ -1,0 +1,52 @@
+﻿
+
+<style>
+    .popup-calendar {
+        z-index: 2048 !important;
+    }
+</style>
+<div class="modal fade" id="attendClassroomModal" tabindex="-1" role="dialog" aria-labelledby="attendClassroomModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attendClassroomTitle">Mark Attended</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!--Alert message-->
+                        <div id="attendClassroomMessage"> </div>
+                        <form class="user">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Attended On</span>
+                                </div>
+                                <input type="text" id="attendClassDate" class="form-control popup-calendar" aria-label="Default" aria-describedby="inputGroup-sizing-default" data-toggle="datepicker" />
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="attendClassStatus">Status</span>
+                                </div>
+                                <select class="custom-select" id="ddlAttendStatus">
+                                    <option value="1">Passed</option>
+                                    <option value="2">Failed</option>
+                                    <option value="3">Not Complete</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="btnMarkClassAttended" data-loading-text="Updating..." data-original-text="Add" href="">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,85 @@
+
+@{
+    ViewBag.Title = "Reset Training";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+<style type="text/css">
+    .ui-datepicker {
+        z-index:9999 !important;
+    }
+</style>
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Reset Training</h1>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-sm-12">
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-info" id="div_training_details">
+            <div class="row">
+                <span>Training Reset Date : </span>
+                <div id="reset_date_holder">
+                    <span id="spn_reset_date"></span>
+                    <span onclick="resetTrainingRenewalDateHandler.showTrainingResetPopUP();" class="fa fa-pen" data-toggle="tooltip" title="Click to edit training reset date">&nbsp;&nbsp;</span>
+                </div>
+            </div>
+        </div>
+        <div id="divMessage_resetLearning"></div>
+
+    </div>
+</div>
+
+<!-- Update score modal-->
+<div class="modal fade" id="updateTrainingResetDateModal" role="dialog" aria-labelledby="updateResetDateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateScoreModalLabel">Update Training Reset Date</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="updateResetDateModal_message"></div>
+                        <form class="user">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">OTP</span>
+                                </div>
+                                <input type="text" id="txtUpdateResetDateOTP" class="form-control" />
+                                <button id="btnSendTrainingResetOTP"  class="btn btn-primary">
+                                    Send OTP
+                                </button>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Training Reset Date </span>
+                                </div>
+                                <input type="text" id="txt_new_reset_date" class="form-control"  />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <div id="btn_update_reset_date" class="btn btn-primary" href="#">Update</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/CourseManagement/refreshTrainingCalendar.js"></script>
+}
+

@@ -1,0 +1,153 @@
+@{
+    Layout = null;
+}
+@model ELG.Model.Learner.TIWResponse
+
+    <style>
+        .elg-wdgt-container {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            /*width: 500px;*/
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .elg-wdgt-header {
+            background-color: #D84738;
+            color: #ffffff;
+            padding: 10px;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .elg-wdgt-body {
+            padding: 20px;
+            font-size: 20px;
+        }
+
+        .elg-wdgt-footer {
+            text-align:center;
+            padding: 20px;
+        }
+
+        .elg-wdgt-prompt, .elg-wdgt-ans {
+            margin: 20px 0;
+            font-size: 20px;
+            text-align: left;
+            font-weight: bold;
+            color: #4472C4;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        .elg-wdgt-ques {
+            margin: 20px 0;
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .elg-wdgt-ans-input {
+            width: calc(100% - 20px);
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 20px;
+        }
+
+        .elg-wdgt-submit-button {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        .elg-wdgt-submit-button:hover {
+            background-color: #333333;
+        }
+    </style>
+    <div class="elg-wdgt-container" id="elg-widget-@(Model.QuesMode)_@(Model.QueWidgetID)">
+        <div class="elg-wdgt-header" style="background-color: @Model.HeaderColor;">
+            @Model.QueWidgetTitle
+        </div>
+        <div class="elg-wdgt-body">
+            @if (Model.QuesMode == "after")
+            {
+                if (Model.ShowQueTextBeforeFR)
+                {
+
+                    <div><p><i>Earlier we asked you the following question:</i></p></div>
+                    <div class="elg-wdgt-prompt">
+                        @Model.Question
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="elg-wdgt-ques">
+                    @Model.Question
+                </div>
+
+            }
+            @if (Model.QuesMode == "after")
+            {
+                if (String.IsNullOrEmpty(Model.Response))
+                {
+                    <textarea id="txt_bfr_@Model.QueWidgetID" disabled class="elg-wdgt-ans-input">@Model.Response</textarea>
+                }
+                else
+                {
+                    <div><p><i>Here's what you wrote :</i></p></div>
+                    <div><p class="elg-wdgt-ans">@Model.Response</p></div>
+                }
+
+            }
+            else if (String.IsNullOrEmpty(Model.Response))
+            {
+                <textarea id="txt_bfr_@Model.QueWidgetID" class="elg-wdgt-ans-input" placeholder="Please enter your answer here..."></textarea>
+            }
+
+            else
+            {
+                <textarea id="txt_bfr_@Model.QueWidgetID" disabled class="elg-wdgt-ans-input">@Model.Response</textarea>
+            }
+
+            @if (Model.QuesMode == "after")
+            {
+                <div class="">
+                    <p><i>@Model.AfterQuestion</i></p>
+                </div>
+                if (String.IsNullOrEmpty(Model.AfterResponse))
+                {
+                    <textarea id="txt_afr_@Model.QueWidgetID" class="elg-wdgt-ans-input" placeholder="Please enter your answer here..."></textarea>
+                }
+                else
+                {
+                    <div><p class="elg-wdgt-ans">@Model.AfterResponse</p></div>
+                }
+            }
+        </div>
+        <div class="elg-wdgt-footer">
+            @if (Model.QuesMode != "after" && String.IsNullOrEmpty(Model.Response))
+            {
+                <button id="btn_fr_sbmt_@Model.QueWidgetID" class="elg-wdgt-submit-button" onclick="widgetHandler.saveUserFirstResponse_txt(this)"
+                        onmouseover="this.style.backgroundColor='@Model.HeaderColor'" onmouseout="this.style.backgroundColor='#000000'">
+                    SUBMIT ANSWER
+                </button>
+                <p id="bfr_resp_msg_@Model.QueWidgetID" style="display:none">THANK YOU,PLEASE CONTINUE</p>
+            }
+           else if (Model.QuesMode == "after" && String.IsNullOrEmpty(Model.AfterResponse))
+            {
+                <button id="btn_afr_sbmt_@Model.QueWidgetID" class="elg-wdgt-submit-button" onclick="widgetHandler.saveUserLastResponse_txt(this)"
+                        onmouseover="this.style.backgroundColor='@Model.HeaderColor'" onmouseout="this.style.backgroundColor='#000000'">
+                    CONTINUE
+                </button>
+                <p id="afr_resp_msg_@Model.QueWidgetID" style="display:none">THANK YOU,PLEASE CONTINUE</p>
+            }
+        </div>
+    </div>

@@ -1,0 +1,78 @@
+
+@{
+    ViewBag.Title = "Self Register";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+
+
+<div class="x_panel tile">
+    <!-- Page Heading -->
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Open Enrollment</h1>
+    </div>
+
+    <div class="x_content">
+        <!-- Self Registration Disabled Alert -->
+        <div id="divNoSelfRegistration">
+            <div>
+                <h5 class="text-primary mb-3">
+                    <i class="fa fa-info-circle me-2"></i> Staff Self-Registration Instructions
+                </h5>
+                <p>
+                    <i class="fa fa-exclamation-circle me-2"></i>
+                    Self registration is not enabled for your company.
+                </p>
+            </div>
+        </div>
+
+        <!-- Self Registration Instructions -->
+        <div id="divSelfRegistrationSteps">
+            <div>
+                <h5 class="text-primary mb-3">
+                    <i class="fa fa-info-circle me-2"></i> Staff Self-Registration Instructions
+                </h5>
+                <p>If your staff need to self-register, please share the following steps with them:</p>
+                <ul class="mb-2">
+                    <li>
+                        Visit
+                        <a href="https://elg-prod.azurewebsites.net/learner/Account/Register/@ELG.Web.Helper.SessionHelper.CompanyNumber"
+                           target="_blank" class="text-decoration-none">
+                            https://elg-prod.azurewebsites.net/learner/Account/Register/@ELG.Web.Helper.SessionHelper.CompanyNumber
+                        </a>
+                    </li>
+                    <li>
+                        Complete all required fields on the registration form.<br />
+                        <em><b>Note:</b> A valid email address must be provided.</em>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Hidden Textarea for Copy Functionality -->
+            @*<textarea id="hdn_txt_copy_area" style="display:none">
+Visit https://elg-prod.azurewebsites.net/learner/Account/Register/@ELG.Web.Helper.SessionHelper.CompanyNumber
+
+ Complete all required fields on the registration form. Note, A valid email address must be provided.
+        </textarea>*@
+
+            <!-- Copy Button -->
+            @*<button type="button" id="btnCopyTextToClipBoard" class="btn btn-primary mt-4" onclick="CopyTextToClipBoard()">
+                <i class="fa fa-clipboard me-1"></i> Copy Instructions
+            </button>*@
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Company/SelfRegister.js"></script>
+}

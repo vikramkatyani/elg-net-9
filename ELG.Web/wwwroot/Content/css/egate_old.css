@@ -1,0 +1,47 @@
+﻿
+/*.btn {
+    background: #2A3F54 !important;
+}
+.btn:hover {
+    background: #1ABB9C !important;
+}*/
+.course-progress-info{
+    min-height:10rem;
+}
+.course-progress-info .badge {
+    font-size: 90%;
+}
+#divMyCourseHolder img{
+    /*border-radius: 15px;*/
+}
+
+.btn-transparent {
+    background: transparent !important;
+    text-decoration: none;
+    color: #2A3F54;
+    border-color: #2A3F54;
+    font-size: 1rem !important;
+}
+.btn-transparent:hover {
+    background: #1ABB9C !important;
+    text-decoration: none !important;
+    color: #FFF;
+}
+.course-card{
+    padding-left:1.25rem
+}
+.course-action{
+    border-radius:50%;
+}
+.div-with-bg {
+    content: '';
+    background-image: url(../images/client-bg.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}

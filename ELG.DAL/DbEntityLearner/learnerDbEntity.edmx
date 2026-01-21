@@ -1,0 +1,2157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="learnerdbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="lms_widget_details">
+          <Key>
+            <PropertyRef Name="widgetId" />
+          </Key>
+          <Property Name="widgetId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="question" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="response" Type="varchar" MaxLength="500" />
+          <Property Name="last_updated_on" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbCourse">
+          <Key>
+            <PropertyRef Name="intCourseID" />
+          </Key>
+          <Property Name="intCourseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intCourseIdentifier" Type="varchar" MaxLength="50" />
+          <Property Name="intOrganisationID" Type="int" Nullable="false" />
+          <Property Name="strUnlockKey" Type="varchar" MaxLength="400" />
+          <Property Name="strCourse" Type="nvarchar" MaxLength="100" />
+          <Property Name="strCourseSummary" Type="nvarchar" MaxLength="400" />
+          <Property Name="strCourseDescription" Type="ntext" />
+          <Property Name="strHSContact" Type="nvarchar" MaxLength="400" />
+          <Property Name="strCourseLogo" Type="varchar" MaxLength="255" />
+          <Property Name="strCourseTutorialPath" Type="varchar" MaxLength="255" />
+          <Property Name="strCourseTestPath" Type="varchar" MaxLength="255" />
+          <Property Name="blnCourseRA" Type="bit" Nullable="false" />
+          <Property Name="intPassmark" Type="int" />
+          <Property Name="intFrequency" Type="int" />
+          <Property Name="blnCancelled" Type="bit" />
+          <Property Name="datModified" Type="datetime" />
+          <Property Name="datCreated" Type="datetime" />
+          <Property Name="intTestFrequency" Type="int" Nullable="false" />
+          <Property Name="blnTestReminders" Type="bit" Nullable="false" />
+          <Property Name="intRAFrequency" Type="int" Nullable="false" />
+          <Property Name="blnRAReminder" Type="bit" Nullable="false" />
+          <Property Name="intTutorialFrequency" Type="int" Nullable="false" />
+          <Property Name="blnTutorialReminder" Type="bit" Nullable="false" />
+          <Property Name="intTestReminderFreq" Type="int" Nullable="false" />
+          <Property Name="intRAReminderFreq" Type="int" Nullable="false" />
+          <Property Name="intTutorialReminderFreq" Type="int" Nullable="false" />
+          <Property Name="intMaxTestReminders" Type="int" Nullable="false" />
+          <Property Name="intMaxRAReminders" Type="int" Nullable="false" />
+          <Property Name="intMaxTutorialReminders" Type="int" Nullable="false" />
+          <Property Name="intRADaysBefore" Type="int" Nullable="false" />
+          <Property Name="intTestDaysBefore" Type="int" Nullable="false" />
+          <Property Name="intTutorialDaysBefore" Type="int" Nullable="false" />
+          <Property Name="blnDeptSendRAIssue" Type="bit" Nullable="false" />
+          <Property Name="blnDeptSendRAComplete" Type="bit" Nullable="false" />
+          <Property Name="blnDeptSendTestPass" Type="bit" Nullable="false" />
+          <Property Name="blnDeptSendTestFail" Type="bit" Nullable="false" />
+          <Property Name="blnDeptSendRANotCompleted" Type="bit" Nullable="false" />
+          <Property Name="blnDeptSendTestNotCompleted" Type="bit" Nullable="false" />
+          <Property Name="blnLocSendRAIssue" Type="bit" Nullable="false" />
+          <Property Name="blnLocSendRAComplete" Type="bit" Nullable="false" />
+          <Property Name="blnLocSendTestPass" Type="bit" Nullable="false" />
+          <Property Name="blnLocSendTestFail" Type="bit" Nullable="false" />
+          <Property Name="blnLocSendRANotCompleted" Type="bit" Nullable="false" />
+          <Property Name="blnLocSendTestNotCompleted" Type="bit" Nullable="false" />
+          <Property Name="blnContactSendTest" Type="bit" Nullable="false" />
+          <Property Name="blnContactSendRA" Type="bit" Nullable="false" />
+          <Property Name="blnCourseActive" Type="bit" />
+          <Property Name="blnHTML5" Type="bit" />
+          <Property Name="intCourseMid" Type="int" />
+          <Property Name="HelpFile" Type="varchar" MaxLength="255" />
+          <Property Name="Price" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="isRAModule" Type="bit" />
+          <Property Name="intMasterCourseId" Type="bigint" />
+          <Property Name="intDaysForCompletion" Type="int" />
+          <Property Name="noLicenceNotification" Type="bit" />
+        </EntityType>
+        <EntityType Name="tbOrganisationDomainDetails">
+          <Key>
+            <PropertyRef Name="recordId" />
+          </Key>
+          <Property Name="recordId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="domain" Type="varchar(max)" />
+          <Property Name="css_path" Type="varchar(max)" />
+          <Property Name="favicon_path" Type="varchar(max)" />
+          <Property Name="lms_org_id" Type="bigint" />
+          <Property Name="title_text" Type="nvarchar" MaxLength="50" />
+          <Property Name="logo_path" Type="varchar(max)" />
+        </EntityType>
+        <Function Name="lms_global_getCompanyDomainInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="domain" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_AssignCoursestoContact" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="contactid" Type="bigint" Mode="In" />
+          <Parameter Name="courseids" Type="varchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+          <Parameter Name="courseList" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_check_admin_rights" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_check_unassignedCoursesWithNoLicences" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_courseSessionEndRecord" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intcontactid" Type="bigint" Mode="In" />
+          <Parameter Name="intcourseid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_create_accidentincident_response" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="contactid" Type="bigint" Mode="In" />
+          <Parameter Name="accidentincidentid" Type="bigint" Mode="In" />
+          <Parameter Name="response" Type="text" Mode="In" />
+          <Parameter Name="createdBy" Type="bigint" Mode="In" />
+          <Parameter Name="reportedby" Type="nvarchar" Mode="In" />
+          <Parameter Name="reportedFor" Type="nvarchar" Mode="In" />
+          <Parameter Name="incidentHappendOn" Type="nvarchar" Mode="In" />
+          <Parameter Name="isEmployee" Type="int" Mode="In" />
+          <Parameter Name="isPermitted" Type="int" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_create_Incident_ResponseEvidence" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intResponseId" Type="bigint" Mode="In" />
+          <Parameter Name="strImagePath" Type="varchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_create_RA_AnswerEvidence" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intAnswerId" Type="bigint" Mode="In" />
+          <Parameter Name="strEvidencePath" Type="varchar" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_createClassroomRequest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="class" Type="bigint" Mode="In" />
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="company" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_createLearner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="firstname" Type="varchar" Mode="In" />
+          <Parameter Name="title" Type="varchar" Mode="In" />
+          <Parameter Name="lastname" Type="varchar" Mode="In" />
+          <Parameter Name="employeeNumber" Type="varchar" Mode="In" />
+          <Parameter Name="email" Type="varchar" Mode="In" />
+          <Parameter Name="organisation" Type="bigint" Mode="In" />
+          <Parameter Name="location" Type="bigint" Mode="In" />
+          <Parameter Name="department" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_createRAResponse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="answerid" Type="bigint" Mode="In" />
+          <Parameter Name="optionid" Type="bigint" Mode="In" />
+          <Parameter Name="note" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_createRiskAssessmentRecord" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_finish_SubModuleRiskAssessment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="incontactid" Type="bigint" Mode="In" />
+          <Parameter Name="intRiskAssessmentResultID" Type="bigint" Mode="In" />
+          <Parameter Name="strLocationName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_FinishRiskAssessment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="incontactid" Type="bigint" Mode="In" />
+          <Parameter Name="intcourseid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_accidentIncidentQues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="accidentId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_bpc_widget_response" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="que_guid" Type="varchar" Mode="In" />
+          <Parameter Name="user_id" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_certificate_record" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="recordid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_companyContractorInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="org" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_course_submodules" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseId" Type="bigint" Mode="In" />
+          <Parameter Name="contactId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_dash_course_completion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_dash_HeaderInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="bigint" Mode="In" />
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_dash_notification" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_learner_get_dash_WeeklyProgress" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_dash_YearlyCompletion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_LearnerSSOInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_mac_widget_response" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="que_guid" Type="varchar" Mode="In" />
+          <Parameter Name="user_id" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_progress_history" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_RA_attempts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="ra_id" Type="bigint" Mode="In" />
+          <Parameter Name="subModule_id" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_reportedIncidents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="search" Type="nvarchar" Mode="In" />
+          <Parameter Name="contactid" Type="bigint" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_subModule_RAQuestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="intRiskAssessmentResultID" Type="bigint" Mode="In" />
+          <Parameter Name="subModuleId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_SubModuleRAResponses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="riskAssesmentResultId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_get_widget_response" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="que_guid" Type="varchar" Mode="In" />
+          <Parameter Name="user_id" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_GetAdminOrgRegSettings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intOrganisationID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getAllAcceptedClassrooms" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="company" Type="bigint" Mode="In" />
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="classroom" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getAllAnouncments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="organisation" Type="bigint" Mode="In" />
+          <Parameter Name="announcementId" Type="bigint" Mode="In" />
+          <Parameter Name="announcement" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getAllClassrooms" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="company" Type="bigint" Mode="In" />
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="classroom" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getAllCourses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="varchar" Mode="In" />
+          <Parameter Name="sort" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getAllDocuments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="search" Type="nvarchar" Mode="In" />
+          <Parameter Name="category" Type="int" Mode="In" />
+          <Parameter Name="company" Type="bigint" Mode="In" />
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getAllRACourses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="company" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getAllUnreadNotifications" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="company" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getCompanyInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="company" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getCoursesForAutoAssignement" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="location" Type="bigint" Mode="In" />
+          <Parameter Name="department" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getDocument_info" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="docId" Type="int" Mode="In" />
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getLoginDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="useremail" Type="nvarchar" Mode="In" />
+          <Parameter Name="pwd" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="masterPwd" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getLoginDetails_byUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_GetNewUserInfoOrResetPasswordInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getRAQuestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getRAResponses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getSessionUserInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="user" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_getSSOLoginDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="useremail" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_GetUserShortDetailByUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_initializeModule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intcontactid" Type="bigint" Mode="In" />
+          <Parameter Name="intcourseid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_insert_course_launch_record" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactId" Type="bigint" Mode="In" />
+          <Parameter Name="browser" Type="nvarchar" Mode="In" />
+          <Parameter Name="browserVersion" Type="nvarchar" Mode="In" />
+          <Parameter Name="os" Type="nvarchar" Mode="In" />
+          <Parameter Name="device" Type="nvarchar" Mode="In" />
+          <Parameter Name="browserDetails" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="isMobileDevice" Type="bit" Mode="In" />
+          <Parameter Name="intCourseId" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="nvarchar" Mode="In" />
+          <Parameter Name="insertRecordId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_insert_Login_Details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactId" Type="bigint" Mode="In" />
+          <Parameter Name="browser" Type="nvarchar" Mode="In" />
+          <Parameter Name="browserVersion" Type="nvarchar" Mode="In" />
+          <Parameter Name="os" Type="nvarchar" Mode="In" />
+          <Parameter Name="device" Type="nvarchar" Mode="In" />
+          <Parameter Name="browserDetails" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="isMobileDevice" Type="bit" Mode="In" />
+          <Parameter Name="insertRecordId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_insert_mac_widget_feedback" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learnerId" Type="bigint" Mode="In" />
+          <Parameter Name="queId" Type="varchar" Mode="In" />
+          <Parameter Name="feedback" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="feedbackText" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="created" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_insert_mac_widget_response" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learnerId" Type="bigint" Mode="In" />
+          <Parameter Name="queId" Type="varchar" Mode="In" />
+          <Parameter Name="response1" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="response2" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="response3" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="created" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_insert_widget_response" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learnerId" Type="bigint" Mode="In" />
+          <Parameter Name="queId" Type="varchar" Mode="In" />
+          <Parameter Name="response" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="responseFor" Type="nvarchar" Mode="In" />
+          <Parameter Name="created" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_ResetPasswordFlag" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_resetProgress" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="recordId" Type="bigint" Mode="In" />
+          <Parameter Name="res" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_setDocRead" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="docid" Type="bigint" Mode="In" />
+          <Parameter Name="organisation" Type="bigint" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_setDocStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="docid" Type="bigint" Mode="In" />
+          <Parameter Name="status" Type="varchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_setNotificationRead" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactID" Type="bigint" Mode="In" />
+          <Parameter Name="intAnnId" Type="bigint" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_start_subModuleRiskAssessment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="incontactid" Type="bigint" Mode="In" />
+          <Parameter Name="intRiskAssessmentResultID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_startRiskAssessment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="incontactid" Type="bigint" Mode="In" />
+          <Parameter Name="intcourseid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_update_CourseProgressScore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="contactid" Type="bigint" Mode="In" />
+          <Parameter Name="courseid" Type="bigint" Mode="In" />
+          <Parameter Name="passingMarks" Type="int" Mode="In" />
+          <Parameter Name="scoredMarks" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_update_profilePic" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="profilePic" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="update" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_updateCourseProgressRecord" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="contactid" Type="bigint" Mode="In" />
+          <Parameter Name="courseid" Type="bigint" Mode="In" />
+          <Parameter Name="action" Type="nvarchar" Mode="In" />
+          <Parameter Name="value" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_updateCourseProgressRecord_withSession" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="contactid" Type="bigint" Mode="In" />
+          <Parameter Name="courseid" Type="bigint" Mode="In" />
+          <Parameter Name="strBookMark" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="strStatus" Type="nvarchar" Mode="In" />
+          <Parameter Name="strSuspendData" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="intScore" Type="int" Mode="In" />
+          <Parameter Name="sessionTime" Type="varchar" Mode="In" />
+          <Parameter Name="sendITPCertificate" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_UpdatePassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactID" Type="int" Mode="In" />
+          <Parameter Name="pwd" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_updateSessionUserInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="firstname" Type="nvarchar" Mode="In" />
+          <Parameter Name="surname" Type="nvarchar" Mode="In" />
+          <Parameter Name="email" Type="nvarchar" Mode="In" />
+          <Parameter Name="empNo" Type="nvarchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_learner_updateSubModuleProgressRecord" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactId" Type="bigint" Mode="In" />
+          <Parameter Name="intSubModuleId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_learner_validateCompanyNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="useremail" Type="nvarchar" Mode="In" />
+          <Parameter Name="company" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="learnerdbModelStoreContainer">
+          <EntitySet Name="lms_widget_details" EntityType="Self.lms_widget_details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbCourse" EntityType="Self.tbCourse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbOrganisationDomainDetails" EntityType="Self.tbOrganisationDomainDetails" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="learnerdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="learnerDBEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="lms_learner_AssignCoursestoContact">
+            <Parameter Name="contactid" Mode="In" Type="Int64" />
+            <Parameter Name="courseids" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+            <Parameter Name="courseList" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_check_admin_rights" ReturnType="Collection(Int32)">
+          <Parameter Name="userid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_check_unassignedCoursesWithNoLicences" ReturnType="Collection(learnerdbModel.lms_learner_check_unassignedCoursesWithNoLicences_Result)">
+          <Parameter Name="learner" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_courseSessionEndRecord">
+            <Parameter Name="intcontactid" Mode="In" Type="Int64" />
+            <Parameter Name="intcourseid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_create_accidentincident_response">
+            <Parameter Name="contactid" Mode="In" Type="Int64" />
+            <Parameter Name="accidentincidentid" Mode="In" Type="Int64" />
+            <Parameter Name="response" Mode="In" Type="String" />
+            <Parameter Name="createdBy" Mode="In" Type="Int64" />
+            <Parameter Name="reportedby" Mode="In" Type="String" />
+            <Parameter Name="reportedFor" Mode="In" Type="String" />
+            <Parameter Name="incidentHappendOn" Mode="In" Type="String" />
+            <Parameter Name="isEmployee" Mode="In" Type="Int32" />
+            <Parameter Name="isPermitted" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_create_Incident_ResponseEvidence">
+            <Parameter Name="intResponseId" Mode="In" Type="Int64" />
+            <Parameter Name="strImagePath" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_create_RA_AnswerEvidence">
+            <Parameter Name="intAnswerId" Mode="In" Type="Int64" />
+            <Parameter Name="strEvidencePath" Mode="In" Type="String" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_createClassroomRequest">
+            <Parameter Name="class" Mode="In" Type="Int64" />
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="company" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_createLearner">
+            <Parameter Name="firstname" Mode="In" Type="String" />
+            <Parameter Name="title" Mode="In" Type="String" />
+            <Parameter Name="lastname" Mode="In" Type="String" />
+            <Parameter Name="employeeNumber" Mode="In" Type="String" />
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="organisation" Mode="In" Type="Int64" />
+            <Parameter Name="location" Mode="In" Type="Int64" />
+            <Parameter Name="department" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_createRAResponse">
+            <Parameter Name="answerid" Mode="In" Type="Int64" />
+            <Parameter Name="optionid" Mode="In" Type="Int64" />
+            <Parameter Name="note" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_createRiskAssessmentRecord">
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_FinishRiskAssessment">
+            <Parameter Name="incontactid" Mode="In" Type="Int64" />
+            <Parameter Name="intcourseid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_accidentIncidentQues" ReturnType="Collection(learnerdbModel.lms_learner_get_accidentIncidentQues_Result)">
+          <Parameter Name="accidentId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_certificate_record" ReturnType="Collection(learnerdbModel.lms_learner_get_certificate_record_Result)">
+          <Parameter Name="recordid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_companyContractorInfo" ReturnType="Collection(learnerdbModel.lms_learner_get_companyContractorInfo_Result)">
+          <Parameter Name="org" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_dash_course_completion" ReturnType="Collection(learnerdbModel.lms_learner_get_dash_course_completion_Result)">
+          <Parameter Name="learner" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_dash_HeaderInfo" ReturnType="Collection(learnerdbModel.lms_learner_get_dash_HeaderInfo_Result)">
+            <Parameter Name="organisation" Mode="In" Type="Int64" />
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_dash_notification" ReturnType="Collection(String)" />
+          <FunctionImport Name="lms_learner_get_dash_WeeklyProgress" ReturnType="Collection(learnerdbModel.lms_learner_get_dash_WeeklyProgress_Result)">
+          <Parameter Name="learner" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_dash_YearlyCompletion" ReturnType="Collection(learnerdbModel.lms_learner_get_dash_YearlyCompletion_Result)">
+          <Parameter Name="learner" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_LearnerSSOInfo" ReturnType="Collection(learnerdbModel.lms_learner_get_LearnerSSOInfo_Result)">
+          <Parameter Name="learner" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_progress_history" ReturnType="Collection(learnerdbModel.lms_learner_get_progress_history_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_reportedIncidents" ReturnType="Collection(learnerdbModel.lms_learner_get_reportedIncidents_Result)">
+            <Parameter Name="search" Mode="In" Type="String" />
+            <Parameter Name="contactid" Mode="In" Type="Int64" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_GetAdminOrgRegSettings" ReturnType="Collection(learnerdbModel.lms_learner_GetAdminOrgRegSettings_Result)">
+          <Parameter Name="intOrganisationID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getAllAcceptedClassrooms" ReturnType="Collection(learnerdbModel.lms_learner_getAllAcceptedClassrooms_Result)">
+            <Parameter Name="company" Mode="In" Type="Int64" />
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="classroom" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getAllAnouncments" ReturnType="Collection(learnerdbModel.lms_learner_getAllAnouncments_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="organisation" Mode="In" Type="Int64" />
+            <Parameter Name="announcementId" Mode="In" Type="Int64" />
+            <Parameter Name="announcement" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getAllClassrooms" ReturnType="Collection(learnerdbModel.lms_learner_getAllClassrooms_Result)">
+            <Parameter Name="company" Mode="In" Type="Int64" />
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="classroom" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getAllCourses" ReturnType="Collection(learnerdbModel.lms_learner_getAllCourses_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="String" />
+            <Parameter Name="sort" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getAllDocuments" ReturnType="Collection(learnerdbModel.lms_learner_getAllDocuments_Result)">
+            <Parameter Name="search" Mode="In" Type="String" />
+            <Parameter Name="category" Mode="In" Type="Int32" />
+            <Parameter Name="company" Mode="In" Type="Int64" />
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getAllRACourses" ReturnType="Collection(learnerdbModel.lms_learner_getAllRACourses_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="company" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getAllUnreadNotifications" ReturnType="Collection(learnerdbModel.lms_learner_getAllUnreadNotifications_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="company" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getCompanyInfo" ReturnType="Collection(learnerdbModel.lms_learner_getCompanyInfo_Result)">
+          <Parameter Name="company" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getCoursesForAutoAssignement" ReturnType="Collection(learnerdbModel.lms_learner_getCoursesForAutoAssignement_Result)">
+            <Parameter Name="location" Mode="In" Type="Int64" />
+            <Parameter Name="department" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getLoginDetails" ReturnType="Collection(learnerdbModel.lms_learner_getLoginDetails_Result)">
+            <Parameter Name="useremail" Mode="In" Type="String" />
+            <Parameter Name="pwd" Mode="In" Type="String" />
+            <Parameter Name="masterPwd" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_GetNewUserInfoOrResetPasswordInfo" ReturnType="Collection(learnerdbModel.lms_learner_GetNewUserInfoOrResetPasswordInfo_Result)">
+          <Parameter Name="intContactID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getRAQuestion" ReturnType="Collection(learnerdbModel.lms_learner_getRAQuestion_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getRAResponses" ReturnType="Collection(learnerdbModel.lms_learner_getRAResponses_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getSessionUserInfo" ReturnType="Collection(learnerdbModel.lms_learner_getSessionUserInfo_Result)">
+          <Parameter Name="user" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getSSOLoginDetails" ReturnType="Collection(learnerdbModel.lms_learner_getSSOLoginDetails_Result)">
+          <Parameter Name="useremail" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_GetUserShortDetailByUserID" ReturnType="Collection(learnerdbModel.lms_learner_GetUserShortDetailByUserID_Result)">
+          <Parameter Name="intContactID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_initializeModule" ReturnType="Collection(learnerdbModel.lms_learner_initializeModule_Result)">
+            <Parameter Name="intcontactid" Mode="In" Type="Int64" />
+            <Parameter Name="intcourseid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_insert_course_launch_record">
+            <Parameter Name="intContactId" Mode="In" Type="Int64" />
+            <Parameter Name="browser" Mode="In" Type="String" />
+            <Parameter Name="browserVersion" Mode="In" Type="String" />
+            <Parameter Name="os" Mode="In" Type="String" />
+            <Parameter Name="device" Mode="In" Type="String" />
+            <Parameter Name="browserDetails" Mode="In" Type="String" />
+            <Parameter Name="isMobileDevice" Mode="In" Type="Boolean" />
+            <Parameter Name="intCourseId" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="String" />
+            <Parameter Name="insertRecordId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_insert_Login_Details">
+            <Parameter Name="intContactId" Mode="In" Type="Int64" />
+            <Parameter Name="browser" Mode="In" Type="String" />
+            <Parameter Name="browserVersion" Mode="In" Type="String" />
+            <Parameter Name="os" Mode="In" Type="String" />
+            <Parameter Name="device" Mode="In" Type="String" />
+            <Parameter Name="browserDetails" Mode="In" Type="String" />
+            <Parameter Name="isMobileDevice" Mode="In" Type="Boolean" />
+            <Parameter Name="insertRecordId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_ResetPasswordFlag">
+          <Parameter Name="intContactID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_setDocRead">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="docid" Mode="In" Type="Int64" />
+            <Parameter Name="organisation" Mode="In" Type="Int64" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_setDocStatus">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="docid" Mode="In" Type="Int64" />
+            <Parameter Name="status" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_setNotificationRead">
+            <Parameter Name="intContactID" Mode="In" Type="Int64" />
+            <Parameter Name="intAnnId" Mode="In" Type="Int64" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_startRiskAssessment">
+            <Parameter Name="incontactid" Mode="In" Type="Int64" />
+            <Parameter Name="intcourseid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_update_CourseProgressScore">
+            <Parameter Name="contactid" Mode="In" Type="Int64" />
+            <Parameter Name="courseid" Mode="In" Type="Int64" />
+            <Parameter Name="passingMarks" Mode="In" Type="Int32" />
+            <Parameter Name="scoredMarks" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_update_profilePic">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="profilePic" Mode="In" Type="Binary" />
+            <Parameter Name="update" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_updateCourseProgressRecord">
+            <Parameter Name="contactid" Mode="In" Type="Int64" />
+            <Parameter Name="courseid" Mode="In" Type="Int64" />
+            <Parameter Name="action" Mode="In" Type="String" />
+            <Parameter Name="value" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_updateCourseProgressRecord_withSession">
+            <Parameter Name="contactid" Mode="In" Type="Int64" />
+            <Parameter Name="courseid" Mode="In" Type="Int64" />
+            <Parameter Name="strBookMark" Mode="In" Type="String" />
+            <Parameter Name="strStatus" Mode="In" Type="String" />
+            <Parameter Name="strSuspendData" Mode="In" Type="String" />
+            <Parameter Name="intScore" Mode="In" Type="Int32" />
+            <Parameter Name="sessionTime" Mode="In" Type="String" />
+            <Parameter Name="sendITPCertificate" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_UpdatePassword">
+            <Parameter Name="intContactID" Mode="In" Type="Int32" />
+            <Parameter Name="pwd" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_updateSessionUserInfo">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="firstname" Mode="In" Type="String" />
+            <Parameter Name="surname" Mode="In" Type="String" />
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="empNo" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_validateCompanyNumber" ReturnType="Collection(learnerdbModel.lms_learner_validateCompanyNumber_Result)">
+            <Parameter Name="useremail" Mode="In" Type="String" />
+            <Parameter Name="company" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="tbCourses" EntityType="learnerdbModel.tbCourse" />
+          <FunctionImport Name="lms_learner_getLoginDetails_byUserId" ReturnType="Collection(learnerdbModel.lms_learner_getLoginDetails_byUserId_Result)">
+          <Parameter Name="userid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_getDocument_info" ReturnType="Collection(learnerdbModel.lms_learner_getDocument_info_Result)">
+            <Parameter Name="docId" Mode="In" Type="Int32" />
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <EntitySet Name="lms_widget_details" EntityType="learnerdbModel.lms_widget_details" />
+          <EntitySet Name="tbOrganisationDomainDetails" EntityType="learnerdbModel.tbOrganisationDomainDetail" />
+          <FunctionImport Name="lms_global_getCompanyDomainInfo" ReturnType="Collection(learnerdbModel.lms_global_getCompanyDomainInfo_Result)">
+          <Parameter Name="domain" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_widget_response" ReturnType="Collection(learnerdbModel.lms_learner_get_widget_response_Result)">
+            <Parameter Name="que_guid" Mode="In" Type="String" />
+            <Parameter Name="user_id" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_insert_widget_response">
+            <Parameter Name="learnerId" Mode="In" Type="Int64" />
+            <Parameter Name="queId" Mode="In" Type="String" />
+            <Parameter Name="response" Mode="In" Type="String" />
+            <Parameter Name="responseFor" Mode="In" Type="String" />
+            <Parameter Name="created" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_resetProgress">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="recordId" Mode="In" Type="Int64" />
+            <Parameter Name="res" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_mac_widget_response" ReturnType="Collection(learnerdbModel.lms_learner_get_mac_widget_response_Result)">
+            <Parameter Name="que_guid" Mode="In" Type="String" />
+            <Parameter Name="user_id" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_insert_mac_widget_response">
+            <Parameter Name="learnerId" Mode="In" Type="Int64" />
+            <Parameter Name="queId" Mode="In" Type="String" />
+            <Parameter Name="response1" Mode="In" Type="String" />
+            <Parameter Name="response2" Mode="In" Type="String" />
+            <Parameter Name="response3" Mode="In" Type="String" />
+            <Parameter Name="created" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_insert_mac_widget_feedback">
+            <Parameter Name="learnerId" Mode="In" Type="Int64" />
+            <Parameter Name="queId" Mode="In" Type="String" />
+            <Parameter Name="feedback" Mode="In" Type="String" />
+            <Parameter Name="feedbackText" Mode="In" Type="String" />
+            <Parameter Name="created" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_course_submodules" ReturnType="Collection(learnerdbModel.lms_learner_get_course_submodules_Result)">
+            <Parameter Name="courseId" Mode="In" Type="Int64" />
+            <Parameter Name="contactId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_updateSubModuleProgressRecord">
+            <Parameter Name="intContactId" Mode="In" Type="Int64" />
+            <Parameter Name="intSubModuleId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_bpc_widget_response" ReturnType="Collection(learnerdbModel.lms_learner_get_bpc_widget_response_Result)">
+            <Parameter Name="que_guid" Mode="In" Type="String" />
+            <Parameter Name="user_id" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_RA_attempts" ReturnType="Collection(learnerdbModel.lms_learner_get_RA_attempts_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="ra_id" Mode="In" Type="Int64" />
+            <Parameter Name="subModule_id" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_subModule_RAQuestion" ReturnType="Collection(learnerdbModel.lms_learner_get_subModule_RAQuestion_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="intRiskAssessmentResultID" Mode="In" Type="Int64" />
+            <Parameter Name="subModuleId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_start_subModuleRiskAssessment">
+            <Parameter Name="incontactid" Mode="In" Type="Int64" />
+            <Parameter Name="intRiskAssessmentResultID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_finish_SubModuleRiskAssessment">
+            <Parameter Name="incontactid" Mode="In" Type="Int64" />
+            <Parameter Name="intRiskAssessmentResultID" Mode="In" Type="Int64" />
+            <Parameter Name="strLocationName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_learner_get_SubModuleRAResponses" ReturnType="Collection(learnerdbModel.lms_learner_get_SubModuleRAResponses_Result)">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="riskAssesmentResultId" Mode="In" Type="Int64" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="lms_learner_check_unassignedCoursesWithNoLicences_Result">
+          <Property Type="Int32" Name="intCourseID" Nullable="true" />
+          <Property Type="Int32" Name="AssignedLicenses" Nullable="true" />
+          <Property Type="Int32" Name="ConsumedLicenses" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_accidentIncidentQues_Result">
+          <Property Type="Int64" Name="intQuestionId" Nullable="false" />
+          <Property Type="Int64" Name="intAccidentIncidentId" Nullable="false" />
+          <Property Type="String" Name="strQuestion" Nullable="false" MaxLength="Max" />
+          <Property Type="String" Name="strQuestionType" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="isMandatory" Nullable="false" />
+          <Property Type="String" Name="options" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strQuestionDisplaySequense" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="strTitle" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_certificate_record_Result">
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Int64" Name="intRecordID" Nullable="false" />
+          <Property Type="String" Name="strStatus" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="intScore" Nullable="true" />
+          <Property Type="DateTime" Name="dateCompletedOn" Nullable="true" Precision="23" />
+          <Property Type="Guid" Name="certGUID" Nullable="false" />
+          <Property Type="Int32" Name="intcpdscore" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_companyContractorInfo_Result">
+          <Property Type="String" Name="strContractorName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strContractorEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strTrainerFirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strTrainerSurname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strTrainerEmail" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_dash_course_completion_Result">
+          <Property Type="Int32" Name="intCourseID" Nullable="true" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strStatus" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_dash_HeaderInfo_Result">
+          <Property Type="Int32" Name="HSECount" Nullable="true" />
+          <Property Type="Int32" Name="TotalDocuments" Nullable="true" />
+          <Property Type="Int32" Name="OverdueCourses" Nullable="true" />
+          <Property Type="DateTime" Name="LastLoginDate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_dash_WeeklyProgress_Result">
+          <Property Type="Int32" Name="InProgressThisWeek" Nullable="true" />
+          <Property Type="Int32" Name="CompletedThisWeek" Nullable="true" />
+          <Property Type="Int32" Name="NotStarted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_dash_YearlyCompletion_Result">
+          <Property Type="Int32" Name="Months" Nullable="true" />
+          <Property Type="Int32" Name="CompletionCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_LearnerSSOInfo_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int64" Name="intRecordId" Nullable="true" />
+          <Property Type="Int64" Name="intOrganisationId" Nullable="true" />
+          <Property Type="Int32" Name="ssoType" Nullable="true" />
+          <Property Type="String" Name="ssoURL" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="entityID" Nullable="true" />
+          <Property Type="String" Name="entityKey" Nullable="true" />
+          <Property Type="String" Name="cert" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="returnURL" Nullable="true" MaxLength="Max" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_progress_history_Result">
+          <Property Type="Int32" Name="intcourseid" Nullable="true" />
+          <Property Type="String" Name="strcourse" Nullable="true" MaxLength="100" />
+          <Property Type="Int64" Name="intrecordid" Nullable="false" />
+          <Property Type="String" Name="strstatus" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="intscore" Nullable="true" />
+          <Property Type="DateTime" Name="datestartedon" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datelaststarted" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datecompletedon" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="dateassignedon" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_GetAdminOrgRegSettings_Result">
+          <Property Type="String" Name="strTitleDescription" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="strFirstNameDescription" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="strSurnameDescription" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="UL_emailIdDescription" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strLocationDescription" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strEmployeeNumberDescription" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strDepartmentDescription" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getAllAcceptedClassrooms_Result">
+          <Property Type="Int64" Name="intClassroomId" Nullable="false" />
+          <Property Type="String" Name="strClassroomName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="strClassroomDesc" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="dateCreatedOn" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="accepted" Nullable="true" />
+          <Property Type="DateTime" Name="dateAcceptedOn" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="intStatus" Nullable="true" />
+          <Property Type="DateTime" Name="dateAttendedOn" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getAllClassrooms_Result">
+          <Property Type="Int64" Name="intClassroomId" Nullable="false" />
+          <Property Type="String" Name="strClassroomName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="strClassroomDesc" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="dateCreatedOn" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="accepted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getAllDocuments_Result">
+          <Property Type="Int64" Name="docId" Nullable="false" />
+          <Property Type="String" Name="docName" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="docDesc" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="docPath" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="docSequence" Nullable="true" Precision="23" />
+          <Property Type="Int64" Name="catId" Nullable="true" />
+          <Property Type="String" Name="catName" Nullable="true" MaxLength="100" />
+          <Property Type="Int64" Name="organisation" Nullable="true" />
+          <Property Type="String" Name="readStatus" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="viewed" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getAllUnreadNotifications_Result">
+          <Property Type="Int64" Name="intAnnouncementId" Nullable="false" />
+          <Property Type="String" Name="strTitle" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strSummary" Nullable="true" MaxLength="Max" />
+          <Property Type="DateTime" Name="datPublish" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datExpire" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datViewed" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getCompanyInfo_Result">
+          <Property Type="Int64" Name="intOrganisationID" Nullable="false" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="Boolean" Name="UL_blnLive" Nullable="true" />
+          <Property Type="String" Name="Reg_Settings" Nullable="true" MaxLength="275" />
+          <Property Type="String" Name="UL_Status" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="SelfRegistrationEnabled" Nullable="true" />
+          <Property Type="String" Name="orgBrandName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="orgBaseURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="supportEmail" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getCoursesForAutoAssignement_Result">
+          <Property Type="Int32" Name="intCourseID" Nullable="false" />
+          <Property Type="Int32" Name="intCourseIdentifier" Nullable="true" />
+          <Property Type="Int32" Name="intOrganisationID" Nullable="false" />
+          <Property Type="String" Name="strUnlockKey" Nullable="true" MaxLength="400" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strCourseLogo" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="blnCourseRA" Nullable="false" />
+          <Property Type="Int32" Name="intPassmark" Nullable="true" />
+          <Property Type="Int32" Name="intFrequency" Nullable="true" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="DateTime" Name="datModified" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datCreated" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getLoginDetails_Result">
+          <Property Type="Int32" Name="intcontactid" Nullable="false" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="Boolean" Name="IsRestPassword" Nullable="true" />
+          <Property Type="Int64" Name="intOrganisationID" Nullable="true" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="UL_strLogo" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_strCertificate" Nullable="true" MaxLength="50" />
+          <Property Type="Binary" Name="org_banner" Nullable="true" />
+          <Property Type="Binary" Name="org_certificate" Nullable="true" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="Int16" Name="incidentAccidentEnabled" Nullable="true" />
+          <Property Type="Binary" Name="profilePic" Nullable="true" />
+          <Property Type="String" Name="learnerMenuSettings" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_GetNewUserInfoOrResetPasswordInfo_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int32" Name="intOrganisationID" Nullable="true" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strTitle" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strNotes" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="strPassword" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="datLastLogin" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datCreated" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datModified" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="String" Name="UL_strPhone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_strExtension" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UL_datDOB" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UL_strPayroll" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="UL_strJobTitle" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="LastPwdModifiedDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="IsRestPassword" Nullable="true" />
+          <Property Type="Boolean" Name="isEmailVerified" Nullable="true" />
+          <Property Type="DateTime" Name="datCurrentLogin" Nullable="true" Precision="23" />
+          <Property Type="Binary" Name="profilePic" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getRAQuestion_Result">
+          <Property Type="Int32" Name="intQuestionID" Nullable="true" />
+          <Property Type="String" Name="strQuestion" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strGroupText" Nullable="true" MaxLength="600" />
+          <Property Type="Int32" Name="intOrder" Nullable="true" />
+          <Property Type="Int32" Name="intQuestionOptionID" Nullable="true" />
+          <Property Type="String" Name="strQuestionOption" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strValue" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="optOrder" Nullable="true" />
+          <Property Type="Boolean" Name="optIssue" Nullable="true" />
+          <Property Type="Int32" Name="intanswerid" Nullable="true" />
+          <Property Type="Boolean" Name="blnYes" Nullable="true" />
+          <Property Type="Boolean" Name="blnNo" Nullable="true" />
+          <Property Type="String" Name="strText" Nullable="true" MaxLength="Max" />
+          <Property Type="Boolean" Name="blnIssue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getRAResponses_Result">
+          <Property Type="String" Name="strQuestion" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strQuestionOption" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="blnIssue" Nullable="false" />
+          <Property Type="String" Name="strText" Nullable="true" MaxLength="Max" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getSessionUserInfo_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getSSOLoginDetails_Result">
+          <Property Type="Int32" Name="intcontactid" Nullable="false" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="Boolean" Name="IsRestPassword" Nullable="true" />
+          <Property Type="Int64" Name="intOrganisationID" Nullable="true" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_strLogo" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_strCertificate" Nullable="true" MaxLength="50" />
+          <Property Type="Binary" Name="org_banner" Nullable="true" />
+          <Property Type="Binary" Name="org_certificate" Nullable="true" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="Binary" Name="profilePic" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_GetUserShortDetailByUserID_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int32" Name="intOrganisationID" Nullable="true" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strTitle" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strNotes" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="strPassword" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="datLastLogin" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datCreated" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datModified" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="String" Name="UL_strPhone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_strExtension" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UL_datDOB" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UL_strPayroll" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="UL_strJobTitle" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="LastPwdModifiedDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="IsRestPassword" Nullable="true" />
+          <Property Type="Boolean" Name="isEmailVerified" Nullable="true" />
+          <Property Type="DateTime" Name="datCurrentLogin" Nullable="true" Precision="23" />
+          <Property Type="Binary" Name="profilePic" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_initializeModule_Result">
+          <Property Type="Int64" Name="intCourseID" Nullable="false" />
+          <Property Type="Int64" Name="intContactID" Nullable="false" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSuspendData" Nullable="true" />
+          <Property Type="String" Name="strBookMark" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strStatus" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="intScore" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_validateCompanyNumber_Result">
+          <Property Type="Int32" Name="intcontactid" Nullable="false" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="Int64" Name="intOrganisationID" Nullable="true" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="Binary" Name="profilePic" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="tbCourse">
+          <Key>
+            <PropertyRef Name="intCourseID" />
+          </Key>
+          <Property Name="intCourseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intCourseIdentifier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="intOrganisationID" Type="Int32" Nullable="false" />
+          <Property Name="strUnlockKey" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="strCourse" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="strCourseSummary" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="strCourseDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="strHSContact" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="strCourseLogo" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="strCourseTutorialPath" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="strCourseTestPath" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="blnCourseRA" Type="Boolean" Nullable="false" />
+          <Property Name="intPassmark" Type="Int32" />
+          <Property Name="intFrequency" Type="Int32" />
+          <Property Name="blnCancelled" Type="Boolean" />
+          <Property Name="datModified" Type="DateTime" Precision="3" />
+          <Property Name="datCreated" Type="DateTime" Precision="3" />
+          <Property Name="intTestFrequency" Type="Int32" Nullable="false" />
+          <Property Name="blnTestReminders" Type="Boolean" Nullable="false" />
+          <Property Name="intRAFrequency" Type="Int32" Nullable="false" />
+          <Property Name="blnRAReminder" Type="Boolean" Nullable="false" />
+          <Property Name="intTutorialFrequency" Type="Int32" Nullable="false" />
+          <Property Name="blnTutorialReminder" Type="Boolean" Nullable="false" />
+          <Property Name="intTestReminderFreq" Type="Int32" Nullable="false" />
+          <Property Name="intRAReminderFreq" Type="Int32" Nullable="false" />
+          <Property Name="intTutorialReminderFreq" Type="Int32" Nullable="false" />
+          <Property Name="intMaxTestReminders" Type="Int32" Nullable="false" />
+          <Property Name="intMaxRAReminders" Type="Int32" Nullable="false" />
+          <Property Name="intMaxTutorialReminders" Type="Int32" Nullable="false" />
+          <Property Name="intRADaysBefore" Type="Int32" Nullable="false" />
+          <Property Name="intTestDaysBefore" Type="Int32" Nullable="false" />
+          <Property Name="intTutorialDaysBefore" Type="Int32" Nullable="false" />
+          <Property Name="blnDeptSendRAIssue" Type="Boolean" Nullable="false" />
+          <Property Name="blnDeptSendRAComplete" Type="Boolean" Nullable="false" />
+          <Property Name="blnDeptSendTestPass" Type="Boolean" Nullable="false" />
+          <Property Name="blnDeptSendTestFail" Type="Boolean" Nullable="false" />
+          <Property Name="blnDeptSendRANotCompleted" Type="Boolean" Nullable="false" />
+          <Property Name="blnDeptSendTestNotCompleted" Type="Boolean" Nullable="false" />
+          <Property Name="blnLocSendRAIssue" Type="Boolean" Nullable="false" />
+          <Property Name="blnLocSendRAComplete" Type="Boolean" Nullable="false" />
+          <Property Name="blnLocSendTestPass" Type="Boolean" Nullable="false" />
+          <Property Name="blnLocSendTestFail" Type="Boolean" Nullable="false" />
+          <Property Name="blnLocSendRANotCompleted" Type="Boolean" Nullable="false" />
+          <Property Name="blnLocSendTestNotCompleted" Type="Boolean" Nullable="false" />
+          <Property Name="blnContactSendTest" Type="Boolean" Nullable="false" />
+          <Property Name="blnContactSendRA" Type="Boolean" Nullable="false" />
+          <Property Name="blnCourseActive" Type="Boolean" />
+          <Property Name="blnHTML5" Type="Boolean" />
+          <Property Name="intCourseMid" Type="Int32" />
+          <Property Name="HelpFile" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="isRAModule" Type="Boolean" />
+          <Property Name="intMasterCourseId" Type="Int64" />
+          <Property Name="intDaysForCompletion" Type="Int32" />
+          <Property Name="noLicenceNotification" Type="Boolean" />
+        </EntityType>
+        <ComplexType Name="lms_learner_get_reportedIncidents_Result">
+          <Property Type="Int64" Name="intResponseId" Nullable="false" />
+          <Property Type="Int64" Name="intContactId" Nullable="false" />
+          <Property Type="Int64" Name="intAccidentIncidentId" Nullable="false" />
+          <Property Type="String" Name="strResponse" Nullable="false" MaxLength="Max" />
+          <Property Type="DateTime" Name="response_created_on" Nullable="false" Precision="23" />
+          <Property Type="String" Name="reportedBy" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="reportedFor" Nullable="false" MaxLength="250" />
+          <Property Type="DateTime" Name="incident_happendon" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="incident_reportedon" Nullable="false" Precision="23" />
+          <Property Type="String" Name="sign_off_comment" Nullable="true" MaxLength="Max" />
+          <Property Type="Int64" Name="signed_off_by" Nullable="true" />
+          <Property Type="DateTime" Name="signed_off_on" Nullable="true" Precision="23" />
+          <Property Type="String" Name="response_imageURL" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strFirstname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strTitle" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="signedoffBy_fn" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="signedoffBy_ln" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="signedoffBy_em" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getAllAnouncments_Result">
+          <Property Type="Int64" Name="intAnnouncementId" Nullable="false" />
+          <Property Type="String" Name="strTitle" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strSummary" Nullable="true" MaxLength="Max" />
+          <Property Type="DateTime" Name="datPublish" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datExpire" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datViewed" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="announcmentRead" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getAllRACourses_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="true" />
+          <Property Type="Int32" Name="intCourseID" Nullable="true" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="intRiskAssessmentResultID" Nullable="true" />
+          <Property Type="Int32" Name="intIssueCount" Nullable="true" />
+          <Property Type="DateTime" Name="datSignOff" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datBegun" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datCompleted" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getAllCourses_Result">
+          <Property Type="Int32" Name="intcourseid" Nullable="false" />
+          <Property Type="String" Name="strcourse" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strcoursesummary" Nullable="true" MaxLength="400" />
+          <Property Type="String" Name="strcoursedescription" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="strcourselogo" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strcoursetutorialpath" Nullable="false" MaxLength="306" />
+          <Property Type="Boolean" Name="blncoursera" Nullable="false" />
+          <Property Type="Int32" Name="inttestfrequency" Nullable="false" />
+          <Property Type="Int32" Name="intrafrequency" Nullable="false" />
+          <Property Type="DateTime" Name="datcourseexpiry" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="courseResetOn" Nullable="true" />
+          <Property Type="DateTime" Name="coursecompleteby" Nullable="true" />
+          <Property Type="Int64" Name="intrecordid" Nullable="true" />
+          <Property Type="String" Name="strstatus" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="intscore" Nullable="true" />
+          <Property Type="DateTime" Name="datestartedon" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datelaststarted" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datecompletedon" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="dateassignedon" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="iscourseexpired" Nullable="false" />
+          <Property Type="Int32" Name="subModuleCount" Nullable="true" />
+          <Property Type="Boolean" Name="SelfCourseResetEnabled" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getLoginDetails_byUserId_Result">
+          <Property Type="Int32" Name="intcontactid" Nullable="false" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="Boolean" Name="IsRestPassword" Nullable="true" />
+          <Property Type="Int64" Name="intOrganisationID" Nullable="true" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="UL_strLogo" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_strCertificate" Nullable="true" MaxLength="50" />
+          <Property Type="Binary" Name="org_banner" Nullable="true" />
+          <Property Type="Binary" Name="org_certificate" Nullable="true" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="Int16" Name="incidentAccidentEnabled" Nullable="true" />
+          <Property Type="Binary" Name="profilePic" Nullable="true" />
+          <Property Type="String" Name="learnerMenuSettings" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_getDocument_info_Result">
+          <Property Type="Int64" Name="docId" Nullable="false" />
+          <Property Type="String" Name="docName" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="docDesc" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="docPath" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="docSequence" Nullable="true" Precision="23" />
+          <Property Type="Int64" Name="catId" Nullable="true" />
+          <Property Type="String" Name="catName" Nullable="true" MaxLength="100" />
+          <Property Type="Int64" Name="organisation" Nullable="true" />
+          <Property Type="String" Name="readStatus" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="viewed" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <EntityType Name="lms_widget_details">
+          <Key>
+            <PropertyRef Name="widgetId" />
+          </Key>
+          <Property Name="widgetId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="question" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="response" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated_on" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbOrganisationDomainDetail">
+          <Key>
+            <PropertyRef Name="recordId" />
+          </Key>
+          <Property Name="recordId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="domain" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="css_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="favicon_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="lms_org_id" Type="Int64" />
+          <Property Name="title_text" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="logo_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="lms_global_getCompanyDomainInfo_Result">
+          <Property Type="String" Name="css_path" Nullable="true" />
+          <Property Type="String" Name="domain" Nullable="true" />
+          <Property Type="String" Name="favicon_path" Nullable="true" />
+          <Property Type="Int64" Name="lms_org_id" Nullable="true" />
+          <Property Type="Int32" Name="recordId" Nullable="false" />
+          <Property Type="String" Name="title_text" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="logo_path" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_widget_response_Result">
+          <Property Type="String" Name="widget_header_color" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="widget_que_text" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="widget_que_text_after" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="widget_que_type" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="resp_text" Nullable="true" />
+          <Property Type="String" Name="resp_text_after" Nullable="true" />
+          <Property Type="String" Name="widget_que_guid" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="widget_que_title" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="widget_show_que_text_bfr_fr" Nullable="true" />
+          </ComplexType>
+        <ComplexType Name="lms_learner_get_mac_widget_response_Result">
+          <Property Type="String" Name="widget_que_guid" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="widget_header_color" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="widget_que_text" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="widget_que_type" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="widget_que_title" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="widget_model_answer_heading" Nullable="true" />
+          <Property Type="String" Name="widget_model_answer_resp1" Nullable="true" />
+          <Property Type="String" Name="widget_model_answer_resp2" Nullable="true" />
+          <Property Type="String" Name="widget_model_answer_resp3" Nullable="true" />
+          <Property Type="String" Name="resp_text" Nullable="true" />
+          <Property Type="String" Name="resp_text_after" Nullable="true" />
+          <Property Type="String" Name="resp_mac_1" Nullable="true" />
+          <Property Type="String" Name="resp_mac_2" Nullable="true" />
+          <Property Type="String" Name="resp_mac_3" Nullable="true" />
+          <Property Type="String" Name="resp_mac_feedback" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="resp_mac_feedback_text" Nullable="true" MaxLength="1000" />
+          <Property Type="Boolean" Name="resp_mac_responded" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_course_submodules_Result">
+          <Property Type="Int64" Name="smid" Nullable="false" />
+          <Property Type="Int64" Name="courseId" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="descrip" Nullable="true" MaxLength="1000" />
+          <Property Type="Int32" Name="seq" Nullable="true" />
+          <Property Type="String" Name="path" Nullable="true" />
+          <Property Type="String" Name="strStatus" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="lastAccessedOn" Nullable="true" Precision="23" />
+          <Property Type="Int64" Name="RAID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_bpc_widget_response_Result">
+          <Property Type="String" Name="widget_que_guid" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="widget_header_color" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="widget_que_text" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="widget_que_type" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="widget_que_title" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="widget_que_label_after" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="resp_mac_1" Nullable="true" />
+          <Property Type="String" Name="resp_mac_2" Nullable="true" />
+          <Property Type="String" Name="resp_mac_3" Nullable="true" />
+          <Property Type="String" Name="resp_mac_feedback_text" Nullable="true" MaxLength="1000" />
+          <Property Type="Boolean" Name="resp_mac_responded" Nullable="true" />
+          <Property Type="String" Name="widget_que_text_after" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_RA_attempts_Result">
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strLocationName" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intRiskAssessmentResultID" Nullable="true" />
+          <Property Type="Int32" Name="intIssueCount" Nullable="true" />
+          <Property Type="DateTime" Name="datSignOff" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datBegun" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datCompleted" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_subModule_RAQuestion_Result">
+          <Property Type="Int32" Name="intQuestionID" Nullable="false" />
+          <Property Type="String" Name="strQuestion" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strGroupText" Nullable="true" MaxLength="600" />
+          <Property Type="Int32" Name="intOrder" Nullable="true" />
+          <Property Type="Int32" Name="intQuestionOptionID" Nullable="true" />
+          <Property Type="String" Name="strQuestionOption" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strValue" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="optOrder" Nullable="true" />
+          <Property Type="Boolean" Name="optIssue" Nullable="true" />
+          <Property Type="Int32" Name="intanswerid" Nullable="true" />
+          <Property Type="Boolean" Name="blnYes" Nullable="true" />
+          <Property Type="Boolean" Name="blnNo" Nullable="true" />
+          <Property Type="String" Name="strText" Nullable="true" MaxLength="Max" />
+          <Property Type="Boolean" Name="blnIssue" Nullable="true" />
+          <Property Type="Int64" Name="RARID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_learner_get_SubModuleRAResponses_Result">
+          <Property Type="String" Name="strQuestion" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strQuestionOption" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="blnIssue" Nullable="false" />
+          <Property Type="String" Name="strText" Nullable="true" MaxLength="Max" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="learnerdbModelStoreContainer" CdmEntityContainer="learnerDBEntities" >
+          <FunctionImportMapping FunctionImportName="lms_learner_AssignCoursestoContact" FunctionName="learnerdbModel.Store.lms_learner_AssignCoursestoContact" />
+          <FunctionImportMapping FunctionImportName="lms_learner_check_admin_rights" FunctionName="learnerdbModel.Store.lms_learner_check_admin_rights" />
+          <FunctionImportMapping FunctionImportName="lms_learner_check_unassignedCoursesWithNoLicences" FunctionName="learnerdbModel.Store.lms_learner_check_unassignedCoursesWithNoLicences">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_check_unassignedCoursesWithNoLicences_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="AssignedLicenses" ColumnName="AssignedLicenses" />
+                <ScalarProperty Name="ConsumedLicenses" ColumnName="ConsumedLicenses" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_courseSessionEndRecord" FunctionName="learnerdbModel.Store.lms_learner_courseSessionEndRecord" />
+          <FunctionImportMapping FunctionImportName="lms_learner_create_accidentincident_response" FunctionName="learnerdbModel.Store.lms_learner_create_accidentincident_response" />
+          <FunctionImportMapping FunctionImportName="lms_learner_create_Incident_ResponseEvidence" FunctionName="learnerdbModel.Store.lms_learner_create_Incident_ResponseEvidence" />
+          <FunctionImportMapping FunctionImportName="lms_learner_create_RA_AnswerEvidence" FunctionName="learnerdbModel.Store.lms_learner_create_RA_AnswerEvidence" />
+          <FunctionImportMapping FunctionImportName="lms_learner_createClassroomRequest" FunctionName="learnerdbModel.Store.lms_learner_createClassroomRequest" />
+          <FunctionImportMapping FunctionImportName="lms_learner_createLearner" FunctionName="learnerdbModel.Store.lms_learner_createLearner" />
+          <FunctionImportMapping FunctionImportName="lms_learner_createRAResponse" FunctionName="learnerdbModel.Store.lms_learner_createRAResponse" />
+          <FunctionImportMapping FunctionImportName="lms_learner_createRiskAssessmentRecord" FunctionName="learnerdbModel.Store.lms_learner_createRiskAssessmentRecord" />
+          <FunctionImportMapping FunctionImportName="lms_learner_FinishRiskAssessment" FunctionName="learnerdbModel.Store.lms_learner_FinishRiskAssessment" />
+          <FunctionImportMapping FunctionImportName="lms_learner_get_accidentIncidentQues" FunctionName="learnerdbModel.Store.lms_learner_get_accidentIncidentQues">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_accidentIncidentQues_Result">
+                <ScalarProperty Name="intQuestionId" ColumnName="intQuestionId" />
+                <ScalarProperty Name="intAccidentIncidentId" ColumnName="intAccidentIncidentId" />
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+                <ScalarProperty Name="strQuestionType" ColumnName="strQuestionType" />
+                <ScalarProperty Name="isMandatory" ColumnName="isMandatory" />
+                <ScalarProperty Name="options" ColumnName="options" />
+                <ScalarProperty Name="strQuestionDisplaySequense" ColumnName="strQuestionDisplaySequense" />
+                <ScalarProperty Name="strTitle" ColumnName="strTitle" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_certificate_record" FunctionName="learnerdbModel.Store.lms_learner_get_certificate_record">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_certificate_record_Result">
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="intRecordID" ColumnName="intRecordID" />
+                <ScalarProperty Name="strStatus" ColumnName="strStatus" />
+                <ScalarProperty Name="intScore" ColumnName="intScore" />
+                <ScalarProperty Name="dateCompletedOn" ColumnName="dateCompletedOn" />
+                <ScalarProperty Name="certGUID" ColumnName="certGUID" />
+                <ScalarProperty Name="intcpdscore" ColumnName="intcpdscore" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_companyContractorInfo" FunctionName="learnerdbModel.Store.lms_learner_get_companyContractorInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_companyContractorInfo_Result">
+                <ScalarProperty Name="strContractorName" ColumnName="strContractorName" />
+                <ScalarProperty Name="strContractorEmail" ColumnName="strContractorEmail" />
+                <ScalarProperty Name="strTrainerFirstName" ColumnName="strTrainerFirstName" />
+                <ScalarProperty Name="strTrainerSurname" ColumnName="strTrainerSurname" />
+                <ScalarProperty Name="strTrainerEmail" ColumnName="strTrainerEmail" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_dash_course_completion" FunctionName="learnerdbModel.Store.lms_learner_get_dash_course_completion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_dash_course_completion_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="strStatus" ColumnName="strStatus" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_dash_HeaderInfo" FunctionName="learnerdbModel.Store.lms_learner_get_dash_HeaderInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_dash_HeaderInfo_Result">
+                <ScalarProperty Name="HSECount" ColumnName="HSECount" />
+                <ScalarProperty Name="TotalDocuments" ColumnName="TotalDocuments" />
+                <ScalarProperty Name="OverdueCourses" ColumnName="OverdueCourses" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_dash_notification" FunctionName="learnerdbModel.Store.lms_learner_get_dash_notification" />
+          <FunctionImportMapping FunctionImportName="lms_learner_get_dash_WeeklyProgress" FunctionName="learnerdbModel.Store.lms_learner_get_dash_WeeklyProgress">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_dash_WeeklyProgress_Result">
+                <ScalarProperty Name="InProgressThisWeek" ColumnName="InProgressThisWeek" />
+                <ScalarProperty Name="CompletedThisWeek" ColumnName="CompletedThisWeek" />
+                <ScalarProperty Name="NotStarted" ColumnName="NotStarted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_dash_YearlyCompletion" FunctionName="learnerdbModel.Store.lms_learner_get_dash_YearlyCompletion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_dash_YearlyCompletion_Result">
+                <ScalarProperty Name="Months" ColumnName="Months" />
+                <ScalarProperty Name="CompletionCount" ColumnName="CompletionCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_LearnerSSOInfo" FunctionName="learnerdbModel.Store.lms_learner_get_LearnerSSOInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_LearnerSSOInfo_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intRecordId" ColumnName="intRecordId" />
+                <ScalarProperty Name="intOrganisationId" ColumnName="intOrganisationId" />
+                <ScalarProperty Name="ssoType" ColumnName="ssoType" />
+                <ScalarProperty Name="ssoURL" ColumnName="ssoURL" />
+                <ScalarProperty Name="entityID" ColumnName="entityID" />
+                <ScalarProperty Name="entityKey" ColumnName="entityKey" />
+                <ScalarProperty Name="cert" ColumnName="cert" />
+                <ScalarProperty Name="returnURL" ColumnName="returnURL" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_progress_history" FunctionName="learnerdbModel.Store.lms_learner_get_progress_history">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_progress_history_Result">
+                <ScalarProperty Name="intcourseid" ColumnName="intcourseid" />
+                <ScalarProperty Name="strcourse" ColumnName="strcourse" />
+                <ScalarProperty Name="intrecordid" ColumnName="intrecordid" />
+                <ScalarProperty Name="strstatus" ColumnName="strstatus" />
+                <ScalarProperty Name="intscore" ColumnName="intscore" />
+                <ScalarProperty Name="datestartedon" ColumnName="datestartedon" />
+                <ScalarProperty Name="datelaststarted" ColumnName="datelaststarted" />
+                <ScalarProperty Name="datecompletedon" ColumnName="datecompletedon" />
+                <ScalarProperty Name="dateassignedon" ColumnName="dateassignedon" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_reportedIncidents" FunctionName="learnerdbModel.Store.lms_learner_get_reportedIncidents" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_reportedIncidents_Result">
+                <ScalarProperty Name="intResponseId" ColumnName="intResponseId" />
+                <ScalarProperty Name="intContactId" ColumnName="intContactId" />
+                <ScalarProperty Name="intAccidentIncidentId" ColumnName="intAccidentIncidentId" />
+                <ScalarProperty Name="strResponse" ColumnName="strResponse" />
+                <ScalarProperty Name="response_created_on" ColumnName="response_created_on" />
+                <ScalarProperty Name="reportedBy" ColumnName="reportedBy" />
+                <ScalarProperty Name="reportedFor" ColumnName="reportedFor" />
+                <ScalarProperty Name="incident_happendon" ColumnName="incident_happendon" />
+                <ScalarProperty Name="incident_reportedon" ColumnName="incident_reportedon" />
+                <ScalarProperty Name="sign_off_comment" ColumnName="sign_off_comment" />
+                <ScalarProperty Name="signed_off_by" ColumnName="signed_off_by" />
+                <ScalarProperty Name="signed_off_on" ColumnName="signed_off_on" />
+                <ScalarProperty Name="response_imageURL" ColumnName="response_imageURL" />
+                <ScalarProperty Name="strFirstname" ColumnName="strFirstname" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strTitle" ColumnName="strTitle" />
+                <ScalarProperty Name="signedoffBy_fn" ColumnName="signedoffBy_fn" />
+                <ScalarProperty Name="signedoffBy_ln" ColumnName="signedoffBy_ln" />
+                <ScalarProperty Name="signedoffBy_em" ColumnName="signedoffBy_em" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_GetAdminOrgRegSettings" FunctionName="learnerdbModel.Store.lms_learner_GetAdminOrgRegSettings">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_GetAdminOrgRegSettings_Result">
+                <ScalarProperty Name="strTitleDescription" ColumnName="strTitleDescription" />
+                <ScalarProperty Name="strFirstNameDescription" ColumnName="strFirstNameDescription" />
+                <ScalarProperty Name="strSurnameDescription" ColumnName="strSurnameDescription" />
+                <ScalarProperty Name="UL_emailIdDescription" ColumnName="UL_emailIdDescription" />
+                <ScalarProperty Name="strLocationDescription" ColumnName="strLocationDescription" />
+                <ScalarProperty Name="strEmployeeNumberDescription" ColumnName="strEmployeeNumberDescription" />
+                <ScalarProperty Name="strDepartmentDescription" ColumnName="strDepartmentDescription" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getAllAcceptedClassrooms" FunctionName="learnerdbModel.Store.lms_learner_getAllAcceptedClassrooms">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getAllAcceptedClassrooms_Result">
+                <ScalarProperty Name="intClassroomId" ColumnName="intClassroomId" />
+                <ScalarProperty Name="strClassroomName" ColumnName="strClassroomName" />
+                <ScalarProperty Name="strClassroomDesc" ColumnName="strClassroomDesc" />
+                <ScalarProperty Name="dateCreatedOn" ColumnName="dateCreatedOn" />
+                <ScalarProperty Name="accepted" ColumnName="accepted" />
+                <ScalarProperty Name="dateAcceptedOn" ColumnName="dateAcceptedOn" />
+                <ScalarProperty Name="intStatus" ColumnName="intStatus" />
+                <ScalarProperty Name="dateAttendedOn" ColumnName="dateAttendedOn" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getAllAnouncments" FunctionName="learnerdbModel.Store.lms_learner_getAllAnouncments" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getAllAnouncments_Result">
+                <ScalarProperty Name="intAnnouncementId" ColumnName="intAnnouncementId" />
+                <ScalarProperty Name="strTitle" ColumnName="strTitle" />
+                <ScalarProperty Name="strSummary" ColumnName="strSummary" />
+                <ScalarProperty Name="datPublish" ColumnName="datPublish" />
+                <ScalarProperty Name="datExpire" ColumnName="datExpire" />
+                <ScalarProperty Name="datViewed" ColumnName="datViewed" />
+                <ScalarProperty Name="announcmentRead" ColumnName="announcmentRead" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getAllClassrooms" FunctionName="learnerdbModel.Store.lms_learner_getAllClassrooms">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getAllClassrooms_Result">
+                <ScalarProperty Name="intClassroomId" ColumnName="intClassroomId" />
+                <ScalarProperty Name="strClassroomName" ColumnName="strClassroomName" />
+                <ScalarProperty Name="strClassroomDesc" ColumnName="strClassroomDesc" />
+                <ScalarProperty Name="dateCreatedOn" ColumnName="dateCreatedOn" />
+                <ScalarProperty Name="accepted" ColumnName="accepted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getAllCourses" FunctionName="learnerdbModel.Store.lms_learner_getAllCourses" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getAllCourses_Result">
+                <ScalarProperty Name="intcourseid" ColumnName="intcourseid" />
+                <ScalarProperty Name="strcourse" ColumnName="strcourse" />
+                <ScalarProperty Name="strcoursesummary" ColumnName="strcoursesummary" />
+                <ScalarProperty Name="strcoursedescription" ColumnName="strcoursedescription" />
+                <ScalarProperty Name="strcourselogo" ColumnName="strcourselogo" />
+                <ScalarProperty Name="strcoursetutorialpath" ColumnName="strcoursetutorialpath" />
+                <ScalarProperty Name="blncoursera" ColumnName="blncoursera" />
+                <ScalarProperty Name="inttestfrequency" ColumnName="inttestfrequency" />
+                <ScalarProperty Name="intrafrequency" ColumnName="intrafrequency" />
+                <ScalarProperty Name="datcourseexpiry" ColumnName="datcourseexpiry" />
+                <ScalarProperty Name="courseResetOn" ColumnName="courseResetOn" />
+                <ScalarProperty Name="coursecompleteby" ColumnName="coursecompleteby" />
+                <ScalarProperty Name="intrecordid" ColumnName="intrecordid" />
+                <ScalarProperty Name="strstatus" ColumnName="strstatus" />
+                <ScalarProperty Name="intscore" ColumnName="intscore" />
+                <ScalarProperty Name="datestartedon" ColumnName="datestartedon" />
+                <ScalarProperty Name="datelaststarted" ColumnName="datelaststarted" />
+                <ScalarProperty Name="datecompletedon" ColumnName="datecompletedon" />
+                <ScalarProperty Name="dateassignedon" ColumnName="dateassignedon" />
+                <ScalarProperty Name="iscourseexpired" ColumnName="iscourseexpired" />
+                <ScalarProperty Name="subModuleCount" ColumnName="subModuleCount" />
+                <ScalarProperty Name="SelfCourseResetEnabled" ColumnName="SelfCourseResetEnabled" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getAllDocuments" FunctionName="learnerdbModel.Store.lms_learner_getAllDocuments">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getAllDocuments_Result">
+                <ScalarProperty Name="docId" ColumnName="docId" />
+                <ScalarProperty Name="docName" ColumnName="docName" />
+                <ScalarProperty Name="docDesc" ColumnName="docDesc" />
+                <ScalarProperty Name="docPath" ColumnName="docPath" />
+                <ScalarProperty Name="docSequence" ColumnName="docSequence" />
+                <ScalarProperty Name="catId" ColumnName="catId" />
+                <ScalarProperty Name="catName" ColumnName="catName" />
+                <ScalarProperty Name="organisation" ColumnName="organisation" />
+                <ScalarProperty Name="readStatus" ColumnName="readStatus" />
+                <ScalarProperty Name="viewed" ColumnName="viewed" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getAllRACourses" FunctionName="learnerdbModel.Store.lms_learner_getAllRACourses" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getAllRACourses_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="intRiskAssessmentResultID" ColumnName="intRiskAssessmentResultID" />
+                <ScalarProperty Name="intIssueCount" ColumnName="intIssueCount" />
+                <ScalarProperty Name="datSignOff" ColumnName="datSignOff" />
+                <ScalarProperty Name="datBegun" ColumnName="datBegun" />
+                <ScalarProperty Name="datCompleted" ColumnName="datCompleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getAllUnreadNotifications" FunctionName="learnerdbModel.Store.lms_learner_getAllUnreadNotifications">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getAllUnreadNotifications_Result">
+                <ScalarProperty Name="intAnnouncementId" ColumnName="intAnnouncementId" />
+                <ScalarProperty Name="strTitle" ColumnName="strTitle" />
+                <ScalarProperty Name="strSummary" ColumnName="strSummary" />
+                <ScalarProperty Name="datPublish" ColumnName="datPublish" />
+                <ScalarProperty Name="datExpire" ColumnName="datExpire" />
+                <ScalarProperty Name="datViewed" ColumnName="datViewed" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getCompanyInfo" FunctionName="learnerdbModel.Store.lms_learner_getCompanyInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getCompanyInfo_Result">
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="UL_blnLive" ColumnName="UL_blnLive" />
+                <ScalarProperty Name="Reg_Settings" ColumnName="Reg_Settings" />
+                <ScalarProperty Name="UL_Status" ColumnName="UL_Status" />
+                <ScalarProperty Name="SelfRegistrationEnabled" ColumnName="SelfRegistrationEnabled" />
+                <ScalarProperty Name="orgBrandName" ColumnName="orgBrandName" />
+                <ScalarProperty Name="orgBaseURL" ColumnName="orgBaseURL" />
+                <ScalarProperty Name="supportEmail" ColumnName="supportEmail" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getCoursesForAutoAssignement" FunctionName="learnerdbModel.Store.lms_learner_getCoursesForAutoAssignement">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getCoursesForAutoAssignement_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="intCourseIdentifier" ColumnName="intCourseIdentifier" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="strUnlockKey" ColumnName="strUnlockKey" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="strCourseLogo" ColumnName="strCourseLogo" />
+                <ScalarProperty Name="blnCourseRA" ColumnName="blnCourseRA" />
+                <ScalarProperty Name="intPassmark" ColumnName="intPassmark" />
+                <ScalarProperty Name="intFrequency" ColumnName="intFrequency" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="datModified" ColumnName="datModified" />
+                <ScalarProperty Name="datCreated" ColumnName="datCreated" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getLoginDetails" FunctionName="learnerdbModel.Store.lms_learner_getLoginDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getLoginDetails_Result">
+                <ScalarProperty Name="intcontactid" ColumnName="intcontactid" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="IsRestPassword" ColumnName="IsRestPassword" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_strLogo" ColumnName="UL_strLogo" />
+                <ScalarProperty Name="UL_strCertificate" ColumnName="UL_strCertificate" />
+                <ScalarProperty Name="org_banner" ColumnName="org_banner" />
+                <ScalarProperty Name="org_certificate" ColumnName="org_certificate" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="incidentAccidentEnabled" ColumnName="incidentAccidentEnabled" />
+                <ScalarProperty Name="profilePic" ColumnName="profilePic" />
+                <ScalarProperty Name="learnerMenuSettings" ColumnName="learnerMenuSettings" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_GetNewUserInfoOrResetPasswordInfo" FunctionName="learnerdbModel.Store.lms_learner_GetNewUserInfoOrResetPasswordInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_GetNewUserInfoOrResetPasswordInfo_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strTitle" ColumnName="strTitle" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strNotes" ColumnName="strNotes" />
+                <ScalarProperty Name="strPassword" ColumnName="strPassword" />
+                <ScalarProperty Name="datLastLogin" ColumnName="datLastLogin" />
+                <ScalarProperty Name="datCreated" ColumnName="datCreated" />
+                <ScalarProperty Name="datModified" ColumnName="datModified" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="UL_strPhone" ColumnName="UL_strPhone" />
+                <ScalarProperty Name="UL_strExtension" ColumnName="UL_strExtension" />
+                <ScalarProperty Name="UL_datDOB" ColumnName="UL_datDOB" />
+                <ScalarProperty Name="UL_strPayroll" ColumnName="UL_strPayroll" />
+                <ScalarProperty Name="UL_strJobTitle" ColumnName="UL_strJobTitle" />
+                <ScalarProperty Name="LastPwdModifiedDate" ColumnName="LastPwdModifiedDate" />
+                <ScalarProperty Name="IsRestPassword" ColumnName="IsRestPassword" />
+                <ScalarProperty Name="isEmailVerified" ColumnName="isEmailVerified" />
+                <ScalarProperty Name="datCurrentLogin" ColumnName="datCurrentLogin" />
+                <ScalarProperty Name="profilePic" ColumnName="profilePic" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getRAQuestion" FunctionName="learnerdbModel.Store.lms_learner_getRAQuestion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getRAQuestion_Result">
+                <ScalarProperty Name="intQuestionID" ColumnName="intQuestionID" />
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+                <ScalarProperty Name="strGroupText" ColumnName="strGroupText" />
+                <ScalarProperty Name="intOrder" ColumnName="intOrder" />
+                <ScalarProperty Name="intQuestionOptionID" ColumnName="intQuestionOptionID" />
+                <ScalarProperty Name="strQuestionOption" ColumnName="strQuestionOption" />
+                <ScalarProperty Name="strValue" ColumnName="strValue" />
+                <ScalarProperty Name="optOrder" ColumnName="optOrder" />
+                <ScalarProperty Name="optIssue" ColumnName="optIssue" />
+                <ScalarProperty Name="intanswerid" ColumnName="intanswerid" />
+                <ScalarProperty Name="blnYes" ColumnName="blnYes" />
+                <ScalarProperty Name="blnNo" ColumnName="blnNo" />
+                <ScalarProperty Name="strText" ColumnName="strText" />
+                <ScalarProperty Name="blnIssue" ColumnName="blnIssue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getRAResponses" FunctionName="learnerdbModel.Store.lms_learner_getRAResponses">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getRAResponses_Result">
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+                <ScalarProperty Name="strQuestionOption" ColumnName="strQuestionOption" />
+                <ScalarProperty Name="blnIssue" ColumnName="blnIssue" />
+                <ScalarProperty Name="strText" ColumnName="strText" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getSessionUserInfo" FunctionName="learnerdbModel.Store.lms_learner_getSessionUserInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getSessionUserInfo_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getSSOLoginDetails" FunctionName="learnerdbModel.Store.lms_learner_getSSOLoginDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getSSOLoginDetails_Result">
+                <ScalarProperty Name="intcontactid" ColumnName="intcontactid" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="IsRestPassword" ColumnName="IsRestPassword" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_strLogo" ColumnName="UL_strLogo" />
+                <ScalarProperty Name="UL_strCertificate" ColumnName="UL_strCertificate" />
+                <ScalarProperty Name="org_banner" ColumnName="org_banner" />
+                <ScalarProperty Name="org_certificate" ColumnName="org_certificate" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="profilePic" ColumnName="profilePic" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_GetUserShortDetailByUserID" FunctionName="learnerdbModel.Store.lms_learner_GetUserShortDetailByUserID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_GetUserShortDetailByUserID_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strTitle" ColumnName="strTitle" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strNotes" ColumnName="strNotes" />
+                <ScalarProperty Name="strPassword" ColumnName="strPassword" />
+                <ScalarProperty Name="datLastLogin" ColumnName="datLastLogin" />
+                <ScalarProperty Name="datCreated" ColumnName="datCreated" />
+                <ScalarProperty Name="datModified" ColumnName="datModified" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="UL_strPhone" ColumnName="UL_strPhone" />
+                <ScalarProperty Name="UL_strExtension" ColumnName="UL_strExtension" />
+                <ScalarProperty Name="UL_datDOB" ColumnName="UL_datDOB" />
+                <ScalarProperty Name="UL_strPayroll" ColumnName="UL_strPayroll" />
+                <ScalarProperty Name="UL_strJobTitle" ColumnName="UL_strJobTitle" />
+                <ScalarProperty Name="LastPwdModifiedDate" ColumnName="LastPwdModifiedDate" />
+                <ScalarProperty Name="IsRestPassword" ColumnName="IsRestPassword" />
+                <ScalarProperty Name="isEmailVerified" ColumnName="isEmailVerified" />
+                <ScalarProperty Name="datCurrentLogin" ColumnName="datCurrentLogin" />
+                <ScalarProperty Name="profilePic" ColumnName="profilePic" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_initializeModule" FunctionName="learnerdbModel.Store.lms_learner_initializeModule">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_initializeModule_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strSuspendData" ColumnName="strSuspendData" />
+                <ScalarProperty Name="strBookMark" ColumnName="strBookMark" />
+                <ScalarProperty Name="strStatus" ColumnName="strStatus" />
+                <ScalarProperty Name="intScore" ColumnName="intScore" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_insert_course_launch_record" FunctionName="learnerdbModel.Store.lms_learner_insert_course_launch_record" />
+          <FunctionImportMapping FunctionImportName="lms_learner_insert_Login_Details" FunctionName="learnerdbModel.Store.lms_learner_insert_Login_Details" />
+          <FunctionImportMapping FunctionImportName="lms_learner_ResetPasswordFlag" FunctionName="learnerdbModel.Store.lms_learner_ResetPasswordFlag" />
+          <FunctionImportMapping FunctionImportName="lms_learner_setDocRead" FunctionName="learnerdbModel.Store.lms_learner_setDocRead" />
+          <FunctionImportMapping FunctionImportName="lms_learner_setDocStatus" FunctionName="learnerdbModel.Store.lms_learner_setDocStatus" />
+          <FunctionImportMapping FunctionImportName="lms_learner_setNotificationRead" FunctionName="learnerdbModel.Store.lms_learner_setNotificationRead" />
+          <FunctionImportMapping FunctionImportName="lms_learner_startRiskAssessment" FunctionName="learnerdbModel.Store.lms_learner_startRiskAssessment" />
+          <FunctionImportMapping FunctionImportName="lms_learner_update_CourseProgressScore" FunctionName="learnerdbModel.Store.lms_learner_update_CourseProgressScore" />
+          <FunctionImportMapping FunctionImportName="lms_learner_update_profilePic" FunctionName="learnerdbModel.Store.lms_learner_update_profilePic" />
+          <FunctionImportMapping FunctionImportName="lms_learner_updateCourseProgressRecord" FunctionName="learnerdbModel.Store.lms_learner_updateCourseProgressRecord" />
+          <FunctionImportMapping FunctionImportName="lms_learner_updateCourseProgressRecord_withSession" FunctionName="learnerdbModel.Store.lms_learner_updateCourseProgressRecord_withSession" />
+          <FunctionImportMapping FunctionImportName="lms_learner_UpdatePassword" FunctionName="learnerdbModel.Store.lms_learner_UpdatePassword" />
+          <FunctionImportMapping FunctionImportName="lms_learner_updateSessionUserInfo" FunctionName="learnerdbModel.Store.lms_learner_updateSessionUserInfo" />
+          <FunctionImportMapping FunctionImportName="lms_learner_validateCompanyNumber" FunctionName="learnerdbModel.Store.lms_learner_validateCompanyNumber">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_validateCompanyNumber_Result">
+                <ScalarProperty Name="intcontactid" ColumnName="intcontactid" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="profilePic" ColumnName="profilePic" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tbCourses">
+            <EntityTypeMapping TypeName="learnerdbModel.tbCourse">
+              <MappingFragment StoreEntitySet="tbCourse">
+                <ScalarProperty Name="noLicenceNotification" ColumnName="noLicenceNotification" />
+                <ScalarProperty Name="intDaysForCompletion" ColumnName="intDaysForCompletion" />
+                <ScalarProperty Name="intMasterCourseId" ColumnName="intMasterCourseId" />
+                <ScalarProperty Name="isRAModule" ColumnName="isRAModule" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="HelpFile" ColumnName="HelpFile" />
+                <ScalarProperty Name="intCourseMid" ColumnName="intCourseMid" />
+                <ScalarProperty Name="blnHTML5" ColumnName="blnHTML5" />
+                <ScalarProperty Name="blnCourseActive" ColumnName="blnCourseActive" />
+                <ScalarProperty Name="blnContactSendRA" ColumnName="blnContactSendRA" />
+                <ScalarProperty Name="blnContactSendTest" ColumnName="blnContactSendTest" />
+                <ScalarProperty Name="blnLocSendTestNotCompleted" ColumnName="blnLocSendTestNotCompleted" />
+                <ScalarProperty Name="blnLocSendRANotCompleted" ColumnName="blnLocSendRANotCompleted" />
+                <ScalarProperty Name="blnLocSendTestFail" ColumnName="blnLocSendTestFail" />
+                <ScalarProperty Name="blnLocSendTestPass" ColumnName="blnLocSendTestPass" />
+                <ScalarProperty Name="blnLocSendRAComplete" ColumnName="blnLocSendRAComplete" />
+                <ScalarProperty Name="blnLocSendRAIssue" ColumnName="blnLocSendRAIssue" />
+                <ScalarProperty Name="blnDeptSendTestNotCompleted" ColumnName="blnDeptSendTestNotCompleted" />
+                <ScalarProperty Name="blnDeptSendRANotCompleted" ColumnName="blnDeptSendRANotCompleted" />
+                <ScalarProperty Name="blnDeptSendTestFail" ColumnName="blnDeptSendTestFail" />
+                <ScalarProperty Name="blnDeptSendTestPass" ColumnName="blnDeptSendTestPass" />
+                <ScalarProperty Name="blnDeptSendRAComplete" ColumnName="blnDeptSendRAComplete" />
+                <ScalarProperty Name="blnDeptSendRAIssue" ColumnName="blnDeptSendRAIssue" />
+                <ScalarProperty Name="intTutorialDaysBefore" ColumnName="intTutorialDaysBefore" />
+                <ScalarProperty Name="intTestDaysBefore" ColumnName="intTestDaysBefore" />
+                <ScalarProperty Name="intRADaysBefore" ColumnName="intRADaysBefore" />
+                <ScalarProperty Name="intMaxTutorialReminders" ColumnName="intMaxTutorialReminders" />
+                <ScalarProperty Name="intMaxRAReminders" ColumnName="intMaxRAReminders" />
+                <ScalarProperty Name="intMaxTestReminders" ColumnName="intMaxTestReminders" />
+                <ScalarProperty Name="intTutorialReminderFreq" ColumnName="intTutorialReminderFreq" />
+                <ScalarProperty Name="intRAReminderFreq" ColumnName="intRAReminderFreq" />
+                <ScalarProperty Name="intTestReminderFreq" ColumnName="intTestReminderFreq" />
+                <ScalarProperty Name="blnTutorialReminder" ColumnName="blnTutorialReminder" />
+                <ScalarProperty Name="intTutorialFrequency" ColumnName="intTutorialFrequency" />
+                <ScalarProperty Name="blnRAReminder" ColumnName="blnRAReminder" />
+                <ScalarProperty Name="intRAFrequency" ColumnName="intRAFrequency" />
+                <ScalarProperty Name="blnTestReminders" ColumnName="blnTestReminders" />
+                <ScalarProperty Name="intTestFrequency" ColumnName="intTestFrequency" />
+                <ScalarProperty Name="datCreated" ColumnName="datCreated" />
+                <ScalarProperty Name="datModified" ColumnName="datModified" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="intFrequency" ColumnName="intFrequency" />
+                <ScalarProperty Name="intPassmark" ColumnName="intPassmark" />
+                <ScalarProperty Name="blnCourseRA" ColumnName="blnCourseRA" />
+                <ScalarProperty Name="strCourseTestPath" ColumnName="strCourseTestPath" />
+                <ScalarProperty Name="strCourseTutorialPath" ColumnName="strCourseTutorialPath" />
+                <ScalarProperty Name="strCourseLogo" ColumnName="strCourseLogo" />
+                <ScalarProperty Name="strHSContact" ColumnName="strHSContact" />
+                <ScalarProperty Name="strCourseDescription" ColumnName="strCourseDescription" />
+                <ScalarProperty Name="strCourseSummary" ColumnName="strCourseSummary" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="strUnlockKey" ColumnName="strUnlockKey" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="intCourseIdentifier" ColumnName="intCourseIdentifier" />
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getLoginDetails_byUserId" FunctionName="learnerdbModel.Store.lms_learner_getLoginDetails_byUserId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getLoginDetails_byUserId_Result">
+                <ScalarProperty Name="intcontactid" ColumnName="intcontactid" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="IsRestPassword" ColumnName="IsRestPassword" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_strLogo" ColumnName="UL_strLogo" />
+                <ScalarProperty Name="UL_strCertificate" ColumnName="UL_strCertificate" />
+                <ScalarProperty Name="org_banner" ColumnName="org_banner" />
+                <ScalarProperty Name="org_certificate" ColumnName="org_certificate" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="incidentAccidentEnabled" ColumnName="incidentAccidentEnabled" />
+                <ScalarProperty Name="profilePic" ColumnName="profilePic" />
+                <ScalarProperty Name="learnerMenuSettings" ColumnName="learnerMenuSettings" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_getDocument_info" FunctionName="learnerdbModel.Store.lms_learner_getDocument_info">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_getDocument_info_Result">
+                <ScalarProperty Name="docId" ColumnName="docId" />
+                <ScalarProperty Name="docName" ColumnName="docName" />
+                <ScalarProperty Name="docDesc" ColumnName="docDesc" />
+                <ScalarProperty Name="docPath" ColumnName="docPath" />
+                <ScalarProperty Name="docSequence" ColumnName="docSequence" />
+                <ScalarProperty Name="catId" ColumnName="catId" />
+                <ScalarProperty Name="catName" ColumnName="catName" />
+                <ScalarProperty Name="organisation" ColumnName="organisation" />
+                <ScalarProperty Name="readStatus" ColumnName="readStatus" />
+                <ScalarProperty Name="viewed" ColumnName="viewed" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="lms_widget_details">
+            <EntityTypeMapping TypeName="learnerdbModel.lms_widget_details">
+              <MappingFragment StoreEntitySet="lms_widget_details">
+                <ScalarProperty Name="last_updated_on" ColumnName="last_updated_on" />
+                <ScalarProperty Name="response" ColumnName="response" />
+                <ScalarProperty Name="question" ColumnName="question" />
+                <ScalarProperty Name="widgetId" ColumnName="widgetId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbOrganisationDomainDetails">
+            <EntityTypeMapping TypeName="learnerdbModel.tbOrganisationDomainDetail">
+              <MappingFragment StoreEntitySet="tbOrganisationDomainDetails">
+                <ScalarProperty Name="logo_path" ColumnName="logo_path" />
+                <ScalarProperty Name="title_text" ColumnName="title_text" />
+                <ScalarProperty Name="lms_org_id" ColumnName="lms_org_id" />
+                <ScalarProperty Name="favicon_path" ColumnName="favicon_path" />
+                <ScalarProperty Name="css_path" ColumnName="css_path" />
+                <ScalarProperty Name="domain" ColumnName="domain" />
+                <ScalarProperty Name="recordId" ColumnName="recordId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="lms_global_getCompanyDomainInfo" FunctionName="learnerdbModel.Store.lms_global_getCompanyDomainInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_global_getCompanyDomainInfo_Result">
+                <ScalarProperty Name="css_path" ColumnName="css_path" />
+                <ScalarProperty Name="domain" ColumnName="domain" />
+                <ScalarProperty Name="favicon_path" ColumnName="favicon_path" />
+                <ScalarProperty Name="lms_org_id" ColumnName="lms_org_id" />
+                <ScalarProperty Name="recordId" ColumnName="recordId" />
+                <ScalarProperty Name="title_text" ColumnName="title_text" />
+                <ScalarProperty Name="logo_path" ColumnName="logo_path" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_widget_response" FunctionName="learnerdbModel.Store.lms_learner_get_widget_response">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_widget_response_Result">
+                <ScalarProperty Name="widget_header_color" ColumnName="widget_header_color" />
+                <ScalarProperty Name="widget_que_text" ColumnName="widget_que_text" />
+                <ScalarProperty Name="widget_que_text_after" ColumnName="widget_que_text_after" />
+                <ScalarProperty Name="widget_que_type" ColumnName="widget_que_type" />
+                <ScalarProperty Name="resp_text" ColumnName="resp_text" />
+                <ScalarProperty Name="resp_text_after" ColumnName="resp_text_after" />
+                <ScalarProperty Name="widget_que_guid" ColumnName="widget_que_guid" />
+                <ScalarProperty Name="widget_que_title" ColumnName="widget_que_title" />
+                <ScalarProperty Name="widget_show_que_text_bfr_fr" ColumnName="widget_show_que_text_bfr_fr" />
+                </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_insert_widget_response" FunctionName="learnerdbModel.Store.lms_learner_insert_widget_response" />
+          <FunctionImportMapping FunctionImportName="lms_learner_resetProgress" FunctionName="learnerdbModel.Store.lms_learner_resetProgress" />
+          <FunctionImportMapping FunctionImportName="lms_learner_get_mac_widget_response" FunctionName="learnerdbModel.Store.lms_learner_get_mac_widget_response">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_mac_widget_response_Result">
+                <ScalarProperty Name="widget_que_guid" ColumnName="widget_que_guid" />
+                <ScalarProperty Name="widget_header_color" ColumnName="widget_header_color" />
+                <ScalarProperty Name="widget_que_text" ColumnName="widget_que_text" />
+                <ScalarProperty Name="widget_que_type" ColumnName="widget_que_type" />
+                <ScalarProperty Name="widget_que_title" ColumnName="widget_que_title" />
+                <ScalarProperty Name="widget_model_answer_heading" ColumnName="widget_model_answer_heading" />
+                <ScalarProperty Name="widget_model_answer_resp1" ColumnName="widget_model_answer_resp1" />
+                <ScalarProperty Name="widget_model_answer_resp2" ColumnName="widget_model_answer_resp2" />
+                <ScalarProperty Name="widget_model_answer_resp3" ColumnName="widget_model_answer_resp3" />
+                <ScalarProperty Name="resp_text" ColumnName="resp_text" />
+                <ScalarProperty Name="resp_text_after" ColumnName="resp_text_after" />
+                <ScalarProperty Name="resp_mac_1" ColumnName="resp_mac_1" />
+                <ScalarProperty Name="resp_mac_2" ColumnName="resp_mac_2" />
+                <ScalarProperty Name="resp_mac_3" ColumnName="resp_mac_3" />
+                <ScalarProperty Name="resp_mac_feedback" ColumnName="resp_mac_feedback" />
+                <ScalarProperty Name="resp_mac_feedback_text" ColumnName="resp_mac_feedback_text" />
+                <ScalarProperty Name="resp_mac_responded" ColumnName="resp_mac_responded" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_insert_mac_widget_response" FunctionName="learnerdbModel.Store.lms_learner_insert_mac_widget_response" />
+          <FunctionImportMapping FunctionImportName="lms_learner_insert_mac_widget_feedback" FunctionName="learnerdbModel.Store.lms_learner_insert_mac_widget_feedback" />
+          <FunctionImportMapping FunctionImportName="lms_learner_get_course_submodules" FunctionName="learnerdbModel.Store.lms_learner_get_course_submodules">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_course_submodules_Result">
+                <ScalarProperty Name="smid" ColumnName="smid" />
+                <ScalarProperty Name="courseId" ColumnName="courseId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="descrip" ColumnName="descrip" />
+                <ScalarProperty Name="seq" ColumnName="seq" />
+                <ScalarProperty Name="path" ColumnName="path" />
+                <ScalarProperty Name="strStatus" ColumnName="strStatus" />
+                <ScalarProperty Name="lastAccessedOn" ColumnName="lastAccessedOn" />
+                <ScalarProperty Name="RAID" ColumnName="RAID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_updateSubModuleProgressRecord" FunctionName="learnerdbModel.Store.lms_learner_updateSubModuleProgressRecord" />
+          <FunctionImportMapping FunctionImportName="lms_learner_get_bpc_widget_response" FunctionName="learnerdbModel.Store.lms_learner_get_bpc_widget_response">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_bpc_widget_response_Result">
+                <ScalarProperty Name="widget_que_guid" ColumnName="widget_que_guid" />
+                <ScalarProperty Name="widget_header_color" ColumnName="widget_header_color" />
+                <ScalarProperty Name="widget_que_text" ColumnName="widget_que_text" />
+                <ScalarProperty Name="widget_que_type" ColumnName="widget_que_type" />
+                <ScalarProperty Name="widget_que_title" ColumnName="widget_que_title" />
+                <ScalarProperty Name="widget_que_label_after" ColumnName="widget_que_label_after" />
+                <ScalarProperty Name="resp_mac_1" ColumnName="resp_mac_1" />
+                <ScalarProperty Name="resp_mac_2" ColumnName="resp_mac_2" />
+                <ScalarProperty Name="resp_mac_3" ColumnName="resp_mac_3" />
+                <ScalarProperty Name="resp_mac_feedback_text" ColumnName="resp_mac_feedback_text" />
+                <ScalarProperty Name="resp_mac_responded" ColumnName="resp_mac_responded" />
+                <ScalarProperty Name="widget_que_text_after" ColumnName="widget_que_text_after" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_RA_attempts" FunctionName="learnerdbModel.Store.lms_learner_get_RA_attempts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_RA_attempts_Result">
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="strLocationName" ColumnName="strLocationName" />
+                <ScalarProperty Name="intRiskAssessmentResultID" ColumnName="intRiskAssessmentResultID" />
+                <ScalarProperty Name="intIssueCount" ColumnName="intIssueCount" />
+                <ScalarProperty Name="datSignOff" ColumnName="datSignOff" />
+                <ScalarProperty Name="datBegun" ColumnName="datBegun" />
+                <ScalarProperty Name="datCompleted" ColumnName="datCompleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_get_subModule_RAQuestion" FunctionName="learnerdbModel.Store.lms_learner_get_subModule_RAQuestion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_subModule_RAQuestion_Result">
+                <ScalarProperty Name="intQuestionID" ColumnName="intQuestionID" />
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+                <ScalarProperty Name="strGroupText" ColumnName="strGroupText" />
+                <ScalarProperty Name="intOrder" ColumnName="intOrder" />
+                <ScalarProperty Name="intQuestionOptionID" ColumnName="intQuestionOptionID" />
+                <ScalarProperty Name="strQuestionOption" ColumnName="strQuestionOption" />
+                <ScalarProperty Name="strValue" ColumnName="strValue" />
+                <ScalarProperty Name="optOrder" ColumnName="optOrder" />
+                <ScalarProperty Name="optIssue" ColumnName="optIssue" />
+                <ScalarProperty Name="intanswerid" ColumnName="intanswerid" />
+                <ScalarProperty Name="blnYes" ColumnName="blnYes" />
+                <ScalarProperty Name="blnNo" ColumnName="blnNo" />
+                <ScalarProperty Name="strText" ColumnName="strText" />
+                <ScalarProperty Name="blnIssue" ColumnName="blnIssue" />
+                <ScalarProperty Name="RARID" ColumnName="RARID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_learner_start_subModuleRiskAssessment" FunctionName="learnerdbModel.Store.lms_learner_start_subModuleRiskAssessment" />
+          <FunctionImportMapping FunctionImportName="lms_learner_finish_SubModuleRiskAssessment" FunctionName="learnerdbModel.Store.lms_learner_finish_SubModuleRiskAssessment" />
+          <FunctionImportMapping FunctionImportName="lms_learner_get_SubModuleRAResponses" FunctionName="learnerdbModel.Store.lms_learner_get_SubModuleRAResponses">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="learnerdbModel.lms_learner_get_SubModuleRAResponses_Result">
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+                <ScalarProperty Name="strQuestionOption" ColumnName="strQuestionOption" />
+                <ScalarProperty Name="blnIssue" ColumnName="blnIssue" />
+                <ScalarProperty Name="strText" ColumnName="strText" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

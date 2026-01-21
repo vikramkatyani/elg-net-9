@@ -1,0 +1,146 @@
+
+@{
+    ViewBag.Title = "My Courses";
+    Layout = "~/Areas/Learner/Views/Shared/_Layout.cshtml";
+}
+
+<div class="">
+    <!-- Page Heading -->
+    <div class="mb-4">
+        <h1 class="page-heading">My Courses</h1>
+        <div class="col-10">
+            <form id="courseSearchForm">
+                <div class="row w-100">
+                    <div class="col-6">
+                        <input name="course" id="txtSearchCoure" type="text" class="search-box" placeholder="Type Course Title...">
+                    </div>
+                    <div class="col-6">
+                        <button class="elg-btn elg-btn-search elg-btn-sm" type="button" id="btnSeachCourse">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div id="divNoLicenceCourses">
+    </div>
+
+    <!-- Content Row -->
+
+    <div id="divMyCourseHolder">
+        <div id="loader"><div class="spinner-border" style="width:3rem; height:3rem;" role="status"> <span class="sr-only"> Loading...</span></div></div>
+    </div>
+
+</div>
+
+
+<!-- Modal to show course description-->
+<div class="modal fade" id="courseDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="courseDescriptionModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow mb-4">
+                    <div class="card-body" id="course_desc_container">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-12">
+                    <p>Course status will reset after <b><span id="spnStatusResetDate"></span></b></p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal to show confirmation message before starting completed course-->
+<div class="modal fade" id="courseLaunchConfirmationModal" tabindex="-1" aria-labelledby="courseLaunchModalLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseLaunchModalLabel">
+                    <i class="fa fa-book-open me-2 text-primary"></i> You've already completed this course.
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div id="div-confrm-msg" class="text-dark">
+                    <!-- Dynamic confirmation message will be injected here -->
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-between">
+                <div class="col-4 float-start">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-1"></i> Close
+                    </button>
+                </div>
+                <div class="col-4 float-end">
+                    <button type="button" class="btn btn-success" id="confirmLaunchBtn">
+                        <i class="fa fa-play me-1"></i> Launch
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Modal to show trainer info-->
+<div class="modal fade" id="modalTrainerInfo" tabindex="-1" role="dialog" aria-labelledby="modalTrainerInfo" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <div class="card text-center shadow mb-4">
+                        <div class="card-body">
+                            <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-phone"></i></h1>
+                            <h5 class="card-title text-gray-900">Contact the training coordinator at</h5>
+                            <h5 class="card-title text-gray-900"><span id="spnCompanyName"></span></h5>
+                            <p class="card-text">If you have any question about the content or course assignment, Please write to the following person:</p>
+                            <p><span id="spnTrainer"></span></p>
+                            <p><span id="spnTrainerEmail"></span></p>
+                            <p><span id="spnTrainerPhone"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal to show course progress history-->
+@{
+    Html.RenderPartial("_CourseProgressHistory");
+}
+@section Scripts{
+    <script type="text/javascript">
+        // Set SCORM tracking URL for module.js - separate from hdnBaseUrl
+        var scormTrackingUrl = '@Url.Content("~/Learner/SCORM/")';
+    </script>
+    <script type="text/javascript" src="~/js/Learner/mycourses.js?v=1.0.9"></script>
+    <script type="text/javascript" src="~/js/Learner/progressHistory.js"></script>
+    <script type="text/javascript" src="~/js/SCORM/module.js?v=1.5"></script>
+}
+

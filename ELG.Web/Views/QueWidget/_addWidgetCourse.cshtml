@@ -1,0 +1,105 @@
+﻿
+<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary" id="addCourseTitle">Add Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div id="addCourseMessage" class="alert alert-danger collapse mb-3" role="alert"></div>
+
+                <form class="user">
+                    <div class="mb-3">
+                        <label for="txtCourseName" class="form-label">Course</label>
+                        <textarea id="txtCourseName" class="form-control" rows="3" placeholder="Enter course name"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="txtCourseDesc" class="form-label">Description</label>
+                        <textarea id="txtCourseDesc" class="form-control" rows="4" placeholder="Enter course description"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAddNewCourse"
+                        data-loading-text="Creating..." data-original-text="Add">
+                    Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--update Modal-->
+
+<div class="modal fade" id="updateCourseModal" tabindex="-1" aria-labelledby="updateCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary" id="updateCourseTitle">Update Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div id="updateCourseMessage" class="alert alert-danger collapse mb-3" role="alert"></div>
+
+                <form class="user">
+                    <div class="mb-3">
+                        <label for="txtUpdateCourseName" class="form-label">Course Name</label>
+                        <input type="text" id="txtUpdateCourseName" class="form-control" placeholder="Enter course name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="txtUpdateCourseDesc" class="form-label">Description</label>
+                        <input type="text" id="txtUpdateCourseDesc" class="form-control" placeholder="Enter course description" />
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateCourse"
+                        data-loading-text="Updating..." data-original-text="Update">
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="viewGlobalLinkModal" tabindex="-1" aria-labelledby="viewGlobalLinkTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary" id="viewGlobalLinkTitle">Script Generator</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="alert alert-info mb-3">
+                    Copy the script tag below and paste it in the footer of the course page.
+                </div>
+                <textarea disabled id="txtGlobalLink" rows="6" class="form-control" placeholder="Script will appear here..."></textarea>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

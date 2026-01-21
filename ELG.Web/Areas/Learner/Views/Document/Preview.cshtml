@@ -1,0 +1,121 @@
+
+@{
+    ViewBag.Title = "Document Preview";
+    Layout = "~/Areas/Learner/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        padding: 50px;
+        display: block;
+    }
+
+    form {
+         align-items: flex-start; 
+    }
+    form input {
+         width: auto; 
+    }
+</style>
+
+<div class="x_panel tile">
+    <div class="x_title">
+        <div class="row">
+            <h1 id="preview_docname" class="h3 mb-2 text-gray-800">@ViewBag.DocName</h1> 
+        </div>
+    </div>
+    <div class="x_content">
+        <div id="message_doc_preview"></div>
+        @if (ViewBag.PreviewAvailable)
+        {
+            <iframe id="doc-preview-container" src="@ViewBag.DocumentPath" style="width:100%;height:80vh"></iframe>
+        }
+        else if (String.IsNullOrEmpty(ViewBag.DocumentPath))
+        {
+            <div class="alert alert-danger">No Document Availbale</div>
+        }
+        else
+        {
+            <div class="alert alert-warning">No Preview Availbale</div>
+        }
+        @if ((!String.IsNullOrEmpty(ViewBag.DocumentPath)) && (!ViewBag.PreviewAvailable))
+        {
+            <div class="">
+                <input type="hidden" id="hdnFileDwnldPath" value="@ViewBag.DocumentPath" />
+                <button id="download-button" type="button" class="btn btn-primary">Download Document</button>
+            </div>
+        }
+        else if ((!String.IsNullOrEmpty(ViewBag.DocumentPath)) && (ViewBag.PreviewAvailable))
+        {
+            <div class="alert alert-info">
+                <span>If you want to download the file, please use the download button <img alt="download icon" style="height:3rem;" src="~/Content/images/download-button-document.png" /></span>
+            </div>
+        }
+        @{
+            var docStatus = ViewBag.DocStatus as string;
+            bool isStatusSet = !string.IsNullOrEmpty(docStatus);
+        }
+
+        @if (!string.IsNullOrEmpty(ViewBag.DocumentPath))
+        {
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mt-4 p-4">
+                        <form>
+                            @{
+                                var options = new[]
+                                {
+                                    "I confirm that I have read and understood",
+                                    "I have read but require further clarification from my line manager and will contact them.",
+                                    "N/A"
+                                };
+                            }
+
+                            @foreach (var option in options)
+                            {
+                                var isChecked = isStatusSet && docStatus == option ? "checked" : "";
+                                var isDisabled = isStatusSet ? "disabled" : "";
+
+                                <div class="form-check mb-3">
+                                    <input type="radio"
+                                           class="form-check-input"
+                                           name="learnerDocStatus"
+                                           id="learnerDocStatus_@option.GetHashCode()"
+                                           value="@option"
+                                           @Html.Raw(isChecked)
+                                           @Html.Raw(isDisabled) />
+                                    <label class="form-check-label ms-2" for="learnerDocStatus_@option.GetHashCode()">@option</label>
+                                </div>
+                            }
+
+
+                            @if (!isStatusSet)
+                            {
+                                <button id="btn-update-status-@ViewBag.DocID"
+                                        type="button"
+                                        class="btn btn-primary mt-3"
+                                        onclick="setDocStatus(this)">
+                                    Update Status
+                                </button>
+                            }
+                            else
+                            {
+                                <button id="btn-update-status-@ViewBag.DocID"
+                                        type="button"
+                                        class="btn btn-primary mt-3"
+                                        style="cursor: not-allowed;"
+                                        disabled>
+                                    Update Status
+                                </button>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/Document/documentPreview.js"></script>
+}

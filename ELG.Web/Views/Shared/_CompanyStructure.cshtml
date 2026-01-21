@@ -1,0 +1,24 @@
+<div class="modal fade" id="companyStucturalInfoModal" tabindex="-1" role="dialog" aria-labelledby="companyStucturalInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="updateInfoTitle">
+                    <h3 id="structurecompanyname">
+                        @ELG.Web.Helper.SessionHelper.CompanyName
+                    </h3>
+                    <span class="fa fa-fw fa-info-circle"></span>&nbsp;Click on the nodes to expand.
+                    &nbsp;<span class="fa fa-fw fa-download"></span>&nbsp;Click <a href="#" onclick="companyStructureHandler.downloadStructure(this)">here</a> to download the structure.
+                </div>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <section id="visualisation" style="max-width: 1100px;"></section>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+

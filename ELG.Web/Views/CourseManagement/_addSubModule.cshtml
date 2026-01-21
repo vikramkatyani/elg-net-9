@@ -1,0 +1,98 @@
+﻿<div class="modal fade" id="addSubModuleModal" tabindex="-1" aria-labelledby="addSubModuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary">
+                    Add Sub-module: <span id="addSubModuleTitle"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger collapse" id="addSubModuleMessage"></div>
+
+                <form id="formUploadSubModule" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h6 class="fw-bold text-secondary">Upload Content</h6>
+                            <hr class="mt-1 mb-2" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtDocName" name="SubModuleName" placeholder="Title" required>
+                                <label for="txtDocName">Title</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtDocDesc" name="SubModuleDesc" placeholder="Description" required>
+                                <label for="txtDocDesc">Description</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="newDocFile" class="form-label fw-semibold">Upload File</label>
+                            <input class="form-control" type="file" id="newDocFile" name="newDocFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.mp4,.zip" required>
+                            <div class="form-text">File size should not exceed 5 MB</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa fa-times me-1"></i> Close
+                </button>
+                <button type="button" form="formUploadSubModule" class="btn btn-primary" id="btnAddNewSubModule" data-loading-text="Creating..." data-original-text="Add">
+                    <i class="fa fa-plus me-1"></i> Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--update document-->
+<div class="modal fade" id="updateSubModuleModal" tabindex="-1" aria-labelledby="updateSubModuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary" id="updateSubModuleTitle">Update Sub-module</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger collapse" id="updateSubModuleMessage"></div>
+
+                <form id="formUpdateSubModule" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtUpdateDocName" name="UpdateSubModuleName" placeholder="Title" required>
+                                <label for="txtUpdateDocName">Title</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtUpdateDocDesc" name="UpdateSubModuleDesc" placeholder="Description" required>
+                                <label for="txtUpdateDocDesc">Description</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa fa-times me-1"></i> Close
+                </button>
+                <button type="submit" form="formUpdateSubModule" class="btn btn-primary" id="btnUpdateDoc" data-loading-text="Updating..." data-original-text="Update">
+                    <i class="fa fa-save me-1"></i> Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

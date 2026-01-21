@@ -1,0 +1,89 @@
+
+@{
+    ViewBag.Title = "Course Auto Allocation";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Course Auto Allocation</h1>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-inline">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="ddlCourse">Select Course</label>
+                        </div>
+                        <select id="ddlCourse" class="custom-select ddl-course">
+                            <option value="0">Select All</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Assign to @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        </div>
+                        <select id="ddlLocation" class="custom-select ddl-loc">
+                            <option value="0">Select All</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="searchDepartmentModule" class="btn btn-primary" type="button">
+                            <i class="fa fa-search fa-sm"></i> Search
+                        </button>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="clearSearchDepartmentModule" class="btn btn-secondary" type="button">
+                            <i class="fa fa-times fa-sm"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-1 control-label mb-3"> (OR) </label>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="assignToEntireDepartment">Assign to @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        </div>
+                        <select id="ddlDepartment" class="custom-select ddl-dept">
+                            <option value="0">Select @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</option>
+                        </select>
+                        <button type="button" class="btn btn-dark" id="btnAssignToEntireDepartment" data-toggle="tooltip" title="Assign licence auto allocation to selected @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription" data-loading-text="Please wait..." data-original-text="Entire @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription">Entire @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</button>
+                    </div>
+                </div>
+                <div class="form-inline">
+
+                    <label class="col-sm-1 control-label mb-3"> (OR) </label>
+
+                    <div class="input-group mb-3">
+                        <button type="button" class="btn btn-primary" id="btnAssignToEntireOrg" data-toggle="tooltip" title="Assign licence auto allocation to all" data-loading-text="Please wait..." data-original-text="Entire Company">Entire Company</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="divMessage_AutoAllocateModule"></div>
+        <div class="table-responsive">
+            <button type="button" class="btn btn-dark float-right disabled" id="btnAllocateToSelected" data-toggle="tooltip" title="Select some departments" data-loading-text="Please wait..." data-original-text="Set Auto for Selected">Set Auto for Selected</button>
+            <table class="table" id="autoAllocateModuleDepartmentList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" name="chk_slc_all_departments" value="1" id="chk_slc_all_departments"><span>Select All</span></th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>const currentpageId = "lic_auto_allocate";</script>
+    <script type="text/javascript" src="~/Scripts/Admin/License/AutoAllocateLicense.js?v=1.2"></script>
+}
+

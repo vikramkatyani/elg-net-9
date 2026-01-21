@@ -1,0 +1,152 @@
+
+@{
+    ViewBag.Title = "Manage notifications";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Manage notifications</h1>
+@*<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row col-md-12 alert alert-info mb-3">
+            Notifications will be sent via email as weekly reports.
+        </div>
+
+        <div id="message_notificationSettings"></div>
+        <div class="row col-md-12 mb-3">
+            Send Passed Tests to Administrators : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkPassedTestToLocationAdmin">
+                    <label class="custom-control-label" for="chkPassedTestToLocationAdmin">Location</label>
+                </div>
+            </div>
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkPassedTestToDepartmentAdmin">
+                    <label class="custom-control-label" for="chkPassedTestToDepartmentAdmin">Department</label>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 mb-3" style="display:none">
+            Send RA Completions to Administrators : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkRACompletionToLocationAdmin">
+                    <label class="custom-control-label" for="chkRACompletionToLocationAdmin">Location</label>
+                </div>
+            </div>
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkRACompletionTestToDepartmentAdmin">
+                    <label class="custom-control-label" for="chkRACompletionTestToDepartmentAdmin">Department</label>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 mb-3">
+            Send Failed Tests to Administrators : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkFailedTestToLocationAdmin">
+                    <label class="custom-control-label" for="chkFailedTestToLocationAdmin">Location</label>
+                </div>
+            </div>
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkFailedTestToDepartmentAdmin">
+                    <label class="custom-control-label" for="chkFailedTestToDepartmentAdmin">Department</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row col-md-12 mb-3">
+            Send Overdue Test Reminders to Administrators : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkOverdueTestToLocationAdmin">
+                    <label class="custom-control-label" for="chkOverdueTestToLocationAdmin">Location</label>
+                </div>
+            </div>
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkOverdueTestToDepartmentAdmin">
+                    <label class="custom-control-label" for="chkOverdueTestToDepartmentAdmin">Department</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row col-md-12 mb-3" style="display:none">
+            Send Overdue RA Reminders to Administrators : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkOverdueRAToLocationAdmin">
+                    <label class="custom-control-label" for="chkOverdueRAToLocationAdmin">Location</label>
+                </div>
+            </div>
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkOverdueRAToDepartmentAdmin">
+                    <label class="custom-control-label" for="chkOverdueRAToDepartmentAdmin">Department</label>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" id="btnUpdateModuleNotification" class="btn btn-primary">Update</button>
+
+    </div>
+</div>*@
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row col-md-12 alert alert-info mb-3">
+            Notifications are enabled for this account.
+        </div>
+
+        <div id="message_notificationSettings"></div>
+        <div class="row col-md-12 mb-3">
+            Weekly account statistics to Super Administrator : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkWeeklyStatisticsToAdmin" checked disabled>
+                    <label class="custom-control-label" for="chkWeeklyStatisticsToAdmin">&nbsp;</label>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 mb-3">
+            Account Expiry to Super Administrator : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkAccountExpiryReminderToAdmin" checked disabled>
+                    <label class="custom-control-label" for="chkAccountExpiryReminderToAdmin">&nbsp;</label>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 mb-3">
+            Course overdue reminder to users (This setting depends on the values set on "Manage Reminders" page.) : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkCourseOverdueToLearner" checked disabled>
+                    <label class="custom-control-label" for="chkCourseOverdueToLearner">&nbsp;</label>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 mb-3">
+            Enable course assignment email : &nbsp;
+            <div class="col-md-1 mb-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chkCourseAssignmentEmailToLearner" >
+                    <label class="custom-control-label" for="chkCourseAssignmentEmailToLearner">&nbsp;</label>
+                </div>
+            </div>
+        </div>
+        <div id="message_notificationSettings"></div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/CourseManagement/moduleEmailSettings.js"></script>
+}
+

@@ -287,6 +287,8 @@ manage_logs/
 
 # Connection strings and secrets
 conn-strings.json
+appsettings.Development.json
+appsettings.Production.json
 
 # Data Protection Keys
 **/DataProtectionKeys/

@@ -1,0 +1,22 @@
+
+@{
+    ViewBag.Title = "Request Licence";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="row">
+    <div class="card text-center shadow mb-4">
+        <div class="card-body">
+            <p class="card-text">
+                If you would like to add further licences or have a requirement for an additional course, please contact your account manager. 
+            </p>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/License/requestlicence.js"></script>
+}

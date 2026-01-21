@@ -1,0 +1,121 @@
+
+<li class="nav-item dropdown no-arrow">
+    <!-- Dropdown - Admin Role List -->
+    <a class="nav-link dropdown-toggle" href="#" id="adminUserDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @switch (ELG.Web.Helper.SessionHelper.UserRole)
+        {
+            case 2:<span class="mr-2 d-none d-lg-inline text-gray-600 small">Department Admin</span>
+                break;
+            case 3: <span class="mr-2 d-none d-lg-inline text-gray-600 small">Location Admin</span>
+                break;
+            case 4: <span class="mr-2 d-none d-lg-inline text-gray-600 small">Report Admin</span>
+                break;
+            case 5: <span class="mr-2 d-none d-lg-inline text-gray-600 small">User Admin</span>
+                break;
+            case 8: <span class="mr-2 d-none d-lg-inline text-gray-600 small">Location Supervisor</span>
+                break;
+            case 9: <span class="mr-2 d-none d-lg-inline text-gray-600 small">Department Supervisor</span>
+                break;
+        }
+    </a>
+    @{
+        var roleList = ELG.Web.Helper.SessionHelper.AdminPrivileges;
+        if (roleList != null && roleList.Count > 1)
+        {
+    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="adminUserDropdown">
+        @foreach (var role in roleList)
+        {
+            if (role.AdminRole != ELG.Web.Helper.SessionHelper.UserRole)
+            {
+                switch (role.AdminRole)
+                {
+                    case 2:
+                        <a class="dropdown-item" id="btnAdminRole-@role.AdminRole" data-toggle="modal" data-target="#changeAdminRoleModal" href="#" onclick="changeRoleClickEvent(this)">
+                            <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Department Admin
+                        </a>
+                        break;
+                    case 3:
+                        <a class="dropdown-item" id="btnAdminRole-@role.AdminRole" data-toggle="modal" data-target="#changeAdminRoleModal" href="#" onclick="changeRoleClickEvent(this)">
+                            <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Location Admin
+                        </a>
+                        break;
+                    case 4:
+                        <a class="dropdown-item" id="btnAdminRole-@role.AdminRole" data-toggle="modal" data-target="#changeAdminRoleModal" href="#" onclick="changeRoleClickEvent(this)">
+                            <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Report Admin
+                        </a>
+                        break;
+                    case 5:
+                        <a class="dropdown-item" id="btnAdminRole-@role.AdminRole" data-toggle="modal" data-target="#changeAdminRoleModal" href="#" onclick="changeRoleClickEvent(this)">
+                            <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            User Admin
+                        </a>
+                        break;
+                    case 8:
+                        <a class="dropdown-item" id="btnAdminRole-@role.AdminRole" data-toggle="modal" data-target="#changeAdminRoleModal" href="#" onclick="changeRoleClickEvent(this)">
+                            <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Location Supervisor
+                        </a>
+                        break;
+                    case 9:
+                        <a class="dropdown-item" id="btnAdminRole-@role.AdminRole" data-toggle="modal" data-target="#changeAdminRoleModal" href="#" onclick="changeRoleClickEvent(this)">
+                            <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Department Supervisor
+                        </a>
+                        break;
+                }
+            }
+        }
+
+    </div>
+        }
+    }
+</li>
+    <div class="modal fade" id="changeAdminRoleModal" tabindex="-1" role="dialog" aria-labelledby="changeAdminRoleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeAdminRoleModal">Change Admin Role?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Yes" below if you are ready to change your current admin role.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+                    <a class="btn btn-primary" id="btnChangeRole" href="@Url.Action("ReportAdmin", "Home")">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function changeRoleClickEvent(btn) {
+            var changeRolebtn = document.getElementById('btnChangeRole');
+            var roleid = btn.id.split('-').pop();
+            switch (roleid) {
+                case 2:
+                case '2': changeRolebtn.setAttribute('href', hdnBaseUrl + "Home/DepartmentAdmin");
+                    break;
+                case 3:
+                case '3': changeRolebtn.setAttribute('href', hdnBaseUrl + "Home/LocationAdmin");
+                    break;
+                case 4:
+                case '4': changeRolebtn.setAttribute('href', hdnBaseUrl + "Home/ReportAdmin");
+                    break;
+                case 5:
+                case '5': changeRolebtn.setAttribute('href', hdnBaseUrl + "Home/UserAdmin");
+                    break;
+                case 8:
+                case '8': changeRolebtn.setAttribute('href', hdnBaseUrl + "Home/LocationSupervisor");
+                    break;
+                case 9:
+                case '9': changeRolebtn.setAttribute('href', hdnBaseUrl + "Home/DepartmentSupervisor");
+                    break;
+                default:
+                    changeRolebtn.setAttribute('href', "#");
+            }
+        }
+    </script>

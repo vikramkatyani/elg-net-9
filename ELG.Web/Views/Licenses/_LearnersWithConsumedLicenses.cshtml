@@ -1,0 +1,78 @@
+<div class="modal fade" id="learnerWithConsumedLicenseModal" tabindex="-1" role="dialog" aria-labelledby="learnerWithConsumedLicenseModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-inline">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">User</span>
+                                        </div>
+                                        <input type="text" id="txt_lwcl_Learner" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="Name/Email">
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="ddl_lwcl_Location">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                                        </div>
+                                        <select id="ddl_lwcl_Location" class="custom-select ddl-loc">
+                                            <option value="0">Select All</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="ddl_lwcl_Department">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                                        </div>
+                                        <select id="ddl_lwcl_Department" class="custom-select ddl-dep">
+                                            <option value="0">Select All</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <button id="search_lwcl_Learner" class="btn btn-primary" type="button">
+                                            <i class="fa fa-search fa-sm"></i> Search
+                                        </button>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <button id="clearSearch_lwcl_Learner" class="btn btn-secondary" type="button">
+                                            <i class="fa fa-times fa-sm"></i> Clear
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="learnerListFor_LWCL" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Email</th>
+                                        @*<th>@ELG.Web.Helper.SessionHelper.CompanySettings.strEmployeeNumberDescription</th>*@
+                                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

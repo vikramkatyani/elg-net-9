@@ -1,0 +1,84 @@
+
+@{
+    ViewBag.Title = "Documents";
+    Layout = "~/Areas/Learner/Views/Shared/_Layout.cshtml";
+    string baseUrl = Url.Content("~/Learner/Document/");
+}
+<div class="x_panel tile">
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Documents</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <!-- Row 1: Filters -->
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtDoc" placeholder="Document name">
+                            <label for="txtDoc">Document Name</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="form-floating">
+                            <select id="ddlCategory" class="form-select ddlCat">
+                                <option value="0">Select</option>
+                            </select>
+                            <label for="ddlCategory">Category</label>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="form-floating">
+                            <select id="ddlDocStatus" class="form-select">
+                                <option value="1" selected>Active</option>
+                                <option value="0">Archived</option>
+                                <option value="2">All</option>
+                            </select>
+                            <label for="ddlDocStatus">Status</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 d-lg-block">
+                        <div class="col-12 d-flex justify-content-end gap-2">
+                            <button id="searchDoc" class="btn btn-primary w-100">
+                                <i class="fa fa-search me-1"></i> Search
+                            </button>
+                            <button id="clearSearchDoc" class="btn btn-secondary w-100">
+                                <i class="fa fa-times me-1"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="x_content">
+        <div id="messageDocument"></div>
+        <div class="table-responsive" id="document-report-container">
+            <table class="table table-striped table-hover table-bordered align-middle" id="orgDocumentList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Document</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic rows go here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var hdnBaseUrl = "@baseUrl";
+    </script>
+    <script type="text/javascript" src="~/js/Document/document.js?v=1.0.2"></script>
+}
+

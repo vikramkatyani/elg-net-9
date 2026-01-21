@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    var code = Context.Request.Query["code"];
+    
+    string errorTitle = "Oops! Something Went Wrong";
+    string errorMessage = "An unexpected error occurred. Please try again or contact support.";
+    string errorCode = code.ToString();
+    
+    if (code == "404")
+    {
+        errorTitle = "Page Not Found";
+        errorMessage = "The page you are looking for could not be found. It may have been moved or deleted.";
+    }
+    else if (code == "403")
+    {
+        errorTitle = "Access Denied";
+        errorMessage = "You do not have permission to access this resource. Please log in with appropriate credentials.";
+    }
+    else if (code == "500")
+    {
+        errorTitle = "Server Error";
+        errorMessage = "An internal server error occurred. Please try again later or contact support if the problem persists.";
+    }
+}
+
+<div class="login-page-container">
+    <div class="left-section">
+        <div class="image-overlay"></div>
+        <div class="content">
+            <div class="branding">
+                <img src="" alt="LMS Logo">
+            </div>
+            <div class="line-partition"></div>
+            <h1 id="introTxt">Fraud Compliance <br />Training Solutions</h1>
+        </div>
+    </div>
+    <div class="right-section">
+        <div class="brand-content">
+            <div class="branding">
+                <img src="" alt="LMS Logo">
+            </div>
+        </div>
+        
+        <div class="text-center mb-4">
+            <h1 style="font-size: 6rem; font-weight: bold; color: #667eea; margin: 0;">@errorCode</h1>
+        </div>
+        
+        <h1 id="page-title"><span class="txt-highlight">@errorTitle</span></h1>
+        <p>@errorMessage</p>
+        
+        <div class="mt-4">
+            <a href="@Url.Action("Login", "Account")" class="elg-btn elg-btn-primary btn-block mb-3">
+                <i class="fa fa-arrow-left"></i> Go to Login
+            </a>
+            <button type="button" onclick="history.back()" class="elg-btn elg-btn-transparent btn-block">
+                <i class="fa fa-arrow-left"></i> Go Back
+            </button>
+        </div>
+        
+        <div class="line-partition mt-4 mb-2"></div>
+        
+    </div>
+</div>

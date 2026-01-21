@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+    @{
+        string host = HttpContextAccessor.HttpContext?.Request.Host.Value;
+        var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
+        if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
+        {
+            ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
+            var organization = rep.GetOrganizationFromHost(host);
+
+            // Store the organization in the SessionHelper
+            ELG.Web.Helper.SessionHelper.OrgDomainDetails = organization;
+            sessionDomainDetails = organization;
+        }
+
+        // Fall back to defaults to avoid null reference and compilation failures when branding is missing
+        var titleText = sessionDomainDetails?.TitleText ?? "ELG";
+        var faviconPath = sessionDomainDetails?.Favicon ?? "Content/images/favicon.ico";
+        var cssPath = sessionDomainDetails?.CSS ?? "Content/css/custom.css";
+        var jsPath = cssPath?.Replace(".css", ".js");
+        var cssUrl = Url.Content("~/" + cssPath);
+        var jsUrl = string.IsNullOrEmpty(jsPath) ? string.Empty : Url.Content("~/" + jsPath);
+    }
+
+    <title>@titleText - @ViewBag.Title</title>
+    <link rel="icon" href="~/@faviconPath" sizes="16x16">
+
+    <!-- Bootstrap -->
+    <link href="~/content/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <!-- Font Awesome -->
+    <link href="~/content/vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- NProgress -->
+    <link href="~/content/vendor/nprogress/nprogress.css" rel="stylesheet" type="text/css">
+    <!-- iCheck -->
+    <link href="~/content/vendor/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    @*<link href="~/content/css/custom.css" rel="stylesheet">
+        <link href="~/content/css/profilePic.css" rel="stylesheet">
+        <link href="~/content/css/egate.css" rel="stylesheet">*@
+
+    <link rel="stylesheet" href="~/Content/css/login.css?v=1.0.3">
+    <link rel="stylesheet" href="@cssUrl" />
+    @if (!string.IsNullOrEmpty(jsUrl))
+    {
+        <script src="@jsUrl"></script>
+    }
+
+    <link href="~/content/vendor/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="~/content/vendor/treeComponent/css/d3-mitch-tree.min.css" rel="stylesheet">
+    <link href="~/content/vendor/treeComponent/css/d3-mitch-tree-theme-default.min.css" rel="stylesheet">
+
+</head>
+<body class="login bg-body">
+    @RenderBody()
+
+    <script>
+        var hdnBaseUrl = '@Context.Request.Scheme://@Context.Request.Host@Context.Request.PathBase/';
+    </script>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/content/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="~/content/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/content/vendor/nprogress/nprogress.js"></script>
+    <script src="~/content/vendor/iCheck/icheck.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/content/js/custom.min.js"></script>
+    <script src="~/Scripts/Admin/Common/utils.js"></script>
+    @* <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script> *@
+
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var ua = window.navigator.userAgent; //Check the userAgent property of the window.navigator object
+            var msie = ua.indexOf('MSIE '); // IE 10 or older
+            var trident = ua.indexOf('Trident/'); //IE 11
+
+            if (msie > 0 || trident > 0) {
+                //if (msie > 0) {
+                alert("This browser is no longer supported, you will not be able to log in to your account.\nPlease use an alternative browser such as Google Chrome, Microsoft Edge or Apple Safari.");
+                window.open('', '_self', '');
+                window.close();
+            }
+
+        });
+    </script>
+</body>
+</html>

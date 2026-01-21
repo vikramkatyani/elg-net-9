@@ -1,0 +1,535 @@
+﻿:root {
+    --color-primary: #80692e;
+    --color-secondary: #005380;
+    --color-white: #FFF;
+    --color-dark: #236251;
+    --color-light: #3BA588;
+    --color-hightlight: #005380;
+    --color-black: #181114;
+    --dash-complete: #0CC078;
+    --dash-progress: #FCFC99;
+    --dash-incomplete: #FB6962;
+    --dash-notstarted: #D3D3D3;
+    --dash-line-graph: #79DE79;
+}
+
+/** Font*/
+@font-face {
+    font-family: 'AvenirLTStd-Book';
+    src: url('fonts/FontsFree-Net-AvenirLTStd-Book.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AvenirLTStd-Book';
+    src: url('fonts/FontsFree-Net-AvenirLTStd-Book.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    font-family: 'AvenirLTStd-Book', sans-serif !important;
+}
+
+
+
+/** Background color */
+.bg-body {
+    background-color: var(--color-white) !important;
+}
+.bg-primary {
+    background-color: var(--color-primary) !important;
+}
+.bg-secondary {
+    background-color: var(--color-secondary) !important;
+}
+
+.bg-white {
+    background-color: var(--color-white) !important;
+}
+
+.bg-highlight {
+    background-color: var(--color-hightlight) !important;
+}
+
+.bg-dark {
+    background-color: var(--color-dark) !important;
+}
+
+.bg-light {
+    background-color: var(--color-light) !important;
+}
+
+/** Text color */
+
+.txt-primary {
+    color: var(--color-primary) !important;
+}
+
+.txt-secondary {
+    color: var(--color-secondary) !important;
+}
+
+.txt-white {
+    color: var(--color-white) !important;
+}
+
+.txt-highlight {
+    color: var(--color-hightlight) !important;
+}
+
+.txt-dark {
+    color: var(--color-dark) !important;
+}
+
+.txt-light {
+    color: var(--color-light) !important;
+}
+.txt-status {
+    font-size:13px;
+}
+.txt-PASSED, .txt-COMPLETED {
+}
+.txt-FAILED {
+}
+.txt-NOT-STARTED {
+}
+.txt-IN-PROGRESS {
+}
+/**************************************************************     END COLORS     *******************************************************************/
+/** Buttons */
+.elg-lnk-btn {
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    height: 24px;
+    width: 100%;
+    border: none;
+    font-weight: 450;
+    line-height: 150%;
+    text-decoration: none;
+    color: var(--color-white) !important;
+}
+
+.elg-btn, .btn {
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    height: 45px;
+    /*width: 100%;*/
+    border-radius: 22.5px;
+    font-weight: 500;
+    line-height: 150%;
+}
+
+.elg-btn:hover, .btn:hover {
+    opacity: .75;
+}
+
+.elg-btn-primary, .btn-primary, .btn-dark {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    &:hover
+{
+    opacity: .75;
+    border: none;
+}
+}
+
+.elg-btn-secondary, btn-secondary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    &:hover
+    {
+        opacity: .75;
+        border: none;
+    }
+}
+
+.elg-btn-transparent {
+    background-color: transparent;
+    color: var(--color-priamry);
+    border: 1px solid var(--color-secondary);
+}
+
+.elg-btn-search {
+    background-color: transparent;
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+.elg-course-card-primary {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+}
+.elg-course-card-secondary {
+    background-color: transparent;
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+.card-button-container {
+    width: 100%;
+}
+
+.card-button-container button {
+    width: auto !important;
+    font-size: 15px !important;
+    padding: 0 15px;
+    margin-right:10px;
+}
+
+/**************************************************************     END BUTTONS     *******************************************************************/
+
+/** Text Element*/
+p {
+    font-size: 16px;
+    font-weight: 450;
+    line-height: 150%;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 36px;
+    color: var(--color-black) !important;
+}
+
+.card-content h2 {
+    font-size: 48px;
+    color: var(--color-black) !important;
+}
+
+.card-content p {
+    color: var(--color-black) !important;
+}
+
+.page-heading {
+    color: var(--color-grey) !important;
+    display: none;
+}
+
+#courseSearchForm {
+    margin: 0 !important;
+}
+/**************************************************************     END TEXT ELEMENTS     *******************************************************************/
+/* Login Screen */
+/* Left Section */
+.left-section {
+    display: none;
+}
+
+    .left-section .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /*background-color: rgba(236, 238, 241, 0.5);*/
+        z-index: 1;
+    }
+
+    .left-section .content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding-right: 100px;
+    }
+
+    .branding img {
+        content: url("logo.png");
+        width: 250px;
+        margin-bottom: 10px;
+    }
+.footer-branding {
+    display: none;
+}
+
+.left-section .line-partition {
+    display: none;
+}
+
+.left-section h1 {
+    display: none;
+}
+/* Right Section */
+    .right-section {
+        flex: 1;
+        color: var(--color-black);
+        padding: 20px;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+       /* margin: 50px 0;*/
+    }
+
+    form input {
+        margin-bottom: 15px;
+        padding: 10px;
+        font-size: 18px;
+        border: 1px solid var(--color-secondary);
+        border-radius: 1px;
+    }
+
+.line-partition {
+    border-top: 1px solid var(--color-primary);
+}
+
+/* style for screen bigger than mobile */
+
+@media (min-width: 768px) {
+
+    .left-section {
+        display: flex;
+        flex: 1.75;
+        position: relative;
+        background: url('landingBG.png') no-repeat center center;
+        background-size: contain;
+        color: var(--color-white);
+        padding-top: 50px;
+        padding-left: 50px;
+        text-align: left;
+        height: auto;
+    }
+
+    .branding {
+        /*margin-bottom: 100px;*/
+
+        display: none;
+    }
+
+    h1 {
+        font-weight: 400;
+        font-size: 64px;
+    }
+
+    p {
+        font-size: 18px;
+    }
+
+    .right-section {
+        flex: 1.25;
+        height: auto;
+        text-align: left;
+        padding: 100px 100px 0 150px;
+    }
+
+    .branding img {
+        max-width: 250px;
+    }
+
+    .branding h1 {
+        font-size: 24px;
+    }
+
+    .right-section h2 {
+        font-size: 22px;
+    }
+
+    form input {
+        padding: 12px;
+        font-size: 18px;
+    }
+
+    .elg-lnk-btn, .elg-btn {
+        width: 240px !important;
+    }
+    .elg-btn-sm {
+        width: 120px !important;
+    }
+}
+
+/**************************************************************     END LOGIN SCREEN     *******************************************************************/
+
+/* Learner page */
+.learner-content-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none; /* Hidden by default for larger screens */
+    cursor: pointer;
+    padding: 10px;
+    /*background-color: var(--color-primary);*/
+    color: white;
+}
+
+.hamburger span {
+    display: block;
+    height: 3px;
+    background-color: var(--color-primary);
+    margin: 5px 0;
+    width: 25px;
+}
+
+/* side menu */
+.learner-menu-bar {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(0); 
+    transition: transform 0.3s ease;
+}
+
+.learner-menu-bar.closed {
+    transform: translateX(-100%); 
+}
+
+.learner-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.learner-menu-bar .logo img {
+    content: url("logoWhite.png");
+    padding: 20px 30px 20px 20px;
+    max-width: 100%;
+    margin: auto;
+    display: block;
+max-height:200px;
+}
+
+.learner-menu li {
+    margin: 10px 0;
+}
+
+.learner-menu a i{
+    margin: 0 10px;
+}
+
+.learner-menu a {
+    text-decoration: none;
+    color: var(--color-black) !important;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s;
+}
+.learner-menu a:hover, .learner-menu a.active {
+    background-color: rgba(128, 105, 46, 0.7) !important;
+    color: var(--color-white) !important;
+}
+
+/* Hide the submenu by default */
+.child_menu {
+    display: none;
+    list-style-type: none;
+    padding-left: 20px; /* Indent child menu items */
+    margin: 0;
+}
+
+/* Show submenu when the parent has 'open' class */
+.parent-menu.open .child_menu {
+    display: block;
+}
+
+/* Profile Section */
+.profile {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    /*position: fixed;*/ 
+    margin-top: 100px; 
+    background-color: var(--color-white); 
+}
+
+.profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px; /* Space between the image and text */
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column; /* Stack "Welcome" and username vertically */
+}
+
+.profile-details span {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.25;
+}
+
+.profile-details h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.25;
+}
+#imgLearnerProfile_noPic {
+    content: url("no-pic.png");
+}
+
+
+.learner-main-content {
+    margin-left: 250px; /* Match the width of the sidebar */
+    transition: margin-left 0.3s ease; /* Smooth transition */
+    padding: 20px;
+}
+
+/* Mobile Styles (Collapse Sidebar) */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show hamburger menu on mobile */
+    }
+
+    .learner-menu-bar {
+        transform: translateX(-100%); /* Hide sidebar by default in mobile */
+        z-index: 1000;
+    }
+
+    .learner-menu-bar.open {
+        transform: translateX(0); /* Show sidebar when open */
+    }
+
+    .learner-main-content {
+        margin-left: 0; /* Adjust content margin when sidebar is hidden */
+    }
+}
+
+.search-box {
+    font-size: 15px;
+    color: var(--color-black);
+    outline: none;
+    height: 46px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid var(--color-black);
+    width: 100%;
+}
+
+/** Course card*/
+.postcard {
+    box-shadow: unset !important;
+    border-radius: 20px;
+    border: 1px solid #000;
+}
+
+
+/******************************************* DATA TABLES **************************************************/
+.dataTables_paginate a {
+    background: var(--color-primary) !important;
+    margin: 1px;
+    color: var(--color-white);
+    text-decoration: none;
+    background-color: transparent;
+}
+
+    .dataTables_paginate a:hover {
+        cursor: pointer;
+    }
+
+    .dataTables_paginate a.disabled {
+        cursor: not-allowed;
+        background: var(--color-secondary) !important;
+    }

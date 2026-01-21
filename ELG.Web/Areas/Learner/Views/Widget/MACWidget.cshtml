@@ -1,0 +1,235 @@
+@{
+    Layout = null;
+}
+@model ELG.Model.Learner.MACResponse
+
+<style>
+        .elg-wdgt-container {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            /*width: 500px;*/
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .elg-wdgt-header {
+            background-color: #D84738;
+            color: #ffffff;
+            padding: 10px;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+
+    .elg-wdgt-body {
+        padding: 20px;
+        font-size: 20px;
+    }
+
+        .elg-wdgt-footer {
+            display: flex;
+            text-align:center;
+            padding: 20px;
+        }
+
+        .elg-wdgt-prompt {
+            margin: 20px 0;
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+    .elg-wdgt-ans-input, .elg-wdgt-resp-input {
+        width: calc(100% - 20px);
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 20px;
+    }
+
+    .elg-wdgt-submit-button, .elg-wdgt-mashow-button {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 20px;
+        display: block;
+        margin: 20px auto 0;
+    }
+    .elg-wdgt-submit-button.active:hover, .elg-wdgt-mashow-button:hover {
+        background-color: @Model.HeaderColor;
+        cursor: pointer;
+    }
+        .elg-wdgt-submit-button.disabled:hover, .elg-wdgt-mashow-button.disabled:hover {
+            cursor: not-allowed;
+        }
+        .elg-wdgt-submit-button.disabled, .elg-wdgt-mashow-button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    ol {
+        padding-left: 20px;
+    }
+    .radio-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .radio-group input[type="radio"] {
+        vertical-align: middle;
+        margin-right: 8px; 
+    }
+
+
+</style>
+    <div class="elg-wdgt-container" id="elg-widget_@(Model.QueWidgetID)">
+        <div class="elg-wdgt-header" style="background-color: @Model.HeaderColor;">
+            @Model.QueWidgetTitle
+        </div>
+        <div class="elg-wdgt-body">
+            <div class="elg-wdgt-prompt">
+                @Model.Question
+            </div>
+            <div class="response-holder">
+                @{
+                    if (String.IsNullOrEmpty(Model.Response_1))
+                    {
+                        <textarea rows="2" id="txt_resp_1_@Model.QueWidgetID" class="elg-wdgt-ans-input" placeholder="Enter your FIRST response" oninput="macWidgetHandler.checkInputs('@Model.QueWidgetID')"></textarea>
+                    }
+                    else
+                    {
+                        <div><p class="elg-wdgt-ans">@Model.Response_1</p></div>
+                    }
+                    if (String.IsNullOrEmpty(Model.Response_2))
+                    {
+                        <textarea rows="2" id="txt_resp_2_@Model.QueWidgetID" class="elg-wdgt-ans-input" placeholder="Enter your SECOND response" oninput="macWidgetHandler.checkInputs('@Model.QueWidgetID')"></textarea>
+                    }
+                    else
+                    {
+                        <div><p class="elg-wdgt-ans">@Model.Response_2</p></div>
+                    }
+                    if (String.IsNullOrEmpty(Model.Response_3))
+                    {
+                        <textarea rows="2" id="txt_resp_3_@Model.QueWidgetID" class="elg-wdgt-ans-input" placeholder="Enter your THIRD response" oninput="macWidgetHandler.checkInputs('@Model.QueWidgetID')"></textarea>
+                    }
+                    else
+                    {
+                        <div><p class="elg-wdgt-ans">@Model.Response_3</p></div>
+                    }
+
+                }
+            </div>
+
+            <div id="model-response-holder_@Model.QueWidgetID" style="display:none">
+                <div class="elg-wdgt-prompt">
+                    @Model.ModelResponseHeading
+                </div>
+                <p>
+                    <ol>
+                        <li>@Model.ModelResponse_1</li>
+                        <li>@Model.ModelResponse_2</li>
+                        <li>@Model.ModelResponse_3</li>
+                    </ol>
+                </p>
+                <p>
+                    <i>Now rate how your answer compares to the model answer:</i>
+                </p>
+
+
+                @if (String.IsNullOrEmpty(Model.FeedBackResponse))
+                {
+                    <div class="radio-group">
+                        <input type="radio" id="feedback_option1" name="feedback_radioGroup" value="My answer is not as good." onchange="macWidgetHandler.validateFeedback('@Model.QueWidgetID')">
+                        <label for="feedback_option1">
+                            My answer is not as good.
+                        </label>
+                    </div>
+
+                    <div class="radio-group">
+                        <input type="radio" id="feedback_option2" name="feedback_radioGroup" value="My answer is about the same." onchange="macWidgetHandler.validateFeedback('@Model.QueWidgetID')">
+                        <label for="feedback_option2">
+                            My answer is about the same.
+                        </label>
+                    </div>
+
+                    <div class="radio-group">
+                        <input type="radio" id="feedback_option3" name="feedback_radioGroup" value="My answer is better." onchange="macWidgetHandler.validateFeedback('@Model.QueWidgetID')">
+                        <label for="feedback_option3">
+                            My answer is better.
+                        </label>
+                    </div>
+                }
+                else
+                {
+                    <div class="radio-group">
+                        <input type="radio" id="feedback_option1" name="feedback_radioGroup" value="My answer is not as good." @(Model.FeedBackResponse == "My answer is not as good." ? "checked" : "") disabled>
+                        <label for="feedback_option1">
+                            My answer is not as good.
+                        </label>
+                    </div>
+
+                    <div class="radio-group">
+                        <input type="radio" id="feedback_option2" name="feedback_radioGroup" value="My answer is about the same." @(Model.FeedBackResponse == "My answer is about the same." ? "checked" : "") disabled>
+                        <label for="feedback_option2">
+                            My answer is about the same.
+                        </label>
+                    </div>
+
+                    <div class="radio-group">
+                        <input type="radio" id="feedback_option3" name="feedback_radioGroup" value="My answer is better." @(Model.FeedBackResponse == "My answer is better." ? "checked" : "") disabled>
+                        <label for="feedback_option3">
+                            My answer is better.
+                        </label>
+                    </div>
+                }
+
+                @if (String.IsNullOrEmpty(Model.FeedBackResponseText))
+                {
+                    <p>
+                        Please provide a short explanation of your answer above.
+                    </p>
+                    <textarea rows="2" id="txt_feedback_@Model.QueWidgetID" class="elg-wdgt-resp-input" placeholder="Type your answer here." oninput="macWidgetHandler.validateFeedback('@Model.QueWidgetID')"></textarea>
+
+                }
+                else
+                {
+                    <p>
+                        <i>The feedback you provided: </i>
+                    </p>
+                    <p>@Model.FeedBackResponseText</p>
+                }
+
+            </div>
+        </div>
+        <div class="elg-wdgt-footer">
+            @if (Model.Responded)
+            {
+                <button id="btn_show_ma_@Model.QueWidgetID" class="elg-wdgt-mashow-button" onclick="macWidgetHandler.showModelAnswer(this)" style="display:block">
+                    SEE MODEL ANSWER
+                </button>
+            }
+            else
+            {
+                <button id="btn_show_ma_@Model.QueWidgetID" class="elg-wdgt-mashow-button" onclick="macWidgetHandler.showModelAnswer(this)" style="display:none">
+                    SEE MODEL ANSWER
+                </button>
+            }
+
+            @*<button id="btn_hide_ma_@Model.QueWidgetID" class="elg-wdgt-mashow-button" onclick="macWidgetHandler.hideModelAnswer(this)" style="display:none">
+                HIDE MODEL ANSWER
+            </button>*@
+            <button id="btn_submit_ma_@Model.QueWidgetID" class="elg-wdgt-mashow-button disabled" onclick="macWidgetHandler.saveFeedback(this)" style="display:none">
+                SUBMIT
+            </button>
+
+            @if (!Model.Responded)
+            {
+                <button id="btn_sbmt_@Model.QueWidgetID" class="elg-wdgt-submit-button disabled"  onclick="macWidgetHandler.saveUserResponses(this)">
+                    SUBMIT
+                </button>
+            }
+
+        </div>
+    </div>

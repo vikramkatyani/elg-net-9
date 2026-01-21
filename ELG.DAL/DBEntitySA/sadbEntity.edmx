@@ -1,0 +1,2182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="sadbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="lms_api_AddLicense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
+          <Parameter Name="CourseId" Type="nvarchar" Mode="In" />
+          <Parameter Name="LicenseKey" Type="nvarchar" Mode="In" />
+          <Parameter Name="ExpiryDate" Type="datetime" Mode="In" />
+          <Parameter Name="Status" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_api_GetLicense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
+          <Parameter Name="CourseId" Type="nvarchar" Mode="In" />
+          <Parameter Name="Licence" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_api_GetLicenseByKey" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LicenseKey" Type="nvarchar" Mode="In" />
+          <Parameter Name="CourseId" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="lms_api_RenewLicense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LicenseId" Type="int" Mode="In" />
+          <Parameter Name="NewExpiryDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="lms_api_RevokeLicense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LicenseId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_super_admin_getSuspendDataRecords" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_assign_company_licence" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="comany" Type="bigint" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="addedLicences" Type="int" Mode="In" />
+          <Parameter Name="revokedLicences" Type="int" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_assign_company_new_licence" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="addedLicences" Type="int" Mode="In" />
+          <Parameter Name="revokedLicences" Type="int" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_assign_course_to_company" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intOrganisationid" Type="bigint" Mode="In" />
+          <Parameter Name="intCourseId" Type="bigint" Mode="In" />
+          <Parameter Name="intRetCourseId" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_assign_new_course_to_company" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+          <Parameter Name="intCourseId" Type="bigint" Mode="In" />
+          <Parameter Name="intRetCourseId" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_CompanyAdminLearner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="title" Type="varchar" Mode="In" />
+          <Parameter Name="firstname" Type="varchar" Mode="In" />
+          <Parameter Name="lastname" Type="varchar" Mode="In" />
+          <Parameter Name="email" Type="varchar" Mode="In" />
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+          <Parameter Name="location" Type="bigint" Mode="In" />
+          <Parameter Name="department" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_deleted_company_record" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="adminid" Type="bigint" Mode="In" />
+          <Parameter Name="orgid" Type="bigint" Mode="In" />
+          <Parameter Name="orgName" Type="varchar" Mode="In" />
+          <Parameter Name="orgNumber" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_department" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+          <Parameter Name="departmentName" Type="nvarchar" Mode="In" />
+          <Parameter Name="newDepId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_location" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+          <Parameter Name="locationName" Type="nvarchar" Mode="In" />
+          <Parameter Name="newLocId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_location_department" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+          <Parameter Name="location" Type="bigint" Mode="In" />
+          <Parameter Name="departmentName" Type="nvarchar" Mode="In" />
+          <Parameter Name="newDepId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_NewRiskAssessment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="title" Type="varchar" Mode="In" />
+          <Parameter Name="summary" Type="varchar" Mode="In" />
+          <Parameter Name="description" Type="varchar" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_NewRiskAssessmentGroup" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="groupName" Type="varchar" Mode="In" />
+          <Parameter Name="raid" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_organisation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="reseller" Type="bigint" Mode="In" />
+          <Parameter Name="organisationName" Type="varchar" Mode="In" />
+          <Parameter Name="orgBrandName" Type="varchar" Mode="In" />
+          <Parameter Name="contractManagerName" Type="varchar" Mode="In" />
+          <Parameter Name="contractManagerEmail" Type="varchar" Mode="In" />
+          <Parameter Name="supportEmail" Type="varchar" Mode="In" />
+          <Parameter Name="supportPhone" Type="varchar" Mode="In" />
+          <Parameter Name="orgBaseURL" Type="varchar" Mode="In" />
+          <Parameter Name="expiryDate" Type="varchar" Mode="In" />
+          <Parameter Name="sector" Type="varchar" Mode="In" />
+          <Parameter Name="rate" Type="varchar" Mode="In" />
+          <Parameter Name="owner" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerFirstName" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerLastName" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerEmail" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerPhone" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerExtension" Type="varchar" Mode="In" />
+          <Parameter Name="sequentialId" Type="varchar" Mode="In" />
+          <Parameter Name="isReseller" Type="bit" Mode="In" />
+          <Parameter Name="maxAllowedUserCount" Type="int" Mode="In" />
+          <Parameter Name="id" Type="uniqueidentifier" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_OTP_record" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="adminid" Type="bigint" Mode="In" />
+          <Parameter Name="otp" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_ra_ques_to_company" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="masterCourseId" Type="bigint" Mode="In" />
+          <Parameter Name="intCourseId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_create_RAQue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="question" Type="varchar" Mode="In" />
+          <Parameter Name="additionalText" Type="varchar" Mode="In" />
+          <Parameter Name="group" Type="bigint" Mode="In" />
+          <Parameter Name="groupText" Type="varchar" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_create_RAQueOption" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="option" Type="varchar" Mode="In" />
+          <Parameter Name="question" Type="bigint" Mode="In" />
+          <Parameter Name="order" Type="int" Mode="In" />
+          <Parameter Name="issue" Type="bit" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_delete_company" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OrgId" Type="bigint" Mode="In" />
+          <Parameter Name="adminid" Type="bigint" Mode="In" />
+          <Parameter Name="otp" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_delete_department" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DepId" Type="bigint" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_delete_location" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LocId" Type="bigint" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_delete_RAQuestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="question" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_delete_RAQuestionOption" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="optionid" Type="bigint" Mode="In" />
+          <Parameter Name="id" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_delete_reseller" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OrgId" Type="bigint" Mode="In" />
+          <Parameter Name="adminid" Type="bigint" Mode="In" />
+          <Parameter Name="otp" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_get_AboutToExpiryCompanies_NextWeek" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_AboutToExpiryCompanies_ThisWeek" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_AllCourses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_AllDepartmentsForLocation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="location" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_AllOptionsForQuestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="question" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_AllRACourseQuestions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="course" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_AllResellers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_AllRiskAssessments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_certificate_record" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="recordid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_company_by_sequential_id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="sequentialId" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_company_course_licences" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="comany" Type="varchar" Mode="In" />
+          <Parameter Name="search" Type="varchar" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_CompanyAdminInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_CompanyAdminList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="varchar" Mode="In" />
+          <Parameter Name="learnerName" Type="nvarchar" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_companyBanner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="orgUID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_companyCertificate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="orgUID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_companyInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="orgUID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_companyListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="resller" Type="bigint" Mode="In" />
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="companySector" Type="nvarchar" Mode="In" />
+          <Parameter Name="companyOwner" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_companyListing_assigned_course" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_companyListing_dropoff" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="resller" Type="bigint" Mode="In" />
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_CompnayLocationDepartmentMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="location" Type="bigint" Mode="In" />
+          <Parameter Name="search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_CourseInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_courseListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_crm_company_admin_Listing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="selectedOrganisations" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="selectedAdminTypes" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="selectContractManager" Type="int" Mode="In" />
+          <Parameter Name="selectTrainer" Type="int" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_crm_companyListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="filter" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_dash_HeaderInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_dash_WeeklyProgress" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_dash_YearlyCompletion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="lms_superadmin_get_GroupsOfRA" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="raid" Type="bigint" Mode="In" />
+          <Parameter Name="search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_LearnerCourseLauchDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactId" Type="bigint" Mode="In" />
+          <Parameter Name="intCourse" Type="bigint" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_LearnerInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_LearnerProgressReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learnerName" Type="nvarchar" Mode="In" />
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="varchar" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+          <Parameter Name="fromDate" Type="datetime" Mode="In" />
+          <Parameter Name="toDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_LearnerRAReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learnerName" Type="nvarchar" Mode="In" />
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="signedOff" Type="int" Mode="In" />
+          <Parameter Name="issues" Type="int" Mode="In" />
+          <Parameter Name="fromDate" Type="datetime" Mode="In" />
+          <Parameter Name="toDate" Type="datetime" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_moduleListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="moduleName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_OTP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="adminid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_RAListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="moduleName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_RAQuestionInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="question" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_RegisteredLearners" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learnerName" Type="nvarchar" Mode="In" />
+          <Parameter Name="organisationName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_resellerListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_get_RiskAssessmentAnswerSheet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="raid" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_getAdminLoginDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="useremail" Type="nvarchar" Mode="In" />
+          <Parameter Name="pwd" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="masterPwd" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_getAllCompnayDepartments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="company" Type="varchar" Mode="In" />
+          <Parameter Name="search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_getAllCompnayLocations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="company" Type="varchar" Mode="In" />
+          <Parameter Name="search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_getCourseLauchDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactId" Type="bigint" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_getLearnerLoginDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactId" Type="bigint" Mode="In" />
+          <Parameter Name="sortCol" Type="varchar" Mode="In" />
+          <Parameter Name="sortDir" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_insert_companyBanner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="orgUID" Type="varchar" Mode="In" />
+          <Parameter Name="banner" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="update" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_insert_companyCertificate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="orgUID" Type="varchar" Mode="In" />
+          <Parameter Name="certificate" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="update" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_insert_LocDepMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="locId" Type="bigint" Mode="In" />
+          <Parameter Name="depId" Type="bigint" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_refresh_module_assignment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_remove_customcertificate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="org_guid" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_remove_customlogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="org_guid" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_remove_superadmin_rights" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="bigint" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_Reset_LearnerPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intContactID" Type="bigint" Mode="In" />
+          <Parameter Name="pwd" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="lms_superadmin_update_CompanyActiveStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="org_guid" Type="varchar" Mode="In" />
+          <Parameter Name="status" Type="bit" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_CompanyFieldTextSettings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TitleDescription" Type="varchar" Mode="In" />
+          <Parameter Name="FirstNameDescription" Type="varchar" Mode="In" />
+          <Parameter Name="LastNameDescription" Type="varchar" Mode="In" />
+          <Parameter Name="EmailDescription" Type="varchar" Mode="In" />
+          <Parameter Name="LocationDescription" Type="varchar" Mode="In" />
+          <Parameter Name="DepartmentDescription" Type="varchar" Mode="In" />
+          <Parameter Name="org_guid" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_CompanyGeneralSettings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="docEnable" Type="bit" Mode="In" />
+          <Parameter Name="allowedUploadCount" Type="int" Mode="In" />
+          <Parameter Name="allowedAccidentIncidentFeature" Type="int" Mode="In" />
+          <Parameter Name="trainingRenewalMode" Type="int" Mode="In" />
+          <Parameter Name="courseAssignMode" Type="int" Mode="In" />
+          <Parameter Name="selfRegistration" Type="bit" Mode="In" />
+          <Parameter Name="org_guid" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_CompanyInformation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="reseller" Type="bigint" Mode="In" />
+          <Parameter Name="organisationName" Type="varchar" Mode="In" />
+          <Parameter Name="orgBrandName" Type="varchar" Mode="In" />
+          <Parameter Name="contractManagerName" Type="varchar" Mode="In" />
+          <Parameter Name="contractManagerEmail" Type="varchar" Mode="In" />
+          <Parameter Name="supportEmail" Type="varchar" Mode="In" />
+          <Parameter Name="supportPhone" Type="varchar" Mode="In" />
+          <Parameter Name="orgBaseURL" Type="varchar" Mode="In" />
+          <Parameter Name="expiryDate" Type="varchar" Mode="In" />
+          <Parameter Name="sector" Type="varchar" Mode="In" />
+          <Parameter Name="rate" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerFirstName" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerLastName" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerEmail" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerPhone" Type="varchar" Mode="In" />
+          <Parameter Name="trainingManagerExtension" Type="varchar" Mode="In" />
+          <Parameter Name="companyOwner" Type="nvarchar" Mode="In" />
+          <Parameter Name="org_guid" Type="varchar" Mode="In" />
+          <Parameter Name="maxAllowedUserCount" Type="int" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_CompanyModuleAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="status" Type="bit" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_CompanyNotes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="notes" Type="varchar(max)" Mode="In" />
+          <Parameter Name="org_guid" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_CourseInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="bigint" Mode="In" />
+          <Parameter Name="title" Type="nvarchar" Mode="In" />
+          <Parameter Name="summary" Type="nvarchar" Mode="In" />
+          <Parameter Name="description" Type="nvarchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_department" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DepId" Type="bigint" Mode="In" />
+          <Parameter Name="departmentName" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_LearnerInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="firstname" Type="nvarchar" Mode="In" />
+          <Parameter Name="surname" Type="nvarchar" Mode="In" />
+          <Parameter Name="email" Type="nvarchar" Mode="In" />
+          <Parameter Name="location" Type="bigint" Mode="In" />
+          <Parameter Name="department" Type="bigint" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_LearnerStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="learner" Type="bigint" Mode="In" />
+          <Parameter Name="status" Type="bit" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_learning_progress_record" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="recordId" Type="bigint" Mode="In" />
+          <Parameter Name="score" Type="int" Mode="In" />
+          <Parameter Name="completeionDate" Type="datetime" Mode="In" />
+          <Parameter Name="status" Type="varchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_location" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LocId" Type="bigint" Mode="In" />
+          <Parameter Name="locationName" Type="varchar" Mode="In" />
+          <Parameter Name="retVal" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_RAQuestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="question" Type="varchar" Mode="In" />
+          <Parameter Name="questionid" Type="bigint" Mode="In" />
+          <Parameter Name="group" Type="bigint" Mode="In" />
+          <Parameter Name="groupText" Type="varchar" Mode="In" />
+          <Parameter Name="course" Type="bigint" Mode="In" />
+          <Parameter Name="order" Type="int" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_RAQuestionOption" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="optionid" Type="bigint" Mode="In" />
+          <Parameter Name="option" Type="varchar" Mode="In" />
+          <Parameter Name="order" Type="int" Mode="In" />
+          <Parameter Name="issue" Type="bit" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_RiskAssessmentGroup" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="raid" Type="bigint" Mode="In" />
+          <Parameter Name="groupName" Type="nvarchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_update_RiskAssessmentResult" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="raid" Type="bigint" Mode="In" />
+          <Parameter Name="signedOff" Type="bit" Mode="In" />
+          <Parameter Name="adminId" Type="bigint" Mode="In" />
+          <Parameter Name="adminComment" Type="varchar" Mode="In" />
+          <Parameter Name="retval" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="lms_superadmin_UpdatetbCourseLicenseDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LicenseCourseId" Type="int" Mode="In" />
+          <Parameter Name="LicenseExpiryDate" Type="datetime" Mode="In" />
+          <Parameter Name="AssignedLicenses" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="sadbModelStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="sadbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="superadmindbEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="lms_super_admin_getSuspendDataRecords" ReturnType="Collection(sadbModel.lms_super_admin_getSuspendDataRecords_Result)">
+          <Parameter Name="intContactId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_assign_company_licence">
+            <Parameter Name="comany" Mode="In" Type="Int64" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="addedLicences" Mode="In" Type="Int32" />
+            <Parameter Name="revokedLicences" Mode="In" Type="Int32" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_assign_company_new_licence">
+            <Parameter Name="organisation" Mode="In" Type="String" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="addedLicences" Mode="In" Type="Int32" />
+            <Parameter Name="revokedLicences" Mode="In" Type="Int32" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_assign_course_to_company">
+            <Parameter Name="intOrganisationid" Mode="In" Type="Int64" />
+            <Parameter Name="intCourseId" Mode="In" Type="Int64" />
+            <Parameter Name="intRetCourseId" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_assign_new_course_to_company">
+            <Parameter Name="organisation" Mode="In" Type="String" />
+            <Parameter Name="intCourseId" Mode="In" Type="Int64" />
+            <Parameter Name="intRetCourseId" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_CompanyAdminLearner">
+            <Parameter Name="title" Mode="In" Type="String" />
+            <Parameter Name="firstname" Mode="In" Type="String" />
+            <Parameter Name="lastname" Mode="In" Type="String" />
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="organisation" Mode="In" Type="String" />
+            <Parameter Name="location" Mode="In" Type="Int64" />
+            <Parameter Name="department" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_deleted_company_record">
+            <Parameter Name="adminid" Mode="In" Type="Int64" />
+            <Parameter Name="orgid" Mode="In" Type="Int64" />
+            <Parameter Name="orgName" Mode="In" Type="String" />
+            <Parameter Name="orgNumber" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_department">
+            <Parameter Name="organisation" Mode="In" Type="String" />
+            <Parameter Name="departmentName" Mode="In" Type="String" />
+            <Parameter Name="newDepId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_location">
+            <Parameter Name="organisation" Mode="In" Type="String" />
+            <Parameter Name="locationName" Mode="In" Type="String" />
+            <Parameter Name="newLocId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_location_department">
+            <Parameter Name="organisation" Mode="In" Type="String" />
+            <Parameter Name="location" Mode="In" Type="Int64" />
+            <Parameter Name="departmentName" Mode="In" Type="String" />
+            <Parameter Name="newDepId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_NewRiskAssessment">
+            <Parameter Name="title" Mode="In" Type="String" />
+            <Parameter Name="summary" Mode="In" Type="String" />
+            <Parameter Name="description" Mode="In" Type="String" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_NewRiskAssessmentGroup">
+            <Parameter Name="groupName" Mode="In" Type="String" />
+            <Parameter Name="raid" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_organisation">
+            <Parameter Name="reseller" Mode="In" Type="Int64" />
+            <Parameter Name="organisationName" Mode="In" Type="String" />
+            <Parameter Name="orgBrandName" Mode="In" Type="String" />
+            <Parameter Name="contractManagerName" Mode="In" Type="String" />
+            <Parameter Name="contractManagerEmail" Mode="In" Type="String" />
+            <Parameter Name="supportEmail" Mode="In" Type="String" />
+            <Parameter Name="supportPhone" Mode="In" Type="String" />
+            <Parameter Name="orgBaseURL" Mode="In" Type="String" />
+            <Parameter Name="expiryDate" Mode="In" Type="String" />
+            <Parameter Name="sector" Mode="In" Type="String" />
+            <Parameter Name="rate" Mode="In" Type="String" />
+            <Parameter Name="owner" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerFirstName" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerLastName" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerEmail" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerPhone" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerExtension" Mode="In" Type="String" />
+            <Parameter Name="sequentialId" Mode="In" Type="String" />
+            <Parameter Name="isReseller" Mode="In" Type="Boolean" />
+            <Parameter Name="maxAllowedUserCount" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="InOut" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_ra_ques_to_company">
+            <Parameter Name="masterCourseId" Mode="In" Type="Int64" />
+            <Parameter Name="intCourseId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_RAQue">
+            <Parameter Name="question" Mode="In" Type="String" />
+            <Parameter Name="additionalText" Mode="In" Type="String" />
+            <Parameter Name="group" Mode="In" Type="Int64" />
+            <Parameter Name="groupText" Mode="In" Type="String" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_RAQueOption">
+            <Parameter Name="option" Mode="In" Type="String" />
+            <Parameter Name="question" Mode="In" Type="Int64" />
+            <Parameter Name="order" Mode="In" Type="Int32" />
+            <Parameter Name="issue" Mode="In" Type="Boolean" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_delete_company">
+            <Parameter Name="OrgId" Mode="In" Type="Int64" />
+            <Parameter Name="adminid" Mode="In" Type="Int64" />
+            <Parameter Name="otp" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_delete_department">
+            <Parameter Name="DepId" Mode="In" Type="Int64" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_delete_RAQuestion">
+            <Parameter Name="question" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_delete_RAQuestionOption">
+            <Parameter Name="optionid" Mode="In" Type="Int64" />
+            <Parameter Name="id" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_delete_reseller">
+            <Parameter Name="OrgId" Mode="In" Type="Int64" />
+            <Parameter Name="adminid" Mode="In" Type="Int64" />
+            <Parameter Name="otp" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_AboutToExpiryCompanies_ThisWeek" ReturnType="Collection(sadbModel.lms_superadmin_get_AboutToExpiryCompanies_ThisWeek_Result)" />
+          <FunctionImport Name="lms_superadmin_get_AllDepartmentsForLocation" ReturnType="Collection(sadbModel.lms_superadmin_get_AllDepartmentsForLocation_Result)">
+          <Parameter Name="location" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_AllOptionsForQuestion" ReturnType="Collection(sadbModel.lms_superadmin_get_AllOptionsForQuestion_Result)">
+          <Parameter Name="question" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_AllResellers" ReturnType="Collection(sadbModel.lms_superadmin_get_AllResellers_Result)" />
+          <FunctionImport Name="lms_superadmin_get_certificate_record" ReturnType="Collection(sadbModel.lms_superadmin_get_certificate_record_Result)">
+          <Parameter Name="recordid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_company_course_licences" ReturnType="Collection(sadbModel.lms_superadmin_get_company_course_licences_Result)">
+            <Parameter Name="comany" Mode="In" Type="String" />
+            <Parameter Name="search" Mode="In" Type="String" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_CompanyAdminList" ReturnType="Collection(sadbModel.lms_superadmin_get_CompanyAdminList_Result)">
+            <Parameter Name="organisation" Mode="In" Type="String" />
+            <Parameter Name="learnerName" Mode="In" Type="String" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_companyCertificate" ReturnType="Collection(Binary)">
+          <Parameter Name="orgUID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_companyInfo" ReturnType="Collection(sadbModel.lms_superadmin_get_companyInfo_Result)">
+          <Parameter Name="orgUID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_companyListing" ReturnType="Collection(sadbModel.lms_superadmin_get_companyListing_Result)">
+            <Parameter Name="resller" Mode="In" Type="Int64" />
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="companySector" Mode="In" Type="String" />
+            <Parameter Name="companyOwner" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_companyListing_assigned_course" ReturnType="Collection(sadbModel.lms_superadmin_get_companyListing_assigned_course_Result)">
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_companyListing_dropoff" ReturnType="Collection(sadbModel.lms_superadmin_get_companyListing_dropoff_Result)">
+            <Parameter Name="resller" Mode="In" Type="Int64" />
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_CourseInfo" ReturnType="Collection(sadbModel.lms_superadmin_get_CourseInfo_Result)">
+          <Parameter Name="id" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_crm_companyListing" ReturnType="Collection(sadbModel.lms_superadmin_get_crm_companyListing_Result)">
+            <Parameter Name="filter" Mode="In" Type="String" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_dash_WeeklyProgress" ReturnType="Collection(sadbModel.lms_superadmin_get_dash_WeeklyProgress_Result)" />
+          <FunctionImport Name="lms_superadmin_get_dash_YearlyCompletion" ReturnType="Collection(sadbModel.lms_superadmin_get_dash_YearlyCompletion_Result)" />
+          <FunctionImport Name="lms_superadmin_get_LearnerCourseLauchDetails" ReturnType="Collection(sadbModel.lms_superadmin_get_LearnerCourseLauchDetails_Result)">
+            <Parameter Name="intContactId" Mode="In" Type="Int64" />
+            <Parameter Name="intCourse" Mode="In" Type="Int64" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_LearnerProgressReport" ReturnType="Collection(sadbModel.lms_superadmin_get_LearnerProgressReport_Result)">
+            <Parameter Name="learnerName" Mode="In" Type="String" />
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="String" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+            <Parameter Name="fromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="toDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_moduleListing" ReturnType="Collection(sadbModel.lms_superadmin_get_moduleListing_Result)">
+            <Parameter Name="moduleName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_OTP" ReturnType="Collection(String)">
+          <Parameter Name="adminid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_RAQuestionInfo" ReturnType="Collection(sadbModel.lms_superadmin_get_RAQuestionInfo_Result)">
+          <Parameter Name="question" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_RegisteredLearners" ReturnType="Collection(sadbModel.lms_superadmin_get_RegisteredLearners_Result)">
+            <Parameter Name="learnerName" Mode="In" Type="String" />
+            <Parameter Name="organisationName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_resellerListing" ReturnType="Collection(sadbModel.lms_superadmin_get_resellerListing_Result)">
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_RiskAssessmentAnswerSheet" ReturnType="Collection(sadbModel.lms_superadmin_get_RiskAssessmentAnswerSheet_Result)">
+          <Parameter Name="raid" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_getAdminLoginDetails" ReturnType="Collection(sadbModel.lms_superadmin_getAdminLoginDetails_Result)">
+            <Parameter Name="useremail" Mode="In" Type="String" />
+            <Parameter Name="pwd" Mode="In" Type="String" />
+            <Parameter Name="masterPwd" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_getAllCompnayDepartments" ReturnType="Collection(sadbModel.lms_superadmin_getAllCompnayDepartments_Result)">
+            <Parameter Name="company" Mode="In" Type="String" />
+            <Parameter Name="search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_getAllCompnayLocations" ReturnType="Collection(sadbModel.lms_superadmin_getAllCompnayLocations_Result)">
+            <Parameter Name="company" Mode="In" Type="String" />
+            <Parameter Name="search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_getCourseLauchDetails" ReturnType="Collection(sadbModel.lms_superadmin_getCourseLauchDetails_Result)">
+            <Parameter Name="intContactId" Mode="In" Type="Int64" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_getLearnerLoginDetails" ReturnType="Collection(sadbModel.lms_superadmin_getLearnerLoginDetails_Result)">
+            <Parameter Name="intContactId" Mode="In" Type="Int64" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_insert_companyBanner">
+            <Parameter Name="orgUID" Mode="In" Type="String" />
+            <Parameter Name="banner" Mode="In" Type="Binary" />
+            <Parameter Name="update" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_insert_companyCertificate">
+            <Parameter Name="orgUID" Mode="In" Type="String" />
+            <Parameter Name="certificate" Mode="In" Type="Binary" />
+            <Parameter Name="update" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_insert_LocDepMap">
+            <Parameter Name="locId" Mode="In" Type="Int64" />
+            <Parameter Name="depId" Mode="In" Type="Int64" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_refresh_module_assignment">
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_remove_customcertificate">
+            <Parameter Name="org_guid" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_remove_customlogo">
+            <Parameter Name="org_guid" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_remove_superadmin_rights">
+            <Parameter Name="userId" Mode="In" Type="Int64" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_Reset_LearnerPassword">
+            <Parameter Name="intContactID" Mode="In" Type="Int64" />
+            <Parameter Name="pwd" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_CompanyActiveStatus">
+            <Parameter Name="org_guid" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Boolean" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_CompanyFieldTextSettings">
+            <Parameter Name="TitleDescription" Mode="In" Type="String" />
+            <Parameter Name="FirstNameDescription" Mode="In" Type="String" />
+            <Parameter Name="LastNameDescription" Mode="In" Type="String" />
+            <Parameter Name="EmailDescription" Mode="In" Type="String" />
+            <Parameter Name="LocationDescription" Mode="In" Type="String" />
+            <Parameter Name="DepartmentDescription" Mode="In" Type="String" />
+            <Parameter Name="org_guid" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_CompanyGeneralSettings">
+            <Parameter Name="docEnable" Mode="In" Type="Boolean" />
+            <Parameter Name="allowedUploadCount" Mode="In" Type="Int32" />
+            <Parameter Name="allowedAccidentIncidentFeature" Mode="In" Type="Int32" />
+            <Parameter Name="trainingRenewalMode" Mode="In" Type="Int32" />
+            <Parameter Name="courseAssignMode" Mode="In" Type="Int32" />
+            <Parameter Name="selfRegistration" Mode="In" Type="Boolean" />
+            <Parameter Name="org_guid" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_CompanyInformation">
+            <Parameter Name="reseller" Mode="In" Type="Int64" />
+            <Parameter Name="organisationName" Mode="In" Type="String" />
+            <Parameter Name="orgBrandName" Mode="In" Type="String" />
+            <Parameter Name="contractManagerName" Mode="In" Type="String" />
+            <Parameter Name="contractManagerEmail" Mode="In" Type="String" />
+            <Parameter Name="supportEmail" Mode="In" Type="String" />
+            <Parameter Name="supportPhone" Mode="In" Type="String" />
+            <Parameter Name="orgBaseURL" Mode="In" Type="String" />
+            <Parameter Name="expiryDate" Mode="In" Type="String" />
+            <Parameter Name="sector" Mode="In" Type="String" />
+            <Parameter Name="rate" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerFirstName" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerLastName" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerEmail" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerPhone" Mode="In" Type="String" />
+            <Parameter Name="trainingManagerExtension" Mode="In" Type="String" />
+            <Parameter Name="companyOwner" Mode="In" Type="String" />
+            <Parameter Name="org_guid" Mode="In" Type="String" />
+            <Parameter Name="maxAllowedUserCount" Mode="In" Type="Int32" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_CompanyModuleAccess">
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="status" Mode="In" Type="Boolean" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_CompanyNotes">
+            <Parameter Name="notes" Mode="In" Type="String" />
+            <Parameter Name="org_guid" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_CourseInfo">
+            <Parameter Name="courseid" Mode="In" Type="Int64" />
+            <Parameter Name="title" Mode="In" Type="String" />
+            <Parameter Name="summary" Mode="In" Type="String" />
+            <Parameter Name="description" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_department">
+            <Parameter Name="DepId" Mode="In" Type="Int64" />
+            <Parameter Name="departmentName" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_LearnerInfo">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="firstname" Mode="In" Type="String" />
+            <Parameter Name="surname" Mode="In" Type="String" />
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="location" Mode="In" Type="Int64" />
+            <Parameter Name="department" Mode="In" Type="Int64" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_LearnerStatus">
+            <Parameter Name="learner" Mode="In" Type="Int64" />
+            <Parameter Name="status" Mode="In" Type="Boolean" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_location">
+            <Parameter Name="LocId" Mode="In" Type="Int64" />
+            <Parameter Name="locationName" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_RAQuestionOption">
+            <Parameter Name="optionid" Mode="In" Type="Int64" />
+            <Parameter Name="option" Mode="In" Type="String" />
+            <Parameter Name="order" Mode="In" Type="Int32" />
+            <Parameter Name="issue" Mode="In" Type="Boolean" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_RiskAssessmentGroup">
+            <Parameter Name="raid" Mode="In" Type="Int64" />
+            <Parameter Name="groupName" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_RiskAssessmentResult">
+            <Parameter Name="raid" Mode="In" Type="Int64" />
+            <Parameter Name="signedOff" Mode="In" Type="Boolean" />
+            <Parameter Name="adminId" Mode="In" Type="Int64" />
+            <Parameter Name="adminComment" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_UpdatetbCourseLicenseDetails">
+            <Parameter Name="LicenseCourseId" Mode="In" Type="Int32" />
+            <Parameter Name="LicenseExpiryDate" Mode="In" Type="DateTime" />
+            <Parameter Name="AssignedLicenses" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_create_OTP_record">
+            <Parameter Name="adminid" Mode="In" Type="Int64" />
+            <Parameter Name="otp" Mode="In" Type="String" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_delete_location">
+            <Parameter Name="LocId" Mode="In" Type="Int64" />
+            <Parameter Name="retVal" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_AboutToExpiryCompanies_NextWeek" ReturnType="Collection(sadbModel.lms_superadmin_get_AboutToExpiryCompanies_NextWeek_Result)" />
+          <FunctionImport Name="lms_superadmin_get_AllCourses" ReturnType="Collection(sadbModel.lms_superadmin_get_AllCourses_Result)" />
+          <FunctionImport Name="lms_superadmin_get_AllRACourseQuestions" ReturnType="Collection(sadbModel.lms_superadmin_get_AllRACourseQuestions_Result)">
+          <Parameter Name="course" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_AllRiskAssessments" ReturnType="Collection(sadbModel.lms_superadmin_get_AllRiskAssessments_Result)" />
+          <FunctionImport Name="lms_superadmin_get_company_by_sequential_id" ReturnType="Collection(Int64)">
+          <Parameter Name="sequentialId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_CompanyAdminInfo" ReturnType="Collection(sadbModel.lms_superadmin_get_CompanyAdminInfo_Result)">
+          <Parameter Name="organisation" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_companyBanner" ReturnType="Collection(Binary)">
+          <Parameter Name="orgUID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_CompnayLocationDepartmentMap" ReturnType="Collection(sadbModel.lms_superadmin_get_CompnayLocationDepartmentMap_Result)">
+            <Parameter Name="location" Mode="In" Type="Int64" />
+            <Parameter Name="search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_crm_company_admin_Listing" ReturnType="Collection(sadbModel.lms_superadmin_get_crm_company_admin_Listing_Result)">
+            <Parameter Name="selectedOrganisations" Mode="In" Type="String" />
+            <Parameter Name="selectedAdminTypes" Mode="In" Type="String" />
+            <Parameter Name="selectContractManager" Mode="In" Type="Int32" />
+            <Parameter Name="selectTrainer" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_dash_HeaderInfo" ReturnType="Collection(sadbModel.lms_superadmin_get_dash_HeaderInfo_Result)" />
+          <FunctionImport Name="lms_superadmin_get_GroupsOfRA" ReturnType="Collection(sadbModel.lms_superadmin_get_GroupsOfRA_Result)">
+            <Parameter Name="raid" Mode="In" Type="Int64" />
+            <Parameter Name="search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_LearnerInfo" ReturnType="Collection(sadbModel.lms_superadmin_get_LearnerInfo_Result)">
+          <Parameter Name="learner" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_LearnerRAReport" ReturnType="Collection(sadbModel.lms_superadmin_get_LearnerRAReport_Result)">
+            <Parameter Name="learnerName" Mode="In" Type="String" />
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="signedOff" Mode="In" Type="Int32" />
+            <Parameter Name="issues" Mode="In" Type="Int32" />
+            <Parameter Name="fromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="toDate" Mode="In" Type="DateTime" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_RAListing" ReturnType="Collection(sadbModel.lms_superadmin_get_RAListing_Result)">
+            <Parameter Name="moduleName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_learning_progress_record">
+            <Parameter Name="recordId" Mode="In" Type="Int64" />
+            <Parameter Name="score" Mode="In" Type="Int32" />
+            <Parameter Name="completeionDate" Mode="In" Type="DateTime" />
+            <Parameter Name="status" Mode="In" Type="String" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_update_RAQuestion">
+            <Parameter Name="question" Mode="In" Type="String" />
+            <Parameter Name="questionid" Mode="In" Type="Int64" />
+            <Parameter Name="group" Mode="In" Type="Int64" />
+            <Parameter Name="groupText" Mode="In" Type="String" />
+            <Parameter Name="course" Mode="In" Type="Int64" />
+            <Parameter Name="order" Mode="In" Type="Int32" />
+            <Parameter Name="retval" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_superadmin_get_courseListing" ReturnType="Collection(sadbModel.lms_superadmin_get_courseListing_Result)">
+            <Parameter Name="courseName" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
+            <Parameter Name="sortCol" Mode="In" Type="String" />
+            <Parameter Name="sortDir" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_api_AddLicense">
+            <Parameter Name="UserId" Mode="In" Type="String" />
+            <Parameter Name="CourseId" Mode="In" Type="String" />
+            <Parameter Name="LicenseKey" Mode="In" Type="String" />
+            <Parameter Name="ExpiryDate" Mode="In" Type="DateTime" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_api_GetLicense" ReturnType="Collection(sadbModel.lms_api_GetLicense_Result)">
+            <Parameter Name="UserId" Mode="In" Type="String" />
+            <Parameter Name="CourseId" Mode="In" Type="String" />
+            <Parameter Name="Licence" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="lms_api_RenewLicense">
+            <Parameter Name="LicenseId" Mode="In" Type="Int32" />
+            <Parameter Name="NewExpiryDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="lms_api_RevokeLicense">
+          <Parameter Name="LicenseId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="lms_api_GetLicenseByKey" ReturnType="Collection(sadbModel.lms_api_GetLicenseByKey_Result)">
+            <Parameter Name="LicenseKey" Mode="In" Type="String" />
+            <Parameter Name="CourseId" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="lms_super_admin_getSuspendDataRecords_Result">
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strSuspendData" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AboutToExpiryCompanies_ThisWeek_Result">
+          <Property Type="Int64" Name="intorganisationid" Nullable="false" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UL_datExpire" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AllDepartmentsForLocation_Result">
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AllOptionsForQuestion_Result">
+          <Property Type="Int32" Name="intQuestionOptionID" Nullable="false" />
+          <Property Type="String" Name="strQuestionOption" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="blnIssue" Nullable="false" />
+          <Property Type="Int32" Name="intOrder" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AllResellers_Result">
+          <Property Type="Int64" Name="resellerId" Nullable="false" />
+          <Property Type="String" Name="resellerName" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_certificate_record_Result">
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Int64" Name="intRecordID" Nullable="false" />
+          <Property Type="String" Name="strStatus" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="intScore" Nullable="true" />
+          <Property Type="DateTime" Name="dateCompletedOn" Nullable="true" Precision="23" />
+          <Property Type="Binary" Name="org_certificate" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_company_course_licences_Result">
+          <Property Type="Int64" Name="MainModuleId" Nullable="false" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="isRAModule" Nullable="true" />
+          <Property Type="Int32" Name="ModuleId" Nullable="true" />
+          <Property Type="Int32" Name="AssignedLicenses" Nullable="true" />
+          <Property Type="Int32" Name="ConsumedLicenses" Nullable="true" />
+          <Property Type="Int32" Name="assignedCourse" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_CompanyAdminList_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int32" Name="intOrganisationID" Nullable="true" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_companyInfo_Result">
+          <Property Type="Int64" Name="intOrganisationId" Nullable="false" />
+          <Property Type="Guid" Name="org_uid" Nullable="true" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ul_sequentialid" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strContractorName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strContractorEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strSector" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strRate" Nullable="true" MaxLength="10" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="DateTime" Name="ul_datExpire" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="docUploadEnabled" Nullable="true" />
+          <Property Type="Boolean" Name="SelfRegistrationEnabled" Nullable="true" />
+          <Property Type="String" Name="strFirstNameDescription" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="strSurnameDescription" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="strTitleDescription" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="UL_emailIdDescription" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strLocationDescription" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strDepartmentDescription" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="org_notes" Nullable="true" />
+          <Property Type="Int32" Name="allowedDocCount" Nullable="true" />
+          <Property Type="Int16" Name="incidentAccidentEnabled" Nullable="true" />
+          <Property Type="Int32" Name="trainingResetType" Nullable="true" />
+          <Property Type="String" Name="stringOwner" Nullable="true" MaxLength="500" />
+          <Property Type="Int64" Name="resellerId" Nullable="true" />
+          <Property Type="String" Name="trainerFirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="trainerLastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="trainerEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="trainerPhone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="trainerPhoneExt" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="courseAssignMode" Nullable="true" />
+          <Property Type="Int32" Name="maxAllowedUserCount" Nullable="true" />
+          <Property Type="String" Name="orgBrandName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="supportEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="supportPhone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="orgBaseURL" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_companyListing_Result">
+          <Property Type="Int64" Name="intOrganisationId" Nullable="false" />
+          <Property Type="Guid" Name="org_uid" Nullable="true" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ul_sequentialid" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strContractorName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strContractorEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strSector" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strRate" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="stringOwner" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="DateTime" Name="ul_datExpire" Nullable="true" Precision="23" />
+          <Property Type="String" Name="TrainerFirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="TrainerLastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="TrainerEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="TrainerPhone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="TrainerExt" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="orgBrandName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="supportEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="supportPhone" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_companyListing_assigned_course_Result">
+          <Property Type="Int64" Name="intOrganisationId" Nullable="false" />
+          <Property Type="Guid" Name="org_uid" Nullable="true" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ul_sequentialid" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strContractorName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strContractorEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strSector" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strRate" Nullable="true" MaxLength="10" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="DateTime" Name="ul_datExpire" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_companyListing_dropoff_Result">
+          <Property Type="Int64" Name="intOrganisationID" Nullable="false" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ul_SequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strContractorName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strContractorEmail" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="datCreated" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="UL_datExpire" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="Int32" Name="learners" Nullable="true" />
+          <Property Type="DateTime" Name="LastLogIn" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="LastCourseLaunch" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_CourseInfo_Result">
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strCourseSummary" Nullable="true" MaxLength="400" />
+          <Property Type="String" Name="strCourseDescription" Nullable="true" MaxLength="4000" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_crm_companyListing_Result">
+          <Property Type="Int64" Name="intOrganisationId" Nullable="false" />
+          <Property Type="Guid" Name="org_uid" Nullable="true" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ul_sequentialid" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strContractorName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strContractorEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strSector" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strRate" Nullable="true" MaxLength="10" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="DateTime" Name="ul_datExpire" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_dash_WeeklyProgress_Result">
+          <Property Type="Int32" Name="InProgressThisWeek" Nullable="true" />
+          <Property Type="Int32" Name="CompletedThisWeek" Nullable="true" />
+          <Property Type="Int32" Name="NotStarted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_dash_YearlyCompletion_Result">
+          <Property Type="Int32" Name="Months" Nullable="true" />
+          <Property Type="Int32" Name="CompletionCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_LearnerCourseLauchDetails_Result">
+          <Property Type="Int64" Name="intRecordID" Nullable="false" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="launchTime" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Browser" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="BrowserVersion" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Device" Nullable="true" />
+          <Property Type="Boolean" Name="isMobileDevice" Nullable="true" />
+          <Property Type="DateTime" Name="courseCloseTime" Nullable="true" Precision="23" />
+          <Property Type="String" Name="OS" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_LearnerProgressReport_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="true" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="Int32" Name="intCourseId" Nullable="true" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Int64" Name="intRecordID" Nullable="false" />
+          <Property Type="String" Name="strSuspendData" Nullable="true" />
+          <Property Type="String" Name="strStatus" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="intScore" Nullable="true" />
+          <Property Type="DateTime" Name="dateCompletedOn" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="dateAssignedOn" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="coursecompleteby" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_moduleListing_Result">
+          <Property Type="Int64" Name="intCourseID" Nullable="false" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="isArchived" Nullable="true" />
+          <Property Type="String" Name="Path" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_RAQuestionInfo_Result">
+          <Property Type="Int32" Name="intQuestionID" Nullable="false" />
+          <Property Type="Int32" Name="intGroupID" Nullable="true" />
+          <Property Type="Int32" Name="intOrder" Nullable="true" />
+          <Property Type="String" Name="strQuestion" Nullable="true" MaxLength="Max" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_RegisteredLearners_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ul_sequentialid" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_resellerListing_Result">
+          <Property Type="Int64" Name="intOrganisationId" Nullable="false" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="Guid" Name="org_uid" Nullable="true" />
+          <Property Type="String" Name="ul_sequentialid" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strContractorName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="strContractorEmail" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="AdminFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="AdminLastName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="AdminEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strSector" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="strRate" Nullable="true" MaxLength="10" />
+          <Property Type="Boolean" Name="ul_blnLive" Nullable="true" />
+          <Property Type="DateTime" Name="ul_datExpire" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="CompanyCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_RiskAssessmentAnswerSheet_Result">
+          <Property Type="Int32" Name="intRiskAssessmentResultID" Nullable="false" />
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int32" Name="intCourseID" Nullable="false" />
+          <Property Type="Int32" Name="intIssueCount" Nullable="false" />
+          <Property Type="String" Name="strUserNotes" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strAdminNotes" Nullable="true" MaxLength="Max" />
+          <Property Type="DateTime" Name="datSignOff" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datCompleted" Nullable="true" Precision="23" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="intQuestionID" Nullable="true" />
+          <Property Type="String" Name="strQuestion" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strGroupText" Nullable="true" MaxLength="600" />
+          <Property Type="Int32" Name="intOrder" Nullable="true" />
+          <Property Type="Int32" Name="intGroupID" Nullable="true" />
+          <Property Type="String" Name="strGroup" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intAnswerID" Nullable="true" />
+          <Property Type="Boolean" Name="blnYes" Nullable="true" />
+          <Property Type="Boolean" Name="blnNo" Nullable="true" />
+          <Property Type="String" Name="strText" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="strissue" Nullable="true" MaxLength="Max" />
+          <Property Type="Boolean" Name="blnIssue" Nullable="true" />
+          <Property Type="String" Name="strQuestionOption" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_getAdminLoginDetails_Result">
+          <Property Type="Int32" Name="intcontactid" Nullable="false" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="IsRestPassword" Nullable="true" />
+          <Property Type="Int32" Name="intAdminLevelID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_getAllCompnayDepartments_Result">
+          <Property Type="Int32" Name="intDepartmentID" Nullable="false" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_getAllCompnayLocations_Result">
+          <Property Type="Int32" Name="intLocationID" Nullable="false" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_getCourseLauchDetails_Result">
+          <Property Type="Int64" Name="intRecordID" Nullable="false" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="launchTime" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Browser" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="BrowserVersion" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Device" Nullable="true" />
+          <Property Type="Boolean" Name="isMobileDevice" Nullable="true" />
+          <Property Type="DateTime" Name="courseCloseTime" Nullable="true" Precision="23" />
+          <Property Type="String" Name="OS" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_getLearnerLoginDetails_Result">
+          <Property Type="Int64" Name="intRecordID" Nullable="false" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="loginDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Browser" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="BrowserVersion" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Device" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="isMobileDevice" Nullable="true" />
+          <Property Type="String" Name="OS" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AboutToExpiryCompanies_NextWeek_Result">
+          <Property Type="Int64" Name="intorganisationid" Nullable="false" />
+          <Property Type="String" Name="UL_sequentialId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UL_datExpire" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AllCourses_Result">
+          <Property Type="Int64" Name="intCourseID" Nullable="false" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AllRACourseQuestions_Result">
+          <Property Type="Int32" Name="intQuestionID" Nullable="false" />
+          <Property Type="String" Name="strQuestion" Nullable="true" MaxLength="Max" />
+          <Property Type="Int32" Name="intQuestionTypeID" Nullable="false" />
+          <Property Type="Int32" Name="intOrder" Nullable="true" />
+          <Property Type="Int32" Name="intGotoNo" Nullable="true" />
+          <Property Type="Int32" Name="intGotoYes" Nullable="true" />
+          <Property Type="Int32" Name="intNumberFrom" Nullable="true" />
+          <Property Type="Int32" Name="intNumberTo" Nullable="true" />
+          <Property Type="Boolean" Name="blnFreeText" Nullable="false" />
+          <Property Type="Boolean" Name="blnMultiLine" Nullable="false" />
+          <Property Type="Boolean" Name="blnEnd" Nullable="false" />
+          <Property Type="Boolean" Name="blnBarChart" Nullable="false" />
+          <Property Type="Boolean" Name="blnBaseQuestion" Nullable="false" />
+          <Property Type="String" Name="strRAGroup" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="OptionCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_AllRiskAssessments_Result">
+          <Property Type="Int64" Name="intCourseID" Nullable="false" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_CompanyAdminInfo_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int32" Name="intOrganisationID" Nullable="true" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_CompnayLocationDepartmentMap_Result">
+          <Property Type="Int32" Name="intDepartmentID" Nullable="false" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="selected" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_dash_HeaderInfo_Result">
+          <Property Type="Int32" Name="TotalActiveCompanies" Nullable="true" />
+          <Property Type="Int32" Name="TotalActiveUsers" Nullable="true" />
+          <Property Type="Int32" Name="LatestLoggedInUsers" Nullable="true" />
+          <Property Type="Int32" Name="TotalModules" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_GroupsOfRA_Result">
+          <Property Type="Int32" Name="intRAGroupID" Nullable="false" />
+          <Property Type="Int32" Name="intRACourseID" Nullable="false" />
+          <Property Type="String" Name="strRAGroup" Nullable="true" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_LearnerInfo_Result">
+          <Property Type="Int32" Name="intContactID" Nullable="false" />
+          <Property Type="Int32" Name="intOrganisationID" Nullable="true" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="blnCancelled" Nullable="true" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_RAListing_Result">
+          <Property Type="Int64" Name="intCourseID" Nullable="false" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="isArchived" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_LearnerRAReport_Result">
+          <Property Type="Int32" Name="intRiskAssessmentResultID" Nullable="true" />
+          <Property Type="Int32" Name="intContactID" Nullable="true" />
+          <Property Type="Int32" Name="intLocationID" Nullable="true" />
+          <Property Type="Int32" Name="intDepartmentID" Nullable="true" />
+          <Property Type="Int32" Name="intCourseId" Nullable="true" />
+          <Property Type="String" Name="strFirstName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strSurname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="strEmail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="strEmployeeNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strOrganisation" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="strLocation" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strDepartment" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="datCompleted" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="intIssueCount" Nullable="false" />
+          <Property Type="DateTime" Name="datSignoff" Nullable="true" Precision="23" />
+          <Property Type="String" Name="SignedOff" Nullable="false" MaxLength="3" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_crm_company_admin_Listing_Result">
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="lms_superadmin_get_courseListing_Result">
+          <Property Type="Int64" Name="block_id" Nullable="false" />
+          <Property Type="String" Name="block_name" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="block_desc" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="block_active" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="lms_api_GetLicense_Result">
+          <Property Type="Int32" Name="LicenseId" Nullable="false" />
+          <Property Type="String" Name="UserId" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="CourseId" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="LicenseKey" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="ExpiryDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="lms_api_GetLicenseByKey_Result">
+          <Property Type="Int32" Name="LicenseId" Nullable="false" />
+          <Property Type="String" Name="UserId" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="CourseId" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="LicenseKey" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="ExpiryDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="sadbModelStoreContainer" CdmEntityContainer="superadmindbEntities" >
+          <FunctionImportMapping FunctionImportName="lms_super_admin_getSuspendDataRecords" FunctionName="sadbModel.Store.lms_super_admin_getSuspendDataRecords">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_super_admin_getSuspendDataRecords_Result">
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="strSuspendData" ColumnName="strSuspendData" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_assign_company_licence" FunctionName="sadbModel.Store.lms_superadmin_assign_company_licence" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_assign_company_new_licence" FunctionName="sadbModel.Store.lms_superadmin_assign_company_new_licence" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_assign_course_to_company" FunctionName="sadbModel.Store.lms_superadmin_assign_course_to_company" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_assign_new_course_to_company" FunctionName="sadbModel.Store.lms_superadmin_assign_new_course_to_company" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_CompanyAdminLearner" FunctionName="sadbModel.Store.lms_superadmin_create_CompanyAdminLearner" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_deleted_company_record" FunctionName="sadbModel.Store.lms_superadmin_create_deleted_company_record" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_department" FunctionName="sadbModel.Store.lms_superadmin_create_department" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_location" FunctionName="sadbModel.Store.lms_superadmin_create_location" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_location_department" FunctionName="sadbModel.Store.lms_superadmin_create_location_department" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_NewRiskAssessment" FunctionName="sadbModel.Store.lms_superadmin_create_NewRiskAssessment" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_NewRiskAssessmentGroup" FunctionName="sadbModel.Store.lms_superadmin_create_NewRiskAssessmentGroup" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_organisation" FunctionName="sadbModel.Store.lms_superadmin_create_organisation" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_ra_ques_to_company" FunctionName="sadbModel.Store.lms_superadmin_create_ra_ques_to_company" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_RAQue" FunctionName="sadbModel.Store.lms_superadmin_create_RAQue" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_RAQueOption" FunctionName="sadbModel.Store.lms_superadmin_create_RAQueOption" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_delete_company" FunctionName="sadbModel.Store.lms_superadmin_delete_company" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_delete_department" FunctionName="sadbModel.Store.lms_superadmin_delete_department" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_delete_RAQuestion" FunctionName="sadbModel.Store.lms_superadmin_delete_RAQuestion" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_delete_RAQuestionOption" FunctionName="sadbModel.Store.lms_superadmin_delete_RAQuestionOption" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_delete_reseller" FunctionName="sadbModel.Store.lms_superadmin_delete_reseller" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AboutToExpiryCompanies_ThisWeek" FunctionName="sadbModel.Store.lms_superadmin_get_AboutToExpiryCompanies_ThisWeek">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AboutToExpiryCompanies_ThisWeek_Result">
+                <ScalarProperty Name="intorganisationid" ColumnName="intorganisationid" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_datExpire" ColumnName="UL_datExpire" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AllDepartmentsForLocation" FunctionName="sadbModel.Store.lms_superadmin_get_AllDepartmentsForLocation">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AllDepartmentsForLocation_Result">
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AllOptionsForQuestion" FunctionName="sadbModel.Store.lms_superadmin_get_AllOptionsForQuestion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AllOptionsForQuestion_Result">
+                <ScalarProperty Name="intQuestionOptionID" ColumnName="intQuestionOptionID" />
+                <ScalarProperty Name="strQuestionOption" ColumnName="strQuestionOption" />
+                <ScalarProperty Name="blnIssue" ColumnName="blnIssue" />
+                <ScalarProperty Name="intOrder" ColumnName="intOrder" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AllResellers" FunctionName="sadbModel.Store.lms_superadmin_get_AllResellers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AllResellers_Result">
+                <ScalarProperty Name="resellerId" ColumnName="resellerId" />
+                <ScalarProperty Name="resellerName" ColumnName="resellerName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_certificate_record" FunctionName="sadbModel.Store.lms_superadmin_get_certificate_record">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_certificate_record_Result">
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="intRecordID" ColumnName="intRecordID" />
+                <ScalarProperty Name="strStatus" ColumnName="strStatus" />
+                <ScalarProperty Name="intScore" ColumnName="intScore" />
+                <ScalarProperty Name="dateCompletedOn" ColumnName="dateCompletedOn" />
+                <ScalarProperty Name="org_certificate" ColumnName="org_certificate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_company_course_licences" FunctionName="sadbModel.Store.lms_superadmin_get_company_course_licences">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_company_course_licences_Result">
+                <ScalarProperty Name="MainModuleId" ColumnName="MainModuleId" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="isRAModule" ColumnName="isRAModule" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+                <ScalarProperty Name="AssignedLicenses" ColumnName="AssignedLicenses" />
+                <ScalarProperty Name="ConsumedLicenses" ColumnName="ConsumedLicenses" />
+                <ScalarProperty Name="assignedCourse" ColumnName="assignedCourse" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_CompanyAdminList" FunctionName="sadbModel.Store.lms_superadmin_get_CompanyAdminList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_CompanyAdminList_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_companyCertificate" FunctionName="sadbModel.Store.lms_superadmin_get_companyCertificate" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_companyInfo" FunctionName="sadbModel.Store.lms_superadmin_get_companyInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_companyInfo_Result">
+                <ScalarProperty Name="intOrganisationId" ColumnName="intOrganisationId" />
+                <ScalarProperty Name="org_uid" ColumnName="org_uid" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="ul_sequentialid" ColumnName="ul_sequentialid" />
+                <ScalarProperty Name="strContractorName" ColumnName="strContractorName" />
+                <ScalarProperty Name="strContractorEmail" ColumnName="strContractorEmail" />
+                <ScalarProperty Name="strSector" ColumnName="strSector" />
+                <ScalarProperty Name="strRate" ColumnName="strRate" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="ul_datExpire" ColumnName="ul_datExpire" />
+                <ScalarProperty Name="docUploadEnabled" ColumnName="docUploadEnabled" />
+                <ScalarProperty Name="SelfRegistrationEnabled" ColumnName="SelfRegistrationEnabled" />
+                <ScalarProperty Name="strFirstNameDescription" ColumnName="strFirstNameDescription" />
+                <ScalarProperty Name="strSurnameDescription" ColumnName="strSurnameDescription" />
+                <ScalarProperty Name="strTitleDescription" ColumnName="strTitleDescription" />
+                <ScalarProperty Name="UL_emailIdDescription" ColumnName="UL_emailIdDescription" />
+                <ScalarProperty Name="strLocationDescription" ColumnName="strLocationDescription" />
+                <ScalarProperty Name="strDepartmentDescription" ColumnName="strDepartmentDescription" />
+                <ScalarProperty Name="org_notes" ColumnName="org_notes" />
+                <ScalarProperty Name="allowedDocCount" ColumnName="allowedDocCount" />
+                <ScalarProperty Name="incidentAccidentEnabled" ColumnName="incidentAccidentEnabled" />
+                <ScalarProperty Name="trainingResetType" ColumnName="trainingResetType" />
+                <ScalarProperty Name="stringOwner" ColumnName="stringOwner" />
+                <ScalarProperty Name="resellerId" ColumnName="resellerId" />
+                <ScalarProperty Name="trainerFirstName" ColumnName="trainerFirstName" />
+                <ScalarProperty Name="trainerLastName" ColumnName="trainerLastName" />
+                <ScalarProperty Name="trainerEmail" ColumnName="trainerEmail" />
+                <ScalarProperty Name="trainerPhone" ColumnName="trainerPhone" />
+                <ScalarProperty Name="trainerPhoneExt" ColumnName="trainerPhoneExt" />
+                <ScalarProperty Name="courseAssignMode" ColumnName="courseAssignMode" />
+                <ScalarProperty Name="maxAllowedUserCount" ColumnName="maxAllowedUserCount" />
+                <ScalarProperty Name="orgBrandName" ColumnName="orgBrandName" />
+                <ScalarProperty Name="supportEmail" ColumnName="supportEmail" />
+                <ScalarProperty Name="supportPhone" ColumnName="supportPhone" />
+                <ScalarProperty Name="orgBaseURL" ColumnName="orgBaseURL" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_companyListing" FunctionName="sadbModel.Store.lms_superadmin_get_companyListing">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_companyListing_Result">
+                <ScalarProperty Name="intOrganisationId" ColumnName="intOrganisationId" />
+                <ScalarProperty Name="org_uid" ColumnName="org_uid" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="ul_sequentialid" ColumnName="ul_sequentialid" />
+                <ScalarProperty Name="strContractorName" ColumnName="strContractorName" />
+                <ScalarProperty Name="strContractorEmail" ColumnName="strContractorEmail" />
+                <ScalarProperty Name="strSector" ColumnName="strSector" />
+                <ScalarProperty Name="strRate" ColumnName="strRate" />
+                <ScalarProperty Name="stringOwner" ColumnName="stringOwner" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="ul_datExpire" ColumnName="ul_datExpire" />
+                <ScalarProperty Name="TrainerFirstName" ColumnName="TrainerFirstName" />
+                <ScalarProperty Name="TrainerLastName" ColumnName="TrainerLastName" />
+                <ScalarProperty Name="TrainerEmail" ColumnName="TrainerEmail" />
+                <ScalarProperty Name="TrainerPhone" ColumnName="TrainerPhone" />
+                <ScalarProperty Name="TrainerExt" ColumnName="TrainerExt" />
+                <ScalarProperty Name="orgBrandName" ColumnName="orgBrandName" />
+                <ScalarProperty Name="supportEmail" ColumnName="supportEmail" />
+                <ScalarProperty Name="supportPhone" ColumnName="supportPhone" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_companyListing_assigned_course" FunctionName="sadbModel.Store.lms_superadmin_get_companyListing_assigned_course">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_companyListing_assigned_course_Result">
+                <ScalarProperty Name="intOrganisationId" ColumnName="intOrganisationId" />
+                <ScalarProperty Name="org_uid" ColumnName="org_uid" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="ul_sequentialid" ColumnName="ul_sequentialid" />
+                <ScalarProperty Name="strContractorName" ColumnName="strContractorName" />
+                <ScalarProperty Name="strContractorEmail" ColumnName="strContractorEmail" />
+                <ScalarProperty Name="strSector" ColumnName="strSector" />
+                <ScalarProperty Name="strRate" ColumnName="strRate" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="ul_datExpire" ColumnName="ul_datExpire" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_companyListing_dropoff" FunctionName="sadbModel.Store.lms_superadmin_get_companyListing_dropoff">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_companyListing_dropoff_Result">
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="ul_SequentialId" ColumnName="ul_SequentialId" />
+                <ScalarProperty Name="strContractorName" ColumnName="strContractorName" />
+                <ScalarProperty Name="strContractorEmail" ColumnName="strContractorEmail" />
+                <ScalarProperty Name="datCreated" ColumnName="datCreated" />
+                <ScalarProperty Name="UL_datExpire" ColumnName="UL_datExpire" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="learners" ColumnName="learners" />
+                <ScalarProperty Name="LastLogIn" ColumnName="LastLogIn" />
+                <ScalarProperty Name="LastCourseLaunch" ColumnName="LastCourseLaunch" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_CourseInfo" FunctionName="sadbModel.Store.lms_superadmin_get_CourseInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_CourseInfo_Result">
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="strCourseSummary" ColumnName="strCourseSummary" />
+                <ScalarProperty Name="strCourseDescription" ColumnName="strCourseDescription" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_crm_companyListing" FunctionName="sadbModel.Store.lms_superadmin_get_crm_companyListing">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_crm_companyListing_Result">
+                <ScalarProperty Name="intOrganisationId" ColumnName="intOrganisationId" />
+                <ScalarProperty Name="org_uid" ColumnName="org_uid" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="ul_sequentialid" ColumnName="ul_sequentialid" />
+                <ScalarProperty Name="strContractorName" ColumnName="strContractorName" />
+                <ScalarProperty Name="strContractorEmail" ColumnName="strContractorEmail" />
+                <ScalarProperty Name="strSector" ColumnName="strSector" />
+                <ScalarProperty Name="strRate" ColumnName="strRate" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="ul_datExpire" ColumnName="ul_datExpire" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_dash_WeeklyProgress" FunctionName="sadbModel.Store.lms_superadmin_get_dash_WeeklyProgress">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_dash_WeeklyProgress_Result">
+                <ScalarProperty Name="InProgressThisWeek" ColumnName="InProgressThisWeek" />
+                <ScalarProperty Name="CompletedThisWeek" ColumnName="CompletedThisWeek" />
+                <ScalarProperty Name="NotStarted" ColumnName="NotStarted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_dash_YearlyCompletion" FunctionName="sadbModel.Store.lms_superadmin_get_dash_YearlyCompletion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_dash_YearlyCompletion_Result">
+                <ScalarProperty Name="Months" ColumnName="Months" />
+                <ScalarProperty Name="CompletionCount" ColumnName="CompletionCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_LearnerCourseLauchDetails" FunctionName="sadbModel.Store.lms_superadmin_get_LearnerCourseLauchDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_LearnerCourseLauchDetails_Result">
+                <ScalarProperty Name="intRecordID" ColumnName="intRecordID" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="launchTime" ColumnName="launchTime" />
+                <ScalarProperty Name="Browser" ColumnName="Browser" />
+                <ScalarProperty Name="BrowserVersion" ColumnName="BrowserVersion" />
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="isMobileDevice" ColumnName="isMobileDevice" />
+                <ScalarProperty Name="courseCloseTime" ColumnName="courseCloseTime" />
+                <ScalarProperty Name="OS" ColumnName="OS" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_LearnerProgressReport" FunctionName="sadbModel.Store.lms_superadmin_get_LearnerProgressReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_LearnerProgressReport_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="intCourseId" ColumnName="intCourseId" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="intRecordID" ColumnName="intRecordID" />
+                <ScalarProperty Name="strSuspendData" ColumnName="strSuspendData" />
+                <ScalarProperty Name="strStatus" ColumnName="strStatus" />
+                <ScalarProperty Name="intScore" ColumnName="intScore" />
+                <ScalarProperty Name="dateCompletedOn" ColumnName="dateCompletedOn" />
+                <ScalarProperty Name="dateAssignedOn" ColumnName="dateAssignedOn" />
+                <ScalarProperty Name="coursecompleteby" ColumnName="coursecompleteby" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_moduleListing" FunctionName="sadbModel.Store.lms_superadmin_get_moduleListing">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_moduleListing_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="isArchived" ColumnName="isArchived" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_OTP" FunctionName="sadbModel.Store.lms_superadmin_get_OTP" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_RAQuestionInfo" FunctionName="sadbModel.Store.lms_superadmin_get_RAQuestionInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_RAQuestionInfo_Result">
+                <ScalarProperty Name="intQuestionID" ColumnName="intQuestionID" />
+                <ScalarProperty Name="intGroupID" ColumnName="intGroupID" />
+                <ScalarProperty Name="intOrder" ColumnName="intOrder" />
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_RegisteredLearners" FunctionName="sadbModel.Store.lms_superadmin_get_RegisteredLearners">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_RegisteredLearners_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="ul_sequentialid" ColumnName="ul_sequentialid" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_resellerListing" FunctionName="sadbModel.Store.lms_superadmin_get_resellerListing">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_resellerListing_Result">
+                <ScalarProperty Name="intOrganisationId" ColumnName="intOrganisationId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="org_uid" ColumnName="org_uid" />
+                <ScalarProperty Name="ul_sequentialid" ColumnName="ul_sequentialid" />
+                <ScalarProperty Name="strContractorName" ColumnName="strContractorName" />
+                <ScalarProperty Name="strContractorEmail" ColumnName="strContractorEmail" />
+                <ScalarProperty Name="AdminFirstName" ColumnName="AdminFirstName" />
+                <ScalarProperty Name="AdminLastName" ColumnName="AdminLastName" />
+                <ScalarProperty Name="AdminEmail" ColumnName="AdminEmail" />
+                <ScalarProperty Name="strSector" ColumnName="strSector" />
+                <ScalarProperty Name="strRate" ColumnName="strRate" />
+                <ScalarProperty Name="ul_blnLive" ColumnName="ul_blnLive" />
+                <ScalarProperty Name="ul_datExpire" ColumnName="ul_datExpire" />
+                <ScalarProperty Name="CompanyCount" ColumnName="CompanyCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_RiskAssessmentAnswerSheet" FunctionName="sadbModel.Store.lms_superadmin_get_RiskAssessmentAnswerSheet">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_RiskAssessmentAnswerSheet_Result">
+                <ScalarProperty Name="intRiskAssessmentResultID" ColumnName="intRiskAssessmentResultID" />
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="intIssueCount" ColumnName="intIssueCount" />
+                <ScalarProperty Name="strUserNotes" ColumnName="strUserNotes" />
+                <ScalarProperty Name="strAdminNotes" ColumnName="strAdminNotes" />
+                <ScalarProperty Name="datSignOff" ColumnName="datSignOff" />
+                <ScalarProperty Name="datCompleted" ColumnName="datCompleted" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="intQuestionID" ColumnName="intQuestionID" />
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+                <ScalarProperty Name="strGroupText" ColumnName="strGroupText" />
+                <ScalarProperty Name="intOrder" ColumnName="intOrder" />
+                <ScalarProperty Name="intGroupID" ColumnName="intGroupID" />
+                <ScalarProperty Name="strGroup" ColumnName="strGroup" />
+                <ScalarProperty Name="intAnswerID" ColumnName="intAnswerID" />
+                <ScalarProperty Name="blnYes" ColumnName="blnYes" />
+                <ScalarProperty Name="blnNo" ColumnName="blnNo" />
+                <ScalarProperty Name="strText" ColumnName="strText" />
+                <ScalarProperty Name="strissue" ColumnName="strissue" />
+                <ScalarProperty Name="blnIssue" ColumnName="blnIssue" />
+                <ScalarProperty Name="strQuestionOption" ColumnName="strQuestionOption" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_getAdminLoginDetails" FunctionName="sadbModel.Store.lms_superadmin_getAdminLoginDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_getAdminLoginDetails_Result">
+                <ScalarProperty Name="intcontactid" ColumnName="intcontactid" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="IsRestPassword" ColumnName="IsRestPassword" />
+                <ScalarProperty Name="intAdminLevelID" ColumnName="intAdminLevelID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_getAllCompnayDepartments" FunctionName="sadbModel.Store.lms_superadmin_getAllCompnayDepartments">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_getAllCompnayDepartments_Result">
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_getAllCompnayLocations" FunctionName="sadbModel.Store.lms_superadmin_getAllCompnayLocations">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_getAllCompnayLocations_Result">
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_getCourseLauchDetails" FunctionName="sadbModel.Store.lms_superadmin_getCourseLauchDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_getCourseLauchDetails_Result">
+                <ScalarProperty Name="intRecordID" ColumnName="intRecordID" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="launchTime" ColumnName="launchTime" />
+                <ScalarProperty Name="Browser" ColumnName="Browser" />
+                <ScalarProperty Name="BrowserVersion" ColumnName="BrowserVersion" />
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="isMobileDevice" ColumnName="isMobileDevice" />
+                <ScalarProperty Name="courseCloseTime" ColumnName="courseCloseTime" />
+                <ScalarProperty Name="OS" ColumnName="OS" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_getLearnerLoginDetails" FunctionName="sadbModel.Store.lms_superadmin_getLearnerLoginDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_getLearnerLoginDetails_Result">
+                <ScalarProperty Name="intRecordID" ColumnName="intRecordID" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="loginDate" ColumnName="loginDate" />
+                <ScalarProperty Name="Browser" ColumnName="Browser" />
+                <ScalarProperty Name="BrowserVersion" ColumnName="BrowserVersion" />
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="isMobileDevice" ColumnName="isMobileDevice" />
+                <ScalarProperty Name="OS" ColumnName="OS" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_insert_companyBanner" FunctionName="sadbModel.Store.lms_superadmin_insert_companyBanner" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_insert_companyCertificate" FunctionName="sadbModel.Store.lms_superadmin_insert_companyCertificate" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_insert_LocDepMap" FunctionName="sadbModel.Store.lms_superadmin_insert_LocDepMap" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_refresh_module_assignment" FunctionName="sadbModel.Store.lms_superadmin_refresh_module_assignment" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_remove_customcertificate" FunctionName="sadbModel.Store.lms_superadmin_remove_customcertificate" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_remove_customlogo" FunctionName="sadbModel.Store.lms_superadmin_remove_customlogo" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_remove_superadmin_rights" FunctionName="sadbModel.Store.lms_superadmin_remove_superadmin_rights" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_Reset_LearnerPassword" FunctionName="sadbModel.Store.lms_superadmin_Reset_LearnerPassword" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_CompanyActiveStatus" FunctionName="sadbModel.Store.lms_superadmin_update_CompanyActiveStatus" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_CompanyFieldTextSettings" FunctionName="sadbModel.Store.lms_superadmin_update_CompanyFieldTextSettings" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_CompanyGeneralSettings" FunctionName="sadbModel.Store.lms_superadmin_update_CompanyGeneralSettings" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_CompanyInformation" FunctionName="sadbModel.Store.lms_superadmin_update_CompanyInformation" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_CompanyModuleAccess" FunctionName="sadbModel.Store.lms_superadmin_update_CompanyModuleAccess" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_CompanyNotes" FunctionName="sadbModel.Store.lms_superadmin_update_CompanyNotes" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_CourseInfo" FunctionName="sadbModel.Store.lms_superadmin_update_CourseInfo" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_department" FunctionName="sadbModel.Store.lms_superadmin_update_department" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_LearnerInfo" FunctionName="sadbModel.Store.lms_superadmin_update_LearnerInfo" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_LearnerStatus" FunctionName="sadbModel.Store.lms_superadmin_update_LearnerStatus" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_location" FunctionName="sadbModel.Store.lms_superadmin_update_location" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_RAQuestionOption" FunctionName="sadbModel.Store.lms_superadmin_update_RAQuestionOption" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_RiskAssessmentGroup" FunctionName="sadbModel.Store.lms_superadmin_update_RiskAssessmentGroup" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_RiskAssessmentResult" FunctionName="sadbModel.Store.lms_superadmin_update_RiskAssessmentResult" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_UpdatetbCourseLicenseDetails" FunctionName="sadbModel.Store.lms_superadmin_UpdatetbCourseLicenseDetails" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_create_OTP_record" FunctionName="sadbModel.Store.lms_superadmin_create_OTP_record" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_delete_location" FunctionName="sadbModel.Store.lms_superadmin_delete_location" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AboutToExpiryCompanies_NextWeek" FunctionName="sadbModel.Store.lms_superadmin_get_AboutToExpiryCompanies_NextWeek">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AboutToExpiryCompanies_NextWeek_Result">
+                <ScalarProperty Name="intorganisationid" ColumnName="intorganisationid" />
+                <ScalarProperty Name="UL_sequentialId" ColumnName="UL_sequentialId" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="UL_datExpire" ColumnName="UL_datExpire" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AllCourses" FunctionName="sadbModel.Store.lms_superadmin_get_AllCourses">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AllCourses_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AllRACourseQuestions" FunctionName="sadbModel.Store.lms_superadmin_get_AllRACourseQuestions">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AllRACourseQuestions_Result">
+                <ScalarProperty Name="intQuestionID" ColumnName="intQuestionID" />
+                <ScalarProperty Name="strQuestion" ColumnName="strQuestion" />
+                <ScalarProperty Name="intQuestionTypeID" ColumnName="intQuestionTypeID" />
+                <ScalarProperty Name="intOrder" ColumnName="intOrder" />
+                <ScalarProperty Name="intGotoNo" ColumnName="intGotoNo" />
+                <ScalarProperty Name="intGotoYes" ColumnName="intGotoYes" />
+                <ScalarProperty Name="intNumberFrom" ColumnName="intNumberFrom" />
+                <ScalarProperty Name="intNumberTo" ColumnName="intNumberTo" />
+                <ScalarProperty Name="blnFreeText" ColumnName="blnFreeText" />
+                <ScalarProperty Name="blnMultiLine" ColumnName="blnMultiLine" />
+                <ScalarProperty Name="blnEnd" ColumnName="blnEnd" />
+                <ScalarProperty Name="blnBarChart" ColumnName="blnBarChart" />
+                <ScalarProperty Name="blnBaseQuestion" ColumnName="blnBaseQuestion" />
+                <ScalarProperty Name="strRAGroup" ColumnName="strRAGroup" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="OptionCount" ColumnName="OptionCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_AllRiskAssessments" FunctionName="sadbModel.Store.lms_superadmin_get_AllRiskAssessments">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_AllRiskAssessments_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_company_by_sequential_id" FunctionName="sadbModel.Store.lms_superadmin_get_company_by_sequential_id" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_CompanyAdminInfo" FunctionName="sadbModel.Store.lms_superadmin_get_CompanyAdminInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_CompanyAdminInfo_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_companyBanner" FunctionName="sadbModel.Store.lms_superadmin_get_companyBanner" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_CompnayLocationDepartmentMap" FunctionName="sadbModel.Store.lms_superadmin_get_CompnayLocationDepartmentMap">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_CompnayLocationDepartmentMap_Result">
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+                <ScalarProperty Name="selected" ColumnName="selected" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_crm_company_admin_Listing" FunctionName="sadbModel.Store.lms_superadmin_get_crm_company_admin_Listing" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_crm_company_admin_Listing_Result">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_dash_HeaderInfo" FunctionName="sadbModel.Store.lms_superadmin_get_dash_HeaderInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_dash_HeaderInfo_Result">
+                <ScalarProperty Name="TotalActiveCompanies" ColumnName="TotalActiveCompanies" />
+                <ScalarProperty Name="TotalActiveUsers" ColumnName="TotalActiveUsers" />
+                <ScalarProperty Name="LatestLoggedInUsers" ColumnName="LatestLoggedInUsers" />
+                <ScalarProperty Name="TotalModules" ColumnName="TotalModules" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_GroupsOfRA" FunctionName="sadbModel.Store.lms_superadmin_get_GroupsOfRA">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_GroupsOfRA_Result">
+                <ScalarProperty Name="intRAGroupID" ColumnName="intRAGroupID" />
+                <ScalarProperty Name="intRACourseID" ColumnName="intRACourseID" />
+                <ScalarProperty Name="strRAGroup" ColumnName="strRAGroup" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_LearnerInfo" FunctionName="sadbModel.Store.lms_superadmin_get_LearnerInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_LearnerInfo_Result">
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intOrganisationID" ColumnName="intOrganisationID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="blnCancelled" ColumnName="blnCancelled" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_LearnerRAReport" FunctionName="sadbModel.Store.lms_superadmin_get_LearnerRAReport" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_LearnerRAReport_Result">
+                <ScalarProperty Name="intRiskAssessmentResultID" ColumnName="intRiskAssessmentResultID" />
+                <ScalarProperty Name="intContactID" ColumnName="intContactID" />
+                <ScalarProperty Name="intLocationID" ColumnName="intLocationID" />
+                <ScalarProperty Name="intDepartmentID" ColumnName="intDepartmentID" />
+                <ScalarProperty Name="intCourseId" ColumnName="intCourseId" />
+                <ScalarProperty Name="strFirstName" ColumnName="strFirstName" />
+                <ScalarProperty Name="strSurname" ColumnName="strSurname" />
+                <ScalarProperty Name="strEmail" ColumnName="strEmail" />
+                <ScalarProperty Name="strEmployeeNumber" ColumnName="strEmployeeNumber" />
+                <ScalarProperty Name="strOrganisation" ColumnName="strOrganisation" />
+                <ScalarProperty Name="strLocation" ColumnName="strLocation" />
+                <ScalarProperty Name="strDepartment" ColumnName="strDepartment" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="datCompleted" ColumnName="datCompleted" />
+                <ScalarProperty Name="intIssueCount" ColumnName="intIssueCount" />
+                <ScalarProperty Name="datSignoff" ColumnName="datSignoff" />
+                <ScalarProperty Name="SignedOff" ColumnName="SignedOff" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_RAListing" FunctionName="sadbModel.Store.lms_superadmin_get_RAListing" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_RAListing_Result">
+                <ScalarProperty Name="intCourseID" ColumnName="intCourseID" />
+                <ScalarProperty Name="strCourse" ColumnName="strCourse" />
+                <ScalarProperty Name="isArchived" ColumnName="isArchived" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_learning_progress_record" FunctionName="sadbModel.Store.lms_superadmin_update_learning_progress_record" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_update_RAQuestion" FunctionName="sadbModel.Store.lms_superadmin_update_RAQuestion" />
+          <FunctionImportMapping FunctionImportName="lms_superadmin_get_courseListing" FunctionName="sadbModel.Store.lms_superadmin_get_courseListing" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_superadmin_get_courseListing_Result">
+                <ScalarProperty Name="block_id" ColumnName="block_id" />
+                <ScalarProperty Name="block_name" ColumnName="block_name" />
+                <ScalarProperty Name="block_desc" ColumnName="block_desc" />
+                <ScalarProperty Name="block_active" ColumnName="block_active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_api_AddLicense" FunctionName="sadbModel.Store.lms_api_AddLicense" />
+          <FunctionImportMapping FunctionImportName="lms_api_GetLicense" FunctionName="sadbModel.Store.lms_api_GetLicense">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_api_GetLicense_Result">
+                <ScalarProperty Name="LicenseId" ColumnName="LicenseId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="LicenseKey" ColumnName="LicenseKey" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="lms_api_RenewLicense" FunctionName="sadbModel.Store.lms_api_RenewLicense" />
+          <FunctionImportMapping FunctionImportName="lms_api_RevokeLicense" FunctionName="sadbModel.Store.lms_api_RevokeLicense" />
+          <FunctionImportMapping FunctionImportName="lms_api_GetLicenseByKey" FunctionName="sadbModel.Store.lms_api_GetLicenseByKey">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sadbModel.lms_api_GetLicenseByKey_Result">
+                <ScalarProperty Name="LicenseId" ColumnName="LicenseId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="LicenseKey" ColumnName="LicenseKey" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,111 @@
+
+@{
+    ViewBag.Title = "Report Archive";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+@model List<string>
+
+
+<!-- Page Heading -->
+<div class="x_panel tile">
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Report Archive</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <table id="fileListTable" class="display table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in Model)
+                            {
+                                <tr>
+                                    <td>@file</td>
+                                    <td>
+                                        <button class="btn btn-primary view-btn" data-filename="@file">View</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                }
+                else
+                {
+                    <div class="alert alert-info">No Excel files found in the archive.</div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Table Section -->
+    <div class="x_content">
+        <div id="message_test_report"></div>
+        <div class="table-responsive" id="report-container">
+            <table id="excelTable" class="display" style="width:100%">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    <script>
+$(document).ready(function () {
+    $('.view-btn').on('click', function () {
+        var fileName = $(this).data('filename');
+
+        $.ajax({
+            url: '@Url.Action("GetExcelData", "Report")',
+            type: 'POST',
+            data: { fileName: fileName },
+            success: function (response) {
+                var $table = $('#excelTable');
+
+                if ($table.length) {
+                    // Destroy existing DataTable safely
+                    if ($.fn.DataTable.isDataTable($table)) {
+                        $table.DataTable().clear().destroy();
+                    }
+
+                    // Reinitialize with new data
+                    $table.DataTable({
+                        data: response.data,
+                        columns: response.columns,
+                        responsive: true,
+                        autoWidth: false
+                    });
+
+                    $('#message_test_report').html(
+                        '<div class="alert alert-success">Excel file "' + fileName + '" loaded successfully.</div>'
+                    );
+                } else {
+                    console.warn('Table element #excelTable not found.');
+                    $('#message_test_report').html(
+                        '<div class="alert alert-warning">Table element not found. Please check your markup.</div>'
+                    );
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX error:', error);
+                $('#message_test_report').html(
+                    '<div class="alert alert-danger">Failed to load Excel file.</div>'
+                );
+            }
+        });
+    });
+});
+    </script>
+}

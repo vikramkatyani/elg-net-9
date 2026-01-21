@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    @{
+        var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
+        var titleText = sessionDomainDetails?.TitleText ?? "LMS";
+        var favicon = sessionDomainDetails?.Favicon ?? "favicon.ico";
+        var cssFile = sessionDomainDetails?.CSS ?? "content/css/custom.css";
+    }
+
+    <title>@titleText - @ViewBag.Title</title>
+    <link rel="icon" href="~/@favicon" sizes="16x16">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="~/content/vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- iCheck -->
+    <link href="~/content/vendor/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="~/@cssFile">
+    <link href="~/content/css/egate.css" rel="stylesheet">
+    <link href="~/content/css/courseCard.css" rel="stylesheet">
+    @* <link href="~/content/css/learner.css" rel="stylesheet"> *@
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="learner-content-container">
+
+        <!-- Hamburger Menu Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Left Navigation Menu -->
+        @{
+            // Deserialize learner menu settings from session
+            var learnerMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgAdminAvailableMenu as string;
+            dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
+                ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
+                : null;
+        }
+        <nav class="learner-menu-bar">
+            <div class="logo">
+                <img src="" alt="Logo">
+            </div>
+            <ul class="learner-menu">
+                @if (learnerMenuSettings == null || learnerMenuSettings.dashboard == true)
+                {
+                    <li class="nav-item" id="dashboardLink">
+                        <a id="menu-dashboard" href="@Url.Action("Dashboard", "Home", new { area = "Learner" })">
+                            <i class="fa fa-pie-chart"></i> Dashboard
+                        </a>
+                    </li>
+                }
+
+                <li class="nav-item" id="myCourseLink">
+                    <a id="menu-my-courses" href="@Url.Action("MyCourses", "Home", new { area = "Learner" })">
+                        <i class="fa fa-leanpub"></i> My Courses
+                    </a>
+                </li>
+
+                @if (learnerMenuSettings == null || learnerMenuSettings.ra == true)
+                {
+                    <li class="nav-item" id="raLink">
+                        <a id="menu-manage-ra" href="@Url.Action("Assessment", "RiskAssessment", new { area = "Learner" })">
+                            <i class="fa fa-tasks"></i> Risk Assessments
+                        </a>
+                    </li>
+                }
+
+                @if (learnerMenuSettings == null || learnerMenuSettings.doc == true)
+                {
+                    <li class="nav-item" id="docLink">
+                        <a id="menu-document-report" href="@Url.Action("List", "Document", new { area = "Learner" })">
+                            <i class="fa fa-cloud-download"></i> Documents
+                        </a>
+                    </li>
+                }
+
+                <li class="nav-item parent-menu" id="settingsLink">
+                    <a class="parent-menu-a">
+                        <i class="fa fa-cog"></i> Settings <i class="fa fa-chevron-down"></i>
+                    </a>
+                    <ul class="nav child_menu">
+                        <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ViewBag.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })"> Profile</a></li>
+                        <li><a id="menu-user-password" href="@Url.Action("ChangePassword", "Home")"> Update password </a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="line-partition mx-4 mt-5"></div>
+            <ul class="learner-menu">
+                @if (ELG.Web.Helper.SessionHelper.HasAdminRights)
+                {
+                    <li class="nav-item" id="docLink">
+                        <a href="#" onclick="switchToAdminView(); return false;" id="menu-switch-admin">
+                            <i class="fa fa-exchange"></i>Admin View
+                        </a>
+                    </li>
+                }
+                <li class="nav-item" id="logoutLink">
+                    <a id="menu-logout" href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fa fa-power-off"></i> Log Out
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Profile Section -->
+            <div class="profile">
+                @{
+                    if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
+                    {
+                        <img id="imgLearnerProfile" class="img-circle profile_img" src="@ELG.Web.Helper.SessionHelper.ProfilePic" alt="Profile">
+                    }
+                    else
+                    {
+                        <img id="imgLearnerProfile" class="img-circle profile_img" src="~/Content/images/no-pic.png" alt="No Profile">
+                    }
+                }
+                <div class="profile-details">
+                    <span>Welcome,</span>
+                    <h2>@(ELG.Web.Helper.SessionHelper.UserDisplayName ?? "User")</h2>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="learner-main-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logOutModalLabel">
+                        <i class="fa fa-sign-out-alt me-2 text-primary"></i> Ready to Leave?
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    Select <strong>Logout</strong> below if you are ready to end your current session.
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-1"></i> Cancel
+                    </button>
+                    <a class="btn btn-primary" href="@Url.Action("LogOut", "Account", new { area = "" })">
+                        <i class="fa fa-power-off me-1"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Verification Modal for Admin Switch -->
+    <div class="modal fade" id="adminSwitchModal" tabindex="-1" aria-labelledby="adminSwitchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminSwitchModalLabel">Verify Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please enter your password to switch to Admin view:</p>
+                    <div class="mb-3">
+                        <label for="adminSwitchPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="adminSwitchPassword" placeholder="Enter password">
+                        <div id="passwordError" class="text-danger mt-2" style="display: none;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmAdminSwitch()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        // Base URL for Learner area Home controller
+        var hdnBaseUrl = '@Url.Content("~/Learner/Home/")';
+    </script>
+
+    <script src="~/Scripts/Admin/Common/utils.js"></script>
+    <script src="~/Scripts/Admin/Learner/learner-layout.js"></script>
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

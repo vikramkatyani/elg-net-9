@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Accident/Incident List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">My Accidents/Incidents</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-inline">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+                        </div>
+                        <input type="text" id="txtAcciInci" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="Search">
+                    </div>
+
+
+                    <div class="input-group mb-3">
+                        <button id="searchAcciInci" class="btn btn-primary" type="button">
+                            <i class="fa fa-search fa-sm"></i> Search
+                        </button>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="clearSearchAcciInci" class="btn btn-secondary" type="button">
+                            <i class="fa fa-times fa-sm"></i> Clear
+                        </button>
+                    </div>
+
+                    <div class="mb-3 ml-auto float-right">
+                        <button id="btnShowAcciInciPopUp" class="btn btn-secondary" type="button">
+                            <i class="fa fa-plus-circle fa-sm"></i> Report Accident/Incident
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="tableAccidentIncidentList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Reported By</th>
+                        <th>Incident Date</th>
+                        <th>Reported On</th>
+                        <th>Injured Person</th>
+                        <th>Created By</th>
+                        <th>Sign Off</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ReportAccidentIncidentModal")
+@Html.Partial("_ReviewAccidentIncidentReport")
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/AccidentIncident/AccidentIncident.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/Common/timepicker.js"></script>
+}
+

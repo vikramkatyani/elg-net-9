@@ -1,0 +1,57 @@
+<style>
+    .rb-option {
+        -ms-transform: scale(1.5); /* IE 9 */
+        -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+        transform: scale(1.5);
+    }
+</style>
+
+<div class="modal fade" id="riskAssessmentModal" tabindex="-1" aria-labelledby="riskAssessmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="riskAssessmentModalLabel">@((ViewBag.RATitle ?? "Risk Assessment").ToString())</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="raErrorMessage"></div>
+                <div id="divriskAssessmentContainer">
+                    <!-- Loader -->
+                    <div id="loader" class="text-center my-4">
+                        <div class="spinner-border" style="width:3rem; height:3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <!-- Start message -->
+                    <div id="divStartRAMessage">
+                        <div class="text-center mb-4">
+                            <h3>RISK ASSESSMENT QUESTIONNAIRE</h3>
+                            <p>This assessment will ask you a series of multiple-choice questions.</p>
+                            <p>Think about your own job and work environment when you answer them.</p>
+                            <p>There are no right or wrong answers.</p>
+                            <p>Any issues will be highlighted as you take the assessment.</p>
+                        </div>
+                        <div class="text-center mb-4">
+                            <button type="button" id="btnStartRA" class="btn btn-dark mb-1">Start Risk Assessment</button>
+                        </div>
+                    </div>
+
+                    <!-- Question tab -->
+                    <div id="divQuestionTab"></div>
+
+                    <!-- Finish tab -->
+                    <div id="divRAFinishTab" class="text-center my-4" style="display:none;">
+                        <p>Thank you.</p>
+                        <p>Your risk assessment has been logged.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

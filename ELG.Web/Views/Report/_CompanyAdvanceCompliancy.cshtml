@@ -1,0 +1,71 @@
+
+@model ELG.Model.OrgAdmin.AdvCompliancyViewModel
+@{
+    Layout = null;
+}
+
+@if (Model == null || Model.Courses == null || Model.LocationCourseCompliancy == null)
+{
+    <div class="alert alert-info"> Please select a date range to filter records.</div>
+}
+else
+{
+<table class="table adv-com-rep">
+    <thead>
+        <tr class="bg-gray-900 text-white">
+            <th></th>
+            @foreach (var course in Model.Courses)
+            {
+                <th>@course.CourseName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var location in Model.LocationCourseCompliancy)
+        {
+            <tr>
+                <td class="bg-gray-900 text-white">@location.LocationName</td>
+                @foreach (var compliancy in location.CompliancyItems)
+                {
+                    string cardClass = "";
+                    if (compliancy.AssignedTo == compliancy.CompletedBy && compliancy.CompletedBy > 0)
+                    {
+                        cardClass = "text-white bg-success";
+                    }
+                    else if (compliancy.CompletedBy == 0 && compliancy.AssignedTo > 0)
+                    {
+                        cardClass = "text-white bg-danger";
+                    }
+                    else if (compliancy.CompletedBy > 0 && compliancy.AssignedTo > compliancy.CompletedBy)
+                    {
+                        cardClass = "text-white bg-warning";
+                    }
+
+                    <td>
+                        <div class="card @cardClass" style="max-width: 20rem; cursor:pointer" onclick="manageFreeLicenseHandler.showNonCompliantUserList(@compliancy.CourseID, @location.LocationID, @compliancy.Department)">
+                            <div class="card-body">
+                                @if (compliancy != null)
+                                {
+                                    <div class="badge">
+                                        <b>TU: </b>@compliancy.TotalUsers
+                                    </div>
+                                    <div class="badge">
+                                        <b>A:</b> @compliancy.AssignedTo
+                                    </div>
+                                    <div class="badge">
+                                        <b>C:</b> @compliancy.CompletedBy
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>N/A</div>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+}

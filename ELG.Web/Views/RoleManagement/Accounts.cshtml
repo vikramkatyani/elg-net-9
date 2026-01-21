@@ -1,0 +1,99 @@
+
+@{
+    ViewBag.Title = "Admins";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+
+<!-- Page Heading -->
+<div class="x_panel tile">
+    <div class="x_title">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 text-primary fw-bold mb-0">Manage Roles</h1>
+
+            <button id="btnShowUserPopUp" class="btn btn-success">
+                <i class="fa fa-plus-circle me-1"></i> Add Admin
+            </button>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+
+                    <!-- Admin Search -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <input type="text" id="txtAdmin" class="form-control" placeholder="Name/Email">
+                            <label for="txtAdmin">Admin</label>
+                        </div>
+                    </div>
+
+                    <!-- Admin Rights Filter -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <select id="ddlAdminRights" class="form-select">
+                                <option value="0" selected>Select All</option>
+                                <option value="1">Account Owner</option>
+                                <option value="2">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Manager</option>
+                                <option value="3">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Manager</option>
+                                @*<option value="4">Reports Admin</option>
+                                <option value="5">User Admin</option>*@
+                                <option value="8">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Coordinator</option>
+                                <option value="9">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Coordinator</option>
+                            </select>
+                            <label for="ddlAdminRights">Admin Rights</label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="col-md-4 col-lg-4 d-flex justify-content-end gap-2">
+                        <button id="searchAdmin" class="btn btn-primary w-100">
+                            <i class="fa fa-search me-1"></i>
+                        </button>
+                        <button id="downloadAdmin" class="btn btn-secondary w-100"
+                                data-loading-text="Downloading..."
+                                data-original-text='<i class="fa fa-download"></i> '>
+                            <i class="fa fa-download me-1"></i>
+                        </button>
+                        <button id="clearSearchAdmin" class="btn btn-secondary w-100">
+                            <i class="fa fa-times me-1"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="x_content">
+        <!-- Alert message -->
+        <div id="errorRemoveRightMessage" role="alert"></div>
+
+        <div class="table-responsive" id="adminReportContainer">
+            <table class="table table-striped table-hover table-bordered align-middle" id="registeredAdminLearnerList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Admin</th>
+                        <th>Email</th>
+                        <th>Admin Rights</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_LearnerList")
+@Html.Partial("_LocationListWithAdminRights")
+@Html.Partial("_DepartmentListWithAdminRights")
+@Html.Partial("_LocationListWithSupervisorRights")
+@Html.Partial("_DepartmentListWithSupervisorRights")
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/RoleManagement/manageAdmins.js?v=1.0.2"></script>
+}
+

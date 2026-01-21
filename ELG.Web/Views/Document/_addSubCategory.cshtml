@@ -1,0 +1,70 @@
+﻿<div class="modal fade" id="addSubCategoryModal" tabindex="-1" aria-labelledby="addSubCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="addSubCategoryModalLabel">Add Sub Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div class="alert alert-danger d-none" role="alert" id="addSubCategoryMessage"></div>
+
+                <!-- Form -->
+                <form id="addSubCategoryForm" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3 w-100">
+                        <textarea id="txtSubCategoryName" class="form-control" placeholder="Sub Category Name" style="height: 80px" required></textarea>
+                        <label for="txtSubCategoryName">Sub Category</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <textarea id="txtSubCategoryDesc" class="form-control" placeholder="Description" style="height: 100px"></textarea>
+                        <label for="txtSubCategoryDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAddNewSubCategory" data-loading-text="Creating..." data-original-text="Add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--update Modal-->
+
+<div class="modal fade" id="updateSubCategoryModal" tabindex="-1" aria-labelledby="updateSubCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="updateSubCategoryModalLabel">Update Sub Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div class="alert alert-danger d-none" role="alert" id="updateSubCategoryMessage"></div>
+
+                <!-- Form -->
+                <form id="updateSubCategoryForm" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtSubUpdateCategoryName" class="form-control" placeholder="Sub Category Name" required />
+                        <label for="txtSubUpdateCategoryName">Sub Category</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtUpdateSubCategoryDesc" class="form-control" placeholder="Description" />
+                        <label for="txtUpdateSubCategoryDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateSubCategory" data-loading-text="Updating..." data-original-text="Update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
