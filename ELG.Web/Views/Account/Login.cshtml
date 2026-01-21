@@ -1,0 +1,53 @@
+@model ELG.Web.Models.LoginViewModel
+@{
+
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div class="login-page-container">
+    <div class="left-section">
+        <div class="image-overlay"></div>
+        <div class="content">
+            <div class="branding">
+                <img src="" alt="LMS Logo">
+            </div>
+            <div class="line-partition"></div>
+            <h1 id="introTxt">Fraud Compliance <br />Training Solutions</h1>
+            <div class="footer-branding">
+                <p>Powered by:</p>
+                <img src="" alt="LMS Logo">
+            </div>
+        </div>
+    </div>
+    <div class="right-section">
+        <div class="brand-content">
+            <div class="branding">
+                <img src="" alt="LMS Logo">
+            </div>
+        </div>
+        <h1 id="page-title"><span class="txt-highlight">Login</span> to your account</h1>
+        <p>Enter your registered email address and password to access your account</p>
+        <form id="adminLoginForm">
+            <div class="alert alert-danger collapse" role="alert" id="divErrorMessage"> </div>
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email" })
+            <div class="password-container">
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+                <i id="togglePassword" class="fa fa-eye"></i>
+            </div>
+            <button type="button" data-loading-text="Logging..." data-original-text="Login" class="elg-btn elg-btn-primary" id="btnLogin">LOGIN</button>
+            <a href="@Url.Action("ForgetPassword" , "Account")" class="elg-lnk-btn mt-2">Forgot Password?</a>
+        </form>
+        <div class="line-partition mb-2"></div>
+        <p>If you are unable to remember your password or don't want to use it on this device, please select "Easy Login". You will receive an email with a link for direct access to your account.</p>
+        <button type="button" class="elg-btn elg-btn-transparent mt-2" id="btnLoginLink">EASY LOGIN</button>
+
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Accounts/login.js"></script>
+}
+
+

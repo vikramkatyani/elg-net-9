@@ -1,0 +1,50 @@
+
+@{
+    ViewBag.Title = "Course Widgets";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="x_panel tile">
+    <div class="x_title">
+        <!-- Page Heading -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 text-primary fw-bold mb-0">
+                <strong id="coursename-header"></strong> - Course Widgets
+            </h1>
+            <div class="d-flex gap-2">
+                <button id="bckToCourseBtn" class="btn btn-secondary" type="button">
+                    <i class="fa fa-arrow-circle-left me-1"></i> Back
+                </button>
+                <button id="btnAddCourseWidgetPopUp" class="btn btn-primary" type="button">
+                    <i class="fa fa-plus-circle me-1"></i> Add Widget
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="x_content">
+        <div id="divMessage_coursewidget" class="mb-3"></div>
+        <div class="table-responsive p-3">
+            <table class="table table-bordered table-striped table-hover align-middle" id="courseWidgetList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Type</th>
+                        <th>Que</th>
+                        <th>Reference</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@{
+    Html.Partial("_addCourseWidget");
+    Html.Partial("_viewWidgetTag");
+}
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Widgets/ManageCourseWidgets.js?v=1.0.2"></script>
+}

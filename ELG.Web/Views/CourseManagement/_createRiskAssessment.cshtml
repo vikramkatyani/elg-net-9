@@ -1,0 +1,73 @@
+<div class="modal fade" id="createRAPopup" tabindex="-1" aria-labelledby="createRAPopupLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold text-primary">
+          Add Risk Assessment: <span id="createRAPopupTitle"></span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger collapse" id="createRAPopupMessage"></div>
+        <div class="alert alert-success collapse" id="createRAPopupSuccess"></div>
+
+        <!-- Upload Section -->
+        <div id="uploadSection">
+          <h5 class="mb-3">Upload Content</h5>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" id="txtCreateRATitle" placeholder="Title">
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" id="txtCreateRADesc" placeholder="Description">
+            </div>
+          </div>
+
+          <h5 class="mb-2">Upload File</h5>
+          <div class="row">
+            <div class="col-md-12 mb-2">
+              <div class="custom-file">
+                <input class="form-control custom-file-input" type="file" id="fileCreateRAExcel" accept=".xlsx,.xls,.csv">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <small class="text-muted">File size should not exceed 5 MB</small>
+              <br />
+              <small><a href="~/templates/RiskAssessment_Template.csv" download class="text-decoration-none"><i class="fa fa-download me-1"></i>Download template</a></small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div id="previewSection" class="collapse">
+          <h5 class="mb-3">Preview Risk Assessment</h5>
+          <div id="previewContent" class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
+            <!-- Preview will be rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <!-- Upload Footer -->
+        <div id="uploadFooter">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fa fa-times me-1"></i> Close
+          </button>
+          <button type="button" class="btn btn-primary" id="btnUploadRA">
+            <i class="fa fa-upload me-1"></i> Upload
+          </button>
+        </div>
+
+        <!-- Preview Footer -->
+        <div id="previewFooter" class="collapse">
+          <button type="button" class="btn btn-secondary" id="btnDiscardRA">
+            <i class="fa fa-trash me-1"></i> Discard
+          </button>
+          <button type="button" class="btn btn-primary" id="btnPublishRA">
+            <i class="fa fa-check me-1"></i> Publish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

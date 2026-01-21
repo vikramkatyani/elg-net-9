@@ -1,0 +1,195 @@
+
+<div class="modal fade" id="addDocumentModal" tabindex="-1" aria-labelledby="addDocumentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="addDocumentModalLabel">Add Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                @if (ELG.Web.Helper.SessionHelper.CompanySettings.UploadDocEnabled)
+                {
+                    <input type="hidden" id="hdnDocUpload" value="1" />
+                    <input type="hidden" id="hdnDocUploadCount" value="@ELG.Web.Helper.SessionHelper.CompanySettings.AllowedUploadCount" />
+                }
+                else
+                {
+                    <input type="hidden" id="hdnDocUpload" value="0" />
+                }
+
+                <!-- Alert Message -->
+                <div class="alert alert-danger d-none" role="alert" id="addDocumentMessage"></div>
+
+                <!-- Form -->
+                <form id="formUploadDocument" class="needs-validation" action="Document/CreateDocument" method="post" enctype="multipart/form-data" novalidate>
+                    <div class="row g-3">
+
+                        <!-- Category -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select name="CategoryId" id="ddlCategory_adddoc" class="form-select ddlCat" required>
+                                    <option value="0">Select</option>
+                                </select>
+                                <label for="ddlCategory_adddoc">Category</label>
+                            </div>
+                        </div>
+
+                        <!-- Sub Category -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select name="ddlSubCategory_adddoc" id="ddlSubCategory_adddoc" class="form-select ddlSubCat" required>
+                                    <option value="0">Select</option>
+                                </select>
+                                <label for="ddlSubCategory_adddoc">Sub Category</label>
+                            </div>
+                        </div>
+
+                        <!-- Title -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="DocumentName" id="txtDocName" class="form-control" placeholder="Title" required />
+                                <label for="txtDocName">Title</label>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="DocumentDesc" id="txtDocDesc" class="form-control" placeholder="Description" />
+                                <label for="txtDocDesc">Description</label>
+                            </div>
+                        </div>
+
+                        <!-- Version -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="txtDocVersion" id="txtDocVersion" class="form-control" placeholder="Version" />
+                                <label for="txtDocVersion">Version</label>
+                            </div>
+                        </div>
+
+                        <!-- Date Published -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="txtDocDatePublished" id="txtDocDatePublished" class="form-control date-input" placeholder="Date Published" />
+                                <label for="txtDocDatePublished">Date Published</label>
+                            </div>
+                        </div>
+
+                        <!-- Date of Review -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="txtDocDtReview" id="txtDocDtReview" class="form-control date-input" placeholder="Date of Review" />
+                                <label for="txtDocDtReview">Date of Review</label>
+                            </div>
+                        </div>
+
+                        <!-- File Upload -->
+                        <div class="col-md-12">
+                            <label for="newDocFile" class="form-label">Upload Document</label>
+                            <input class="form-control" type="file" id="newDocFile" name="newDocFile" required>
+                            <div class="form-text">File size should not be more than 5 MB</div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="btnAddNewDoc" data-loading-text="Creating..." data-original-text="Add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--update document-->
+<div class="modal fade" id="updateDocumentModal" tabindex="-1" aria-labelledby="updateDocumentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="updateDocumentModalLabel">Update Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div class="alert alert-danger d-none" role="alert" id="updateDocumentMessage"></div>
+
+                <!-- Form -->
+                <form id="updateDocumentForm" class="needs-validation" novalidate>
+                    <div class="row g-3">
+
+                        <!-- Category -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="ddlCategory_updatedoc" class="form-select ddlCat" required>
+                                    <option value="0">Select</option>
+                                </select>
+                                <label for="ddlCategory_updatedoc">Category</label>
+                            </div>
+                        </div>
+
+                        <!-- Sub Category -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="ddlSubCategory_updatedoc" class="form-select ddlSubCat" required>
+                                    <option value="0">Select</option>
+                                </select>
+                                <label for="ddlSubCategory_updatedoc">Sub Category</label>
+                            </div>
+                        </div>
+
+                        <!-- Title -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="txtUpdateDocName" class="form-control" placeholder="Title" required />
+                                <label for="txtUpdateDocName">Title</label>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="txtUpdateDocDesc" class="form-control" placeholder="Description" />
+                                <label for="txtUpdateDocDesc">Description</label>
+                            </div>
+                        </div>
+
+                        <!-- Version -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="txtUpdateDocVersion" class="form-control" placeholder="Version" />
+                                <label for="txtUpdateDocVersion">Version</label>
+                            </div>
+                        </div>
+
+                        <!-- Date Published -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="txtUpdateDocDatePublished" class="form-control date-input" placeholder="Date Published" />
+                                <label for="txtUpdateDocDatePublished">Date Published</label>
+                            </div>
+                        </div>
+
+                        <!-- Date of Review -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="txtUpdateDocDtReview" class="form-control date-input" placeholder="Date of Review" />
+                                <label for="txtUpdateDocDtReview">Date of Review</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateDoc" data-loading-text="Updating..." data-original-text="Update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+

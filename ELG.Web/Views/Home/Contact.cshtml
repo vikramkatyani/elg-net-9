@@ -1,0 +1,45 @@
+
+@{
+    ViewBag.Title = "Contact";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<div class="text-center mb-4">
+    <h1 class="h3 mb-0 text-gray-900">Help & Support</h1>
+    <h1 class="h5 mb-0 text-gray-700">Need some support? Here's how you can reach us.</h1>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card text-center shadow mb-4">
+            <div class="card-body">
+                <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-phone"></i></h1>
+                <h5 class="card-title text-gray-900">Contact the training coordinator at</h5>
+                <h5 class="card-title text-gray-900"><span id="spnCompanyName"></span></h5>
+                <p class="card-text">If you have any question about the content or course assignment, Please write to the following person:</p>
+                <p><span id="spnTrainer"></span></p>
+                <p><span id="spnTrainerEmail"></span></p>
+                <p><span id="spnTrainerPhone"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card text-center shadow mb-4">
+            <div class="card-body">
+                <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-comments"></i></h1>
+                <h5 class="card-title text-gray-900">Contact Technical Support</h5>
+                <p class="card-text">If you have any technical difficulties please contact the ClickHSE support team directly.</p>
+                <a href="#" id="btnSupportTicket" class="btn btn-warning">Contact Support</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Common/Contact.js"></script>
+}

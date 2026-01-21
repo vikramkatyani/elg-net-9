@@ -1,0 +1,311 @@
+@{
+    ViewBag.Title = "External Certificates";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="x_panel tile">
+    <div class="x_title">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">External Certificates</h1>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-inline">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" id="inputGroup-sizing-default">Search</label>
+                        </div>
+                        <input type="text" id="txtProfile" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="Learner name / Email">
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="searchLearner" class="btn btn-primary" type="button">
+                            <i class="fa fa-search fa-sm"></i> Search
+                        </button>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="clearSearchLearner" class="btn btn-secondary" type="button">
+                            <i class="fa fa-times fa-sm"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" style="text-align:right">
+                <a id="btnAddNewProfile" class="btn btn-primary" data-target="modal" href="#addNewCertificate">
+                    <i class="fa fa-plus-circle"></i> Add Certificate
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="x_content">
+        <div id="message_profile_list"></div>
+        <div class="table-responsive" id="learner-table-container">
+            <table class="table" id="orgProfileList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>User</th>
+                        <th>Added On</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Manual Handling</td>
+                        <td>
+                            <span>Jhon Doe</span><br />
+                            <em>(jhon@demo.test)</em>
+                        </td>
+                        <td>
+                            05-Jun-2024
+                        </td>
+                        <td><span class="status-dot bg-active"></span> Active</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a> 
+                                <a class="dropdown-item" href="#"> 
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a> 
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a> 
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Slip, Trip and Falls</td>
+                        <td>
+                            <span>Jhon Doe</span><br />
+                            <em>(jhon@demo.test)</em>
+                        </td>
+                        <td>
+                            05-Jun-2024
+                        </td>
+                        <td><span class="status-dot bg-deactive"></span> Archived</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fire Safety Training</td>
+                        <td>
+                            <span>Jhon Doe</span><br />
+                            <em>(jhon@demo.test)</em>
+                        </td>
+                        <td>
+                            05-Jun-2024
+                        </td>
+                        <td><span class="status-dot bg-active"></span> Active</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>GDPR</td>
+                        <td>
+                            <span>Jhon Doe</span><br />
+                            <em>(jhon@demo.test)</em>
+                        </td>
+                        <td>
+                            05-Jun-2024
+                        </td>
+                        <td><span class="status-dot bg-active"></span> Active</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Cyber Security</td>
+                        <td>
+                            <span>Jhon Doe</span><br />
+                            <em>(jhon@demo.test)</em>
+                        </td>
+                        <td>
+                            05-Jun-2024
+                        </td>
+                        <td><span class="status-dot bg-active"></span> Active</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Food Hygeine</td>
+                        <td>
+                            <span>Jhon Doe</span><br />
+                            <em>(jhon@demo.test)</em>
+                        </td>
+                        <td>
+                            05-Jun-2024
+                        </td>
+                        <td><span class="status-dot bg-deactive"></span> Archived</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Driver Safety</td>
+                        <td>
+                            <span>Jhon Doe</span><br />
+                            <em>(jhon@demo.test)</em>
+                        </td>
+                        <td>
+                            05-Jun-2024
+                        </td>
+                        <td><span class="status-dot bg-active"></span> Active</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Manual Handling</td>
+                        <td>
+                            <span>Jane Doe</span><br />
+                            <em>(jane@demo.test)</em>
+                        </td>
+                        <td>
+                            15-May-2024
+                        </td>
+                        <td><span class="status-dot bg-active"></span> Active</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Manual Handling</td>
+                        <td>
+                            <span>Steve Smith</span><br />
+                            <em>(steve@demo.test)</em>
+                        </td>
+                        <td>
+                            12-May-2024
+                        </td>
+                        <td><span class="status-dot bg-active"></span> Active</td>
+                        <td>
+                            <div class="user-profile" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </div>
+                            <div class="dropdown-menu dropdown-usermenu pull-right">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-edit"></i><span>Edit</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-fw fa-power-off"></i> <span>Archive</span>
+                                </a>
+                                <a class="dropdown-item dlt-usr-btn" href="#" data-button-icon="trash">
+                                    <i class="fa fa-fw fa-trash"></i><span>Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="dataTables_info" id="allocateModuleLearnerList_info" role="status" aria-live="polite">Showing 1 to 9 of 9 entries</div>
+            <div class="dataTables_paginate paging_simple_numbers" id="allocateModuleLearnerList_paginate">
+                <a class="paginate_button previous disabled" aria-controls="allocateModuleLearnerList" data-dt-idx="0" tabindex="0" id="allocateModuleLearnerList_previous">Previous</a>
+                <span>
+                    <a class="paginate_button current" aria-controls="learningProgressReport" data-dt-idx="1" tabindex="0">1</a>
+                </span>
+                <a class="paginate_button next disabled" aria-controls="allocateModuleLearnerList" data-dt-idx="1" tabindex="0" id="allocateModuleLearnerList_next">Next</a>
+            </div>
+        </div>
+    </div>
+</div>
+

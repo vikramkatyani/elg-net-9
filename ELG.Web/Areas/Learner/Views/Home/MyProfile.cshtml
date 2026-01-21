@@ -1,0 +1,111 @@
+@{
+    ViewBag.Title = "My Profile";
+    Layout = "~/Areas/Learner/Views/Shared/_Layout.cshtml";
+}
+<div class="x_panel tile">
+    <!-- Page Heading -->
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">My Profile</h1>
+    </div>
+
+    <div class="x_content">
+        <div class="row g-4">
+            <!-- Profile Picture Section -->
+            <div class="col-lg-4">
+                <div class="text-center">
+                    @{
+                        var profilesrc = string.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic as string) ? "~/Content/img/no-pic.png" : ELG.Web.Helper.SessionHelper.ProfilePic as string;
+                    }
+                    <label for="wizard-picture" class="d-block mb-3">
+                        <img src="@profilesrc" class="rounded-circle border shadow-sm" id="wizardPicturePreview" style="width: 150px; height: 150px; object-fit: cover;" title="Click to change photo">
+                    </label>
+                    <input type="file" accept="image/*" id="wizard-picture" class="d-none">
+                    <a href="#" id="btn-remove-pic" class="d-block mt-2 text-danger small" onclick="updateSessionLearnerHandler.removeProfilePic()">
+                        &times; Remove
+                    </a>
+                    <div id="msg-profile-pic" class="mt-3 text-muted small"></div>
+                    <p class="text-muted small mt-2">
+                        Kindly upload a clear image of yourself.<br />
+                        Accepted formats: <strong>.jpg, .jpeg, .png, .gif</strong><br />
+                        Maximum file size: <strong>1MB</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Profile Info Section -->
+            <div class="col-lg-8">
+                <div id="editSessionLearnerError"></div>
+
+                <form id="updateSessionForm" class="row g-3">
+                    <!-- First Name -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" id="txtUpdateSessionFirstName" class="form-control" placeholder="First Name">
+                            <label for="txtUpdateSessionFirstName">Firstname</label>
+                        </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" id="txtUpdateSessionLastName" class="form-control" placeholder="Last Name">
+                            <label for="txtUpdateSessionLastName">Surname</label>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="email" id="txtUpdateSessionEmail" class="form-control" placeholder="Email" disabled>
+                            <label for="txtUpdateSessionEmail">Email</label>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select ddl-loc" id="updateSessionLocationDDL" disabled>
+                                <option value="0" selected>Select...</option>
+                            </select>
+                            <label for="updateSessionLocationDDL">Location</label>
+                        </div>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select ddl-dep" id="updateSessionDepartmentDDL" disabled>
+                                <option selected>Select...</option>
+                            </select>
+                            <label for="updateSessionDepartmentDDL">Department</label>
+                        </div>
+                    </div>
+
+                    <!-- Employee Number -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" id="updateSessionEmpNo" class="form-control" placeholder="Employee Number">
+                            <label for="updateSessionEmpNo">Employee Number</label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary w-100" id="btnUpdateSessionLearnerInfo"
+                                data-loading-text="Updating..." data-original-text="Update">
+                            Update
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/Common/UserInfo.js"></script>
+
+}
+

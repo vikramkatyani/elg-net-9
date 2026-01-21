@@ -1,0 +1,107 @@
+﻿<!-- Update score modal-->
+<div class="modal fade" id="updateModuleNotificationModal" tabindex="-1" role="dialog" aria-labelledby="updateModuleNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModuleNotificationModalLabel">Manage Notifications </h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="updateModuleNotificationMessage"></div>
+                        <form class="user">
+                            <h5>Email Notifications</h5>
+                            <div class="row col-md-12">
+                                <div class="col-md-6 mb-3">Send Passed Tests to Administrators</div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="chkPassedTestToLocationAdmin">
+                                        <label class="custom-control-label" for="chkPassedTestToLocationAdmin">Location</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="chkPassedTestToDepartmentAdmin">
+                                        <label class="custom-control-label" for="chkPassedTestToDepartmentAdmin">Department</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-md-12">
+                                <div class="col-md-6 mb-3">Send Failed Tests to Administrators</div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="chkFailedTestToLocationAdmin">
+                                        <label class="custom-control-label" for="chkFailedTestToLocationAdmin">Location</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="chkFailedTestToDepartmentAdmin">
+                                        <label class="custom-control-label" for="chkFailedTestToDepartmentAdmin">Department</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-md-12 mb-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="chkTestResultToLearner">
+                                    <label class="custom-control-label" for="chkTestResultToLearner">Send Test Results to User</label>
+                                </div>
+                            </div>
+                            <hr/>
+                            <h5>Email Reminders</h5>
+                            <div class="row col-md-12 mb-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="chkTestReminders">
+                                    <label class="custom-control-label" for="chkTestReminders">Test Reminders</label>
+                                </div>
+                            </div>
+                            <div class="row col-md-12 mb-3">
+                                Tests should be repeated every
+                                <input type="number" class="col-md-1 form-control form-control-sm" id="txtTestFrequency" />
+                                days.
+                            </div>
+                            <div class="row col-md-12 mb-3">
+                                Begin sending reminders
+                                <input type="number" class="col-md-1 form-control form-control-sm" id="txtFirstReminder" />
+                                days before test is due.
+                            </div>
+                            <div class="row col-md-12 mb-3">
+                                Send reminders every
+                                <input type="number" class="col-md-1 form-control form-control-sm" id="txtReminderFrequency" />
+                                days.
+                            </div>
+                            <div class="row col-md-12 mb-3">
+                                Send no more than
+                                <input type="number" class="col-md-1 form-control form-control-sm" id="txtMaxReminder" />
+                                reminders.
+                            </div>
+                            <div class="row col-md-12 mb-3">
+                                <div class="col-md-6 mb-3">Send Overdue Test Reminders to Administrators</div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="chkOverdueTestToLocationAdmin">
+                                        <label class="custom-control-label" for="chkOverdueTestToLocationAdmin">Location</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="chkOverdueTestToDepartmentAdmin">
+                                        <label class="custom-control-label" for="chkOverdueTestToDepartmentAdmin">Department</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <div id="btnUpdateModuleNotification" class="btn btn-primary" href="#">Update</div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,38 @@
+<div class="modal fade" id="riskAssessmentReviewModal" tabindex="-1" aria-labelledby="riskAssessmentReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="riskAssessmentReviewModalLabel">@(ViewBag.RATitle ?? "Risk Assessment")</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="divriskAssessmentReviewContainer">
+                    <div class="row" id="divRAReview">
+                        <div class="col-lg-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="reviewRAResponseList" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Question</th>
+                                            <th>Response</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic rows go here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+﻿
+<div class="modal fade" id="addCourseWidgetModal" tabindex="-1" aria-labelledby="addCourseWidgetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary" id="addCourseWidgetTitle">Add Question Widget</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="addCourseWidgetMessage" class="mb-3"></div>
+
+                <div class="row mb-3">
+                    <div class="col-lg-6">
+                        <label for="widgetTypeDLL" class="form-label">Widget Type</label>
+                        <select id="widgetTypeDLL" class="form-select">
+                            <option value="-1">Select widget type</option>
+                            <option value="1">Text input widget</option>
+                            <option value="2">Model answer compare widget</option>
+                            <option value="3">Bullet point compare widget</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row gy-4 question-container" id="text-widget-container">
+                    <div class="col-lg-12">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="txtWidgetRef" class="form-label">Widget Reference</label>
+                                <input id="txtWidgetRef" maxlength="10" type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="txtWidgetTitle" class="form-label">Widget Title</label>
+                                <input id="txtWidgetTitle" maxlength="100" type="text" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!-- TIW -->
+                        <div id="wdgt_tiw_field" class="mt-4 wdgt-field-container">
+                            <label for="txtQue" class="form-label">First Response Question</label>
+                            <textarea id="txtQue" rows="4" class="form-control"></textarea>
+
+                            <label for="txtQueAfter" class="form-label mt-3">Final Response Question</label>
+                            <textarea id="txtQueAfter" rows="4" class="form-control mb-4"></textarea>
+
+                            <input type="checkbox" id="chkShowFRQ" class="form-check-input">
+                            <label for="chkShowFRQ" class="form-check-label">
+                                Show First Response Question Before Final Response
+                            </label>
+
+                        </div>
+
+                        <!-- MAC -->
+                        <div id="wdgt_mac_field" class="mt-4 wdgt-field-container">
+                            <label for="txtQue_mac" class="form-label">Three Responses Question</label>
+                            <textarea id="txtQue_mac" rows="4" class="form-control"></textarea>
+
+                            <label for="txtModelAnswer_mac" class="form-label mt-3">Model Answer Intro</label>
+                            <textarea id="txtModelAnswer_mac" rows="2" class="form-control"></textarea>
+
+                            <label class="form-label mt-3">Model Responses</label>
+                            <textarea id="txtModelAnswer_mac_res1" rows="3" class="form-control mb-2" placeholder="Response 1"></textarea>
+                            <textarea id="txtModelAnswer_mac_res2" rows="3" class="form-control mb-2" placeholder="Response 2"></textarea>
+                            <textarea id="txtModelAnswer_mac_res3" rows="3" class="form-control" placeholder="Response 3"></textarea>
+                        </div>
+
+                        <!-- BPC -->
+                        <div id="wdgt_bpc_field" class="mt-4 wdgt-field-container">
+                            <label for="txtQue_bpc" class="form-label">Three Responses Question</label>
+                            <textarea id="txtQue_bpc" rows="4" class="form-control"></textarea>
+
+                            <label for="txtAfter_bpc" class="form-label mt-3">Text Before Responses</label>
+                            <textarea id="txtAfter_bpc" rows="4" class="form-control"></textarea>
+
+                            <label for="txtQueAfter_bpc" class="form-label mt-3">Final Response Question</label>
+                            <textarea id="txtQueAfter_bpc" rows="4" class="form-control"></textarea>
+                        </div>
+
+                        <!-- Header Color -->
+                        <div class="mt-4">
+                            <label for="txtHeaderColor" class="form-label">Widget Header Color</label>
+                            <input id="txtHeaderColor" type="text" class="form-control" value="#D84738" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAddNewCourseWidget" data-loading-text="Creating..." data-original-text="Add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

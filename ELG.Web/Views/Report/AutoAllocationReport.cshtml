@@ -1,0 +1,82 @@
+
+@{
+    ViewBag.Title = "Auto-allocation Report";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Auto-Allocation Report</h1>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-inline">
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Course</label>
+                        </div>
+                        <select id="ddlCourse" class="custom-select ddl-course">
+                            <option value="0">Select All</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        </div>
+                        <select id="ddlLocation" class="custom-select ddl-loc">
+                            <option value="0">Select All</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        </div>
+                        <select id="ddlDepartment" class="custom-select ddl-dep">
+                            <option value="0">Select All</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="searchLearnerProgress" class="btn btn-primary" type="button">
+                            <i class="fa fa-search fa-sm"></i> Search
+                        </button>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button id="downloadProgressReport" class="btn btn-dark" type="button" data-loading-text="Downloading..." data-original-text='<i class="fa fa-download fa-sm"></i> Download'>
+                            <i class="fa fa-download fa-sm"></i> Download
+                        </button>
+                    </div>
+                    @*<div class="input-group mb-3">
+            <button id="clearSearchProgressReport" class="btn btn-secondary" type="button">
+                <i class="fa fa-times fa-sm"></i> Clear
+            </button>
+        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="message_autoallocation_report"></div>
+        <div class="table-responsive" id="autoallocation-report-container">
+            <table class="table" id="autoAllocationReport" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Auto Allocation On</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/autoAllocationReport.js?v=1.1"></script>
+}

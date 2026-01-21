@@ -1,0 +1,772 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyTitle>ELG.DAL</AssemblyTitle>
+    <Product>ELG.DAL</Product>
+    <Copyright>Copyright ©  2024</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SendGrid" Version="9.29.3" />
+    <PackageReference Include="starkbank-ecdsa" Version="1.3.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.2.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.20.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="DbEntityLearner\learnerDbEntity.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>learnerDbEntity.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\learnerDbEntity.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\learnerDbEntity.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>learnerDbEntity.edmx</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_global_getCompanyDomainInfo_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_check_unassignedCoursesWithNoLicences_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_GetAdminOrgRegSettings_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getAllAcceptedClassrooms_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getAllAnouncments_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getAllClassrooms_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getAllCourses_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getAllDocuments_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getAllRACourses_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getAllUnreadNotifications_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getCompanyInfo_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getCoursesForAutoAssignement_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getDocument_info_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getLoginDetails_byUserId_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getLoginDetails_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_GetNewUserInfoOrResetPasswordInfo_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getRAQuestion_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getRAResponses_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getSessionUserInfo_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_getSSOLoginDetails_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_GetUserShortDetailByUserID_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_accidentIncidentQues_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_bpc_widget_response_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_certificate_record_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_companyContractorInfo_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_course_submodules_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_dash_course_completion_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_dash_HeaderInfo_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_dash_WeeklyProgress_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_dash_YearlyCompletion_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_LearnerSSOInfo_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_mac_widget_response_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_progress_history_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_RA_attempts_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_reportedIncidents_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_SubModuleRAResponses_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_subModule_RAQuestion_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_get_widget_response_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_initializeModule_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_learner_validateCompanyNumber_Result.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\lms_widget_details.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\tbCourse.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DbEntityLearner\tbOrganisationDomainDetail.cs">
+      <DependentUpon>learnerDbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_api_GetLicenseByKey_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_api_GetLicense_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_getAdminLoginDetails_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_getAllCompnayDepartments_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_getAllCompnayLocations_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_getCourseLauchDetails_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_getLearnerLoginDetails_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AboutToExpiryCompanies_NextWeek_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AboutToExpiryCompanies_ThisWeek_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AllCourses_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AllDepartmentsForLocation_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AllOptionsForQuestion_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AllRACourseQuestions_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AllResellers_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_AllRiskAssessments_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_certificate_record_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_CompanyAdminInfo_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_CompanyAdminList_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_companyInfo_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_companyListing_assigned_course_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_companyListing_dropoff_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_companyListing_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_company_course_licences_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_CompnayLocationDepartmentMap_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_CourseInfo_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_courseListing_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_crm_companyListing_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_crm_company_admin_Listing_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_dash_HeaderInfo_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_dash_WeeklyProgress_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_dash_YearlyCompletion_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_GroupsOfRA_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_LearnerCourseLauchDetails_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_LearnerInfo_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_LearnerProgressReport_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_LearnerRAReport_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_moduleListing_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_RAListing_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_RAQuestionInfo_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_RegisteredLearners_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_resellerListing_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_superadmin_get_RiskAssessmentAnswerSheet_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\lms_super_admin_getSuspendDataRecords_Result.cs">
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\sadbEntity.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>sadbEntity.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\sadbEntity.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>sadbEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntitySA\sadbEntity.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>sadbEntity.edmx</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\AdminDBEntity.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdminDBEntity.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\AdminDBEntity.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\AdminDBEntity.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AdminDBEntity.edmx</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_CategoryInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_createLearner_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAdminLoginDetails_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_GetAdminOrgRegSettings_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllAnnouncments_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllClassrooms_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllClassroom_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllCourses_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDepartmentAdminRights_OfLeaner_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDepartmentsForAutoLicenseAllocation_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDepartmentsForLocation_perRole_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDepartmentsForLocation_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDepartmentSupervisorRights_OfLeaner_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDepartments_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDocumentCategories_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllDocuments_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllLearnersWithAdminRights_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllLearnersWithAdminRights_toDownload_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllLocationAdminRights_OfLeaner_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllLocationsForAutoLicenseAllocation_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllLocationSupervisorRights_OfLeaner_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllLocations_perRole_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllLocations_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllOptionsForQuestion_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllRACourseQuestions_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllRACourses_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllRAGroups_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getAllRiskAssessments_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_GetAnnouncmentInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getClassroomInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getClassroomPendingRequest_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getClassroomProgressReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getClassroomProgress_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getCompanyDomainInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getCompanyInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getCompliancyForCompany_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getCompliancyForLocation_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getCoursesForAutoAssignement_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getCoursesForOrganisation_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getDepartmentForLearnerWithAdminRights_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getDepartmentForLearnerWithSupervisiorRights_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getDepartmentsForAutoLicenseAllocation_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getDocumentInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnerAnnouncementReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnerDocumentReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnerInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnerProgressReport_historic_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnerProgressReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnerRAReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnersForAssignedModule_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnersForModuleNotAssigned_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnersToRevokeModule_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnersToRevokeRetakeRA_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnersWithNotStatrtedAssignedModule_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLearnersWithStatrtedAssignedModule_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLicenseTransactionReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLocationForLearnerWithAdminRights_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getLocationForLearnerWithSupervisorRights_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_GetNewUserInfoOrResetPasswordInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getNonCompliantRecords_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getOrganisationLicenseSummary_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getOrganisationModules_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getOverdueCourseReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getPrivileges_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getQuestionInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getRAasSubModulesForCourse_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getRegisteredLearners_perRole_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getRegisteredLearners_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getRiskAssessmentAnswerSheet_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getSSOLoginDetails_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getTrainingManagerDetails_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_getUserAdminRights_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_GetUserShortDetailByUserID_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_accidentIncidentQues_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_advrep_users_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_AllCourses_summaryReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_AllDocuments_group_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_AllWidgetCourses_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_AutoAllocationMap_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_CategoryLocation_Map_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_certificate_record_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_companyContractorInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_company_details_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_company_structure_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_completionPerDepartment_summaryReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_completionPerLocation_summaryReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_CourseAutoAllocationReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_CourseDetails_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_CourseWidgets_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_course_submodules_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_dash_courseCompletionData_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_dash_course_assignments_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_dash_course_completion_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_dash_HeaderInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_dash_licenceUsage_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_dash_WeeklyProgress_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_dash_YearlyCompletion_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_DocumentAllocation_AllDepartments_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_DocumentAllocation_Departments_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_DocumentAllocation_Map_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_DocumentCategoryList_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_doc_groups_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_emailInfo_upgradetoAdmin_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_LearnerAssignedCourses_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_LearnerDocumentReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_LearnerProgressReportForManualNotification_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_LearnersForDocumentAssignment_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_LearnersForGroupAssignment_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_LearnerSSOInfo_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_location_user_distribution_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_notification_settings_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_org_WidgetCourses_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_progressRecordWithOverdueDate_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_ra_reminder_configuration_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_reportedIncidents_for_org_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_reportedIncidents_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_SubCategories_ForCategory_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_test_reminder_configuration_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_trainingCard_TraineeDetails_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_trainingCard_TraineeDocResults_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_trainingCard_TraineeRAResults_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_trainingCard_TraineeTestResults_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_get_widgetReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_admin_validateCompanyNumber_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_reseller_get_company_licenceUsage_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_reseller_get_company_list_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\lms_reseller_get_LicenceTransactionReport_Result.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DBEntity\tbContactCourse.cs">
+      <DependentUpon>AdminDBEntity.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ELG.Model\ELG.Model.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="DBEntity\AdminDBEntity.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AdminDBEntity.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="DbEntityLearner\learnerDbEntity.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>learnerDbEntity.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Update="DbEntityLearner\learnerDbEntity.edmx.diagram">
+      <DependentUpon>learnerDbEntity.edmx</DependentUpon>
+    </None>
+    <EntityDeploy Include="DBEntitySA\sadbEntity.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>sadbEntity.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Update="DBEntitySA\sadbEntity.edmx.diagram">
+      <DependentUpon>sadbEntity.edmx</DependentUpon>
+    </None>
+    <None Update="DBEntity\AdminDBEntity.edmx.diagram">
+      <DependentUpon>AdminDBEntity.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DbEntityLearner\learnerDbEntity.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>learnerDbEntity.edmx</DependentUpon>
+      <LastGenOutput>learnerDbEntity.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DbEntityLearner\learnerDbEntity.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>learnerDbEntity.edmx</DependentUpon>
+      <LastGenOutput>learnerDbEntity.cs</LastGenOutput>
+    </Content>
+    <Content Include="DBEntitySA\sadbEntity.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>sadbEntity.edmx</DependentUpon>
+      <LastGenOutput>sadbEntity.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DBEntitySA\sadbEntity.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>sadbEntity.edmx</DependentUpon>
+      <LastGenOutput>sadbEntity.cs</LastGenOutput>
+    </Content>
+    <Content Include="DBEntity\AdminDBEntity.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AdminDBEntity.edmx</DependentUpon>
+      <LastGenOutput>AdminDBEntity.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DBEntity\AdminDBEntity.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AdminDBEntity.edmx</DependentUpon>
+      <LastGenOutput>AdminDBEntity.cs</LastGenOutput>
+    </Content>
+    <Content Include="LearnerEmailTemplate\ForgetPwdEmail.html" />
+    <Content Include="LearnerEmailTemplate\NewUserEmail.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+</Project>

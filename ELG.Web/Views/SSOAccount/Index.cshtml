@@ -1,0 +1,52 @@
+﻿
+@{
+
+    ViewBag.Title = "User Login";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div class="row alert alert-default cookie-header" role="alert">
+    <div class="col-md-11">
+        By using our website or clicking "OK" you accept the use of our cookies. Click <a href="#" target="_blank">here</a> for more information.
+    </div>
+    <div class="col-md-1 pull-right">
+        <button type="button" onclick="removeCookieAlert()" class="btn btn-primary btn-user btn-block">OK</button>
+    </div>
+</div>
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="p-5">
+                                <img src="~/Content/images/kc-banner.png" alt="LMS" class="login-logo" />
+                                <div class="text-center">
+                                    <p><h1 class="h3 text-gray-900 mb-4">User Login</h1></p>
+                                </div>
+                                <!--Alert message-->
+                                <div class="alert alert-danger collapse" role="alert" id="divErrorMessage"></div>
+                                <form class="user" id="learnerLoginForm">
+                                    <div class="form-group">
+                                        <input type="email" class="form-control form-control-user" id="ssoInputEmail" placeholder="Enter Email Address">
+                                    </div>
+                                    <button type="button" data-loading-text="Validating..." data-original-text="Login" class="btn btn-primary btn-user btn-block" id="btnLogin">
+                                        Login
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/SSOAccount/ssologin.js"></script>
+}

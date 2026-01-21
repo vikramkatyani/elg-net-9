@@ -1,0 +1,36 @@
+<div class="modal fade" id="mapRAPopup" tabindex="-1" aria-labelledby="mapRAPopupLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold text-primary">
+          Map Risk Assessment: <span id="mapRAPopupTitle"></span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger collapse" id="mapRAPopupMessage"></div>
+        <div class="row g-3">
+          <div class="col-md-8">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtSearchRA_map" placeholder="Search Risk Assessment">
+              <label for="txtSearchRA_map">Search Risk Assessment</label>
+            </div>
+          </div>
+          <div class="col-md-4 d-grid">
+            <button type="button" id="btnSearchRA_map" class="btn btn-outline-primary">Search</button>
+          </div>
+          <div class="col-md-12">
+            <div id="raListContainer_map" style="max-height:300px; overflow:auto; border:1px solid #e3e3e3; padding:10px; border-radius:4px;">
+              <div class="text-muted">Search to load risk assessments...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fa fa-times me-1"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

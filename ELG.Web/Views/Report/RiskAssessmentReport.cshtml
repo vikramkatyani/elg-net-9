@@ -1,0 +1,160 @@
+
+@{
+    ViewBag.Title = "Risk Assessment Report";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+
+<div class="x_panel tile">
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Risk Assessments</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <!-- Row 1: Main Filters -->
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <input type="text" id="txtLearner" class="form-control" placeholder="Name/Email">
+                            <label for="txtLearner">User</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select id="ddlLocation" class="form-select ddl-loc">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select id="ddlDepartment" class="form-select ddl-dep">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select id="ddlCourse" class="form-select ddl-course">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlCourse">Risk Assessment</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select id="ddlRAStatus" class="form-select">
+                                <option value="0" selected>Select All</option>
+                                <option value="1">Completed</option>
+                                <option value="2">Not complete</option>
+                            </select>
+                            <label for="ddlRAStatus">Status</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select id="ddlIssue" class="form-select">
+                                <option value="0" selected>Select All</option>
+                                <option value="1">Yes</option>
+                                <option value="2">No</option>
+                            </select>
+                            <label for="ddlIssue">Issue</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Additional Filters -->
+                <div class="row g-3 align-items-end mt-3">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select id="ddlSignedOff" class="form-select">
+                                <option value="0" selected>Select All</option>
+                                <option value="1">Yes</option>
+                                <option value="2">No</option>
+                            </select>
+                            <label for="ddlSignedOff">Signed Off</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <input type="date" id="txtRptFrom" class="form-control" placeholder="From">
+                            <label for="txtRptFrom">Completed From</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <input type="date" id="txtRptTo" class="form-control" placeholder="To">
+                            <label for="txtRptTo">Completed To</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 d-lg-block">
+                        <div class="col-12 d-flex justify-content-end gap-2">
+                            <button id="searchRiskAssessmentBtn" class="btn btn-primary w-100">
+                                <i class="fa fa-search me-1"></i>
+                            </button>
+                            <button id="downloadRAReport" class="btn btn-secondary w-100"
+                                    data-loading-text="Downloading..."
+                                    data-original-text='<i class="fa fa-download"></i> '>
+                                <i class="fa fa-download me-1"></i>
+                            </button>
+                            <button id="clearSearchRAReport" class="btn btn-secondary w-100">
+                                <i class="fa fa-times me-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="x_content">
+        <div id="divMessageRAResp"></div>
+        <div class="table-responsive" id="div-report-container">
+            <table class="table table-striped table-hover table-bordered align-middle" id="riskAssessmentReport" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Risk Assessment</th>
+                        <th>Assigned On</th>
+                        <th>Issue Count</th>
+                        <th>Signed Off</th>
+                        <th>Status</th>
+                        <th>Completion Date</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+    <div id="individualRAPrintSection">
+
+    </div>
+     @Html.Partial("_RiskAssessmentResponse")
+    @section Scripts{
+        <script type="text/javascript" src="~/Scripts/Admin/Reports/riskAssessmentReport.js?v=1.6"></script>
+    }
+
+

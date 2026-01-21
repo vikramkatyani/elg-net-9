@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>LMS - @ViewBag.Title</title>
+    <link rel="icon" href="~/Content/images/kc-logo.png" sizes="16x16">
+
+    <!-- Bootstrap -->
+    <link href="~/content/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <!-- Font Awesome -->
+    <link href="~/content/vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- NProgress -->
+    <link href="~/content/vendor/nprogress/nprogress.css" rel="stylesheet" type="text/css">
+    <!-- iCheck -->
+    <link href="~/content/vendor/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="~/content/css/custom.css" rel="stylesheet">
+    <link href="~/content/css/profilePic.css" rel="stylesheet">
+    <link href="~/content/vendor/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="~/content/vendor/treeComponent/css/d3-mitch-tree.min.css" rel="stylesheet">
+    <link href="~/content/vendor/treeComponent/css/d3-mitch-tree-theme-default.min.css" rel="stylesheet">
+</head>
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex justify-content-center" href="#" style="align-items: baseline!important;">
+                <div class="sidebar-brand-icon">
+                    <img src="~/Content/img/ClickHSE_logo_white.png" alt="LMS" width="100%" class="mb-3" />
+                </div>
+                <div class="sidebar-brand-text mx-3">@ELG.Web.Helper.SessionHelper.CompanyNumber</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item" id="dashboardLink">
+                <a class="nav-link" id="menu-dashboard" href="@Url.Action("Dashboard" , "Home")">
+                    <i class="fa fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item" id="resellerCompanyLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseResellerCompanies" aria-expanded="true" aria-controls="collapseModuleManage">
+                    <i class="fa fa-fw fa-university"></i>
+                    <span>Companies</span>
+                </a>
+                <div id="collapseResellerCompanies" class="collapse menu-link-container" aria-labelledby="headingResellerCompanies" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-reseller-companies" href="@Url.Action("Companies" , "Reseller")">Companies</a>
+                        <a class="collapse-item" id="menu-reseller-licence-transaction" href="@Url.Action("LicenceTransactionReport" , "Reseller")">Transaction Report</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item" id="userLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserManage" aria-expanded="true" aria-controls="collapseUserManage">
+                    <i class="fa fa-fw fa-user"></i>
+                    <span>User Management</span>
+                </a>
+                <div id="collapseUserManage" class="collapse menu-link-container" aria-labelledby="headingUserManage" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-view-user" href="@Url.Action("Learner" , "ManageLearner")">View Users</a>
+                        <a class="collapse-item" id="menu-add-user" href="@Url.Action("CreateLearner" , "ManageLearner")">Add New Users</a>
+                        <a class="collapse-item" id="menu-upload-user" href="@Url.Action("ImportUsers" , "ManageLearner")">Upload Bulk Users</a>
+                        <a class="collapse-item" id="menu-self-register" href="@Url.Action("SelfRegister" , "ManageLearner")">Self Registration</a>
+                        <a class="collapse-item" id="menu-view-admin" href="@Url.Action("GetAdmins" , "ManageAdmin")">View/Add Administrators</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item" id="moduleLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseModuleManage" aria-expanded="true" aria-controls="collapseModuleManage">
+                    <i class="fa fa-fw fa-book"></i>
+                    <span>Course Management</span>
+                </a>
+                <div id="collapseModuleManage" class="collapse menu-link-container" aria-labelledby="headingModuleManage" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-allocate-module" href="@Url.Action("AllocateModule" , "Module")">Allocate Course</a>
+                        <a class="collapse-item" id="menu-revoke-module" href="@Url.Action("RevokeModule" , "Module")">Suspend Access</a>
+                        <a class="collapse-item" id="menu-module-catalogue" target="_blank" href="#">Course Catalogue</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item" id="licenceLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLicenceManage" aria-expanded="true" aria-controls="collapseLicenceManage">
+                    <i class="fa fa-fw fa-certificate"></i>
+                    <span>License Management</span>
+                </a>
+                <div id="collapseLicenceManage" class="collapse menu-link-container" aria-labelledby="headingLicenceManage" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-review-license" href="@Url.Action("ReviewLicenses" , "Licenses")">Review Licenses</a>
+                        <a class="collapse-item" id="menu-license-transaction" href="@Url.Action("LicenseTransactions" , "Licenses")">Transaction History</a>
+                        <a class="collapse-item" id="menu-license-request" href="@Url.Action("RequestLicence" , "Licenses")">Request Licenses</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item" id="manageRALink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRAManage" aria-expanded="true" aria-controls="collapseRAManage">
+                    <i class="fa fa-fw fa-exclamation-triangle"></i>
+                    <span>Risk Management</span>
+                </a>
+                <div id="collapseRAManage" class="collapse menu-link-container" aria-labelledby="headingRAManage" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-allocate-ra" href="@Url.Action("AllocateRiskAssessment" , "RiskAssessment")">Manual Allocation</a>
+                        <a class="collapse-item" id="menu-revoke-ra" href="@Url.Action("RevokeRiskAssessment" , "RiskAssessment")">Suspend Access / Retake</a>
+                        <a class="collapse-item" id="menu-configure-ra" href="@Url.Action("ConfigureRiskAssessment" , "RiskAssessment")">Configure Assessment</a>
+                        <a class="collapse-item" id="menu-edit-ra" href="@Url.Action("ManageRiskAssessment" , "RiskAssessment")">Edit Risk Assessment</a>
+                    </div>
+                </div>
+            </li>
+            @*<li class="nav-item" id="manageRALink">
+                    <a class="nav-link" href="@Url.Action("ManageRiskAssessment" , "RiskAssessment")" id="menu-manage-ra">
+                        <i class="fa fa-fw fa-exclamation-triangle"></i>
+                        <span>Manage Risk Assessment</span>
+                    </a>
+                </li>*@
+            <li class="nav-item" id="classroomLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClassManage" aria-expanded="true" aria-controls="collapseClassManage">
+                    <i class="fa fa-fw fa-users"></i>
+                    <span>Classroom Sessions</span>
+                </a>
+                <div id="collapseClassManage" class="collapse menu-link-container" aria-labelledby="headingClassManage" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-class-report" href="@Url.Action("Classroom" , "Classroom")">Manage Classroom</a>
+                        <a class="collapse-item" id="menu-class-request" href="@Url.Action("PendingRequests" , "Classroom")">Approve/Reject Request</a>
+                        <a class="collapse-item" id="menu-class-attendance" href="@Url.Action("ClassAttendance" , "Classroom")">Mark Attendance</a>
+                        @*<a class="collapse-item"  id="menu-class-archive"  href="">Archived Class</a>*@
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item" id="docLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDocManage" aria-expanded="true" aria-controls="collapseDocManage">
+                    <i class="fa fa-fw fa-folder"></i>
+                    <span>Document Management</span>
+                </a>
+                <div id="collapseDocManage" class="collapse menu-link-container" aria-labelledby="headingDocManage" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-category-report" href="@Url.Action("DocumentCategory" , "Document")">Add/Edit Category</a>
+                        <a class="collapse-item" id="menu-document-report" href="@Url.Action("Documents" , "Document")">Add/Edit Document</a>
+                        <a class="collapse-item" id="menu-document-accesss" href="@Url.Action("ManageAccess" , "Document")">Manage Access</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item" id="reportLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReports" aria-expanded="true" aria-controls="collapseReports">
+                    <i class="fa fa-fw fa-file-alt"></i>
+                    <span>Reports</span>
+                </a>
+                <div id="collapseReports" class="collapse menu-link-container" aria-labelledby="headingReports" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="menu-learning-report" href="@Url.Action("LearningProgress" , "Report")">Test Results</a>
+                        <a class="collapse-item" id="menu-adv-report" href="@Url.Action("AdvanceCompliancyReport" , "Report")">Advanced Compliancy</a>
+                        <!-- <a class="collapse-item" href="userTrainingCard">User Training Card</a> -->
+                        <a class="collapse-item" id="menu-ra-report" href="@Url.Action("RiskAssessmentReport" , "Report")">Risk Assessment Report</a>
+                        <a class="collapse-item" id="menu-overdue-report" href="@Url.Action("OverdueCourseReport" , "Report")">Course Overdue Report</a>
+                        @*<a class="collapse-item" id="menu-class-report" href="@Url.Action("ClassroomReport" , "Report")">Classroom Report</a>*@
+                        <a class="collapse-item" id="menu-auto-allocation-report" href="@Url.Action("AutoAllocationReport" , "Report")">Auto-Allocation Report</a>
+                        <a class="collapse-item" id="menu-announcement-report" href="@Url.Action("AnnouncementReport" , "Report")">Announcement Report</a>
+                        <a class="collapse-item" id="menu-doc-report" href="@Url.Action("DocumentReport" , "Report")">Document Report</a>
+                        <a class="collapse-item" id="menu-trainingcard-report" href="@Url.Action("TrainingCard" , "Report")">Training Card</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item" id="settingLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings" aria-expanded="true" aria-controls="collapseSettings">
+                    <i class="fa fa-fw fa-comments"></i>
+                    <span>Communication</span>
+                </a>
+                <div id="collapseSettings" class="collapse menu-link-container" aria-labelledby="headingSettings" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("ModuleReminder" , "Home")" id="menu-set-reminder">Refreshers</a>
+                        <a class="collapse-item" href="@Url.Action("Announcements" , "Announcement")" id="menu-announcement">Announcements</a>
+                        <a class="collapse-item" id="menu-set-notification" href="@Url.Action("ModuleNotification" , "Home")">Notifications</a>
+                        @*<a class="collapse-item" href="@Url.Action("ModuleReminder" , "Home")" id="menu-set-reminder">Manage Reminders - Course</a>
+                            <a class="collapse-item" href="@Url.Action("RAReminder" , "Home")" id="menu-set-ra-reminder">Manage Reminders - RA</a>*@
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item" id="resourcesLink">
+                <a class="nav-link" id="menu-resources" href="@Url.Action("Resources" , "Home")">
+                    <i class="fa fa-fw fa-briefcase"></i>
+                    <span>Resources</span>
+                </a>
+            </li>
+
+            <li class="nav-item" id="helpLink">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="true" aria-controls="collapseHelp">
+                    <i class="fa fa-fw fa-question"></i>
+                    <span>Help</span>
+                </a>
+                <div id="collapseHelp" class="collapse menu-link-container" aria-labelledby="headingHelp" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" target="_blank" href="#" id="help_guides">Help Guides</a>
+                        <a class="collapse-item" id="menu-contact" href="@Url.Action("Contact" , "Home")">Contact Support</a>
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    @{
+                        if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.CompanyLogo))
+                        {
+
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <img height="64px" src="@ELG.Web.Helper.SessionHelper.CompanyLogo">
+                                        @*<img class="img-profile" height="64px" src="https://www.atfwebportal.co.uk/images/ROSPA_logo.jpg">*@
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                    }
+
+
+                    <ul class="navbar-nav ml-auto">
+
+                        @*<!-- Nav Item - Alerts -->
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-bell fa-fw"></i>
+                                    <!-- Counter - Alerts -->
+                                    <span class="badge badge-danger badge-counter">1</span>
+                                </a>
+                                <!-- Dropdown - Alerts -->
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                                    <h6 class="dropdown-header">
+                                        Announcement Center
+                                    </h6>
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fa fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">December 12, 2019</div>
+                                            <span class="font-weight-bold">A new demo announcement!</span>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All Announcements</a>
+                                </div>
+                            </li>
+
+                            <!-- Nav Item - Messages -->
+                            <div class="topbar-divider d-none d-sm-block"></div>*@
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ELG.Web.Helper.SessionHelper.UserDisplayName</span>
+                                <img class="img-profile rounded-circle" src="~/Content/img/no-pic.png">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item user-profile-btn" id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="#">
+                                    <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+
+                                @{
+                                    if (!ELG.Web.Helper.SessionHelper.IsSSOLogin)
+                                    {
+                                        <a class="dropdown-item" href="@Url.Action("ChangePassword" , "Home")">
+                                            <i class="fa fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Change password
+                                        </a>
+                                    }
+                                }
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fa fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    @RenderBody()
+
+                </div>
+                <!-- /.container-fluid -->
+                @Html.Partial("_EditLearnerInfo");
+                @Html.Partial("_EditSessionLearnerInfo");
+
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; eLearning Gate @DateTime.Now.Year</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fa fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logOutModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                    <a class="btn btn-primary" href="@Url.Action("LogOut" , "Account")">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var hdnBaseUrl = '@Context.Request.Scheme://@Context.Request.Host@Context.Request.PathBase/';
+    </script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js" integrity="sha256-Fb0zP4jE3JHqu+IBB9YktLcSjI1Zc6J2b6gTjB0LpoM=" crossorigin="anonymous"></script>
+    <link href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+    <script src="~/content/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/content/vendor/nprogress/nprogress.js"></script>
+    <script src="~/content/vendor/iCheck/icheck.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/content/js/custom.min.js"></script>
+
+    <script src="~/Content/vendor/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="~/Content/vendor/treeComponent/js/d3-mitch-tree.min.js"></script>
+    <script src="~/Scripts/Admin/Common/utils.js"></script>
+    <script src="~/Scripts/Admin/Common/UserInfo.js?v=1.1"></script>
+    <script src="~/Scripts/Admin/Common/companyStructure.js?v=1.1"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

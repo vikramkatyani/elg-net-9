@@ -1,0 +1,61 @@
+
+@{
+    ViewBag.Title = "Edit Risk Assessment";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Edit Risk Assessment : <span id="spnRACourseName"></span></h1>
+    <a href="@Url.Action("ManageRiskAssessment" , "RiskAssessment")" class="btn btn-sm btn-secondary"><i class="fa fa-backward"></i> Back</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div id="message_RAQ"></div>
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-inline">
+                    <div class="input-group mb-3">
+                        <button id="addRAGroupBtn" class="btn btn-secondary" type="button" onclick="addRAGroupHandler.showCreatePopUp()">
+                            <i class="fa fa-fw fa-plus-circle"></i> Add Group
+                        </button>
+                    </div>&nbsp;&nbsp;
+                    <div class="input-group mb-3">
+                        <button id="addRAQuestionBtn" class="btn btn-secondary" type="button" data-toggle="modal" data-target="#addRAQModal">
+                            <i class="fa fa-fw fa-plus-circle"></i> Add Question
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="messageRAQues"></div>
+        <div class="table-responsive">
+            <table class="table" id="riskAssessmentQuestionList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Group</th>
+                        <th>Question</th>
+                        <th>Options</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+            @*<button type="button" id="btnUpdateRAQorder" class="btn btn-dark mb-1" onclick="manageRAHandler.updateRAQOrder(this)" data-loading-text="Updating..." data-original-text="Update"> Update </button>*@
+        </div>
+    </div>
+</div>
+@{
+    Html.Partial("_AddRAQuestion");
+    Html.Partial("_AddRAGroup");
+    Html.Partial("_EditRAQ");
+}
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/ManageRiskAssessment/EditRiskAssessment.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/ManageRiskAssessment/raGroup.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/ManageRiskAssessment/raQuestion.js"></script>
+}

@@ -1,0 +1,114 @@
+
+@{
+    ViewBag.Title = "Assign Admin Rights";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+
+
+<div class="container-fluid">
+    <div class="x_panel tile">
+        <!-- Page Heading -->
+        <div class="x_title">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-4 text-primary fw-bold">Assign Rights: @ViewBag.LearnerName</h1>
+                <a href="@Url.Action("Accounts", "RoleManagement")" class="btn btn-sm btn-secondary">
+                    <i class="fa fa-backward me-1"></i> Back
+                </a>
+            </div>
+        </div>
+
+        <div class="x_content">
+
+            <!-- Alert Message -->
+            <div id="divAdminRightErrorMessage"></div>
+
+            <div class="table-responsive" id="tbAdminRoles">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 60%;">Admin Role</th>
+                            <th style="width: 40%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Account Owner</strong><br>
+                                Full access across the platform
+                            </td>
+                            <td>
+                                <button type="button" id="btnAssignAdminGod" class="btn btn-primary">
+                                    <i class="fa fa-plus-circle me-1"></i> Assign
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Manager</strong><br>
+                                Manages full @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription and its @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription
+                            </td>
+                            <td>
+                                <button type="button" id="btnShowLocations" class="btn btn-secondary">
+                                    <i class="fa fa-folder-open me-1"></i> Select
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Manager</strong><br>
+                                Manages specific @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription
+                            </td>
+                            <td>
+                                <button type="button" id="btnShowDepartments" class="btn btn-secondary">
+                                    <i class="fa fa-folder-open me-1"></i> Select
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Coordinator</strong><br>
+                                Supports @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription without delete rights
+                            </td>
+                            <td>
+                                <button type="button" id="btnShowLocations_spv" class="btn btn-secondary">
+                                    <i class="fa fa-folder-open me-1"></i> Select
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Coordinator</strong><br>
+                                Supports @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription without delete rights
+                            </td>
+                            <td>
+                                <button type="button" id="btnShowDepartments_spv" class="btn btn-secondary">
+                                    <i class="fa fa-folder-open me-1"></i> Select
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_LocationListforAdminRights")
+@Html.Partial("_DepartmentListforAdminRights")
+@Html.Partial("_LocationListforSupervisorRights")
+@Html.Partial("_DepartmentListforSupervisorRights")
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/RoleManagement/assignRights.js"></script>
+}
+

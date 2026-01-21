@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+    @{
+        string host = HttpContextAccessor.HttpContext?.Request.Host.Value;
+        var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
+        if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
+        {
+            ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
+            var organization = rep.GetOrganizationFromHost(host);
+
+            // Store the organization in the SessionHelper
+            ELG.Web.Helper.SessionHelper.OrgDomainDetails = organization;
+            sessionDomainDetails = organization;
+        }
+    }
+
+    <title>@sessionDomainDetails.TitleText - @ViewBag.Title</title>
+    <link rel="icon" href="~/@sessionDomainDetails.Favicon" sizes="16x16">
+
+    <!-- Bootstrap -->
+    @*<link href="~/content/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">*@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="~/content/vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- NProgress -->
+    @*<link href="~/content/vendor/nprogress/nprogress.css" rel="stylesheet" type="text/css">*@
+    <!-- iCheck -->
+    <link href="~/content/vendor/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    @*<link href="~/content/css/custom.css" rel="stylesheet">
+        <link href="~/content/css/profilePic.css" rel="stylesheet">*@
+    <link rel="stylesheet" href="~/@sessionDomainDetails.CSS">
+    <link href="~/content/css/egate.css" rel="stylesheet">
+    @*<link href="~/content/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">*@
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <link href="~/content/vendor/treeComponent/css/d3-mitch-tree.min.css" rel="stylesheet">
+    <link href="~/content/vendor/treeComponent/css/d3-mitch-tree-theme-default.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="learner-content-container">
+
+        <!-- Hamburger Menu Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Left Navigation Menu -->
+
+        @{
+            // Deserialize learnerMenuSettings if it's not null
+            var learnerMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgAdminAvailableMenu as string;
+            dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
+                ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
+                : null;
+        }
+        <nav class="learner-menu-bar">
+            <div class="logo">
+                <img src="" alt="Logo">
+            </div>
+            <div class="menu-container">
+                <ul class="learner-menu">
+                    @if (learnerMenuSettings == null || learnerMenuSettings.dashboard == true)
+                    {
+                        <li class="nav-item" id="dashboardLink">
+                            <a id="menu-dashboard" href="@Url.Action("Dashboard", "Home")">
+                                @*<i class="fa fa-pie-chart"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/dasboard.png" alt="Dasboard" /> Dashboard
+                            </a>
+                        </li>
+                    }
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageUsers == true)
+                    {
+                        <li class="nav-item parent-menu" id="userLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-user"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/user.png" alt="Users" /> User Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                @if (learnerMenuSettings == null || learnerMenuSettings.userListing == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-view-user" href="@Url.Action("Accounts" , "UserManagement")">User Directory</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.adddUser == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-add-user" href="@Url.Action("CreateAccount" , "UserManagement")">Create Account</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.userSelfRegister == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-self-register" href="@Url.Action("OpenEnrollment" , "UserManagement")">Open Enrollment</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @*<li class="nav-item" id="profileLink">
+                            <a>
+                                <i class="fa fa-graduation-cap"></i> Profile Management <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="collapse-item" id="menu-manage-profile" href="@Url.Action("ManageProfile" , "Profile")">Manage Profile</a></li>
+                                <li><a class="collapse-item" id="menu-allocate-profile" href="@Url.Action("AssignProfile" , "Profile")">Assign Profile - Manual</a></li>
+                                <li><a class="collapse-item" id="menu-allocate-profile" href="@Url.Action("ProfileAutoAssign" , "Profile")">Assign Profile - Auto</a></li>
+                                <li><a class="collapse-item" id="menu-renew-profile" href="@Url.Action("RenewProfile" , "Profile")">Refresh Profile</a></li>
+                            </ul>
+                        </li>*@
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageCourse == true)
+                    {
+                        <li class="nav-item parent-menu" id="moduleLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-book"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/course.png" alt="Course" /> Course Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="collapse-item" id="menu-allocate-module" href="@Url.Action("Enrollment", "CourseManagement")">Hand-Picked Enrollment</a></li>
+                                 <li><a class="collapse-item" id="menu-revoke-module" href="@Url.Action("RestictAccess", "CourseManagement")">Restrict Course Access</a></li>
+                                @if (learnerMenuSettings == null || learnerMenuSettings.trainingRenewal == true)
+                                {
+                                    if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 1)
+                                    {
+                                        <li><a class="collapse-item" id="menu-configure-module" href="@Url.Action("Setup", "CourseManagement")">Refresher Training</a></li>
+                                    }
+                                    else if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 2)
+                                    {
+                                        <li><a class="collapse-item" id="menu-configure-module" href="@Url.Action("ResetDateSetup", "CourseManagement")">Refresher Training</a></li>
+                                    }
+                                    else if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 3)
+                                    {
+                                        <li><a class="collapse-item" id="menu-configure-module" href="@Url.Action("TrainingRefresher", "CourseManagement")">Refresher Training</a></li>
+                                    }
+                                }
+
+                            </ul>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageRiskAssessment == true)
+                    {
+                        <li class="nav-item parent-menu" id="manageRALink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-exclamation-triangle"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/riskmngmnt.png" alt="Risk Management" /> Risk Assessment Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="collapse-item" id="menu-allocate-ra" href="@Url.Action("AllocateRiskAssessment", "RiskAssessment")">Hand-Picked Allocation</a></li>
+                                <li><a class="collapse-item" id="menu-revoke-ra" href="@Url.Action("RevokeRiskAssessment", "RiskAssessment")">Revoke & Reset</a></li>
+                                <li><a class="collapse-item" id="menu-configure-ra" href="@Url.Action("ConfigureRiskAssessment", "RiskAssessment")">Assessment Setup</a></li>
+                             </ul>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageDocs == true)
+                    {
+                        <li class="nav-item parent-menu" id="docLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-folder"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/document.png" alt="Documents" /> Document Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="collapse-item" id="menu-category-report" href="@Url.Action("DocumentCategory", "Document")">Manage Categories</a></li>
+                                <li><a class="collapse-item" id="menu-document-report" href="@Url.Action("Documents", "Document")">Manage Document</a></li>
+                                <li><a class="collapse-item" id="menu-docgroup-report" href="@Url.Action("DocumentBundel", "Document")">Manage Document Group</a></li>
+                                <li><a class="collapse-item" id="menu-document-accesss" href="@Url.Action("ManageAccess", "Document")">Access Control</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.viewReports == true)
+                    {
+                        <li class="nav-item parent-menu" id="reportLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-file"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                @if (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-summary-report" href="@Url.Action("Summary", "Report")">Overview</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.learningReport == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-learning-report" href="@Url.Action("LearningProgress", "Report")">Course Progress</a></li>
+                                    <li><a class="collapse-item" id="menu-historic-report" href="@Url.Action("HistoricRecords", "Report")">Historic Records</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.raReport == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("RiskAssessmentReport", "Report")">Risk Assessment Summary</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.documentReport == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("DocumentReport", "Report")">Document Report</a></li>
+                                }
+                                @*@if (learnerMenuSettings == null || learnerMenuSettings.announcmentReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-announcement-report" href="@Url.Action("AnnouncementReport", "Report")">Announcement Engagement</a></li>
+                                    }*@
+                                @if (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-trainingcard-report" href="@Url.Action("TrainingCard", "Report")">Learner Account Snapshot</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @*<li class="nav-item" id="certificateLink">
+                            <a id="menu-certificate" href="@Url.Action("External" , "Certificate")"><i class="fa fa-certificate"></i> External Certificate </a>
+                        </li>*@
+
+                    @*@if (learnerMenuSettings == null || learnerMenuSettings.manageCommunications == true)
+                        {
+                            <li class="nav-item parent-menu" id="settingLink">
+                                <a class="parent-menu-a">
+                                    <i class="fa fa-comments"></i> Communication <span class="fa fa-chevron-down"></span>
+                                </a>
+                                <ul class="nav child_menu">
+                                    <li><a class="collapse-item" href="@Url.Action("LearningProgressNotification", "Report")" id="menu-manual-notification">Reminders</a></li>
+                                    <li><a class="collapse-item" href="@Url.Action("ModuleReminder", "Home")" id="menu-set-reminder">Refreshers</a></li>
+                                    <li><a class="collapse-item" href="@Url.Action("Announcements", "Announcement")" id="menu-announcement">Announcements</a></li>
+                                    <li><a class="collapse-item" id="menu-set-notification" href="@Url.Action("ModuleNotification", "Home")">Notifications</a></li>
+                                </ul>
+                            </li>
+                        }*@
+
+                    <li class="nav-item parent-menu" id="settingsLink">
+                        <a class="parent-menu-a">
+                            @*<i class="fa fa-cog"></i>*@
+                            <img class="menu-icon" src="~/Content/images/icons/settings.png" alt="Settings" /> Settings <span class="fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu">
+                            <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile" , "Home")"> Profile</a></li>
+                            <li><a id="menu-user-password" href="@Url.Action("ChangePassword" , "Home")"> Update password </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="line-partition mx-4 mt-5"></div>
+            <ul class="learner-menu">
+                <li class="nav-item" id="logout">
+                    <a id="menu-logout" href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        @*<i class="fa fa-power-off me-1"></i>*@
+                        <img class="menu-icon" src="~/Content/images/icons/logout.png" alt="Logout" /> Log Out
+                    </a>
+                </li>
+            </ul>
+            <div class="profile">
+                @{
+                    if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
+                    {
+                        <img id="imgLearnerProfile" class="img-circle profile_img" src="@ELG.Web.Helper.SessionHelper.ProfilePic">
+                    }
+                    else
+                    {
+                        <img id="imgLearnerProfile" class="img-circle profile_img" src="~/Content/images/no-pic.png">
+                    }
+                }
+                <div class="profile-details">
+                    <span>Welcome,</span>
+                    <h2>@ELG.Web.Helper.SessionHelper.UserDisplayName</h2>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="learner-main-content">
+
+            @RenderBody()
+            <partial name="_EditLearnerInfo" />
+        </main>
+    </div>
+
+
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logOutModalLabel">
+                        <i class="fa fa-sign-out-alt me-2 text-primary"></i> Ready to Leave?
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    Select <strong>Logout</strong> below if you are ready to end your current session.
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-1"></i> Close
+                    </button>
+                    <a id="menu-logout" href="@Url.Action("Logout", "Account")" class="btn btn-primary">
+                        <i class="fa fa-power-off me-1"></i> Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var hdnBaseUrl = '@Context.Request.Scheme://@Context.Request.Host@Context.Request.PathBase/';
+    </script>
+
+    <!-- Bootstrap core JavaScript-->
+    @*<script src="~/content/vendor/jquery/dist/jquery.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js" integrity="sha256-Fb0zP4jE3JHqu+IBB9YktLcSjI1Zc6J2b6gTjB0LpoM=" crossorigin="anonymous"></script>
+    <link href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+    @* <script src="~/content/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/content/vendor/nprogress/nprogress.js"></script>
+    <script src="~/content/vendor/iCheck/icheck.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/content/js/custom.min.js"></script>
+
+    @*<script src="~/Content/vendor/datatables/jquery.dataTables.min.js"></script>*@
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="~/Content/vendor/treeComponent/js/d3-mitch-tree.min.js"></script>
+    <script src="~/Scripts/Admin/Common/utils.js"></script>
+    <script src="~/Scripts/Admin/Common/UserInfo.js?v=1.1"></script>
+    @*<script src="~/Scripts/Admin/Common/companyStructure.js?v=1.1"></script>*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var ua = window.navigator.userAgent; //Check the userAgent property of the window.navigator object
+            var msie = ua.indexOf('MSIE '); // IE 10 or older
+            var trident = ua.indexOf('Trident/'); //IE 11
+
+            if (msie > 0 || trident > 0) {
+                // if (msie > 0) {
+                alert("This browser is no longer supported, you will not be able to log in to your account.\nPlease use an alternative browser such as Google Chrome, Microsoft Edge or Apple Safari.");
+                window.open('', '_self', '');
+                window.close();
+            }
+
+        });
+    </script>
+</body>
+</html>

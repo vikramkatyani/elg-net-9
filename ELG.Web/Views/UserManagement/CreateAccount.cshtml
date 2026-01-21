@@ -1,0 +1,100 @@
+
+@{
+    ViewBag.Title = "Create User";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+<div class="x_panel tile">
+    <!-- Page Heading -->
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Create Account</h1>
+    </div>
+
+    <div class="x_content">
+        <!-- Alert Message -->
+        <div class="alert alert-danger d-none" role="alert" id="divAddLearnerErrorMessage"></div>
+
+        <form id="createLearnerForm" class="needs-validation" novalidate>
+            <div class="row g-3">
+
+                <!-- Email -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="txtAddEmail" placeholder="Email" required>
+                        <label for="txtAddEmail">@ELG.Web.Helper.SessionHelper.CompanySettings.emailIdDescription *</label>
+                    </div>
+                </div>
+
+                <!-- First Name -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="txtAddFirstName" placeholder="First Name" required>
+                        <label for="txtAddFirstName">@ELG.Web.Helper.SessionHelper.CompanySettings.strFirstNameDescription *</label>
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="txtAddLastName" placeholder="Last Name" required>
+                        <label for="txtAddLastName">@ELG.Web.Helper.SessionHelper.CompanySettings.strSurnameDescription *</label>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" id="ddlAddLocation" required>
+                            <option value="" selected disabled>Select</option>
+                        </select>
+                        <label for="ddlAddLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription *</label>
+                    </div>
+                </div>
+
+                <!-- Department -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" id="ddlAddDpartment" required>
+                            <option value="" selected disabled>Select</option>
+                        </select>
+                        <label for="ddlAddDpartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription *</label>
+                    </div>
+                </div>
+
+                <!-- Employee Number -->
+                <div class="col-md-6 d-none">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="txtAddEmpNo" placeholder="Employee Number">
+                        <label for="txtAddEmpNo">@ELG.Web.Helper.SessionHelper.CompanySettings.strEmployeeNumberDescription</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="button" id="btnAddNewUser"
+                            class="btn btn-primary"
+                            data-loading-text="Creating User..."
+                            data-original-text="Create User">
+                        Create User
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/ManageLearner/createlearner.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/Common/formValidate.js"></script>
+}
+
+

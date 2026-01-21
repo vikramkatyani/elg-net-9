@@ -1,0 +1,79 @@
+<div class="modal fade" id="updateLearnerInfoModal" tabindex="-1" aria-labelledby="updateLearnerInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateLearnerInfoModalLabel">Update Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div id="editLearnerError" role="alert"></div>
+
+                <form id="updateLearnerForm" class="row g-3">
+                    <!-- First Name -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <input type="text" id="txtUpdateFirstName" class="form-control" placeholder="First Name">
+                            <label for="txtUpdateFirstName">@ELG.Web.Helper.SessionHelper.CompanySettings.strFirstNameDescription</label>
+                        </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <input type="text" id="txtUpdateLastName" class="form-control" placeholder="Last Name">
+                            <label for="txtUpdateLastName">@ELG.Web.Helper.SessionHelper.CompanySettings.strSurnameDescription</label>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <input type="email" id="txtUpdateEmail" class="form-control" placeholder="Email">
+                            <label for="txtUpdateEmail">Email</label>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <select id="updateLocationDDL" class="form-select ddl-loc">
+                                <option value="0" selected>Select...</option>
+                            </select>
+                            <label for="updateLocationDDL">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        </div>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <select id="updateDepartmentDDL" class="form-select ddl-dep">
+                                <option value="0" selected>Select...</option>
+                            </select>
+                            <label for="updateDepartmentDDL">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        </div>
+                    </div>
+
+                    <!-- Employee Number -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <input type="text" id="txtUpdateUserId" class="form-control" placeholder="Employee ID">
+                            <label for="txtUpdateUserId">@ELG.Web.Helper.SessionHelper.CompanySettings.strEmployeeNumberDescription</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateLearnerInfo"
+                        data-loading-text="Updating..." data-original-text="Update">
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

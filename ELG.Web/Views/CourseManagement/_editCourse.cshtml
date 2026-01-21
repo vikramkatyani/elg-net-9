@@ -1,0 +1,71 @@
+<div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary">
+                    Edit Course
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger collapse" id="editCourseMessage"></div>
+
+                <form id="formEditCourse" enctype="multipart/form-data">
+                    <input type="hidden" id="editCourseId" name="CourseId" />
+                    <input type="hidden" id="editOldThumbnailPath" name="OldThumbnailPath" />
+                    <input type="hidden" id="editOldCoursePath" name="OldCoursePath" />
+                    
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h6 class="fw-bold text-secondary">Course Information</h6>
+                            <hr class="mt-1 mb-2" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="editCourseName" name="CourseName" placeholder="Course Title" required>
+                                <label for="editCourseName">Course Title</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="editCourseDesc" name="CourseDesc" placeholder="Description" style="height: 100px" required></textarea>
+                                <label for="editCourseDesc">Description</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editCourseThumbnail" class="form-label fw-semibold">Course Thumbnail (Optional)</label>
+                            <input class="form-control" type="file" id="editCourseThumbnail" name="ThumbnailFile" accept="image/*">
+                            <div class="form-text">Leave empty to keep existing thumbnail</div>
+                            <div id="currentThumbnail" class="mt-2">
+                                <small class="text-muted">Current thumbnail:</small>
+                                <img id="currentThumbnailImg" src="" alt="Current Thumbnail" class="img-thumbnail mt-1" style="max-width: 100px; height: auto;">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editCoursePackage" class="form-label fw-semibold">SCORM Package (Optional)</label>
+                            <input class="form-control" type="file" id="editCoursePackage" name="CoursePackage" accept=".zip">
+                            <div class="form-text">Leave empty to keep existing package</div>
+                            <div id="currentPackage" class="mt-2">
+                                <small class="text-muted">Current package exists</small>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa fa-times me-1"></i> Close
+                </button>
+                <button type="button" form="formEditCourse" class="btn btn-primary" id="btnUpdateCourse" data-loading-text="Updating..." data-original-text="Update">
+                    <i class="fa fa-save me-1"></i> Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

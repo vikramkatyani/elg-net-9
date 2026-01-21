@@ -1,0 +1,151 @@
+@{
+    ViewBag.Title = "Learning Summary";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+<style>
+    .stats-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        padding: 10px 0;
+        gap: 20px;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        flex: 1;
+        border-right: 1px solid #333;
+    }
+
+    .stat-title {
+        font-size: 12px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .stat-value {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .chart-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    #locationDetails {
+        width: 100%;
+    }
+
+    .card-body {
+        background-color: #FAFAFA;
+    }
+        .card-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        background-color: #FAFAFA;
+        border: none;
+    }
+
+    .card-header {
+        background-color: #FAFAFA;
+        border: none;
+        font-weight: bold;
+    }
+
+    .stat-item-first {
+        display: flex;
+        flex-direction: column; /* Titles appear above numbers */
+        align-items: end;
+        flex: 1;
+    }
+
+    .stat-item-last {
+        border: none;
+    }
+
+    .stat-title {
+        font-size: 12px; /* Smaller titles */
+        font-weight: bold;
+        color: #555;
+    }
+
+    .stat-value {
+        font-size: 18px; /* Larger numbers */
+        font-weight: bold;
+    }
+
+    .department-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .dept-name {
+        font-weight: bold;
+        width: 20%;
+    }
+
+    .dept-stats {
+        width: 20%;
+        text-align: center;
+    }
+
+    .completion-bar {
+        height: 8px; /* Keeps bars thin */
+        max-width: 200px; /* Limits bar width */
+        text-align: left; /* Aligns bar to the left */
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: flex-start; /* Moves the bar visually to the left */
+    }
+</style>
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Training Progress</h1>
+    <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+</div>
+
+<div id="div-card-container" class="container mb-4">
+</div>
+
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="departmentStatsModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Department Stats</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content goes here -->
+            </div>
+
+            <div class="modal-footer" id="modalFooter">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- Optional: Add action buttons here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/summary.js"></script>
+}

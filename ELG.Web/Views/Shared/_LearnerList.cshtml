@@ -1,0 +1,91 @@
+<div class="modal fade" id="learnerListModal" tabindex="-1" aria-labelledby="learnerListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content shadow-sm border-0">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-semibold" id="learnerListModalLabel">
+                    <i class="fa fa-users-cog me-2 text-primary"></i> Assign Admin Rights
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Filters Card -->
+                <div class="card mb-4 border-0">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <!-- User Search -->
+                            <div class="col-md-6 col-lg-3">
+                                <div class="form-floating">
+                                    <input type="text" id="txtAdminLearner" class="form-control" placeholder="Search user">
+                                    <label for="txtAdminLearner">Search by Name/Email</label>
+                                </div>
+                            </div>
+
+                            <!-- Location Filter -->
+                            <div class="col-md-6 col-lg-3">
+                                <div class="form-floating">
+                                    <select id="ddlAdminLocation" class="form-select ddl-loc">
+                                        <option value="0">Select All</option>
+                                    </select>
+                                    <label for="ddlAdminLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                                </div>
+                            </div>
+
+                            <!-- Department Filter -->
+                            <div class="col-md-6 col-lg-3">
+                                <div class="form-floating">
+                                    <select id="ddlAdminDepartment" class="form-select ddl-dep">
+                                        <option value="0">Select All</option>
+                                    </select>
+                                    <label for="ddlAdminDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="col-md-6 col-lg-3 d-flex gap-2 justify-content-end">
+                                <button id="searchAdminLearner" class="btn btn-primary w-100">
+                                    <i class="fa fa-search me-1"></i> Search
+                                </button>
+                                <button id="clearSearchAdminLearner" class="btn btn-secondary w-100">
+                                    <i class="fa fa-times me-1"></i> Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div id="admin-learner-message" class="mb-3"></div>
+                        <div class="table-responsive" id="learnerListForAdmins">
+                            <table class="table table-striped table-hover table-bordered align-middle" id="learnerListForAdminRights" width="100%">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Email</th>
+                                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa fa-times me-1"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

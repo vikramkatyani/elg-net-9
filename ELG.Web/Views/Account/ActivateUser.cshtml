@@ -1,0 +1,70 @@
+@model ELG.Web.Models.ActivateUserViewModel
+@{
+    ViewBag.Title = "Activate User";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div>
+    <div class="login_wrapper">
+        <div class="animate form login_form">
+            <section class="login_content">
+                    <h1>Create Password</h1>
+                    <p class="mb-4">Password should contain at least one lowercase, one uppercase, one numeric, one special character and password must be eight characters or longer.</p>
+                    <!--Alert message-->
+                    @if (ViewBag.Error == 1)
+                    {
+                        <div class="alert alert-danger collapse" role="alert" id="divErrorMessage">@ViewBag.Message</div>
+                    }
+                    else if (ViewBag.Error == 2)
+                    {
+                        <div class="alert alert-danger collapse" role="alert" id="dvLinkExpired">Link has been expired. Please @Html.ActionLink("Click here", "Login", "Account")to regenerate link.</div>
+                    }
+                    else if (ViewBag.Error == 3)
+                    {
+                        <div role="alert" id="divActivatedAccount">You have already activated your account. Please @Html.ActionLink("Click here to Login", "Login", "Account")</div>
+                        <div class="text-center mb-4">
+                            <a class="small" href="@Url.Action("ForgetPassword" , "Account")">Forgot Password?</a>
+                        </div>
+                    }
+                    else if (ViewBag.Error == 0)
+                    {
+                        <div role="alert" id="divErrorMessage"></div>
+                    }
+                    else if (ViewBag.Error == 10)
+                    {
+                        <div class="alert alert-success" id="divActivatedAccount">Password created successfully. Please @Html.ActionLink("Click here to Login", "Login", "Account")</div>
+                    }
+                    @if (ViewBag.Error == 0)
+                    {
+
+                        <div class="" id="tempSuccessMsg">@ViewBag.Message</div>
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        using (Html.BeginForm("ActivateUserPassword", "Account", FormMethod.Post, new { @class = "user", id = "learnerActivateUserForm", name = "learnerActivateUserForm" }))
+                        {
+                            <input type="hidden" id="hdnUserID" name="UserID" value="@ViewBag.UserID" />
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-user", placeholder = "Password", autocomplete="off" })
+                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control form-control-user", placeholder = "Confirm Password",  })
+                                @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                            </div>
+                            <button type="submit" data-loading-text="Logging..." data-original-text="Update" class="btn btn-primary btn-user btn-block" id="btnlearnerActivateUser">
+                                Update
+                            </button>
+                        }
+                    }
+                    <div class="clearfix"></div>
+                    <div class="separator">
+                        <div class="clearfix"></div>
+                        <br />
+                        <div>
+                            <p style="color: #71797E;"><img src="~/Content/images/eLearing-Gate-tag-line-black.png" style="height:50px" alt="eLearning Gate Logo">Copyright &copy; eLearning Gate @DateTime.Now.Year</p>
+                        </div>
+                    </div>
+            </section>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,101 @@
+<div class="modal fade" id="updateSessionLearnerInfoModal" tabindex="-1" role="dialog" aria-labelledby="updateSessionLearnerInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateSessionInfoTitle">Update Info</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="container">
+                        <div class="picture-container">
+                            <div class="picture">
+
+                                @{
+                                    var profilesrc = "../Content/img/no-pic.png";
+                                    if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
+                                    {
+                                        profilesrc = ELG.Web.Helper.SessionHelper.ProfilePic;
+                                    }
+                                }
+                                <label for="wizard-picture">
+                                    <img src="@profilesrc" class="picture-src" id="wizardPicturePreview" title="">
+                                </label>
+                                <input type="file" accept="image/*" id="wizard-picture" class="">
+                            </div>
+                            <a href="#" id="btn-remove-pic" onclick="updateSessionLearnerHandler.removeProfilePic()">&times; Remove</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="picture-msg">
+                        <div id="msg-profile-pic"></div>
+                        <h6 class="">Please click on the image above to upload a photo of yourself that clearly shows your face.</h6>
+                        <h6 class="">Supported image formats are .jpg, .jpeg, .png and .gif and size should not exceed 1mb.</h6>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!--Alert message-->
+                        <div id="editSessionLearnerError"> </div>
+
+                        <form class="user">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblSessionFirstName">@ELG.Web.Helper.SessionHelper.CompanySettings.strFirstNameDescription</span>
+                                </div>
+                                <input type="text" id="txtUpdateSessionFirstName" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblSessionLastName">@ELG.Web.Helper.SessionHelper.CompanySettings.strSurnameDescription</span>
+                                </div>
+                                <input type="text" id="txtUpdateSessionLastName" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblSessionEmail">Email</span>
+                                </div>
+                                <input type="email" id="txtUpdateSessionEmail" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="ddlSessionLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                                </div>
+                                <select class="custom-select ddl-loc" id="updateSessionLocationDDL" disabled>
+                                    <option value="0" selected>Select...</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="ddlSessionDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                                </div>
+                                <select class="custom-select ddl-dep" id="updateSessionDepartmentDDL" disabled>
+                                    <option selected>Select...</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblUserId">@ELG.Web.Helper.SessionHelper.CompanySettings.strEmployeeNumberDescription</span>
+                                </div>
+                                <input type="text" id="updateSessionEmpNo" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="btnUpdateSessionLearnerInfo" data-loading-text="Updating..." data-original-text="Update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+

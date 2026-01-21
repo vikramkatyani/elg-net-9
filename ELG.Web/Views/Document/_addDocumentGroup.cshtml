@@ -1,0 +1,79 @@
+<div class="modal fade" id="addDocumentGroupModal" tabindex="-1" aria-labelledby="addDocumentGroupModalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="addCategoryModalLabel">Add Document Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div id="addDocGroupMessage"></div>
+
+                <!-- Form -->
+                <form id="addDocGroupForm" class="needs-validation" novalidate>
+
+
+                    <div class="form-floating mb-3 w-100">
+                        <select class="form-select" id="ddlGroupLocation" required>
+                        </select>
+                        <label for="ddlGroupLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <textarea class="form-control" placeholder="Enter group name" id="txtDocGroupName" style="height: 80px" required></textarea>
+                        <label for="txtDocGroupName">Group Name</label>
+                    </div>
+
+
+                    <div class="form-floating mb-3 w-100">
+                        <textarea class="form-control" placeholder="Enter description" id="txtDocGroupDesc" style="height: 100px"></textarea>
+                        <label for="txtDocGroupDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAddDocGroup" data-loading-text="Creating..." data-original-text="Add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--update Modal-->
+
+<div class="modal fade" id="updateDocGroupModal" tabindex="-1" aria-labelledby="updateDocGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="updateDocGroupModalLabel">Update Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div id="updateDocGroupMessage"></div>
+
+                <!-- Form -->
+                <form id="updateDocGroupForm" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtUpdateDocGroupName" class="form-control" placeholder="Group name" required />
+                        <label for="txtUpdateDocGroupName">Group Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtUpdateDocGroupDesc" class="form-control" placeholder="Description" />
+                        <label for="txtUpdateDocGroupDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateDocGroup" data-loading-text="Updating..." data-original-text="Update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

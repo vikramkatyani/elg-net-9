@@ -1,0 +1,200 @@
+
+@{
+    ViewBag.Title = "Course Auto Allocation";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="x_panel tile">
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Auto-Assign - Courses</h1>
+
+        <!-- Filter Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+
+                    <!-- Course Dropdown -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <select id="ddlCourse" class="form-select ddl-course">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlCourse">Select Course</label>
+                        </div>
+                    </div>
+
+                    <!-- Assign By Dropdown -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <select id="ddlMethod" class="form-select">
+                                <option value="0">Select</option>
+                                <option value="2">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</option>
+                                <option value="3">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</option>
+                                <option value="4">Entire Company</option>
+                                <option value="1">Advanced</option>
+                            </select>
+                            <label for="ddlMethod">Assign By</label>
+                        </div>
+                    </div>
+
+                    <!-- Continue Button -->
+                    <div class="col-md-4 col-lg-3 d-flex justify-content-end">
+                        <button id="applyAssignmentMethod" class="btn btn-primary w-100">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Filter -->
+        <div class="row assign-sel-row mb-3" id="filter-assignby-location">
+            <div class="col-md-12">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="form-floating">
+                            <select id="ddlLocation" class="form-select ddl-loc">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlLocation">Assign to @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 d-flex gap-2 justify-content-end">
+                        <button id="searchDepartmentModule" class="btn btn-primary">
+                            <i class="fa fa-search me-1"></i> Search
+                        </button>
+                        <button id="clearSearchDepartmentModule" class="btn btn-secondary">
+                            <i class="fa fa-times me-1"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Filter -->
+        <div class="row assign-sel-row mb-3" id="filter-assignby-department">
+            <div class="col-md-12">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="form-floating">
+                            <select id="ddlDepartment" class="form-select ddl-dept">
+                                <option value="0">Select @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</option>
+                            </select>
+                            <label for="ddlDepartment">Assign to @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-dark w-100" id="btnAssignToEntireDepartment"
+                                data-bs-toggle="tooltip"
+                                title="Assign licence auto allocation to selected @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription"
+                                data-loading-text="Please wait..." data-original-text="Entire Department">
+                            Entire Department
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entire Company Filter -->
+        <div class="row assign-sel-row mb-3" id="filter-assignby-org">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" id="btnAssignToEntireOrg"
+                        data-bs-toggle="tooltip" title="Assign licence auto allocation to all"
+                        data-loading-text="Please wait..." data-original-text="Entire Company">
+                    Entire Company
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tables Section -->
+    <div class="x_content">
+        <div id="divMessage_AutoAllocateModule"></div>
+
+
+        <!-- Info Message -->
+        <div id="divLicAutoAllocateInfoMessage" class="alert alert-default">
+            <div>
+                <b>How to use this page:</b>
+                <ul>
+                    <li>Begin by selecting a <b>Course</b> from the dropdown menu.</li>
+                    <li>Choose how the course should be assigned—by <b>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</b>, <b>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</b>, or to the <b>Entire Organisation</b>.</li>
+                    <li>Use <b>Auto Allocation</b> to automatically assign the course to users added in the future.</li>
+                    <li>To assign the course to existing users, switch to the <b>Hand-Picked Enrollment</b> tab.</li>
+                    <li>Apply filters as needed to refine your selection.</li>
+                    <li>Click <i class="fa fa-search me-1"></i> <b>Search</b> to view eligible users.</li>
+                    <li>Select users using the checkboxes and click <b>Allocate to Selected</b> to complete the assignment.</li>
+                    <li>Use <i class="fa fa-times me-1"></i> <b>Clear</b> to reset all selections and filters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Department Table -->
+        <div class="table-responsive mb-4 type-table-container" id="autoassigndepartments_tbl_container">
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-dark disabled" id="btnAllocateToSelected"
+                        data-bs-toggle="tooltip" title="Select some departments"
+                        data-loading-text="Please wait..." data-original-text="Set Auto for Selected">
+                    Set Auto for Selected
+                </button>
+            </div>
+            <table class="table table-striped table-hover table-bordered align-middle" id="autoAllocateModuleDepartmentList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th><input type="checkbox" id="chk_slc_all_departments"><span class="ms-1">Select All</span></th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <!-- Location Table -->
+        <div class="table-responsive mb-4 type-table-container" id="autoAssignAllLocations_tbl_container">
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-dark disabled" id="btnAllocateToSelectedLocations"
+                        data-bs-toggle="tooltip" title="Select some @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription"
+                        data-loading-text="Please wait..." data-original-text="Set Auto for Selected">
+                    Set Auto for Selected
+                </button>
+            </div>
+            <table class="table table-striped table-hover table-bordered align-middle" id="autoAllocateModuleAllLocationList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th><input type="checkbox" id="chk_slc_all_locations"><span class="ms-1">Select All</span></th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <!-- Company-Wide Department Table -->
+        <div class="table-responsive type-table-container" id="autoAssignAllDepartments_tbl_container">
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-dark disabled" id="btnAllocateToSelectedDepartments"
+                        data-bs-toggle="tooltip" title="Select some @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription"
+                        data-loading-text="Please wait..." data-original-text="Set Auto for Selected">
+                    Set Auto for Selected
+                </button>
+            </div>
+            <table class="table table-striped table-hover table-bordered align-middle" id="autoAllocateModuleAllDepartmentList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th><input type="checkbox" id="chk_slc_all_company_departments"><span class="ms-1">Select All</span></th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+        @section Scripts{
+            <script>const currentpageId = "lic_auto_allocate";</script>
+            <script type="text/javascript" src="~/Scripts/Admin/License/AutoAllocateLicense.js?v=1.4"></script>
+        }
+
