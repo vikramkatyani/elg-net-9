@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1433
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELG.Web", "ELG.Web\ELG.Web.csproj", "{F5DC0360-8758-47A1-85B8-2DBAED28112A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELG.DAL", "ELG.DAL\ELG.DAL.csproj", "{5850CCB5-2DC3-42D3-B70B-10A023EED165}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELG.Model", "ELG.Model\ELG.Model.csproj", "{DE56B799-700E-480B-85AE-247311B96487}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5DC0360-8758-47A1-85B8-2DBAED28112A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5DC0360-8758-47A1-85B8-2DBAED28112A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5DC0360-8758-47A1-85B8-2DBAED28112A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5DC0360-8758-47A1-85B8-2DBAED28112A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5850CCB5-2DC3-42D3-B70B-10A023EED165}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5850CCB5-2DC3-42D3-B70B-10A023EED165}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5850CCB5-2DC3-42D3-B70B-10A023EED165}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5850CCB5-2DC3-42D3-B70B-10A023EED165}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE56B799-700E-480B-85AE-247311B96487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE56B799-700E-480B-85AE-247311B96487}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE56B799-700E-480B-85AE-247311B96487}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE56B799-700E-480B-85AE-247311B96487}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {776EE47E-5BB8-4B33-A439-D6A967414F3A}
+	EndGlobalSection
+EndGlobal

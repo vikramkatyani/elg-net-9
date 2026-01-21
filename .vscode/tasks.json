@@ -1,0 +1,171 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/KCLMS48.sln",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary;ForceNoAlign"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/KCLMS48.sln",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary;ForceNoAlign"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"run",
+				"--project",
+				"${workspaceFolder}/KCLMS48.sln"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "build LMS_learner",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_learner/LMS_learner.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary;ForceNoAlign"
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_learner",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_learner/LMS_learner.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary;ForceNoAlign"
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_learner",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_learner/LMS_learner.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build LMS_admin",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"LMS_admin/LMS_admin.csproj"
+			],
+			"group": "build"
+		}
+	]
+}
