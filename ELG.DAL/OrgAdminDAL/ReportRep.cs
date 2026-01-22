@@ -577,10 +577,14 @@ namespace ELG.DAL.OrgAdminDAL
         {
             try
             {
+                // Gracefully parse optional dates; allow nulls to avoid FormatException and let the proc decide defaults
+                DateTime? statusUpdatedOn = ParseNullableDate(record?.StatusUpdatedOn);
+                DateTime? viewedOn = ParseNullableDate(record?.ViewedOnDate);
+
                 ObjectParameter retVal = new ObjectParameter("retVal", typeof(int));
                 using (var context = new lmsdbEntities())
                 {
-                    var result = context.lms_admin_setLearnerDocStatus(record.UserID, record.DocID, record.DocumentStatus, Convert.ToDateTime(record.StatusUpdatedOn), Convert.ToDateTime(record.ViewedOnDate), retVal);
+                    context.lms_admin_setLearnerDocStatus(record?.UserID, record?.DocID, record?.DocumentStatus, statusUpdatedOn, viewedOn, retVal);
                 }
                 return Convert.ToInt32(retVal.Value);
             }
@@ -588,6 +592,29 @@ namespace ELG.DAL.OrgAdminDAL
             {
                 throw;
             }
+        }
+
+        private static DateTime? ParseNullableDate(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            // Accept the formats we send from the UI and common fallbacks
+            string[] formats = { "dd-MMM-yyyy", "dd-MMM-yy", "dd-MMM-yyyy HH:mm:ss", "yyyy-MM-dd", "MM/dd/yyyy" };
+            if (DateTime.TryParseExact(value.Trim(), formats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime parsed))
+            {
+                return parsed;
+            }
+
+            // Last-resort parse with current culture
+            if (DateTime.TryParse(value, out parsed))
+            {
+                return parsed;
+            }
+
+            return null;
         }
         #endregion
 

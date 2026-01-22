@@ -12,6 +12,11 @@ using System.Linq;
 
 namespace ELG.Web.Areas.Learner.Controllers
 {
+    public class DocManageRequest
+    {
+        public long DocumentId { get; set; }
+        public string Status { get; set; }
+    }
     [Area("Learner")]
     public class DocumentController : Controller
     {
@@ -97,12 +102,13 @@ namespace ELG.Web.Areas.Learner.Controllers
 
         // POST: mark document read
         [HttpPost]
-        public ActionResult MarkDocumentRead(Int64 DocumentId)
+        public ActionResult MarkDocumentRead([FromBody] DocManageRequest request)
         {
             try
             {
+                Int64 docid = request?.DocumentId ?? 0;
                 var docRep = new DocumentRep();
-                int result = docRep.MarkDocumentRead(SessionHelper.UserId, DocumentId, SessionHelper.CompanyId);
+                int result = docRep.MarkDocumentRead(SessionHelper.UserId, docid, SessionHelper.CompanyId);
                 return Json(new { success = result });
             }
             catch (Exception ex)
@@ -114,12 +120,14 @@ namespace ELG.Web.Areas.Learner.Controllers
 
         // POST: set document status
         [HttpPost]
-        public ActionResult SetDocumentStatus(Int64 DocumentId, string Status)
+        public ActionResult SetDocumentStatus([FromBody] DocManageRequest request)
         {
             try
             {
+                Int64 docid = request?.DocumentId ?? 0;
+                string status = request?.Status ?? "";
                 var docRep = new DocumentRep();
-                int result = docRep.UpdateDocumentStatus(SessionHelper.UserId, DocumentId, Status);
+                int result = docRep.UpdateDocumentStatus(SessionHelper.UserId, docid, status);
                 return Json(new { success = result });
             }
             catch (Exception ex)

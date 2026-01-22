@@ -265,6 +265,14 @@ namespace ELG.DAL.Utilities
         {
             throw new NotSupportedException("Use the overload with baseURL parameter in .NET Core");
         }
+        public string CreatePasswordResetLink(Int64 userid, bool createUserLink = false)
+        {
+            StringBuilder sbLoginLink = new StringBuilder();
+            string strInnerContent = Convert.ToString(userid) + "~" + DateTime.UtcNow.ToString("o");
+            sbLoginLink.Append("/Account/ActivateUser/");
+            sbLoginLink.Append(System.Net.WebUtility.UrlEncode(EncodeString(strInnerContent)));
+            return sbLoginLink.ToString();
+        }
         public string CreateLoginLinkToBeSendInMail(string baseURL, Int64 userid, bool createUserLink = false)
         {
             StringBuilder sbLoginLink = new StringBuilder();

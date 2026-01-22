@@ -569,7 +569,7 @@ namespace ELG.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateLearnerDocRecord(DocumentReportItem record)
+        public ActionResult UpdateLearnerDocRecord([FromBody] DocumentReportItem record)
         {
             try
             {

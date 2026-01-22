@@ -104,7 +104,7 @@ namespace ELG.Web.Controllers
 
                         // Redirect to password reset if needed
                         if (!admin.IsPasswordReset)
-                            redirectUrl = emailUti.CreateLoginLinkToBeSendInMail(admin.UserID);
+                            redirectUrl = emailUti.CreatePasswordResetLink(admin.UserID);
 
                         response.Err = 0;
                         response.Url = redirectUrl;
@@ -144,7 +144,7 @@ namespace ELG.Web.Controllers
 
                         // Redirect to password reset if needed
                         if (!learner.IsPasswordReset)
-                            redirectUrl = emailUti.CreateLoginLinkToBeSendInMail((int)learner.UserID);
+                            redirectUrl = emailUti.CreatePasswordResetLink((int)learner.UserID);
 
                         response.Err = 0;
                         response.Url = redirectUrl;

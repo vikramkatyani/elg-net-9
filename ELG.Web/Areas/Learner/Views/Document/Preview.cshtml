@@ -15,6 +15,22 @@
     form input {
          width: auto; 
     }
+    
+    /* Hide left sidebar on preview page */
+    .learner-menu-bar,
+    .hamburger {
+        display: none !important;
+    }
+    
+    .learner-main-content {
+        width: 100% !important;
+        margin-left: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    .learner-content-container {
+        grid-template-columns: 1fr !important;
+    }
 </style>
 
 <div class="x_panel tile">
@@ -117,5 +133,8 @@
 </div>
 
 @section Scripts{
+    <script>
+        var hdnBaseUrl = '@Url.Content("~/Learner/Document/")';
+    </script>
     <script type="text/javascript" src="~/js/Document/documentPreview.js"></script>
 }

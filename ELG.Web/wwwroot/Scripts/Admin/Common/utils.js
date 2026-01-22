@@ -166,27 +166,33 @@ UTILS.Alert = {
             $ref.className = '';
             $ref.innerHTML = '';
         }
+        
+        var classes = '';
         switch (type) {
             case "error":
-                $ref.addClass("alert alert-error-dark floating-alert");
+                classes = "alert alert-error-dark floating-alert";
                 break;
             case "success":
-                $ref.addClass("alert alert-success-dark floating-alert");
+                classes = "alert alert-success-dark floating-alert";
                 break;
             case "info":
-                $ref.addClass("alert alert-info-dark floating-alert");
+                classes = "alert alert-info-dark floating-alert";
                 break;
             case "warning":
-                $ref.addClass("alert alert-warning");
+                classes = "alert alert-warning";
                 break;
         }
+        
         if (isJQ) {
+            $ref.addClass(classes);
             $ref.append(message);
             $ref.fadeIn();
         } else if ($ref) {
-            $ref.innerHTML += message || '';
+            $ref.className = classes;
+            $ref.innerHTML = message || '';
             $ref.style.display = '';
         }
+        
         messageAlertTimeOut = setInterval(function () { hideAlert($ref); }, 3000);
 
         function hideAlert($ref) {
