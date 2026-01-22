@@ -295,3 +295,14 @@ appsettings.Production.json
 
 # Publish artifacts
 publish/
+*.zip
+publish.zip
+deploy.zip
+deployment.zip
+
+# Environment files
+.env
+.env.local
+
+# CI/CD artifacts
+.github/workflows/secrets.json

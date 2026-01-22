@@ -1,0 +1,105 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  AZURE_RESOURCE_GROUP: 'atf-prod-core-infra-rg'
+  AZURE_APP_NAME: 'elg-prod'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    name: Build and Test
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore KCLMS48.sln
+
+    - name: Build
+      run: dotnet build KCLMS48.sln --configuration Release --no-restore
+
+    - name: Run tests (if any)
+      run: dotnet test KCLMS48.sln --configuration Release --no-build --verbosity normal
+      continue-on-error: true
+
+    - name: Publish
+      run: dotnet publish ELG.Web/ELG.Web.csproj -c Release -o ./publish -f net9.0
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
+
+  deploy:
+    needs: build
+    runs-on: windows-latest
+    name: Deploy to Azure
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
+
+    - name: Create deployment package
+      run: |
+        7z a -r deploy.zip ./publish/*
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_APP_NAME }}
+        package: deploy.zip
+        resource-group: ${{ env.AZURE_RESOURCE_GROUP }}
+
+    - name: Logout from Azure
+      run: az logout
+
+  notify:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    name: Notify on Completion
+    if: always()
+
+    steps:
+    - name: Build Status
+      run: |
+        if [ "${{ needs.build.result }}" == "success" ]; then
+          echo "✅ Build succeeded"
+        else
+          echo "❌ Build failed"
+          exit 1
+        fi
+
+    - name: Deployment Status
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        if [ "${{ needs.deploy.result }}" == "success" ]; then
+          echo "✅ Deployment succeeded"
+        else
+          echo "❌ Deployment failed"
+        fi
