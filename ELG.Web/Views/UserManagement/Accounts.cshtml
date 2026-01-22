@@ -36,7 +36,7 @@
                                     class="form-select ddl-loc"
                                     aria-label="Location">
                                 <option value="0">Select All</option>
-                                <!-- …other options… -->
+                                <!-- ï¿½other optionsï¿½ -->
                             </select>
                             <label for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
                         </div>
@@ -49,7 +49,7 @@
                                     class="form-select ddl-dep"
                                     aria-label="Department">
                                 <option value="0">Select All</option>
-                                <!-- …other options… -->
+                                <!-- ï¿½other optionsï¿½ -->
                             </select>
                             <label for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
                         </div>
@@ -107,6 +107,8 @@
         </div>
     </div>
 </div>
+
+@Html.Partial("_EditLearnerInfo")
 
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/Admin/ManageLearner/manageLearners.js?v=1.5"></script>

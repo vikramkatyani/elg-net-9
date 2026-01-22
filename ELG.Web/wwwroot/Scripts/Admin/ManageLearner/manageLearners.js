@@ -25,7 +25,7 @@ var learnerReportHandler = (function () {
     //var learnerTable = 
 
     //apply filters for search
-    $searchBtn.click(function (e) {
+    $searchBtn.on('click',function (e) {
         e.preventDefault();
         UTILS.Alert.hide($alert);
         $learnerTableContainer.show();
