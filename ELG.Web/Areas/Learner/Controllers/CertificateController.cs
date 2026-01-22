@@ -40,7 +40,9 @@ namespace ELG.Web.Areas.Learner.Controllers
                 var reportRep = new LearnerCourseRep();
                 progress = reportRep.GetCertificateRecord(id);
 
-                string strFilePath = System.IO.Path.Combine(_env.WebRootPath ?? _env.ContentRootPath, "content", "certificate");
+                // Construct path: use WebRootPath only (it already contains wwwroot)
+                string basePath = _env.WebRootPath ?? System.IO.Path.Combine(_env.ContentRootPath, "wwwroot");
+                string strFilePath = System.IO.Path.Combine(basePath, "content", "certificate");
 
                 string userName = progress.FirstName + " " + progress.LastName;
                 string courseName = progress.CourseName;

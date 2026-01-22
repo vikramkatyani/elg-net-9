@@ -17,6 +17,10 @@ using ELG.DAL.OrgAdminDAL;
 
 namespace ELG.Web.Controllers
 {
+    public class UserManageRequest
+    {
+        public long learnerId { get; set; }
+    }
     [SessionCheck]
     public class UserManagementController : Controller
     {
@@ -130,10 +134,11 @@ namespace ELG.Web.Controllers
         
         // to reset learner's password.
         [HttpPost]
-        public ActionResult ResetLearnerPassword(Int64 learnerId)
+        public ActionResult ResetLearnerPassword(UserManageRequest request)
         {
             try
             {
+                Int64 learnerId = request?.learnerId ?? 0;
                 var acc = new OrgAdminAccountRep();
                 acc.UpdateLearnerPasswordByAdmin(learnerId, CommonHelper.GetAppSettingValue("LMS_DefaultPassword"), CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"));
                 return Json(new { success = 1 });
@@ -147,10 +152,11 @@ namespace ELG.Web.Controllers
         
         // to resend learner's activation email.
         [HttpPost]
-        public ActionResult ResendLearnerActivationEmail(Int64 learnerId)
+        public ActionResult ResendLearnerActivationEmail(UserManageRequest request)
         {
             try
             {
+                Int64 learnerId = request?.learnerId ?? 0;
                 var learnerRep = new LearnerRep();
                 LearnerInfo learnerInfo = learnerRep.GetLearnerInfo(learnerId);
 

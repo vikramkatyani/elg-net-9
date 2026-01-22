@@ -102,8 +102,8 @@ namespace ELG.Web.Controllers
                            .SetTextAlignment(TextAlignment.CENTER);
                     }
 
-                    string ttf_file_path_1 = System.IO.Path.Combine(_env.WebRootPath, "fonts", "MonteCarlo-Regular.ttf");
-                    string ttf_file_path_2 = System.IO.Path.Combine(_env.WebRootPath, "fonts", "Roboto-Light.ttf");
+                    string ttf_file_path_1 = System.IO.Path.Combine(_env.WebRootPath, "content", "certificate", "fonts", "NeueHaasDisplayBold.ttf");
+                    string ttf_file_path_2 = System.IO.Path.Combine(_env.WebRootPath, "content", "certificate", "fonts", "NeueHaasDisplayThin.ttf");
                     PdfFont customFont_name = PdfFontFactory.CreateFont(ttf_file_path_1, "Identity-H");
                     PdfFont customFont_details = PdfFontFactory.CreateFont(ttf_file_path_2, "Identity-H");
 
@@ -190,7 +190,7 @@ namespace ELG.Web.Controllers
                        .Create(strFilePath + "business_certificate.jpg"))
                        .SetTextAlignment(TextAlignment.CENTER);
 
-                    string ttf_file_path = System.IO.Path.Combine(_env.WebRootPath, "fonts", "OpenSans-Regular.ttf");
+                    string ttf_file_path = System.IO.Path.Combine(_env.WebRootPath, "content", "certificate", "fonts", "NeueHaasDisplayThin.ttf");
                     PdfFont customFont = PdfFontFactory.CreateFont(ttf_file_path, "Identity-H");
 
                     //Color hseColor = new DeviceRgb(243, 112, 33);

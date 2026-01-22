@@ -42,13 +42,36 @@ function setDocStatus(btn) {
         };
         UTILS.makeAjaxCall(url, data, function (res) {
             if (res.success === 1) {
-                UTILS.Alert.showFloatingAlert(alertElement, 'success', 'Document status updated successfully.');
-                window.opener.location.reload();
+                // Show success message
+                UTILS.Alert.show(alertElement, 'success', 'Document status updated successfully.');
+                
+                // Disable all radio buttons
+                const radioButtons = document.querySelectorAll('input[name="learnerDocStatus"]');
+                radioButtons.forEach(radio => {
+                    radio.disabled = true;
+                });
+                
+                // Disable update button and change appearance
+                const updateBtn = document.querySelector(`#btn-update-status-${docId}`);
+                if (updateBtn) {
+                    updateBtn.disabled = true;
+                    updateBtn.style.cursor = 'not-allowed';
+                    updateBtn.style.opacity = '0.6';
+                }
+                
+                // Refresh parent window if it exists
+                if (window.opener && !window.opener.closed) {
+                    try {
+                        window.opener.location.reload();
+                    } catch (e) {
+                        console.log('Could not reload parent window');
+                    }
+                }
             } else {
-                UTILS.Alert.showFloatingAlert(alertElement, 'error', 'Failed to update document status.');
+                UTILS.Alert.show(alertElement, 'error', 'Failed to update document status.');
             }
         }, function (err) {
-            UTILS.Alert.showFloatingAlert(alertElement, 'error', 'Failed to update document status. Please try again later.');
+            UTILS.Alert.show(alertElement, 'error', 'Failed to update document status. Please try again later.');
         });
     }
 }
