@@ -3778,7 +3778,7 @@
         </ComplexType>
         <ComplexType Name="lms_admin_getCoursesForAutoAssignement_Result">
           <Property Type="Int32" Name="intCourseID" Nullable="false" />
-          <Property Type="Int32" Name="intCourseIdentifier" Nullable="true" />
+          <Property Type="String" Name="intCourseIdentifier" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="intOrganisationID" Nullable="false" />
           <Property Type="String" Name="strUnlockKey" Nullable="true" MaxLength="400" />
           <Property Type="String" Name="strCourse" Nullable="true" MaxLength="100" />

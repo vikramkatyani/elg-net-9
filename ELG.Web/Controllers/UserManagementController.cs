@@ -345,7 +345,7 @@ namespace ELG.Web.Controllers
 
         // function to add new user
         [HttpPost]
-        public ActionResult CreateAccount(LearnerInfo learner)
+        public ActionResult CreateAccount([FromBody] LearnerInfo learner)
         {
             try
             {
