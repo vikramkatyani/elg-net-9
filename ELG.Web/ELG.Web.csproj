@@ -808,6 +808,7 @@
     <PackageReference Include="jQuery.Validation" Version="1.21.0" />
     <PackageReference Include="log4net" Version="3.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.1" />
     <PackageReference Include="Microsoft.Bcl.Cryptography" Version="9.0.1" />
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
