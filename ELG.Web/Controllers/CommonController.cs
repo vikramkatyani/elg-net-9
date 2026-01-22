@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ELG.Web.Controllers
 {
+    public class DepartmentListRequest
+    {
+        public long Location { get; set; }
+    }
+
     public class CommonController : Controller
     {
         // get Compnay trainer info
@@ -55,10 +60,11 @@ namespace ELG.Web.Controllers
         }
 
         //Get list of all departments for a location
-        public ActionResult DepartmentList(Int64 location)
+        public ActionResult DepartmentList([FromBody] DepartmentListRequest request)
         {
             try
             {
+                Int64 location = request?.Location ?? 0;
                 var locFilter = new CommonMethods();
                 List<OrganisationDepartment> departmentList = new List<OrganisationDepartment>();
                 departmentList = locFilter.GetDepartmentsForLocation(SessionHelper.UserRole, SessionHelper.UserId, location);
