@@ -27,17 +27,17 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
-      run: dotnet restore KCLMS48.sln
+      run: dotnet restore elgLMS.sln
 
     - name: Build
-      run: dotnet build KCLMS48.sln --configuration Release --no-restore
+      run: dotnet build elgLMS.sln --configuration Release --no-restore
 
     - name: Run tests (if any)
-      run: dotnet test KCLMS48.sln --configuration Release --no-build --verbosity normal
+      run: dotnet test elgLMS.sln --configuration Release --no-build --verbosity normal
       continue-on-error: true
 
     - name: Publish
-      run: dotnet publish ELG.Web/ELG.Web.csproj -c Release -o ./publish -f net9.0
+      run: dotnet publish ELG.Web/ELG.Web.csproj -c Release -o ./publish -f net9.0 --no-build
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3

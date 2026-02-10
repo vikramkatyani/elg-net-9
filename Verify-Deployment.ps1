@@ -112,7 +112,7 @@ if ($BuildRelease) {
     
     try {
         Push-Location $workspaceRoot
-        $buildOutput = dotnet build KCLMS48.sln -c Release 2>&1
+        $buildOutput = dotnet build elgLMS.sln -c Release 2>&1
         $buildSuccess = $LASTEXITCODE -eq 0
         Pop-Location
         

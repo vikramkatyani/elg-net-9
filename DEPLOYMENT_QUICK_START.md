@@ -53,7 +53,7 @@ git push origin main
 cd d:\Net-Project\elgLMS_NET9
 
 # Build in Release mode
-dotnet build KCLMS48.sln -c Release
+dotnet build elgLMS.sln -c Release
 
 # Publish individual apps
 dotnet publish LMS_admin/LMS_admin.csproj -c Release -o ./publish/LMS_admin

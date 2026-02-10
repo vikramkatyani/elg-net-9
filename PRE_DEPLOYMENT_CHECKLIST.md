@@ -156,7 +156,7 @@
 ### Option B: Manual Deployment (If Actions fails)
 ```bash
 # Build
-dotnet build KCLMS48.sln -c Release
+dotnet build elgLMS.sln -c Release
 
 # Publish
 dotnet publish LMS_admin/LMS_admin.csproj -c Release -o ./publish/LMS_admin
