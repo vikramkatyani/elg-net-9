@@ -47,7 +47,22 @@ try
     }
 
     // Configure data protection to persist keys (prevents session cookie errors on restart)
-    var keysPath = Path.Combine(builder.Environment.ContentRootPath, "DataProtectionKeys");
+    var contentRootPath = builder.Environment.ContentRootPath;
+    if (string.IsNullOrEmpty(contentRootPath))
+    {
+        contentRootPath = AppContext.BaseDirectory;
+    }
+    if (string.IsNullOrEmpty(contentRootPath))
+    {
+        contentRootPath = Directory.GetCurrentDirectory();
+    }
+    if (!string.IsNullOrEmpty(contentRootPath))
+    {
+        builder.Environment.ContentRootPath = contentRootPath;
+    }
+    var keysPath = string.IsNullOrEmpty(contentRootPath)
+        ? "DataProtectionKeys"
+        : Path.Combine(contentRootPath, "DataProtectionKeys");
     builder.Services.AddDataProtection()
         .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
         .SetApplicationName("ELG.Web");
@@ -97,35 +112,43 @@ try
 
     // Serve additional static assets from wwwroot subdirectories
     var wwwrootPath = app.Environment.WebRootPath;
-    
-    var wwwrootContentPath = Path.Combine(wwwrootPath, "Content");
-    if (Directory.Exists(wwwrootContentPath))
+    if (string.IsNullOrEmpty(wwwrootPath) && !string.IsNullOrEmpty(contentRootPath))
     {
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(wwwrootContentPath),
-            RequestPath = "/Content"
-        });
+        wwwrootPath = Path.Combine(contentRootPath, "wwwroot");
+        app.Environment.WebRootPath = wwwrootPath;
     }
 
-    var wwwrootScriptsPath = Path.Combine(wwwrootPath, "Scripts");
-    if (Directory.Exists(wwwrootScriptsPath))
+    if (!string.IsNullOrEmpty(wwwrootPath))
     {
-        app.UseStaticFiles(new StaticFileOptions
+        var wwwrootContentPath = Path.Combine(wwwrootPath, "Content");
+        if (Directory.Exists(wwwrootContentPath))
         {
-            FileProvider = new PhysicalFileProvider(wwwrootScriptsPath),
-            RequestPath = "/Scripts"
-        });
-    }
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(wwwrootContentPath),
+                RequestPath = "/Content"
+            });
+        }
 
-    var wwwrootFontsPath = Path.Combine(wwwrootPath, "fonts");
-    if (Directory.Exists(wwwrootFontsPath))
-    {
-        app.UseStaticFiles(new StaticFileOptions
+        var wwwrootScriptsPath = Path.Combine(wwwrootPath, "Scripts");
+        if (Directory.Exists(wwwrootScriptsPath))
         {
-            FileProvider = new PhysicalFileProvider(wwwrootFontsPath),
-            RequestPath = "/fonts"
-        });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(wwwrootScriptsPath),
+                RequestPath = "/Scripts"
+            });
+        }
+
+        var wwwrootFontsPath = Path.Combine(wwwrootPath, "fonts");
+        if (Directory.Exists(wwwrootFontsPath))
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(wwwrootFontsPath),
+                RequestPath = "/fonts"
+            });
+        }
     }
 
     app.UseRouting();
