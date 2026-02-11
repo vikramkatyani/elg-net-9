@@ -27,7 +27,7 @@
         var titleText = sessionDomainDetails?.TitleText ?? "ELG";
         var faviconPath = sessionDomainDetails?.Favicon ?? "Content/images/favicon.ico";
         var cssPath = sessionDomainDetails?.CSS ?? "Content/css/custom.css";
-        var jsPath = cssPath?.Replace(".css", ".js");
+        var jsPath = !string.IsNullOrEmpty(cssPath) ? cssPath.Replace(".css", ".js") : string.Empty;
         var cssUrl = Url.Content("~/" + cssPath);
         var jsUrl = string.IsNullOrEmpty(jsPath) ? string.Empty : Url.Content("~/" + jsPath);
     }
