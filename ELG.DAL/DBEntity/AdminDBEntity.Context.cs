@@ -14,12 +14,32 @@ namespace ELG.DAL.DBEntity
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
+    using Microsoft.Extensions.Configuration;
     
     public partial class lmsdbEntities : DbContext
     {
+        public static IConfiguration _configuration { get; set; }
+
         public lmsdbEntities()
-            : base("name=lmsdbEntities")
+            : base(GetConnectionString())
         {
+        }
+
+        private static string GetConnectionString()
+        {
+            // Try to get from global configuration first (set by Program.cs)
+            if (_configuration != null)
+            {
+                var connStr = _configuration.GetConnectionString("lmsdbEntities");
+                if (!string.IsNullOrEmpty(connStr))
+                {
+                    return connStr;
+                }
+            }
+
+            // If configuration is not available at construction time, return a sensible fallback
+            // that allows .NET to resolve connection strings from appsettings files
+            return "name=lmsdbEntities";
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

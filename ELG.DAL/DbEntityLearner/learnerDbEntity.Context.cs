@@ -14,12 +14,29 @@ namespace ELG.DAL.DbEntityLearner
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
+    using Microsoft.Extensions.Configuration;
     
     public partial class learnerDBEntities : DbContext
     {
+        public static IConfiguration _configuration { get; set; }
+
         public learnerDBEntities()
-            : base("name=learnerDBEntities")
+            : base(GetConnectionString())
         {
+        }
+
+        private static string GetConnectionString()
+        {
+            if (_configuration != null)
+            {
+                var connStr = _configuration.GetConnectionString("learnerDBEntities");
+                if (!string.IsNullOrEmpty(connStr))
+                {
+                    return connStr;
+                }
+            }
+
+            return "name=learnerDBEntities";
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

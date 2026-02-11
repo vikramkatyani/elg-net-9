@@ -19,6 +19,12 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // Set the IConfiguration on Entity Framework DbContext classes
+    // This allows them to read connection strings from appsettings.json in .NET Core
+    ELG.DAL.DBEntity.lmsdbEntities._configuration = builder.Configuration;
+    ELG.DAL.DbEntityLearner.learnerDBEntities._configuration = builder.Configuration;
+    ELG.DAL.DBEntitySA.superadmindbEntities._configuration = builder.Configuration;
+
     // Allow large uploads (SCORM packages up to ~600 MB)
     const long maxUploadSize = 600L * 1024L * 1024L;
     builder.Services.Configure<FormOptions>(options =>
@@ -47,22 +53,7 @@ try
     }
 
     // Configure data protection to persist keys (prevents session cookie errors on restart)
-    var contentRootPath = builder.Environment.ContentRootPath;
-    if (string.IsNullOrEmpty(contentRootPath))
-    {
-        contentRootPath = AppContext.BaseDirectory;
-    }
-    if (string.IsNullOrEmpty(contentRootPath))
-    {
-        contentRootPath = Directory.GetCurrentDirectory();
-    }
-    if (!string.IsNullOrEmpty(contentRootPath))
-    {
-        builder.Environment.ContentRootPath = contentRootPath;
-    }
-    var keysPath = string.IsNullOrEmpty(contentRootPath)
-        ? "DataProtectionKeys"
-        : Path.Combine(contentRootPath, "DataProtectionKeys");
+    var keysPath = Path.Combine(builder.Environment.ContentRootPath, "DataProtectionKeys");
     builder.Services.AddDataProtection()
         .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
         .SetApplicationName("ELG.Web");
@@ -112,43 +103,35 @@ try
 
     // Serve additional static assets from wwwroot subdirectories
     var wwwrootPath = app.Environment.WebRootPath;
-    if (string.IsNullOrEmpty(wwwrootPath) && !string.IsNullOrEmpty(contentRootPath))
+    
+    var wwwrootContentPath = Path.Combine(wwwrootPath, "Content");
+    if (Directory.Exists(wwwrootContentPath))
     {
-        wwwrootPath = Path.Combine(contentRootPath, "wwwroot");
-        app.Environment.WebRootPath = wwwrootPath;
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(wwwrootContentPath),
+            RequestPath = "/Content"
+        });
     }
 
-    if (!string.IsNullOrEmpty(wwwrootPath))
+    var wwwrootScriptsPath = Path.Combine(wwwrootPath, "Scripts");
+    if (Directory.Exists(wwwrootScriptsPath))
     {
-        var wwwrootContentPath = Path.Combine(wwwrootPath, "Content");
-        if (Directory.Exists(wwwrootContentPath))
+        app.UseStaticFiles(new StaticFileOptions
         {
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(wwwrootContentPath),
-                RequestPath = "/Content"
-            });
-        }
+            FileProvider = new PhysicalFileProvider(wwwrootScriptsPath),
+            RequestPath = "/Scripts"
+        });
+    }
 
-        var wwwrootScriptsPath = Path.Combine(wwwrootPath, "Scripts");
-        if (Directory.Exists(wwwrootScriptsPath))
+    var wwwrootFontsPath = Path.Combine(wwwrootPath, "fonts");
+    if (Directory.Exists(wwwrootFontsPath))
+    {
+        app.UseStaticFiles(new StaticFileOptions
         {
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(wwwrootScriptsPath),
-                RequestPath = "/Scripts"
-            });
-        }
-
-        var wwwrootFontsPath = Path.Combine(wwwrootPath, "fonts");
-        if (Directory.Exists(wwwrootFontsPath))
-        {
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(wwwrootFontsPath),
-                RequestPath = "/fonts"
-            });
-        }
+            FileProvider = new PhysicalFileProvider(wwwrootFontsPath),
+            RequestPath = "/fonts"
+        });
     }
 
     app.UseRouting();

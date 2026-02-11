@@ -14,12 +14,29 @@ namespace ELG.DAL.DBEntitySA
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
+    using Microsoft.Extensions.Configuration;
     
     public partial class superadmindbEntities : DbContext
     {
+        public static IConfiguration _configuration { get; set; }
+
         public superadmindbEntities()
-            : base("name=superadmindbEntities")
+            : base(GetConnectionString())
         {
+        }
+
+        private static string GetConnectionString()
+        {
+            if (_configuration != null)
+            {
+                var connStr = _configuration.GetConnectionString("superadmindbEntities");
+                if (!string.IsNullOrEmpty(connStr))
+                {
+                    return connStr;
+                }
+            }
+
+            return "name=superadmindbEntities";
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
