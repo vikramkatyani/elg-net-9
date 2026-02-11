@@ -24,8 +24,23 @@ try
     var config = builder.Configuration;
     
     // Debug: Log what we're getting from configuration
-    System.Diagnostics.Debug.WriteLine($"Environment: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
-    System.Diagnostics.Debug.WriteLine($"ConnectionStrings__lmsdbEntities: {config["ConnectionStrings:lmsdbEntities"]?.Substring(0, Math.Min(100, config["ConnectionStrings:lmsdbEntities"]?.Length ?? 0))}");
+    string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Unknown";
+    string lmsConnStr = config["ConnectionStrings:lmsdbEntities"] ?? "NOT_FOUND";
+    string lmsConnStrFromEnv = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_lmsdbEntities") ?? "NOT_IN_ENV";
+    
+    System.Diagnostics.Debug.WriteLine($"=== ELG.Web Startup ===");
+    System.Diagnostics.Debug.WriteLine($"Environment: {env}");
+    System.Diagnostics.Debug.WriteLine($"lmsdbEntities from config: {(string.IsNullOrEmpty(lmsConnStr) ? "NULL" : lmsConnStr.Substring(0, Math.Min(60, lmsConnStr.Length)) + "...")}");
+    System.Diagnostics.Debug.WriteLine($"CONNECTIONSTRINGS_lmsdbEntities from env: {(string.IsNullOrEmpty(lmsConnStrFromEnv) ? "NULL" : lmsConnStrFromEnv.Substring(0, Math.Min(60, lmsConnStrFromEnv.Length)) + "...")}");
+
+    // Fallback: if configuration doesn't have connection strings but environment variables do,
+    // manually add them to configuration
+    if (string.IsNullOrEmpty(lmsConnStr) && !string.IsNullOrEmpty(lmsConnStrFromEnv))
+    {
+        // Azure environment variables are present but not being picked up
+        // This indicates a configuration provider issue
+        System.Diagnostics.Debug.WriteLine("WARNING: Connection strings from environment not being read by configuration");
+    }
 
     // Set the IConfiguration on Entity Framework DbContext classes
     // This allows them to read connection strings from appsettings.json in .NET Core

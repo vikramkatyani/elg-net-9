@@ -32,8 +32,17 @@ namespace ELG.DAL.DbEntityLearner
                 var connStr = _configuration.GetConnectionString("learnerDBEntities");
                 if (!string.IsNullOrEmpty(connStr))
                 {
+                    System.Diagnostics.Debug.WriteLine($"[learnerDBEntities] Using connection string from configuration");
                     return connStr;
                 }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[learnerDBEntities] Configuration exists but connection string 'learnerDBEntities' not found");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"[learnerDBEntities] Configuration is NULL - falling back to app.config");
             }
 
             return "name=learnerDBEntities";

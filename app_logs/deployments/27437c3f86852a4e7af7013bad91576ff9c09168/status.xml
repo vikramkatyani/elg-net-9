@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>27437c3f86852a4e7af7013bad91576ff9c09168</id>
+  <author>aleido-svelte</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>vikram.katyani@aleido.com</authorEmail>
+  <message>Fix: Resolve Entity Framework 6 connection string resolution in .NET Core
+
+- Modified AdminDBEntity.Context.cs to inject IConfiguration for connection string lookup
+- Modified learnerDbEntity.Context.cs with configuration-based connection string support
+- Modified sadbEntity.Context.cs (superadmindbEntities) with configuration injection
+- Updated Program.cs to set static _configuration property on DbContext classes
+- Fixed App.Config with correct EDMX embedded resource names (DBEntity.AdminDBEntity, DbEntityLearner.learnerDbEntity, DBEntitySA.sadbEntity)
+- Corrected appsettings.Production.json connection string metadata paths to match actual embedded resource names
+
+ROOT CAUSE: Entity Framework 6 auto-generated constructors used hardcoded 'name=contextName' references that don't work in .NET Core. Additionally, EDMX metadata paths were incorrect, preventing resource resolution.
+
+SOLUTION: Implemented static configuration injection pattern allowing DbContexts to read connection strings from .NET Core IConfiguration system, with fallback to app.config naming convention.
+
+This fix resolves the 500 Internal Server Error that was preventing application startup when deployed to Azure.
+</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2026-02-11T06:11:37.8291003Z</lastSuccessEndTime>
+  <receivedTime>2026-02-11T06:04:15.0809283Z</receivedTime>
+  <startTime>2026-02-11T06:09:53.4692814Z</startTime>
+  <endTime>2026-02-11T06:11:37.8291003Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <project_type>ASP.NET CORE CSPROJ MSBUILD 16</project_type>
+  <vsproject_id></vsproject_id>
+</deployment>

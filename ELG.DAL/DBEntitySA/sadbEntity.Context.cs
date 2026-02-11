@@ -32,8 +32,17 @@ namespace ELG.DAL.DBEntitySA
                 var connStr = _configuration.GetConnectionString("superadmindbEntities");
                 if (!string.IsNullOrEmpty(connStr))
                 {
+                    System.Diagnostics.Debug.WriteLine($"[superadmindbEntities] Using connection string from configuration");
                     return connStr;
                 }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[superadmindbEntities] Configuration exists but connection string 'superadmindbEntities' not found");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"[superadmindbEntities] Configuration is NULL - falling back to app.config");
             }
 
             return "name=superadmindbEntities";

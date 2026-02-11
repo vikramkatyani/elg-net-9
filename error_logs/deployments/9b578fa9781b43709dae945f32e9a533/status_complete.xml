@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>9b578fa9781b43709dae945f32e9a533</id>
+  <author>N/A</author>
+  <deployer>GITHUB_ZIP_DEPLOY</deployer>
+  <authorEmail>N/A</authorEmail>
+  <message>{"type":"deployment","sha":"27437c3f86852a4e7af7013bad91576ff9c09168","repoName":"vikramkatyani/elg-net-9","actor":"vaibhavkatyani","slotName":"production","commitMessage":"Fix: Resolve Entity Framework 6 connection string resolution in .NET Core\n\n- Modified AdminDBEntity.Context.cs to inject IConfiguration for connection string lookup\n- Modified learnerDbEntity.Context.cs with configuration-based connection string support\n- Modified sadbEntity.Context.cs (superadmindbEntities) with configuration injection\n- Updated Program.cs to set static _configuration property on DbContext classes\n- Fixed App.Config with correct EDMX embedded resource names (DBEntity.AdminDBEntity, DbEntityLearner.learnerDbEntity, DBEntitySA.sadbEntity)\n- Corrected appsettings.Production.json connection string metadata paths to match actual embedded resource names\n\nROOT CAUSE: Entity Framework 6 auto-generated constructors used hardcoded 'name=contextName' references that don't work in .NET Core. Additionally, EDMX metadata paths were incorrect, preventing resource resolution.\n\nSOLUTION: Implemented static configuration injection pattern allowing DbContexts to read connection strings "}</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2026-02-11T05:45:12.2182578Z</lastSuccessEndTime>
+  <receivedTime>2026-02-11T05:44:51.638705Z</receivedTime>
+  <startTime>2026-02-11T05:44:52.0605912Z</startTime>
+  <endTime>2026-02-11T05:45:12.2182578Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>True</is_readonly>
+  <project_type>BASIC</project_type>
+  <vsproject_id></vsproject_id>
+</deployment>

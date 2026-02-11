@@ -15,12 +15,21 @@
         var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
         if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
         {
-            ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
-            var organization = rep.GetOrganizationFromHost(host);
+            try
+            {
+                ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
+                var organization = rep.GetOrganizationFromHost(host);
 
-            // Store the organization in the SessionHelper
-            ELG.Web.Helper.SessionHelper.OrgDomainDetails = organization;
-            sessionDomainDetails = organization;
+                // Store the organization in the SessionHelper
+                ELG.Web.Helper.SessionHelper.OrgDomainDetails = organization;
+                sessionDomainDetails = organization;
+            }
+            catch (Exception dbEx)
+            {
+                // Database error - log it but don't throw, use defaults
+                System.Diagnostics.Debug.WriteLine($"[MasterLayout] Database error getting organization: {dbEx.Message}");
+                sessionDomainDetails = null; // Will use defaults below
+            }
         }
 
         // Fall back to defaults to avoid null reference and compilation failures when branding is missing

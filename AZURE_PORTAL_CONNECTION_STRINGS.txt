@@ -1,0 +1,39 @@
+CORRECT CONNECTION STRINGS FOR AZURE PORTAL UI
+================================================
+
+When setting via Azure Portal UI, use these EXACT strings (copy-paste without any modifications):
+
+1. NAME: DefaultConnection
+VALUE:
+Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;Persist Security Info=False;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;
+
+---
+
+2. NAME: lmsdbEntities
+VALUE:
+metadata=res://*/DBEntity.AdminDBEntity.csdl|res://*/DBEntity.AdminDBEntity.ssdl|res://*/DBEntity.AdminDBEntity.msl;provider=System.Data.SqlClient;provider connection string="Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;App=EntityFramework"
+
+---
+
+3. NAME: learnerDBEntities
+VALUE:
+metadata=res://*/DbEntityLearner.learnerDbEntity.csdl|res://*/DbEntityLearner.learnerDbEntity.ssdl|res://*/DbEntityLearner.learnerDbEntity.msl;provider=System.Data.SqlClient;provider connection string="Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;App=EntityFramework"
+
+---
+
+4. NAME: superadmindbEntities
+VALUE:
+metadata=res://*/DBEntitySA.sadbEntity.csdl|res://*/DBEntitySA.sadbEntity.ssdl|res://*/DBEntitySA.sadbEntity.msl;provider=System.Data.SqlClient;provider connection string="Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;App=EntityFramework"
+
+---
+
+IMPORTANT:
+- Do NOT include escaped quotes (\" becomes just ")
+- Do NOT include backslashes
+- Copy the VALUE section EXACTLY as shown above
+- The quotes inside the connection strings should be standard ASCII quotes (")
+
+If you got "Format of the initialization string at index 223" error, it means:
+- The quotes in the connection string are malformed (possibly wrong quote characters or escaped quotes in wrong format)
+- Check character by character that the VALUE you pasted matches above
+- Use Notepad (not Word) to verify the text if copying from elsewhere

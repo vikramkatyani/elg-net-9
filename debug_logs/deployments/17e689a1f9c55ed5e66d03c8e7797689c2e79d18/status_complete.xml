@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>17e689a1f9c55ed5e66d03c8e7797689c2e79d18</id>
+  <author>aleido-svelte</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>vikram.katyani@aleido.com</authorEmail>
+  <message>Debug: Add logging for configuration resolution at startup
+</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2026-02-11T06:18:06.7000037Z</lastSuccessEndTime>
+  <receivedTime>2026-02-11T06:15:57.1304806Z</receivedTime>
+  <startTime>2026-02-11T06:15:57.2086059Z</startTime>
+  <endTime>2026-02-11T06:18:06.7000037Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <project_type>ASP.NET CORE CSPROJ MSBUILD 16</project_type>
+  <vsproject_id></vsproject_id>
+</deployment>

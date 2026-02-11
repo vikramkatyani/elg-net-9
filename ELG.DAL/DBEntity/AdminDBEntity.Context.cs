@@ -33,8 +33,17 @@ namespace ELG.DAL.DBEntity
                 var connStr = _configuration.GetConnectionString("lmsdbEntities");
                 if (!string.IsNullOrEmpty(connStr))
                 {
+                    System.Diagnostics.Debug.WriteLine($"[lmsdbEntities] Using connection string from configuration");
                     return connStr;
                 }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[lmsdbEntities] Configuration exists but connection string 'lmsdbEntities' not found");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"[lmsdbEntities] Configuration is NULL - falling back to app.config");
             }
 
             // If configuration is not available at construction time, return a sensible fallback

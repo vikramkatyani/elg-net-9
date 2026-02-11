@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>temp-c478313f</id>
+  <author>N/A</author>
+  <deployer>GITHUB_ZIP_DEPLOY</deployer>
+  <authorEmail>N/A</authorEmail>
+  <message>Deploying from pushed zip file</message>
+  <progress></progress>
+  <status>Failed</status>
+  <statusText></statusText>
+  <lastSuccessEndTime />
+  <receivedTime>2026-02-11T06:46:34.0628354Z</receivedTime>
+  <startTime>2026-02-11T06:46:34.0628354Z</startTime>
+  <endTime>2026-02-11T06:46:38.2661134Z</endTime>
+  <complete>True</complete>
+  <is_temp>True</is_temp>
+  <is_readonly>False</is_readonly>
+  <project_type></project_type>
+  <vsproject_id></vsproject_id>
+</deployment>
