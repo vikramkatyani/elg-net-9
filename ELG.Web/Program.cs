@@ -18,6 +18,14 @@ using Microsoft.AspNetCore.DataProtection;
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    
+    // Ensure Azure environment variables are properly loaded
+    // Azure App Settings use CONNECTIONSTRINGS_* (note the underscore) naming convention
+    var config = builder.Configuration;
+    
+    // Debug: Log what we're getting from configuration
+    System.Diagnostics.Debug.WriteLine($"Environment: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
+    System.Diagnostics.Debug.WriteLine($"ConnectionStrings__lmsdbEntities: {config["ConnectionStrings:lmsdbEntities"]?.Substring(0, Math.Min(100, config["ConnectionStrings:lmsdbEntities"]?.Length ?? 0))}");
 
     // Set the IConfiguration on Entity Framework DbContext classes
     // This allows them to read connection strings from appsettings.json in .NET Core
