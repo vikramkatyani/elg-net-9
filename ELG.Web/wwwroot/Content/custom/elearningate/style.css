@@ -187,6 +187,14 @@ h1 {
 }
 /**************************************************************     END TEXT ELEMENTS     *******************************************************************/
 /* Login Screen */
+/* Login Page Container - Main wrapper */
+.login-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
 /* Left Section */
 .left-section {
     display: none;
@@ -198,7 +206,6 @@ h1 {
         left: 0;
         width: 100%;
         height: 100%;
-        /*background-color: rgba(0, 0, 0, 0.5);*/
         z-index: 1;
     }
 
@@ -207,14 +214,17 @@ h1 {
         z-index: 2;
         width: 100%;
         padding-right: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
     }
 
 .branding img {
     content: url("logo.png");
-    width: 250px;
-    margin-bottom: 10px;
+    width: 200px;
+    margin-bottom: 15px;
 }
-
 
 .footer-branding {
     display: none;
@@ -224,29 +234,56 @@ h1 {
 .right-section {
     flex: 1;
     color: var(--color-dark);
-    padding: 20px;
+    padding: 20px 15px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
 }
 
 .left-section .branding {
     display: none;
 }
 
-
 form {
     display: flex;
     flex-direction: column;
-    margin: 50px 0;
+    margin: 15px 0;
     align-items: center;
+    width: 100%;
+    max-width: 350px;
 }
 
     form input {
-        margin-bottom: 15px;
-        padding: 10px;
-        font-size: 18px;
+        margin-bottom: 12px;
+        padding: 10px 12px;
+        font-size: 16px;
         border: 1px solid var(--color-border);
-        border-radius: 1px;
-        width: 100%
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+.password-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+    .password-container input {
+        width: 100%;
+        padding-right: 40px;
+    }
+
+    .password-container i {
+        position: absolute;
+        right: 12px;
+        cursor: pointer;
+        color: var(--color-light);
     }
 
 .left-section .line-partition {
@@ -259,78 +296,265 @@ form {
 
 .line-partition {
     border-top: 1px solid var(--color-border);
-    margin-top: 10px;
-    padding-top: 10px;
+    margin: 12px 0;
+    padding-top: 12px;
+    width: 100%;
 }
 
-/* style for screen bigger than mobile */
+#page-title {
+    font-size: 24px;
+    margin: 10px 0 5px 0;
+    font-weight: 500;
+    line-height: 1.2;
+}
 
+#page-title .txt-highlight {
+    color: var(--color-primary);
+}
+
+.right-section > p {
+    font-size: 14px;
+    margin: 5px 0 10px 0;
+    line-height: 1.4;
+    max-width: 350px;
+}
+
+.brand-content {
+    margin-bottom: 10px;
+}
+
+    .brand-content .branding img {
+        width: 120px;
+    }
+
+/* Alert message styling */
+.alert {
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Responsive buttons on login page */
+.right-section .elg-btn,
+.right-section .elg-lnk-btn {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+    .right-section .elg-btn {
+        width: 100%;
+        max-width: 300px;
+        height: 40px;
+    }
+
+    .right-section .elg-lnk-btn {
+        font-size: 14px;
+        height: auto;
+        margin-top: 5px;
+    }
+
+.right-section .elg-btn-transparent {
+    width: 100%;
+    max-width: 300px;
+    height: 40px;
+}
+
+/* Mobile First - Compact Layout */
+.mt-2 {
+    margin-top: 8px !important;
+}
+
+.mb-2 {
+    margin-bottom: 8px !important;
+}
+
+/* Tablet and Desktop Styles */
 @media (min-width: 768px) {
+    .login-page-container {
+        flex-direction: row;
+    }
 
     .left-section {
         display: flex;
-        flex: 1.75;
+        flex: 1.5;
         position: relative;
         background: url('landingBG.png') no-repeat center center;
         background-size: cover;
         color: var(--color-white);
-        padding-top: 80px;
-        padding-left: 75px;
+        padding: 50px;
         text-align: left;
-        height: auto;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
     }
 
         .left-section h1 {
-            content: none;
+            display: block;
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--color-white);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .left-section .content {
+            justify-content: flex-start;
+            padding-right: 80px;
         }
 
         .left-section .line-partition {
-            display: none;
+            display: block;
+            width: 80px;
+            margin: 30px 0;
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
     .branding {
-        margin-bottom: 100px;
+        margin-bottom: 50px;
     }
 
-    h1 {
-        font-weight: 400;
-        font-size: 64px;
+        .branding img {
+            width: 200px;
+            margin-bottom: 15px;
+        }
+
+    .right-section {
+        flex: 1;
+        padding: 40px 60px;
+        justify-content: center;
+        min-height: 100vh;
     }
 
-    p {
-        font-size: 18px;
+    #page-title {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .right-section > p {
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
+
+    form {
+        margin: 20px 0;
+    }
+
+        form input {
+            padding: 12px 14px;
+            font-size: 16px;
+            margin-bottom: 14px;
+        }
+
+    .right-section .elg-btn {
+        width: auto;
+        max-width: none;
+        min-width: 240px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .right-section .elg-lnk-btn {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    .right-section .elg-btn-transparent {
+        width: auto;
+        max-width: none;
+        min-width: 240px;
+        height: 45px;
+    }
+
+    .line-partition {
+        margin: 20px 0;
+        padding-top: 20px;
+    }
+
+    .brand-content {
+        margin-bottom: 20px;
+    }
+
+        .brand-content .branding img {
+            width: 180px;
+        }
+
+    .alert {
+        max-width: 100%;
+    }
+}
+
+/* Large Desktop Optimization */
+@media (min-width: 1024px) {
+    .left-section h1 {
+        font-size: 56px;
+    }
+
+    #page-title {
+        font-size: 32px;
     }
 
     .right-section {
-        flex: 1.25;
-        height: auto;
-        text-align: center;
-        padding: 100px 50px 0 0px;
+        padding: 50px 80px;
     }
 
-    .branding img {
-        width: 250px;
+    .right-section > p {
+        font-size: 16px;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .login-page-container {
+        min-height: auto;
     }
 
-    .branding h1 {
-        font-size: 24px;
+    .right-section {
+        padding: 15px 12px;
+        min-height: auto;
     }
 
-    .right-section h2 {
+    #page-title {
         font-size: 22px;
+        margin: 8px 0 4px 0;
     }
 
-    form input {
-        padding: 12px;
-        font-size: 18px;
+    .right-section > p {
+        font-size: 13px;
+        margin-bottom: 8px;
     }
 
-    .elg-lnk-btn, .elg-btn {
-        width: 240px !important;
+    form {
+        margin: 10px 0;
+        max-width: 100%;
     }
 
-    .elg-btn-sm {
-        width: 120px !important;
+        form input {
+            padding: 9px 10px;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+    .right-section .elg-btn {
+        height: 36px;
+        font-size: 15px;
+        max-width: 100%;
+    }
+
+    .line-partition {
+        margin: 10px 0;
+        padding-top: 10px;
+    }
+
+    .brand-content .branding img {
+        width: 100px;
+    }
+
+    .alert {
+        font-size: 13px;
+        padding: 8px;
     }
 }
 
