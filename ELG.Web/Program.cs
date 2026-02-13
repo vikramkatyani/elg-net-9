@@ -48,8 +48,8 @@ try
     ELG.DAL.DbEntityLearner.learnerDBEntities._configuration = builder.Configuration;
     ELG.DAL.DBEntitySA.superadmindbEntities._configuration = builder.Configuration;
 
-    // Allow large uploads (SCORM packages up to ~600 MB)
-    const long maxUploadSize = 600L * 1024L * 1024L;
+    // Allow large uploads (SCORM packages up to ~1 GB)
+    const long maxUploadSize = 1024L * 1024L * 1024L;
     builder.Services.Configure<FormOptions>(options =>
     {
         options.MultipartBodyLengthLimit = maxUploadSize;

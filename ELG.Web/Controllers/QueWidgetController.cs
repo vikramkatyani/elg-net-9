@@ -64,10 +64,13 @@ namespace ELG.Web.Controllers
 
         // function to add new course
         [HttpPost]
-        public ActionResult CreateCourse(WidgetCourse course)
+        public ActionResult CreateCourse([FromBody] WidgetCourse course)
         {
             try
             {
+                if (course == null)
+                    return Json(new { success = 0 });
+
                 if (String.IsNullOrEmpty(course.CourseName))
                     return View("Course");
 
@@ -130,10 +133,13 @@ namespace ELG.Web.Controllers
 
         // function to add new widget
         [HttpPost]
-        public ActionResult CreateWidget(CourseWidget widget)
+        public ActionResult CreateWidget([FromBody] CourseWidget widget)
         {
             try
             {
+                if (widget == null)
+                    return Json(new { success = 0 });
+
                 if (String.IsNullOrEmpty(widget.QuesText))
                     return View("CourseWidgets");
 

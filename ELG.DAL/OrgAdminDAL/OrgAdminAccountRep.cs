@@ -59,7 +59,7 @@ namespace ELG.DAL.OrgAdminDAL
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public List<OrgAdminInfo> GetAdmin(string username, string password, string key, Boolean masterPwd)
+        public List<OrgAdminInfo> GetAdmin(Int64 orgId, string username, string password, string key, Boolean masterPwd)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace ELG.DAL.OrgAdminDAL
                 List<OrgAdminInfo> admins = new List<OrgAdminInfo>();
                 using (var context = new lmsdbEntities())
                 {
-                    var adminList = context.lms_admin_getAdminLoginDetails(username, enc_password, masterPwd).ToList();
+                    var adminList = context.lms_admin_getAdminLoginDetails(orgId, username, enc_password, masterPwd).ToList();
                     if (adminList != null && adminList.Count > 0)
                     {
                         foreach (var item in adminList)

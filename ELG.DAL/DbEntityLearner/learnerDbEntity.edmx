@@ -284,6 +284,7 @@
           <Parameter Name="useremail" Type="nvarchar" Mode="In" />
           <Parameter Name="pwd" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="masterPwd" Type="bit" Mode="In" />
+          <Parameter Name="organisation" Type="bigint" Mode="In" />
         </Function>
         <Function Name="lms_learner_getLoginDetails_byUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userid" Type="int" Mode="In" />
@@ -603,6 +604,7 @@
             <Parameter Name="useremail" Mode="In" Type="String" />
             <Parameter Name="pwd" Mode="In" Type="String" />
             <Parameter Name="masterPwd" Mode="In" Type="Boolean" />
+            <Parameter Name="organisation" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="lms_learner_GetNewUserInfoOrResetPasswordInfo" ReturnType="Collection(learnerdbModel.lms_learner_GetNewUserInfoOrResetPasswordInfo_Result)">
           <Parameter Name="intContactID" Mode="In" Type="Int32" />

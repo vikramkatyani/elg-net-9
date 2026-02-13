@@ -371,38 +371,77 @@ h3.degrees {
 
 /* Hamburger Menu */
 .hamburger {
-    display: none; /* Hidden by default for larger screens */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    display: none;
+    flex-direction: column;
     cursor: pointer;
+    z-index: 1001;
+    border: none;
     padding: 10px;
-    /*background-color: var(--color-primary);*/
-    color: white;
+    transition: all 0.3s ease;
+    background-color: white;
+    border-radius: 4px;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
 
     .hamburger span {
         display: block;
         height: 3px;
-        background-color: var(--color-primary);
         margin: 5px 0;
         width: 25px;
+    background-color: var(--color-primary);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+    .page-heading {
+        margin-left: 2.5rem;
+    }
     }
 
 /* side menu */
 .learner-menu-bar {
-    /*background-color: var(--color-primary);
-    color: white;*/
     width: 270px;
     height: 100vh;
     position: fixed;
-    left: 0;
     top: 0;
-    transform: translateX(0);
+    z-index: 1000;
     transition: transform 0.3s ease;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
 }
 
+/* Desktop view - menu always visible */
+@media (min-width: 769px) {
+    .learner-menu-bar {
+        transform: translateX(0) !important;
+}
+}
+
+/* Mobile view - menu hidden by default */
+@media (max-width: 768px) {
+    .learner-menu-bar {
+        transform: translateX(-100%);
+    }
+
+    /* Show menu when active class is applied */
+    .learner-menu-bar.active {
+        transform: translateX(0);
+    }
+
+    /* Alternative: closed class for backward compatibility */
     .learner-menu-bar.closed {
         transform: translateX(-100%);
     }
+}
 
 .learner-menu {
     list-style: none;
@@ -429,16 +468,10 @@ h3.degrees {
 
 .learner-menu a {
     text-decoration: none;
-    /* color: white; */
     padding: 10px;
     display: block;
     transition: background-color 0.3s;
 }
-
-    /*.learner-menu a:hover, .learner-menu a.active {
-        background-color: var(--color-hightlight);
-        color: var(--color-black)
-    }*/
 
 /* Hide the submenu by default */
 .child_menu {
@@ -459,21 +492,21 @@ h3.degrees {
     align-items: center;
     padding: 10px 20px;
     width: 100%;
-    /*position: fixed;*/
     margin-top: 100px;
-    /*background-color: var(--color-primary);*/
 }
 
-    .profile img {
+.profile img,
+.profile .img-circle,
+.profile .profile_img {
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        margin-right: 15px; /* Space between the image and text */
+    margin-right: 15px;
     }
 
 .profile-details {
     display: flex;
-    flex-direction: column; /* Stack "Welcome" and username vertically */
+    flex-direction: column;
 }
 
     .profile-details span {
@@ -488,6 +521,12 @@ h3.degrees {
         font-weight: bold;
         line-height: 1.25;
     }
+
+/* Line Partition */
+.line-partition {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+}
 
 #imgLearnerProfile_noPic {
     content: url("no-pic.png");

@@ -1575,8 +1575,12 @@ namespace ELG.DAL.DBEntity
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.DateTime>>("lms_admin_get_TrainingResetDate", companyParameter);
         }
     
-        public virtual ObjectResult<lms_admin_getAdminLoginDetails_Result> lms_admin_getAdminLoginDetails(string useremail, string pwd, Nullable<bool> masterPwd)
+        public virtual ObjectResult<lms_admin_getAdminLoginDetails_Result> lms_admin_getAdminLoginDetails(Nullable<long> organisation, string useremail, string pwd, Nullable<bool> masterPwd)
         {
+            var organisationParameter = organisation.HasValue ?
+                new ObjectParameter("organisation", organisation) :
+                new ObjectParameter("organisation", typeof(long));
+    
             var useremailParameter = useremail != null ?
                 new ObjectParameter("useremail", useremail) :
                 new ObjectParameter("useremail", typeof(string));
@@ -1589,7 +1593,7 @@ namespace ELG.DAL.DBEntity
                 new ObjectParameter("masterPwd", masterPwd) :
                 new ObjectParameter("masterPwd", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<lms_admin_getAdminLoginDetails_Result>("lms_admin_getAdminLoginDetails", useremailParameter, pwdParameter, masterPwdParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<lms_admin_getAdminLoginDetails_Result>("lms_admin_getAdminLoginDetails", organisationParameter, useremailParameter, pwdParameter, masterPwdParameter);
         }
     
         public virtual ObjectResult<lms_admin_GetAdminOrgRegSettings_Result> lms_admin_GetAdminOrgRegSettings(Nullable<long> intOrganisationID)

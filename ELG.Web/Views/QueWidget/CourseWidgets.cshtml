@@ -40,10 +40,10 @@
         </div>
     </div>
 </div>
-@{
-    Html.Partial("_addCourseWidget");
-    Html.Partial("_viewWidgetTag");
-}
+
+    @Html.Partial("_addCourseWidget")
+    @Html.Partial("_viewWidgetTag")
+    
 
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/Admin/Widgets/ManageCourseWidgets.js?v=1.0.2"></script>

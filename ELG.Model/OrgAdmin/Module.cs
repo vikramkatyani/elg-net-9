@@ -42,6 +42,14 @@ namespace ELG.Model.OrgAdmin
         public Int64 LearnerID { get; set; }
     }
 
+    public class LearnerProgressResetRequest
+    {
+        public LearnerModuleFilter SearchCriteria { get; set; }
+        public bool AllSelected { get; set; }
+        public long[] SelectedRecordList { get; set; }
+        public long[] UnselectedRecordList { get; set; }
+    }
+
     public class ModuleLicenceSummary: Module
     {
         public int TotalLicenses { get; set; }

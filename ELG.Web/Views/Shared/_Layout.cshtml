@@ -3,8 +3,43 @@
 @{
     // OrgDomainMiddleware has already populated SessionHelper.OrgDomainDetails
     var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
-    var titleText = sessionDomainDetails?.TitleText ?? "LMS";
-    var favicon = sessionDomainDetails?.Favicon ?? "favicon.ico";
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+    string host = HttpContextAccessor.HttpContext?.Request.Host.Value;
+    string titleText;
+    string favicon;
+    string cssPath;
+    @if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
+    {
+        if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
+        {
+            try
+            {
+                ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
+                var organization = rep.GetOrganizationFromHost(host);
+
+                // Store the organization in the SessionHelper
+                ELG.Web.Helper.SessionHelper.OrgDomainDetails = organization;
+                sessionDomainDetails = organization;
+            }
+            catch (Exception dbEx)
+            {
+                // Database error - log it but don't throw, use defaults
+                System.Diagnostics.Debug.WriteLine($"[MasterLayout] Database error getting organization: {dbEx.Message}");
+                sessionDomainDetails = null; // Will use defaults below
+            }
+        }
+
+        // Fall back to defaults to avoid null reference and compilation failures when branding is missing
+         titleText = sessionDomainDetails?.TitleText ?? "ELG";
+         favicon = sessionDomainDetails?.Favicon ?? "Content/images/favicon.ico";
+         cssPath = sessionDomainDetails?.CSS ?? "Content/css/custom.css";
+    }
+    else
+    {
+        titleText = sessionDomainDetails?.TitleText ?? "LMS";
+        favicon = sessionDomainDetails?.Favicon ?? "favicon.ico";
+        cssPath = sessionDomainDetails?.CSS ?? "Content/css/custom.css";
+    }
 }
 
 <head>

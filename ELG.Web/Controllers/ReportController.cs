@@ -4,17 +4,19 @@ using Microsoft.AspNetCore.Http;
 using ELG.Web.Helper;
 using ELG.DAL.OrgAdminDAL;
 using ELG.DAL.Utilities;
-using ELG.Model.OrgAdmin;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace ELG.Web.Controllers
 {
@@ -122,7 +124,7 @@ namespace ELG.Web.Controllers
 
         //update learning progress record
         [HttpPost]
-        public ActionResult UpdateLearningProgress(ELG.Model.OrgAdmin.CourseProgressItem record)
+        public ActionResult UpdateLearningProgress([FromBody] ELG.Model.OrgAdmin.CourseProgressItem record)
         {
             try
             {
@@ -1287,14 +1289,14 @@ namespace ELG.Web.Controllers
                 return Json(new { });
             }
         }
-        public ActionResult LoadLearningStatisticsForLocations(int course)
+        public ActionResult LoadLearningStatisticsForLocations([FromBody] CourseRecordRequest request)
         {
             List<CourseLearningStatistics_perLocation> stats = new List<CourseLearningStatistics_perLocation>();
             try
             {
                 var reportRep = new ReportRep();
 
-                stats = reportRep.GetLearningStatistics_perLocation(SessionHelper.CompanyId, course);
+                stats = reportRep.GetLearningStatistics_perLocation(SessionHelper.CompanyId, request.Course);
                 return Json(new { stats });
             }
 
@@ -1319,6 +1321,156 @@ namespace ELG.Web.Controllers
             {
                 Logger.Error(ex.Message, ex);
                 return Json(new { });
+            }
+        }
+
+        public ActionResult DownloadSummaryReport()
+        {
+            try
+            {
+                var reportRep = new ReportRep();
+                var summaryReport = reportRep.DownloadSummaryReport(SessionHelper.CompanyId);
+
+                var courses = summaryReport
+                    .Select(x => x.Course)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .OrderBy(x => x)
+                    .ToList();
+
+                var locations = summaryReport
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Location))
+                    .GroupBy(x => x.LocationId)
+                    .Select(g => new { LocationId = g.Key, Location = g.First().Location })
+                    .OrderBy(x => x.Location)
+                    .ToList();
+
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Summary Report");
+
+                    var headerColors = new[]
+                    {
+                        ColorTranslator.FromHtml("#D9E8F7"),
+                        ColorTranslator.FromHtml("#F8E1D4"),
+                        ColorTranslator.FromHtml("#DFF2D8"),
+                        ColorTranslator.FromHtml("#EED7F5"),
+                        ColorTranslator.FromHtml("#D6EEFF")
+                    };
+
+                    int row = 1;
+                    worksheet.Cells[row, 1].Value = $"Data as at {DateTime.Now:dd/MM/yyyy}";
+                    using (var range = worksheet.Cells[row, 1])
+                    {
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(Color.Black);
+                        range.Style.Font.Color.SetColor(Color.White);
+                        range.Style.Font.Bold = true;
+                    }
+
+                    row = 2;
+                    worksheet.Cells[row, 1].Value = ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription;
+                    worksheet.Cells[row, 1, row + 1, 1].Merge = true;
+                    using (var range = worksheet.Cells[row, 1, row + 1, 1])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    }
+
+                    int col = 2;
+                    for (int i = 0; i < courses.Count; i++)
+                    {
+                        var course = courses[i];
+                        var color = headerColors[i % headerColors.Length];
+
+                        worksheet.Cells[row, col].Value = course;
+                        worksheet.Cells[row, col, row, col + 1].Merge = true;
+                        using (var range = worksheet.Cells[row, col, row, col + 1])
+                        {
+                            range.Style.Font.Bold = true;
+                            range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            range.Style.Fill.BackgroundColor.SetColor(color);
+                            range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+
+                        worksheet.Cells[row + 1, col].Value = "Completed";
+                        worksheet.Cells[row + 1, col + 1].Value = "Assigned";
+                        using (var range = worksheet.Cells[row + 1, col, row + 1, col + 1])
+                        {
+                            range.Style.Font.Bold = true;
+                            range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            range.Style.Fill.BackgroundColor.SetColor(color);
+                            range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+
+                        col += 2;
+                    }
+
+                    int dataRow = row + 2;
+                    foreach (var location in locations)
+                    {
+                        worksheet.Cells[dataRow, 1].Value = location.Location;
+
+                        int dataCol = 2;
+                        foreach (var course in courses)
+                        {
+                            // Find the specific record for this location and course
+                            var record = summaryReport.FirstOrDefault(x => 
+                                x.LocationId == location.LocationId && 
+                                x.Course == course);
+                            
+                            if (record != null)
+                            {
+                                worksheet.Cells[dataRow, dataCol].Value = record.TotalCompleted;
+                                worksheet.Cells[dataRow, dataCol + 1].Value = record.TotalAssignments;
+                            }
+                            else
+                            {
+                                worksheet.Cells[dataRow, dataCol].Value = 0;
+                                worksheet.Cells[dataRow, dataCol + 1].Value = 0;
+                            }
+                            dataCol += 2;
+                        }
+                        dataRow++;
+                    }
+
+                    var totalsRow = dataRow;
+                    worksheet.Cells[totalsRow, 1].Value = "Total";
+                    worksheet.Cells[totalsRow, 1].Style.Font.Bold = true;
+                    int totalsCol = 2;
+                    foreach (var course in courses)
+                    {
+                        var totalCompleted = summaryReport.Where(x => x.Course == course).Sum(x => x.TotalCompleted);
+                        var totalAssigned = summaryReport.Where(x => x.Course == course).Sum(x => x.TotalAssignments);
+                        worksheet.Cells[totalsRow, totalsCol].Value = totalCompleted;
+                        worksheet.Cells[totalsRow, totalsCol + 1].Value = totalAssigned;
+                        worksheet.Cells[totalsRow, totalsCol, totalsRow, totalsCol + 1].Style.Font.Bold = true;
+                        totalsCol += 2;
+                    }
+                    dataRow++;
+
+                    var lastCol = totalsCol - 1;
+                    var lastRow = dataRow - 1;
+                    var tableRange = worksheet.Cells[row, 1, lastRow, lastCol];
+                    tableRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    tableRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    tableRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    tableRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    tableRange.AutoFitColumns();
+
+                    byte[] filecontent = package.GetAsByteArray();
+                    return File(filecontent, CommonHelper.ExcelContentType, "SummaryReport.xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return View("Summary");
             }
         }
         #endregion

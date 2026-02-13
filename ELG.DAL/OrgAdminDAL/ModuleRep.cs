@@ -1600,7 +1600,7 @@ namespace ELG.DAL.OrgAdminDAL
 
         #region refresh learning manual
 
-        public int RefreshLearerModuleProgress(LearnerModuleFilter searchCriteria)
+        public int RefreshLearnerModuleProgress(LearnerModuleFilter searchCriteria)
         {
             try
             {
@@ -1617,7 +1617,7 @@ namespace ELG.DAL.OrgAdminDAL
             }
         }
 
-        public int RefreshLearerModuleProgress_Multiple(DataTableFilter searchCriteria, string selectedRecordList, string unselectedRecordList, bool isAllSelected)
+        public int RefreshLearnerModuleProgress_Multiple(DataTableFilter searchCriteria, string selectedRecordList, string unselectedRecordList, bool isAllSelected)
         {
             try
             {

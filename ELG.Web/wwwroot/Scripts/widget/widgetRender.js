@@ -1,5 +1,5 @@
 //const widget_baseURL = 'http://localhost:61544';
-const widget_baseURL = 'https://learning.fraud-sentinel.com';
+const widget_baseURL = window.location.origin;
 
 window.addEventListener("storage", function (event) {
     if (event.key === "refreshWidgetId") {

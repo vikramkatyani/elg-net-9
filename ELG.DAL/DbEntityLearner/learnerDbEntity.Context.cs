@@ -538,8 +538,12 @@ namespace ELG.DAL.DbEntityLearner
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<lms_learner_getCoursesForAutoAssignement_Result>("lms_learner_getCoursesForAutoAssignement", locationParameter, departmentParameter);
         }
     
-        public virtual ObjectResult<lms_learner_getLoginDetails_Result> lms_learner_getLoginDetails(string useremail, string pwd, Nullable<bool> masterPwd)
+        public virtual ObjectResult<lms_learner_getLoginDetails_Result> lms_learner_getLoginDetails(Nullable<long> organisation, string useremail, string pwd, Nullable<bool> masterPwd)
         {
+            var organisationParameter = organisation.HasValue ?
+                new ObjectParameter("organisation", organisation) :
+                new ObjectParameter("organisation", typeof(long));
+    
             var useremailParameter = useremail != null ?
                 new ObjectParameter("useremail", useremail) :
                 new ObjectParameter("useremail", typeof(string));
@@ -552,7 +556,7 @@ namespace ELG.DAL.DbEntityLearner
                 new ObjectParameter("masterPwd", masterPwd) :
                 new ObjectParameter("masterPwd", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<lms_learner_getLoginDetails_Result>("lms_learner_getLoginDetails", useremailParameter, pwdParameter, masterPwdParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<lms_learner_getLoginDetails_Result>("lms_learner_getLoginDetails", organisationParameter, useremailParameter, pwdParameter, masterPwdParameter);
         }
     
         public virtual ObjectResult<lms_learner_GetNewUserInfoOrResetPasswordInfo_Result> lms_learner_GetNewUserInfoOrResetPasswordInfo(Nullable<int> intContactID)

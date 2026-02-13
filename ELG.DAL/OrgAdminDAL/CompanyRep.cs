@@ -416,22 +416,22 @@ namespace ELG.DAL.OrgAdminDAL
         /// <returns></returns>
         public CompanyDomainDetails GetOrganizationFromHost(string host)
         {
-            CompanyDomainDetails detalis = new CompanyDomainDetails();
+            CompanyDomainDetails details = new CompanyDomainDetails();
 
             using (var context = new lmsdbEntities())
             {
                 var info = context.lms_admin_getCompanyDomainInfo(host).FirstOrDefault();
                 if (info != null)
                 {
-                    detalis.CompanyId = Convert.ToInt64(info.lms_org_id);
-                    detalis.Domain = info.domain;
-                    detalis.CSS = info.css_path;
-                    detalis.Favicon = info.favicon_path;
-                    detalis.TitleText = info.title_text;
-                    detalis.LogoPath = info.logo_path;
+                    details.CompanyId = Convert.ToInt64(info.lms_org_id);
+                    details.Domain = info.domain;
+                    details.CSS = info.css_path;
+                    details.Favicon = info.favicon_path;
+                    details.TitleText = info.title_text;
+                    details.LogoPath = info.logo_path;
                 }
             }
-            return detalis;
+            return details;
         }
     }
 }

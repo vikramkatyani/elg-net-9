@@ -29,7 +29,7 @@ var refreshTrainingManualHandler = (function () {
         selectAllRecords = false;
         $selectAllChkBox.prop('checked', false);
         $allocateAllBtn.addClass('disabled');
-        $allocateAllBtn.removeAttr("onclick", "refreshTrainingManualHandler.resetForSelected()");
+        $allocateAllBtn.removeAttr("onclick");
         $allocateAllBtn.attr("title", "Select training records to reset");
     }
     function showDefaultMessage() {
@@ -170,6 +170,65 @@ var refreshTrainingManualHandler = (function () {
         });
     });
 
+    // function to check learner checkbox click - bind after each table draw
+    $('#learnerAssignedModuleList').on('draw.dt', function () {
+        $('#learnerAssignedModuleList tbody').off('change', 'input.chk-user'); // remove any duplicate bindings
+        $('#learnerAssignedModuleList tbody').on('change', 'input[type="checkbox"]', function () {
+            // If checkbox is not checked
+            if (!this.checked) {
+                var el = $selectAllChkBox.get(0);
+                // If "Select all" control is checked and has 'indeterminate' property
+                if (el && el.checked && ('indeterminate' in el)) {
+                    el.indeterminate = true;
+                }
+            }
+
+            // push values in selected or unselected arrays respectively to maintain state
+            var id = this.id.split('-').pop();
+
+            //push in selected array
+            if (this.checked) {
+                selRecords.push(id);
+                // enable reset button
+                $allocateAllBtn.removeClass('disabled');
+                $allocateAllBtn.attr("onclick", "refreshTrainingManualHandler.resetForSelected()");
+                $allocateAllBtn.attr("title", "Reset all selected training records");
+
+                // remove id if exist in unselected array
+                if (unSelRecords.length > 0) {
+                    for (i = 0; i < unSelRecords.length; i++) {
+                        if (unSelRecords[i] == id) {
+                            unSelRecords.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+
+                //push in unselected array
+                unSelRecords.push(id);
+
+                // remove id if exist in selected array
+                if (selRecords.length > 0) {
+                    for (i = 0; i < selRecords.length; i++) {
+                        if (selRecords[i] == id) {
+                            selRecords.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                
+                // Disable button if no records selected
+                if (selRecords.length === 0 && !selectAllRecords) {
+                    $allocateAllBtn.addClass('disabled');
+                    $allocateAllBtn.removeAttr("onclick");
+                    $allocateAllBtn.attr("title", "Select records to reset");
+                }
+            }
+        });
+    });
+
     //clear search filters
     $clearSearchBtn.click(function (e) {
         e.preventDefault();
@@ -290,19 +349,19 @@ var refreshTrainingManualHandler = (function () {
 
     //function to allocate module to single learner and refresh table
     function resetLearnerCourseRecord(btn) {
-        if (confirm("Are you sure you want to reset learning for this user?")) {
+        if (confirm("Are you sure you want to reset training for this user?")) {
             var recordID = btn.id.split('-').pop();
-            var url = hdnBaseUrl + 'CourseManagement/RefreshLearerModuleProgress'
+            var url = hdnBaseUrl + 'CourseManagement/RefreshLearnerModuleProgress'
             var data = {
-                LearnerID: recordID
+                LearnerID: parseInt(recordID)
             }
             UTILS.makeAjaxCall(url, data, function (result) {
                 if (result.success == 1) {
-                    UTILS.Alert.show($alert, 'success', 'Progress reset successfully.')
+                    UTILS.Alert.show($alert, 'success', 'Training reset successfully.')
                     $('#learnerAssignedModuleList').DataTable().draw();
                 }
                 else
-                    UTILS.Alert.show($alert, 'error', 'Failed to reset progress.')
+                    UTILS.Alert.show($alert, 'error', 'Failed to reset training.')
             }, function (status) {
                 console.log(status);
             });
@@ -322,59 +381,10 @@ var refreshTrainingManualHandler = (function () {
             $allocateAllBtn.attr("title", "Reset all selected training records");
         } else {
             $allocateAllBtn.addClass('disabled');
-            $allocateAllBtn.removeAttr("onclick", "refreshTrainingManualHandler.resetForSelected()");
+            $allocateAllBtn.removeAttr("onclick");
             $allocateAllBtn.attr("title", "Select records to reset");
         }
         refreshTrainingManualHandler.selectAllRows();
-    });
-
-    // function to check learner checkbox click
-    $('#learnerAssignedModuleList tbody').on('change', 'input[type="checkbox"]', function () {
-        // If checkbox is not checked
-        if (!this.checked) {
-            var el = $selectAllChkBox.get(0);
-            // If "Select all" control is checked and has 'indeterminate' property
-            if (el && el.checked && ('indeterminate' in el)) {
-                el.indeterminate = true;
-            }
-        }
-
-        // push values in selected or unselected arrays respectively to maintain state
-        var id = this.id.split('-').pop();
-
-        //push in selected array
-        if (this.checked) {
-            selRecords.push(id);
-            // enable allocate to all button
-            $allocateAllBtn.removeClass('disabled');
-            $allocateAllBtn.attr("onclick", "refreshTrainingManualHandler.resetForSelected()");
-            $allocateAllBtn.attr("title", "Reset all selected training records");
-
-            // remove id if exist in unselected array
-            if (unSelRecords.length > 0) {
-                for (i = 0; i < unSelRecords.length; i++) {
-                    if (unSelRecords[i] == id) {
-                        unSelRecords.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-
-            //push in unselected array
-            unSelRecords.push(id);
-
-            // remove id if exist in selected array
-            if (selRecords.length > 0) {
-                for (i = 0; i < selRecords.length; i++) {
-                    if (selRecords[i] == id) {
-                        selRecords.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-        }
     });
 
     // function to render rows on page change
@@ -409,21 +419,23 @@ var refreshTrainingManualHandler = (function () {
         })
     }
     
-    // function to bulk assign from assign to selected button
+    // function to bulk reset to selected button
     function resetForSelected() {
         if (selRecords.length > 0 || selectAllRecords) {
-            if (confirm("Are you sure you want to resest all selected training records?")) {
+            if (confirm("Are you sure you want to reset all selected training records?")) {
                 // allocate functionality
                 UTILS.disableButton($allocateAllBtn);
-                var url = hdnBaseUrl + "CourseManagement/RefreshLearerModuleProgress_Multiple";
+                var url = hdnBaseUrl + "CourseManagement/RefreshLearnerModuleProgress_Multiple";
                 var data = {
-                    allSelected: selectAllRecords,
-                    selectedRecordList: selRecords,
-                    unselectedRecordList: unSelRecords,
+                    SearchCriteria: {
                     SearchText: $learner.val(),
-                    Location: $ddlLoc.val(),
-                    Department: $ddlDep.val(),
-                    Course: $ddlCourse.val()
+                        Location: parseInt($ddlLoc.val()),
+                        Department: parseInt($ddlDep.val()),
+                        Course: parseInt($ddlCourse.val())
+                    },
+                    AllSelected: selectAllRecords,
+                    SelectedRecordList: selRecords.map(id => parseInt(id)),
+                    UnselectedRecordList: unSelRecords.map(id => parseInt(id))
                 }
                 UTILS.makeAjaxCall(url, data, function (result) {
                     if (result.success == 1) {

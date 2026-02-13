@@ -2,7 +2,9 @@ using ELG.DAL.DBEntity;
 using ELG.Model.OrgAdmin;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Core.Objects;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -1002,7 +1004,7 @@ namespace ELG.DAL.OrgAdminDAL
                         progress.Score = Convert.ToInt32(item.intScore);
                         progress.CPDScore = Convert.ToInt32(item.intcpdscore);
                         progress.CompletionDate = item.dateCompletedOn == null ? "" : (Convert.ToDateTime(item.dateCompletedOn)).ToString("dd-MMM-yyyy");
-                        progress.CertificateNumber = item.certGUID == null ? "" : Convert.ToString(item.certGUID);
+                        progress.CertificateNumber = item.certGUID == Guid.Empty ? "" : Convert.ToString(item.certGUID);
                     }
                 }
                 return progress;
@@ -1469,6 +1471,7 @@ namespace ELG.DAL.OrgAdminDAL
                             CourseLearningStatistics_perLocation progress = new CourseLearningStatistics_perLocation();
                             progress.Location = item.LocationName;
                             progress.LocationId = Convert.ToInt32(item.intLocationID);
+                            progress.Assigned = Convert.ToInt32(item.TotalAssignments ?? 0);
                             progress.Completed = Convert.ToInt32(item.TotalCompletions);
 
                             progressRecord.Add(progress);
@@ -1504,6 +1507,39 @@ namespace ELG.DAL.OrgAdminDAL
                     }
                 }
                 return progressRecord;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<SummaryReportDownloadItem> DownloadSummaryReport(Int64 organisationId)
+        {
+            try
+            {
+                const string query = @"SELECT l.intLocationID AS LocationId, l.strLocation AS Location, c.intCourseID AS CourseId, c.strCourse AS Course,
+COUNT(pd.intRecordID) AS TotalAssignments,
+SUM(CASE WHEN pd.strStatus IN ('passed','completed') THEN 1 ELSE 0 END) AS TotalCompleted,
+SUM(CASE WHEN pd.strStatus = 'incomplete' THEN 1 ELSE 0 END) AS TotalInProgress,
+SUM(CASE WHEN pd.strStatus = 'not-started' THEN 1 ELSE 0 END) AS TotalNotStarted
+FROM tblocation l
+INNER JOIN tbContact ln ON l.intLocationID = ln.intLocationID AND l.intOrganisationID = ln.intOrganisationID
+INNER JOIN tbcourse c ON l.intOrganisationID = c.intOrganisationID
+LEFT JOIN tbCourseProgressDetails pd ON pd.intCourseID = c.intCourseID AND pd.intContactID = ln.intContactID
+WHERE l.intOrganisationID = @organisationid
+GROUP BY l.intLocationID, l.strLocation, c.intCourseID, c.strCourse
+ORDER BY l.strLocation, c.strCourse";
+
+                using (var context = new lmsdbEntities())
+                {
+                    var orgParam = new SqlParameter("@organisationid", SqlDbType.BigInt)
+                    {
+                        Value = organisationId
+                    };
+
+                    return context.Database.SqlQuery<SummaryReportDownloadItem>(query, orgParam).ToList();
+                }
             }
             catch (Exception)
             {

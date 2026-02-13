@@ -494,10 +494,22 @@ namespace ELG.Model.OrgAdmin
         public int Inprogress { get; set; }
         public int Notstarted { get; set; }
     }
+    public class SummaryReportDownloadItem
+    {
+        public int LocationId { get; set; }
+        public string Location { get; set; }
+        public int CourseId { get; set; }
+        public string Course { get; set; }
+        public int TotalAssignments { get; set; }
+        public int TotalCompleted { get; set; }
+        public int TotalInProgress { get; set; }
+        public int TotalNotStarted { get; set; }
+    }
     public class CourseLearningStatistics_perLocation
     {
         public Int64 LocationId { get; set; }   
         public string Location { get; set; }
+        public int Assigned { get; set; }
         public int Completed { get; set; }
     }
     public class CourseLearningStatistics_perDepartment

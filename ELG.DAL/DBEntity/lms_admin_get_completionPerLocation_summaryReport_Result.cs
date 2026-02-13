@@ -15,6 +15,7 @@ namespace ELG.DAL.DBEntity
     {
         public Nullable<int> intLocationID { get; set; }
         public string LocationName { get; set; }
+        public Nullable<int> TotalAssignments { get; set; }
         public Nullable<int> TotalCompletions { get; set; }
     }
 }

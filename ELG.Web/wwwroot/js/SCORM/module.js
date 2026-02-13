@@ -311,14 +311,24 @@ function getStartPage(url) {
 
 
 function launchModulePopUp(courseid, url) {
-    let startPath = ""
+    let startPath = "";
     API.module = parseInt(courseid);
+
+    // Open a placeholder window synchronously to avoid Safari popup blocking
+    // (must be directly in the user-initiated click handler call stack)
+    let popup = null;
+    try {
+        popup = window.open('', '_blank');
+    } catch (e) {
+        popup = null;
+    }
+    moduleWin = popup;
     
     // Pre-initialize API data before opening window
     const initUrl = trackingURL + "LMSInitialize";
     const initData = {
         CourseId: API.module
-    }
+    };
 
     UTILS.makeAsyncAjaxCall(initUrl, initData, function (resp) {
         // Pre-populate values so they're ready when course checks
@@ -344,19 +354,35 @@ function launchModulePopUp(courseid, url) {
                 // hdnBaseUrl typically ends with "/Learner/Home/"; trim "Home/" to get area base
                 const learnerBase = hdnBaseUrl.replace(/Home\/?$/i, "");
                 const proxyBase = learnerBase + "CourseProxy/" + API.module + "/index.html?baseUrl=" + encodeURIComponent(courseUrl);
-                moduleWin = window.open(proxyBase);
+                if (moduleWin && !moduleWin.closed) {
+                    moduleWin.location.href = proxyBase;
+                } else {
+                    window.location.href = proxyBase;
+                }
             } catch (e) {
                 // Fallback to direct course URL if proxy construction fails
-                moduleWin = window.open(courseUrl);
+                if (moduleWin && !moduleWin.closed) {
+                    moduleWin.location.href = courseUrl;
+                } else {
+                    window.location.href = courseUrl;
+                }
             }
         }, function () {
             // Even if shim ensure fails, attempt to open via proxy
             try {
                 const learnerBase = hdnBaseUrl.replace(/Home\/?$/i, "");
                 const proxyBase = learnerBase + "CourseProxy/" + API.module + "/index.html?baseUrl=" + encodeURIComponent(courseUrl);
-                moduleWin = window.open(proxyBase);
+                if (moduleWin && !moduleWin.closed) {
+                    moduleWin.location.href = proxyBase;
+                } else {
+                    window.location.href = proxyBase;
+                }
             } catch (e) {
-                moduleWin = window.open(courseUrl);
+                if (moduleWin && !moduleWin.closed) {
+                    moduleWin.location.href = courseUrl;
+                } else {
+                    window.location.href = courseUrl;
+                }
             }
         });
     }, function (err) {
@@ -366,7 +392,11 @@ function launchModulePopUp(courseid, url) {
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
             courseUrl = "../courses/" + url;
         }
-        moduleWin = window.open(courseUrl);
+        if (moduleWin && !moduleWin.closed) {
+            moduleWin.location.href = courseUrl;
+        } else {
+            window.location.href = courseUrl;
+        }
     });
 }
 

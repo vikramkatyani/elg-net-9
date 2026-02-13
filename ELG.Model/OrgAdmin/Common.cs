@@ -34,4 +34,9 @@ namespace ELG.Model.OrgAdmin
         public int FailedCount { get; set; }
         public int Error { get; set; }
     }
+
+    public class CourseRecordRequest
+    {
+        public int Course { get; set; }
+    }
 }

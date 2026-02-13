@@ -39,9 +39,11 @@ namespace ELG.Web.Controllers
                     // Check if master password is being used for login
                     Boolean isMasterPwd = login.Password == CommonHelper.GetAppSettingValue("LMS_MasterPassword");
 
+                    Int64 currentOrgId = ELG.Web.Helper.SessionHelper.OrgDomainDetails?.CompanyId ?? 0;
+
                     // First, try to authenticate as admin
                     var adminAcc = new OrgAdminAccountRep();
-                    List<OrgAdminInfo> admins = adminAcc.GetAdmin(login.Email, login.Password, 
+                    List<OrgAdminInfo> admins = adminAcc.GetAdmin(currentOrgId, login.Email, login.Password, 
                         CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
                     
                     // If no admin found, try learner authentication
@@ -49,7 +51,7 @@ namespace ELG.Web.Controllers
                     if (admins == null || admins.Count == 0)
                     {
                         var learnerAcc = new LearnerAccountRep();
-                        learners = learnerAcc.GetLearnerInfoByUsernamePassword(login.Email, login.Password, 
+                        learners = learnerAcc.GetLearnerInfoByUsernamePassword(currentOrgId, login.Email, login.Password, 
                             CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
                     }
 
@@ -431,7 +433,7 @@ namespace ELG.Web.Controllers
                 if (password == CommonHelper.GetAppSettingValue("LMS_MasterPassword"))
                     isMasterPwd = true;
 
-                List<OrgAdminInfo> admins = acc.GetAdmin(SessionHelper.UserName, password, 
+                List<OrgAdminInfo> admins = acc.GetAdmin(SessionHelper.OrgDomainDetails.CompanyId, SessionHelper.UserName, password, 
                     CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
 
                 if (admins != null && admins.Count > 0)
@@ -616,7 +618,7 @@ namespace ELG.Web.Controllers
                     // check if master password is being used for login
                     Boolean isMasterPwd = true;
 
-                    List<OrgAdminInfo> learner = acc.GetAdmin(frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
+                    List<OrgAdminInfo> learner = acc.GetAdmin(SessionHelper.OrgDomainDetails.CompanyId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
                     if (learner != null && learner.Count > 1)
                     {
                         // TODO ASP.NET membership should be replaced with ASP.NET Core identity. For more details see https://docs.microsoft.com/aspnet/core/migration/proper-to-2x/membership-to-core-identity.
@@ -750,7 +752,10 @@ namespace ELG.Web.Controllers
                     var acc = new OrgAdminAccountRep();
                     // check if master password is being used for login
                     Boolean isMasterPwd = true;
-                    List<OrgAdminInfo> admin = acc.GetAdmin(frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
+
+                    Int64 currentOrgId = ELG.Web.Helper.SessionHelper.OrgDomainDetails?.CompanyId ?? 0;
+
+                    List<OrgAdminInfo> admin = acc.GetAdmin(currentOrgId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
                     if (admin != null && admin.Count > 1)
                     {
                         SessionHelper.UserName = admin[0].EmailId;

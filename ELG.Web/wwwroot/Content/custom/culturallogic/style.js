@@ -4,6 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Change the text content
   if (heading) {
-    heading.innerHTML = "Online Academy <br/> of Ethnography";
+    heading.innerHTML = "Online Academy";
   }
 });

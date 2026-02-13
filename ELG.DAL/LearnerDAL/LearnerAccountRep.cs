@@ -57,7 +57,7 @@ namespace ELG.DAL.LearnerDAL
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public List<LearnerInfo> GetLearnerInfoByUsernamePassword(string username, string password, string key, bool isMasterPwd)
+        public List<LearnerInfo> GetLearnerInfoByUsernamePassword(Int64 orgId, string username, string password, string key, bool isMasterPwd)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace ELG.DAL.LearnerDAL
 
                 using (learnerDBEntities context = new learnerDBEntities())
                 {
-                    var learnerInfolst = context.lms_learner_getLoginDetails(username, enc_password, isMasterPwd).ToList();
+                    var learnerInfolst = context.lms_learner_getLoginDetails(orgId, username, enc_password, isMasterPwd).ToList();
                     if (learnerInfolst != null && learnerInfolst.Count > 0)
                     {
                         foreach (var item in learnerInfolst)

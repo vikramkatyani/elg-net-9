@@ -2,6 +2,7 @@
     UTILS.activateNavigationLink('moduleLink');
     UTILS.activateMenuNavigationLink('menu-que-widget');
     $('[data-toggle="tooltip"]').tooltip();
+    widgetCourseHandler.init();
 });
 
 var widgetCourseHandler = (function () {
@@ -19,9 +20,12 @@ var widgetCourseHandler = (function () {
 
     var update_courseId = 0;
 
-    $createBtn.click(function () {
+    function init() {
+        $(document).on('click', '#btnAddCoursePopUp', function (e) {
+            e.preventDefault();
         addWidgetCourseHandler.showCreatePopUp();
     });
+    }
 
     var widgetCourseTable = $('#widgetCourseList').DataTable({
         processing: true,
@@ -130,6 +134,7 @@ var widgetCourseHandler = (function () {
 
 
     return {
+        init: init,
         showCourseWidgets: showCourseWidgets,
         showCourseGlobalLink: showCourseGlobalLink
     }

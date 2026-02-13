@@ -662,6 +662,7 @@
           <Parameter Name="sortDir" Type="varchar" Mode="In" />
         </Function>
         <Function Name="lms_admin_getAdminLoginDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="organisation" Type="bigint" Mode="In" />
           <Parameter Name="useremail" Type="nvarchar" Mode="In" />
           <Parameter Name="pwd" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="masterPwd" Type="bit" Mode="In" />
@@ -2069,6 +2070,7 @@
           <Parameter Name="company" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="lms_admin_getAdminLoginDetails" ReturnType="Collection(lmsdbModel.lms_admin_getAdminLoginDetails_Result)">
+            <Parameter Name="organisation" Mode="In" Type="Int64" />
             <Parameter Name="useremail" Mode="In" Type="String" />
             <Parameter Name="pwd" Mode="In" Type="String" />
             <Parameter Name="masterPwd" Mode="In" Type="Boolean" />
@@ -4306,6 +4308,7 @@
         <ComplexType Name="lms_admin_get_completionPerLocation_summaryReport_Result">
           <Property Type="Int32" Name="intLocationID" Nullable="true" />
           <Property Type="String" Name="LocationName" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="TotalAssignments" Nullable="true" />
           <Property Type="Int32" Name="TotalCompletions" Nullable="true" />
         </ComplexType>
         <ComplexType Name="lms_admin_get_widgetReport_Result">

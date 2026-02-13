@@ -1,0 +1,36 @@
+EXACT APP SETTINGS KEY-VALUE PAIRS FOR AZURE PORTAL
+===================================================
+
+Copy each pair exactly as shown below into Azure Portal → App Settings
+
+KEY: ConnectionStrings__DefaultConnection
+VALUE: Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;Persist Security Info=False;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;
+
+---
+
+KEY: ConnectionStrings__lmsdbEntities
+VALUE: metadata=res://*/DBEntity.AdminDBEntity.csdl|res://*/DBEntity.AdminDBEntity.ssdl|res://*/DBEntity.AdminDBEntity.msl;provider=System.Data.SqlClient;provider connection string="Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;App=EntityFramework"
+
+---
+
+KEY: ConnectionStrings__learnerDBEntities
+VALUE: metadata=res://*/DbEntityLearner.learnerDbEntity.csdl|res://*/DbEntityLearner.learnerDbEntity.ssdl|res://*/DbEntityLearner.learnerDbEntity.msl;provider=System.Data.SqlClient;provider connection string="Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;App=EntityFramework"
+
+---
+
+KEY: ConnectionStrings__superadmindbEntities
+VALUE: metadata=res://*/DBEntitySA.sadbEntity.csdl|res://*/DBEntitySA.sadbEntity.ssdl|res://*/DBEntitySA.sadbEntity.msl;provider=System.Data.SqlClient;provider connection string="Server=tcp:atf-prod-db.database.windows.net,1433;Initial Catalog=ELG-Prod-DB;User ID=atf-db-admin;Password=dbp@33w0rd@dmin;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;App=EntityFramework"
+
+---
+
+STEPS IN AZURE PORTAL:
+1. Go to: https://portal.azure.com
+2. Navigate to: elg-prod App Service → Configuration (under Settings)
+3. Click "+ New application setting" for each entry above
+4. Enter KEY exactly as shown
+5. Enter VALUE exactly as shown (copy entire long string)
+6. Click OK
+7. Click SAVE at the top
+8. App will restart automatically
+
+NOTE: Use regular pipe | character (not backslash-pipe)

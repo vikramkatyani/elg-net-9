@@ -328,6 +328,7 @@ const summaryHandler = (function () {
     function drawLocationStatsChart(res, chartId) {
         var locations = res.map(item => item.Location); // Extract location names
         var completions = res.map(item => item.Completed); // Extract completion counts
+        var assigned = res.map(item => item.Assigned); // Extract assigned counts
         var locationIds = res.map(item => item.LocationId);
         var ctx = document.getElementById(chartId).getContext("2d");
 
@@ -339,12 +340,20 @@ const summaryHandler = (function () {
             type: "bar",
             data: {
                 labels: locations, // Use dynamically populated locations
-                datasets: [{
-                    label: "Completions",
+                datasets: [
+                    {
+                        label: "Completed",
                     data: completions, // Use dynamically populated completion counts
-                    backgroundColor: greenColor, // All bars in green
+                        backgroundColor: greenColor, // Green for completed
                     maxBarThickness: 30
-                }]
+                    },
+                    {
+                        label: "Assigned",
+                        data: assigned, // Use dynamically populated assigned counts
+                        backgroundColor: '#CCCCCC', // Light gray for assigned
+                        maxBarThickness: 30
+                    }
+                ]
             },
             options: {
                 onClick: function (event, elements) {
@@ -437,7 +446,7 @@ const summaryHandler = (function () {
                 });
             }
             else {
-                $locStatContainer.html($noRecMessage);
+                $("#departmentStatsModal #modalBody").html($noRecMessage);
             }
         }, function (err) {
             $("#departmentStatsModal #modalBody").html("<p>Error fetching details.</p>");
@@ -452,3 +461,29 @@ const summaryHandler = (function () {
         toggleDetailView: toggleDetailView
     };
 })();
+
+// Handle Generate Report button click for Excel export
+$(document).on('click', '#generateReportBtn', function (e) {
+    e.preventDefault();
+    var $btn = $(this);
+    var $originalText = $btn.data('original-text');
+    var $loadingText = $btn.data('loading-text');
+    
+    // Store original text if not already stored
+    if (!$originalText) {
+        $originalText = $btn.html();
+        $btn.data('original-text', $originalText);
+    }
+    
+    // Change button text to loading state
+    $btn.html($loadingText).prop('disabled', true);
+    
+    // Initiate download by navigating to the download endpoint
+    var url = hdnBaseUrl + "Report/DownloadSummaryReport";
+    window.location.href = url;
+    
+    // Reset button after a delay (to allow download to start)
+    setTimeout(function () {
+        $btn.html($originalText).prop('disabled', false);
+    }, 2000);
+});

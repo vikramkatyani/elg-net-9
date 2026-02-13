@@ -4,6 +4,7 @@ $(function () {
     UTILS.activateNavigationLink('moduleLink');
     UTILS.activateMenuNavigationLink('menu-que-widget');
     $('[data-toggle="tooltip"]').tooltip();
+    courseWidgetHandler.init();
 });
 
 var courseWidgetHandler = (function () {
@@ -28,9 +29,12 @@ var courseWidgetHandler = (function () {
         window.location.href = hdnBaseUrl + "QueWidget/Course";
     });
 
-    $createBtn.click(function () {
+    function init() {
+        $(document).on('click', '#btnAddCourseWidgetPopUp', function (e) {
+            e.preventDefault();
         addCourseWidgetHandler.showCreatePopUp();
     });
+    }
 
     var courseWidgetTable = $('#courseWidgetList').DataTable({
         processing: true,
@@ -105,6 +109,9 @@ var courseWidgetHandler = (function () {
         order: [[1, 'asc']]
     });
 
+    return {
+        init: init
+    };
 
 })();
 
@@ -187,7 +194,7 @@ var addCourseWidgetHandler = (function () {
                     AfterQuesText: $queAfterText.val(),
                     QueType: widgetType,
                     HeaderColor: $headerColor.val(),
-                    ShowQueTextBeforeFR: $showQueTextBeforeFR.prop('checked') ? 1 : 0
+                    ShowQueTextBeforeFR: $showQueTextBeforeFR.prop('checked')
                 }
                     break;
                 case '2': data = {

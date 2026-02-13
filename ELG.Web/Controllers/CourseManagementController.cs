@@ -911,7 +911,7 @@ namespace ELG.Web.Controllers
 
         // revoke Module Access
         [HttpPost]
-        public ActionResult RefreshLearnerModuleProgress(LearnerModuleFilter searchCriteria)
+        public ActionResult RefreshLearnerModuleProgress([FromBody] LearnerModuleFilter searchCriteria)
         {
             try
             {
@@ -919,7 +919,7 @@ namespace ELG.Web.Controllers
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
-                int result = moduleRep.RefreshLearerModuleProgress(searchCriteria);
+                int result = moduleRep.RefreshLearnerModuleProgress(searchCriteria);
                 return Json(new { success = result });
             }
             catch (Exception ex)
@@ -930,38 +930,38 @@ namespace ELG.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult RefreshLearnerModuleProgress_Multiple(LearnerModuleFilter searchCriteria, bool allSelected, long[] selectedRecordList, long[] unselectedRecordList)
+        public ActionResult RefreshLearnerModuleProgress_Multiple([FromBody] LearnerProgressResetRequest request)
         {
             try
             {
                 int result = 0;
                 var moduleRep = new ModuleRep();
-                searchCriteria.Company = SessionHelper.CompanyId;
-                searchCriteria.AdminRole = SessionHelper.UserRole;
-                searchCriteria.AdminUserId = SessionHelper.UserId;
+                request.SearchCriteria.Company = SessionHelper.CompanyId;
+                request.SearchCriteria.AdminRole = SessionHelper.UserRole;
+                request.SearchCriteria.AdminUserId = SessionHelper.UserId;
 
                 string selectedRecords = "";
                 string unSelectedRecords = "";
 
-                if (allSelected)
+                if (request.AllSelected)
                 {
                     //remove unselected users
-                    if (unselectedRecordList != null && unselectedRecordList.Length > 0)
+                    if (request.UnselectedRecordList != null && request.UnselectedRecordList.Length > 0)
                     {
-                        unSelectedRecords = string.Join(",", unselectedRecordList);
+                        unSelectedRecords = string.Join(",", request.UnselectedRecordList);
                     }
                 }
                 else
                 {
                     // if few are selected
-                    if (selectedRecordList != null && selectedRecordList.Length > 0)
+                    if (request.SelectedRecordList != null && request.SelectedRecordList.Length > 0)
                     {
-                        selectedRecords = string.Join(",", selectedRecordList);
+                        selectedRecords = string.Join(",", request.SelectedRecordList);
                     }
 
                 }
 
-                result = moduleRep.RefreshLearerModuleProgress_Multiple(searchCriteria, selectedRecords, unSelectedRecords, allSelected);
+                result = moduleRep.RefreshLearnerModuleProgress_Multiple(request.SearchCriteria, selectedRecords, unSelectedRecords, request.AllSelected);
 
                 return Json(new { success = result });
             }

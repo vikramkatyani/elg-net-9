@@ -23,10 +23,47 @@ function switchToLearnerView() {
 
 // Toggle menu function for mobile hamburger
 function toggleMenu() {
+    console.log('toggleMenu() called');
     const menuBar = document.querySelector('.learner-menu-bar');
+    console.log('menuBar element:', menuBar);
+    
     if (menuBar) {
         menuBar.classList.toggle('active');
+        const isActive = menuBar.classList.contains('active');
+        console.log('Menu is now:', isActive ? 'OPEN' : 'CLOSED');
+        console.log('Menu classes:', menuBar.className);
+    } else {
+        console.error('Could not find .learner-menu-bar element');
     }
+}
+
+// Close menu when clicking outside
+function closeMenuOnClickOutside() {
+    document.addEventListener('click', function(event) {
+        const menuBar = document.querySelector('.learner-menu-bar');
+        const hamburger = document.querySelector('.hamburger');
+        
+        if (menuBar && hamburger) {
+            // Check if click is outside both hamburger and menu
+            if (!menuBar.contains(event.target) && !hamburger.contains(event.target)) {
+                menuBar.classList.remove('active');
+            }
+        }
+    });
+}
+
+// Close menu when a menu item is clicked
+function closeMenuOnItemClick() {
+    const menuItems = document.querySelectorAll('.learner-menu a');
+    const menuBar = document.querySelector('.learner-menu-bar');
+    
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            if (menuBar && window.innerWidth <= 768) {
+                menuBar.classList.remove('active');
+            }
+        });
+    });
 }
 
 // Browser compatibility check - IE detection
@@ -41,4 +78,8 @@ $(document).ready(function () {
         window.open('', '_self', '');
         window.close();
     }
+
+    // Initialize mobile menu handlers
+    closeMenuOnClickOutside();
+    closeMenuOnItemClick();
 });
