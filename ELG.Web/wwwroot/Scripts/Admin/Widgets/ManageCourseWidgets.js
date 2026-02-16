@@ -80,7 +80,7 @@ var courseWidgetHandler = (function () {
                 targets: [3],
                 className: 'text-center',
                 render: function (a, b, data) {
-                    const guid = data.CourseGUID;
+                    const guid = data.QueGUID;
                     return `
           <div class="dropdown">
             <button class="btn btn-sm rounded-circle" type="button"
@@ -93,6 +93,12 @@ var courseWidgetHandler = (function () {
                 <a class="dropdown-item" href="#" id="show_widget_${guid}"
                    onclick="tagViewHandler.openTagPopUp(this)">
                   <i class="fa fa-fw fa-code me-2"></i>View Script
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item text-danger" href="#" id="delete_widget_${guid}"
+                   onclick="deleteWidgetHandler.confirmDelete('${guid}')">
+                  <i class="fa fa-fw fa-trash me-2"></i>Delete
                 </a>
               </li>
               <!-- Future: Preview/Edit options -->
@@ -385,5 +391,58 @@ var tagViewHandler = (function () {
     return {
         openTagPopUp: openTagPopUp
     }
+
+})();
+
+
+var deleteWidgetHandler = (function () {
+    var $alert = $('#divMessage_coursewidget');
+
+    function confirmDelete(widgetGuid) {
+        event.preventDefault();
+        
+        // First get the count of linked responses
+        var url = hdnBaseUrl + "QueWidget/GetWidgetResponseCount";
+        var data = { WidgetGuid: widgetGuid };
+        
+        UTILS.makeAjaxCall(url, data, function (res) {
+            if (res.success > 0) {
+                var count = res.count;
+                var message = count > 0 
+                    ? `This widget has ${count} linked response(s) in the system. Deleting this widget will also delete all associated responses. Are you sure you want to proceed?`
+                    : 'Are you sure you want to delete this widget?';
+                
+                if (confirm(message)) {
+                    deleteWidget(widgetGuid);
+                }
+            } else {
+                alert('Unable to retrieve widget information. Please try again.');
+            }
+        }, function (err) {
+            console.error(err);
+            alert('An error occurred while checking widget responses. Please try again.');
+        });
+    }
+
+    function deleteWidget(widgetGuid) {
+        var url = hdnBaseUrl + "QueWidget/DeleteWidget";
+        var data = { WidgetGuid: widgetGuid };
+        
+        UTILS.makeAjaxCall(url, data, function (res) {
+            if (res.success > 0) {
+                UTILS.Alert.show($alert, "success", "Widget deleted successfully");
+                $('#courseWidgetList').DataTable().draw();
+            } else {
+                UTILS.Alert.show($alert, "error", "Failed to delete widget. Please try again later");
+            }
+        }, function (err) {
+            console.error(err);
+            UTILS.Alert.show($alert, "error", "An error occurred while deleting the widget. Please try again.");
+        });
+    }
+
+    return {
+        confirmDelete: confirmDelete
+    };
 
 })();

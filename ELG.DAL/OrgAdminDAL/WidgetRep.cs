@@ -151,5 +151,61 @@ namespace ELG.DAL.OrgAdminDAL
             }
             return success;
         }
+
+        /// <summary>
+        /// Get count of responses linked to a widget
+        /// </summary>
+        /// <param name="widgetGuid"></param>
+        /// <returns></returns>
+        public int GetWidgetResponseCount(string widgetGuid)
+        {
+            int count = 0;
+            try
+            {
+                using (var context = new lmsdbEntities())
+                {
+                    string sql = "SELECT COUNT(*) FROM tb_widget_responses WHERE resp_que_guid = @p0";
+                    count = context.Database.SqlQuery<int>(sql, widgetGuid).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// Delete widget by GUID
+        /// </summary>
+        /// <param name="widgetGuid"></param>
+        /// <returns></returns>
+        public int DeleteWidget(string widgetGuid)
+        {
+            int success = 0;
+            try
+            {
+                using (var context = new lmsdbEntities())
+                {
+                    // First delete all responses linked to this widget
+                    string deleteResponsesSql = "DELETE FROM tb_widget_responses WHERE resp_que_guid = @p0";
+                    context.Database.ExecuteSqlCommand(deleteResponsesSql, widgetGuid);
+
+                    // Then delete the widget itself
+                    string deleteWidgetSql = "DELETE FROM tb_widget_ques WHERE widget_que_guid = @p0";
+                    int rowsAffected = context.Database.ExecuteSqlCommand(deleteWidgetSql, widgetGuid);
+                    
+                    if (rowsAffected > 0)
+                    {
+                        success = 1;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return success;
+        }
     }
 }

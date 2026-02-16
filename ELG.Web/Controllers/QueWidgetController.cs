@@ -154,5 +154,53 @@ namespace ELG.Web.Controllers
                 return View("CourseWidgets");
             }
         }
+
+        // Get count of responses linked to a widget
+        [HttpPost]
+        public ActionResult GetWidgetResponseCount([FromBody] WidgetRequest request)
+        {
+            try
+            {
+                if (request == null || String.IsNullOrEmpty(request.WidgetGuid))
+                    return Json(new { success = 0, count = 0 });
+
+                var widgetRep = new WidgetRep();
+                int count = widgetRep.GetWidgetResponseCount(request.WidgetGuid);
+
+                return Json(new { success = 1, count = count });
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return Json(new { success = 0, count = 0 });
+            }
+        }
+
+        // Delete widget
+        [HttpPost]
+        public ActionResult DeleteWidget([FromBody] WidgetRequest request)
+        {
+            try
+            {
+                if (request == null || String.IsNullOrEmpty(request.WidgetGuid))
+                    return Json(new { success = 0 });
+
+                var widgetRep = new WidgetRep();
+                int result = widgetRep.DeleteWidget(request.WidgetGuid);
+
+                return Json(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return Json(new { success = 0 });
+            }
+        }
+
+        // Helper class for widget delete/count requests
+        public class WidgetRequest
+        {
+            public string WidgetGuid { get; set; }
+        }
     }
 }
