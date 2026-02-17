@@ -195,16 +195,19 @@ var learningWidgetReportHandler = (function () {
                 }
             }, {
                     // render widget type
-                targets: [5], render: function (a, b, data, d) {
-                    switch (data["QuesType"]) {
-                        case 1: return '<span>TIW</span>'
-                            break;
-                        case 2: return '<span>MAC</span>'
-                            break;
+                    targets: [5], render: function (a, b, data, d) {
+                        var qtype = parseInt(data["QuesType"]);
+                        switch (qtype) {
+                            case 1: 
+                                return '<span>TIW</span>';
+                            case 2: 
+                                return '<span>MAC</span>';
+                            default: 
+                                return '<span>-</span>';
+                        }
                     }
-                       
-                    }
-                }]
+                }
+            ]
         });
     });
 

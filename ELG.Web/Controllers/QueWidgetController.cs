@@ -182,7 +182,7 @@ namespace ELG.Web.Controllers
         {
             try
             {
-                if (request == null || String.IsNullOrEmpty(request.WidgetGuid))
+                  if (request == null || String.IsNullOrEmpty(request.WidgetGuid))
                     return Json(new { success = 0 });
 
                 var widgetRep = new WidgetRep();

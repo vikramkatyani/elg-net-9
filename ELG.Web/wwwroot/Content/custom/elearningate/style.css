@@ -287,11 +287,11 @@ form {
     }
 
 .left-section .line-partition {
-    display: none;
+    display: none !important;
 }
 
 .left-section h1 {
-    display: none;
+    display: none !important;
 }
 
 .line-partition {
@@ -325,6 +325,7 @@ form {
 
     .brand-content .branding img {
         width: 120px;
+    max-height: 128px;
     }
 
 /* Alert message styling */
@@ -379,7 +380,7 @@ form {
 
     .left-section {
         display: flex;
-        flex: 1.5;
+        flex: 1;
         position: relative;
         background: url('landingBG.png') no-repeat center center;
         background-size: cover;
@@ -493,7 +494,7 @@ form {
     }
 
     #page-title {
-        font-size: 32px;
+        font-size: 64px;
     }
 
     .right-section {
@@ -613,7 +614,9 @@ form {
 
 .learner-menu-bar .logo img {
     content: url("logo.png");
-    padding: 20px 30px 20px 20px;
+
+padding: 0 !important;
+    max-height: 128px;
     max-width: 100%;
     margin: 20px auto;
     display: block;
