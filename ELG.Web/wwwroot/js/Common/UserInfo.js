@@ -88,7 +88,7 @@ const updateSessionLearnerHandler = (() => {
     function getSessionUserInfo(session_learnerId) {
         session_isSessionUser = true;
         const data = { UserID: session_learnerId };
-        const url = `${hdnBaseUrl}home/GetSessionLearnerInfo`;
+        const url = `${hdnBaseUrl}GetSessionLearnerInfo`;
         UTILS.makeAjaxCall(url, data, (info) => {
             session_populateData(info);
         }, (status) => {

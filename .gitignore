@@ -306,3 +306,4 @@ deployment.zip
 
 # CI/CD artifacts
 .github/workflows/secrets.json
+courses/

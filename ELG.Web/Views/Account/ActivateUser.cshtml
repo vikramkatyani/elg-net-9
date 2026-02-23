@@ -113,7 +113,31 @@
         }
         else if (ViewBag.Error == 0)
         {
-            <p class="mb-4">Password should contain at least one lowercase, one uppercase, one numeric, one special character and password must be eight characters or longer.</p>
+            <!-- Password Requirements Checklist - Always Visible -->
+            <div id="passwordRequirements" class="mb-4">
+                <small class="text-muted d-block mb-2"><strong>Password Requirements:</strong></small>
+                <div class="requirement-item mb-2">
+                    <span id="req-length" class="requirement-indicator">✗</span>
+                    <small id="req-length-text">At least 8 characters</small>
+                </div>
+                <div class="requirement-item mb-2">
+                    <span id="req-uppercase" class="requirement-indicator">✗</span>
+                    <small id="req-uppercase-text">At least one uppercase letter (A-Z)</small>
+                </div>
+                <div class="requirement-item mb-2">
+                    <span id="req-lowercase" class="requirement-indicator">✗</span>
+                    <small id="req-lowercase-text">At least one lowercase letter (a-z)</small>
+                </div>
+                <div class="requirement-item mb-2">
+                    <span id="req-number" class="requirement-indicator">✗</span>
+                    <small id="req-number-text">At least one number (0-9)</small>
+                </div>
+                <div class="requirement-item mb-2">
+                    <span id="req-special" class="requirement-indicator">✗</span>
+                    <small id="req-special-text">At least one special character (!@@#$%^&* etc.)</small>
+                </div>
+            </div>
+
             <div id="divErrorMessage"></div>
 
             <div class="" id="tempSuccessMsg">@ViewBag.Message</div>
@@ -122,13 +146,18 @@
             {
                 <input type="hidden" id="hdnUserID" name="UserID" value="@ViewBag.UserID" />
 
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-user", placeholder = "Password", autocomplete = "off" })
+                <div class="form-group">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-user", placeholder = "Password", autocomplete = "off", id = "Password" })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
 
-                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control form-control-user", placeholder = "Confirm Password", })
+                <div class="form-group">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control form-control-user", placeholder = "Confirm Password", id = "ConfirmPassword" })
                     @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                    <small id="confirm-match-message" class="text-danger" style="display: none;">Passwords do not match</small>
+                </div>
 
-                <button type="submit" data-loading-text="Logging..." data-original-text="Update" class="btn btn-primary btn-user btn-block" id="btnlearnerActivateUser">
+                <button type="submit" data-loading-text="Logging..." data-original-text="Update" class="btn btn-primary btn-user btn-block" id="btnlearnerActivateUser" disabled>
                     Update
                 </button>
             }
@@ -139,4 +168,207 @@
     </div>
 </div>
 
+<style>
+    .requirement-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
+    .requirement-indicator {
+        display: inline-block;
+        width: 20px;
+        text-align: center;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .requirement-indicator.unmet {
+        color: #dc3545;
+    }
+
+    .requirement-indicator.met {
+        color: #28a745;
+    }
+
+    .requirement-item small {
+        flex: 1;
+        transition: all 0.3s ease;
+    }
+
+    .requirement-item.unmet small {
+        color: #6c757d;
+    }
+
+    .requirement-item.met small {
+        color: #28a745;
+        font-weight: 500;
+    }
+
+    #passwordRequirements {
+        background-color: #f8f9fa;
+        padding: 12px;
+        border-radius: 4px;
+        border-left: 3px solid #ffc107;
+    }
+
+    .form-control.invalid {
+        border-color: #dc3545;
+        background-color: #fff5f5;
+    }
+
+    .form-control.valid {
+        border-color: #28a745;
+    }
+
+    #confirm-match-message {
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
+
+    #btnlearnerActivateUser:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+</style>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.getElementById('Password');
+        const confirmPasswordInput = document.getElementById('ConfirmPassword');
+        const submitBtn = document.getElementById('btnlearnerActivateUser');
+        const passwordRequirements = document.getElementById('passwordRequirements');
+        const confirmMatchMessage = document.getElementById('confirm-match-message');
+
+        // Password validation regex: at least one lowercase, one uppercase, one digit, one special char, min 8 chars
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
+
+        // Requirements checkers
+        const requirements = {
+            length: {
+                element: document.getElementById('req-length'),
+                textElement: document.getElementById('req-length-text'),
+                check: (pwd) => pwd.length >= 8
+            },
+            uppercase: {
+                element: document.getElementById('req-uppercase'),
+                textElement: document.getElementById('req-uppercase-text'),
+                check: (pwd) => /[A-Z]/.test(pwd)
+            },
+            lowercase: {
+                element: document.getElementById('req-lowercase'),
+                textElement: document.getElementById('req-lowercase-text'),
+                check: (pwd) => /[a-z]/.test(pwd)
+            },
+            number: {
+                element: document.getElementById('req-number'),
+                textElement: document.getElementById('req-number-text'),
+                check: (pwd) => /\d/.test(pwd)
+            },
+            special: {
+                element: document.getElementById('req-special'),
+                textElement: document.getElementById('req-special-text'),
+                check: (pwd) => /[^\da-zA-Z]/.test(pwd)
+            }
+        };
+
+        function updateRequirements(password) {
+            let allMet = true;
+
+            for (const [key, req] of Object.entries(requirements)) {
+                const isMet = req.check(password);
+                
+                if (isMet) {
+                    req.element.textContent = '✓';
+                    req.element.classList.remove('unmet');
+                    req.element.classList.add('met');
+                    req.textElement.parentElement.classList.remove('unmet');
+                    req.textElement.parentElement.classList.add('met');
+                } else {
+                    req.element.textContent = '✗';
+                    req.element.classList.remove('met');
+                    req.element.classList.add('unmet');
+                    req.textElement.parentElement.classList.remove('met');
+                    req.textElement.parentElement.classList.add('unmet');
+                    allMet = false;
+                }
+            }
+
+            return allMet;
+        }
+
+        function validateAndUpdateUI(password, confirmPassword) {
+            // Password requirements are always visible, just update them
+
+            // Update requirements
+            const passwordValid = updateRequirements(password);
+
+            // Update password field styling
+            if (password.length > 0) {
+                if (passwordValid) {
+                    passwordInput.classList.remove('invalid');
+                    passwordInput.classList.add('valid');
+                } else {
+                    passwordInput.classList.remove('valid');
+                    passwordInput.classList.add('invalid');
+                }
+            } else {
+                passwordInput.classList.remove('invalid', 'valid');
+            }
+
+            // Check if passwords match
+            const passwordsMatch = password.length > 0 && password === confirmPassword;
+            
+            if (confirmPassword.length > 0 && !passwordsMatch) {
+                confirmMatchMessage.style.display = 'block';
+                confirmPasswordInput.classList.remove('valid');
+                confirmPasswordInput.classList.add('invalid');
+            } else if (passwordsMatch) {
+                confirmMatchMessage.style.display = 'none';
+                confirmPasswordInput.classList.remove('invalid');
+                confirmPasswordInput.classList.add('valid');
+            } else {
+                confirmMatchMessage.style.display = 'none';
+                confirmPasswordInput.classList.remove('invalid', 'valid');
+            }
+
+            // Enable/disable submit button
+            const isFormValid = passwordValid && passwordsMatch && password.length > 0 && confirmPassword.length > 0;
+            submitBtn.disabled = !isFormValid;
+        }
+
+        // Event listeners
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function () {
+                validateAndUpdateUI(this.value, confirmPasswordInput.value);
+            });
+        }
+
+        if (confirmPasswordInput) {
+            confirmPasswordInput.addEventListener('input', function () {
+                validateAndUpdateUI(passwordInput.value, this.value);
+            });
+        }
+
+        // Validate on form submission
+        const form = document.getElementById('learnerActivateUserForm');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (!passwordRegex.test(password)) {
+                    e.preventDefault();
+                    alert('Password does not meet all requirements. Please check the requirements and try again.');
+                    return false;
+                }
+
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match. Please enter matching passwords.');
+                    return false;
+                }
+            });
+        }
+    });
+</script>

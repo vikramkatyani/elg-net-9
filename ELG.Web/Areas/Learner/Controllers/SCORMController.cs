@@ -75,31 +75,39 @@ namespace ELG.Web.Areas.Learner.Controllers
                 SendABSCertificate = 0
             };
 
-            if (DataValue != null)
+            try
             {
+                if (DataValue == null)
+                {
+                    Logger.Info("LMSSaveData: DataValue is null");
+                    response.Success = "0";
+                    return Json(new { success = response.Success });
+                }
+
                 DataValue.UserId = Convert.ToInt64(SessionHelper.UserId);
                 DataValue.CourseId = Convert.ToInt64(SessionHelper.CourseId);
 
-                if (DataValue.UserId > 0 && DataValue.CourseId > 0)
+                Logger.Info($"LMSSaveData: UserId={DataValue.UserId}, CourseId={DataValue.CourseId}, Status={DataValue.ProgressStatus}, Score={DataValue.Score}, Bookmark={DataValue.Bookmark}, SuspendData={DataValue.SuspendData}");
+
+                if (DataValue.UserId <= 0 || DataValue.CourseId <= 0)
                 {
-                    try
-                    {
-                        var progressRep = new SCORMRep();
-                        response = progressRep.SaveProgressDetails(DataValue);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex.Message, ex);
-                    }
-                }
-                else
-                {
-                    // Session not available
+                    Logger.Info($"LMSSaveData: Invalid session - UserId={DataValue.UserId}, CourseId={DataValue.CourseId}");
                     response.Success = "-1";
+                    return Json(new { success = response.Success });
                 }
+
+                var progressRep = new SCORMRep();
+                response = progressRep.SaveProgressDetails(DataValue);
+                
+                Logger.Info($"LMSSaveData: Save result - Success={response.Success}, SendCertificate={response.SendABSCertificate}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"LMSSaveData Exception: {ex.Message}", ex);
+                response.Success = "0";
             }
 
-            return Json(new { success = response.Success });
+            return Json(new { success = response.Success, sendCertificate = response.SendABSCertificate });
         }
 
         [HttpPost]

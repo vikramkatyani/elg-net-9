@@ -104,17 +104,22 @@ namespace ELG.Web.Areas.Learner.Controllers
             ViewBag.Title = "My Profile";
             return View();
         }
+        public class ModuleRequest
+        {
+            public Int64 Course { get; set; }
+            public Int64 RecordId { get; set; }
+        }
 
         // POST: Reset course progress
         [HttpPost]
-        public IActionResult ResetProgress(Int64 Course, Int64 RecordId)
+        public IActionResult ResetProgress([FromBody] ModuleRequest request)
         {
             int reset = 0;
             try
             {
                 var learnerRep = new LearnerCourseRep();
                 Int64 UserID = Convert.ToInt64(SessionHelper.UserId);
-                reset = learnerRep.ResetLearningProgress(UserID, Course, RecordId);
+                reset = learnerRep.ResetLearningProgress(UserID, request.Course, request.RecordId);
                 return Json(new { reset });
             }
             catch (Exception ex)

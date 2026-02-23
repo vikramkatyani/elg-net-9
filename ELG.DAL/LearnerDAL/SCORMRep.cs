@@ -62,20 +62,50 @@ namespace ELG.DAL.LearnerDAL
         {
             CourseProgressResponse response = new CourseProgressResponse();
             response.SendABSCertificate = 0;
-            response.Success = "1";
+            response.Success = "0";
+            
+            if (SaveData == null || SaveData.UserId <= 0 || SaveData.CourseId <= 0)
+            {
+                response.Success = "-1"; // Invalid data
+                return response;
+            }
+
             int score = (int)Math.Round(SaveData.Score);
+            string sessionTime = SaveData.SessionTime ?? DateTime.Now.ToString("HH:mm:ss");
+            string bookmark = SaveData.Bookmark ?? string.Empty;
+            string progressStatus = SaveData.ProgressStatus ?? "not attempted";
+            string suspendData = SaveData.SuspendData ?? string.Empty;
+            
             try
             {
                 ObjectParameter sendITPCertificate = new ObjectParameter("sendITPCertificate", typeof(int));
                 using (learnerDBEntities context = new learnerDBEntities())
                 {
-                    var result = context.lms_learner_updateCourseProgressRecord_withSession(SaveData.UserId, SaveData.CourseId, SaveData.Bookmark, SaveData.ProgressStatus, SaveData.SuspendData, score, SaveData.SessionTime, sendITPCertificate);
-                    response.SendABSCertificate = Convert.ToInt32(sendITPCertificate.Value);
+                    // Call the stored procedure to update course progress
+                    var result = context.lms_learner_updateCourseProgressRecord_withSession(
+                        SaveData.UserId, 
+                        SaveData.CourseId, 
+                        bookmark, 
+                        progressStatus, 
+                        suspendData, 
+                        score, 
+                        sessionTime, 
+                        sendITPCertificate);
+                    
+                    // Set the certificate flag if returned by the stored procedure
+                    if (sendITPCertificate.Value != null)
+                    {
+                        response.SendABSCertificate = Convert.ToInt32(sendITPCertificate.Value);
+                    }
+                    
                     response.Success = "1";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"SaveProgressDetails Error: {ex.Message}");
+                response.Success = "0";
+                response.SendABSCertificate = 0;
                 throw;
             }
             return response;
