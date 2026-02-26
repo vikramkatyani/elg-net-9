@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+ALTERNATIVE web.config if the above doesn't work.
+This explicitly sets requestLimits to 2 GB to ensure no conflict.
+Use this if you're still getting 413 after the previous deployment.
+-->
+<configuration>
+  <location path="." inheritInChildApplications="false">
+    <system.webServer>
+      <security>
+        <requestFiltering>
+          <!-- Set to 2 GB to ensure no conflict with WEBSITE_MAX_CONTENT_SIZE -->
+          <requestLimits maxAllowedContentLength="2147483648" />
+        </requestFiltering>
+      </security>
+      
+      <handlers>
+        <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+      </handlers>
+      
+      <aspNetCore requestTimeout="00:10:00" 
+                  processPath="dotnet" 
+                  arguments=".\ELG.Web.dll" 
+                  stdoutLogEnabled="true" 
+                  stdoutLogFile="\\?\%home%\LogFiles\stdout" 
+                  hostingModel="inprocess" />
+    </system.webServer>
+  </location>
+</configuration>

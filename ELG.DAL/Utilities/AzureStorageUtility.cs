@@ -355,6 +355,67 @@ namespace ELG.DAL.Utilities
         }
 
         /// <summary>
+        /// Download a partial range from an Azure blob for video seeking support
+        /// Enables HTTP 206 Partial Content responses for Range requests
+        /// Buffers the result into a MemoryStream to ensure it's independent of the HTTP response lifecycle
+        /// </summary>
+        public async Task<Stream> DownloadBlobRangeAsync(string blobPath, long start, long? end, bool isThumbnail = false)
+        {
+            try
+            {
+                var containerClient = isThumbnail ? _thumbnailContainerClient : _containerClient;
+                string blobName = ExtractBlobName(blobPath, isThumbnail);
+                var blobClient = containerClient.GetBlobClient(blobName);
+                var exists = await blobClient.ExistsAsync();
+                if (!exists.Value)
+                {
+                    return null;
+                }
+
+                // Calculate the length of the range
+                long length = end.HasValue ? (end.Value - start + 1) : long.MaxValue;
+                
+                // Request only the needed bytes from Azure using Range header
+                var downloadOptions = new BlobDownloadOptions 
+                { 
+                    Range = new Azure.HttpRange(start, length) 
+                };
+
+                var response = await blobClient.DownloadStreamingAsync(downloadOptions);
+                
+                // Buffer the stream into a MemoryStream so it outlives the HTTP response
+                var memoryStream = new MemoryStream();
+                await response.Value.Content.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                return memoryStream;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the total size of an Azure blob
+        /// Used for constructing Content-Range headers in Range requests
+        /// </summary>
+        public async Task<long> GetBlobSizeAsync(string blobPath, bool isThumbnail = false)
+        {
+            try
+            {
+                var containerClient = isThumbnail ? _thumbnailContainerClient : _containerClient;
+                string blobName = ExtractBlobName(blobPath, isThumbnail);
+                var blobClient = containerClient.GetBlobClient(blobName);
+                var properties = await blobClient.GetPropertiesAsync();
+                return properties.Value.ContentLength;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Extract blob name from full URL or return as-is if already a relative path
         /// Handles Azure blob URLs with or without SAS tokens
         /// </summary>

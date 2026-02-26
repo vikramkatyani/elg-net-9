@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ELG.DAL.Utilities;
-using ELG.Web.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
@@ -30,12 +29,6 @@ namespace ELG.Web.Areas.Learner.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string courseId, string path, [FromQuery] string baseUrl, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
-            // Validate courseId is not empty or invalid
-            if (string.IsNullOrWhiteSpace(courseId) || courseId == "0")
-            {
-                return BadRequest($"Invalid courseId: '{courseId}'. CourseId must be a non-empty, non-zero value.");
-            }
-
             string folderPath = null;
             string baseRelativePath = null; // launch file relative path, e.g. res/index.html
             bool isLocalFile = false; // Indicates whether we're serving from local file system
@@ -48,7 +41,6 @@ namespace ELG.Web.Areas.Learner.Controllers
             {
                 try
                 {
-                    Logger.Info($"CourseProxyController.Get: Initializing courseId={courseId} with baseUrl={baseUrl}");
                     // Check if baseUrl is a relative path (starts with .. or ./) or local path (contains ../)
                     if (baseUrl.StartsWith("..") || baseUrl.StartsWith("./") || baseUrl.Contains("../"))
                     {
@@ -113,9 +105,8 @@ namespace ELG.Web.Areas.Learner.Controllers
                     if (!string.IsNullOrWhiteSpace(baseRelativePath))
                         HttpContext.Session.SetString(sessionKeyRel, baseRelativePath);
                     HttpContext.Session.SetString(sessionKeyIsLocal, isLocalFile.ToString());
-                    Logger.Info($"CourseProxyController.Get: Cached courseId={courseId} in session. FolderPath={folderPath}, BaseRelativePath={baseRelativePath}");
                 }
-                catch (Exception ex) { Logger.Info($"CourseProxyController.Get: Session not available for courseId={courseId}: {ex.Message}"); }
+                catch { /* session may not be available; use memory cache */ }
                 
                 lock (_folderPathCache)
                 {
@@ -151,8 +142,7 @@ namespace ELG.Web.Areas.Learner.Controllers
 
                 if (string.IsNullOrWhiteSpace(folderPath))
                 {
-                    Logger.Error($"CourseProxyController.Get: No cached baseUrl for courseId={courseId}, path={path}. Session keys: {sessionKey}={HttpContext.Session.GetString(sessionKey)}, Memory cache size: {_folderPathCache.Count}");
-                    return BadRequest($"Course {courseId} not initialized. Please launch the course through the learner interface with the baseUrl parameter.");
+                    return BadRequest("No cached baseUrl for this course. Please load via the launcher with baseUrl parameter.");
                 }
             }
 
@@ -167,7 +157,7 @@ namespace ELG.Web.Areas.Learner.Controllers
             
             var blobPath = folderPath + effectivePath;
             var originalPath = path; // Save original requested path for fallback attempts
-
+            
             Stream stream = null;
             string resolvedFilePath = null;
 
@@ -195,61 +185,122 @@ namespace ELG.Web.Areas.Learner.Controllers
             
             // If not found and effectivePath is just "index.html", try common subdirectories
             if (stream == null && effectivePath == "index.html" && string.IsNullOrWhiteSpace(baseRelativePath))
-            {
-                var tryPaths = new[] { "res/index.html", "index/index.html", "dist/index.html" };
-                foreach (var tryPath in tryPaths)
                 {
-                    if (isLocalFile)
+                    var tryPaths = new[] { "res/index.html", "index/index.html", "dist/index.html" };
+                    foreach (var tryPath in tryPaths)
                     {
-                        resolvedFilePath = System.IO.Path.Combine(folderPath, tryPath).Replace("/", System.IO.Path.DirectorySeparatorChar.ToString());
-                        if (System.IO.File.Exists(resolvedFilePath))
+                        if (isLocalFile)
                         {
-                            stream = System.IO.File.OpenRead(resolvedFilePath);
-                            effectivePath = tryPath;
-                            blobPath = folderPath + tryPath;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        var tryBlobPath = folderPath + tryPath;
-                        try
-                        {
-                            stream = await _storage.DownloadBlobAsync(tryBlobPath, isThumbnail: false);
-                            if (stream != null)
+                            resolvedFilePath = System.IO.Path.Combine(folderPath, tryPath).Replace("/", System.IO.Path.DirectorySeparatorChar.ToString());
+                            if (System.IO.File.Exists(resolvedFilePath))
                             {
+                                stream = System.IO.File.OpenRead(resolvedFilePath);
                                 effectivePath = tryPath;
-                                blobPath = tryBlobPath;
+                                blobPath = folderPath + tryPath;
                                 break;
                             }
                         }
-                        catch { /* continue trying other paths */ }
+                        else
+                        {
+                            var tryBlobPath = folderPath + tryPath;
+                            try
+                            {
+                                stream = await _storage.DownloadBlobAsync(tryBlobPath, isThumbnail: false);
+                                if (stream != null)
+                                {
+                                    effectivePath = tryPath;
+                                    blobPath = tryBlobPath;
+                                    break;
+                                }
+                            }
+                            catch { /* continue trying other paths */ }
+                        }
                     }
+                }
+                
+            // If still not found, try removing the base directory from the path
+            // This handles SCORM packages where files are referenced relative to root, not the launch file directory
+                if (stream == null && !string.IsNullOrWhiteSpace(baseRelativePath))
+                {
+                var baseDir = Path.GetDirectoryName(baseRelativePath)?.Replace("\\", "/") ?? "";
+                if (!string.IsNullOrEmpty(baseDir) && effectivePath.StartsWith(baseDir + "/", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Try the path without the base directory prefix
+                    var withoutBaseDir = effectivePath.Substring(baseDir.Length + 1);
+                    var tryBlobPath = folderPath + withoutBaseDir;
+                    try
+                    {
+                        stream = await _storage.DownloadBlobAsync(tryBlobPath, isThumbnail: false);
+                        if (stream != null)
+                        {
+                            effectivePath = withoutBaseDir;
+                            blobPath = tryBlobPath;
+                        }
+                    }
+                    catch { /* fallback didn't work, continue to error */ }
+                }
+                
+                // Also try the original requested path without any base directory prepending
+                if (stream == null && !path.Equals(originalPath, StringComparison.OrdinalIgnoreCase))
+                        {
+                    var tryBlobPath = folderPath + path;
+                            try
+                            {
+                                stream = await _storage.DownloadBlobAsync(tryBlobPath, isThumbnail: false);
+                                if (stream != null)
+                                {
+                            effectivePath = path;
+                                    blobPath = tryBlobPath;
+                        }
+                    }
+                    catch { /* fallback didn't work, continue to error */ }
+                }
+                
+                // If the request omitted the base directory (e.g., browser asked for driverOptions.js but files live under scormdriver/)
+                if (stream == null && !string.IsNullOrEmpty(baseDir) && !path.StartsWith(baseDir + "/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var withBaseDir = baseDir + "/" + path;
+                    var tryBlobPath = folderPath + withBaseDir;
+                    try
+                    {
+                        stream = await _storage.DownloadBlobAsync(tryBlobPath, isThumbnail: false);
+                        if (stream != null)
+                        {
+                            effectivePath = withBaseDir;
+                            blobPath = tryBlobPath;
+                        }
+                    }
+                    catch { /* fallback didn't work, continue to error */ }
+                }
+
+                // SCORM Rise packages often store assets under scormcontent/ while HTML uses scormdriver/ relative paths
+                // If still not found, try replacing a leading "scormdriver/" with "scormcontent/"
+                if (stream == null && effectivePath.StartsWith("scormdriver/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var withoutDriver = effectivePath.Substring("scormdriver/".Length);
+                    var tryBlobPath = folderPath + "scormcontent/" + withoutDriver;
+                            try
+                            {
+                                stream = await _storage.DownloadBlobAsync(tryBlobPath, isThumbnail: false);
+                                if (stream != null)
+                                {
+                            effectivePath = "scormcontent/" + withoutDriver;
+                                    blobPath = tryBlobPath;
+                        }
+                    }
+                    catch { /* fallback didn't work, continue to error */ }
                 }
             }
             
             if (stream == null)
             {
-                Logger.Error($"CourseProxyController.Get: Resource not found. CourseId={courseId}, Path={path}, EffectivePath={effectivePath}, BlobPath={blobPath}, FolderPath={folderPath}");
-                return NotFound($"Resource not found: {effectivePath} (looked for: {blobPath}");
+                return NotFound($"Resource not found: {effectivePath} (looked for: {blobPath})");
             }
 
-            // Determine content type based on file extension
-            string contentType = "application/octet-stream";
-            if (isLocalFile && !string.IsNullOrEmpty(resolvedFilePath))
-            {
-                contentType = GetContentTypeFromExtension(System.IO.Path.GetExtension(resolvedFilePath));
-            }
-            else if (_storage != null)
-            {
-                var storageContentType = _storage.GetContentType(effectivePath);
-                if (!string.IsNullOrWhiteSpace(storageContentType))
-                    contentType = storageContentType;
-            }
+            var contentType = _storage.GetContentType(effectivePath);
+            if (string.IsNullOrWhiteSpace(contentType)) contentType = "application/octet-stream";
 
-            Logger.Debug($"CourseProxyController.Get: Serving resource. CourseId={courseId}, Path={path}, EffectivePath={effectivePath}, ContentType={contentType}");
-
-            // If this is an HTML file, inject a <base> tag to route relative requests through CourseProxy
+            // If this is an HTML file, rewrite relative URLs to absolute Azure blob SAS URLs
             if (contentType.Contains("text/html", StringComparison.OrdinalIgnoreCase))
             {
                 try
@@ -259,25 +310,21 @@ namespace ELG.Web.Areas.Learner.Controllers
                         string htmlContent = await reader.ReadToEndAsync();
                         
                         // Inject a <base> tag in <head> to make all relative requests route through CourseProxy
-                        var baseDir = System.IO.Path.GetDirectoryName(baseRelativePath ?? "index.html")?.Replace("\\", "/") ?? "";
-                        
-                        // Build base href - ensure proper formatting
-                        string baseHref = $"/Learner/CourseProxy/{courseId}/";
-                        if (!string.IsNullOrEmpty(baseDir))
+                        // This ensures XMLHttpRequest and fetch() calls from scripts use CourseProxy routing
+                        // Include the directory path from baseRelativePath so relative URLs resolve correctly
+                        var baseDir = Path.GetDirectoryName(baseRelativePath)?.Replace("\\", "/") ?? "";
+                        if (!string.IsNullOrEmpty(baseDir) && !baseDir.EndsWith("/"))
                         {
-                            baseHref += baseDir + "/";
+                            baseDir += "/";
                         }
-                        
-                        // Normalize multiple slashes
-                        baseHref = System.Text.RegularExpressions.Regex.Replace(baseHref, @"/+", "/");
-                        
-                        var baseTagHtml = $"<base href=\"{baseHref}\">";
+                        var baseTagHtml = $"<base href=\"/Learner/CourseProxy/{courseId}/{baseDir}\">";
                         if (htmlContent.Contains("</head>", StringComparison.OrdinalIgnoreCase))
                         {
                             htmlContent = htmlContent.Replace("</head>", baseTagHtml + "</head>", StringComparison.OrdinalIgnoreCase);
                         }
                         else if (htmlContent.Contains("<head", StringComparison.OrdinalIgnoreCase))
                         {
+                            // If no closing head tag, add after opening head tag
                             var headTagMatch = System.Text.RegularExpressions.Regex.Match(htmlContent, @"<head[^>]*>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
                             if (headTagMatch.Success)
                             {
@@ -285,6 +332,14 @@ namespace ELG.Web.Areas.Learner.Controllers
                             }
                         }
                         
+                        // NOTE: We rely on the <base> tag to route all relative URLs through CourseProxy.
+                        // We do NOT rewrite URLs to direct SAS URLs because:
+                        // 1. The base tag handles static HTML attributes (src, href) automatically
+                        // 2. It handles dynamic JS requests (fetch, XMLHttpRequest) automatically  
+                        // 3. Rewriting to SAS URLs would expose tokens and bypass CourseProxy caching
+                        // 4. Videos, iframes, and other media work better with relative paths
+                        
+                        // Return modified HTML as a new stream
                         var modifiedStream = new MemoryStream();
                         var writer = new StreamWriter(modifiedStream);
                         await writer.WriteAsync(htmlContent);
@@ -296,11 +351,75 @@ namespace ELG.Web.Areas.Learner.Controllers
                 }
                 catch
                 {
+                    // If rewriting fails, return original stream
                     stream.Position = 0;
                     return File(stream, contentType);
                 }
             }
 
+            // Handle HTTP Range requests for video seeking support
+            // When a video player seeks to a timestamp, it sends a Range header like "Range: bytes=1000-2000"
+            // We need to support this by returning 206 Partial Content instead of 200 OK
+            var rangeHeader = Request.Headers["Range"].ToString();
+            if (!string.IsNullOrEmpty(rangeHeader) && contentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    // Get total file size
+                    long totalBytes = stream.Length;
+                    
+                    // Parse Range header (e.g., "bytes=1000-2000" or "bytes=1000-")
+                    if (rangeHeader.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var rangeValue = rangeHeader.Substring("bytes=".Length);
+                        var parts = rangeValue.Split('-');
+                        
+                        if (parts.Length == 2 && long.TryParse(parts[0], out long start))
+                        {
+                            long end;
+                            
+                            if (string.IsNullOrEmpty(parts[1]))
+                            {
+                                // "bytes=1000-" means from 1000 to end
+                                end = totalBytes - 1;
+                            }
+                            else if (long.TryParse(parts[1], out long parsedEnd))
+                            {
+                                // "bytes=1000-2000" means from 1000 to 2000
+                                end = Math.Min(parsedEnd, totalBytes - 1);
+                            }
+                            else
+                            {
+                                // Invalid range, serve full file
+                                return File(stream, contentType);
+                            }
+                            
+                            // Validate range
+                            if (start >= 0 && start <= end && end < totalBytes)
+                            {
+                                // Seek to start position
+                                stream.Seek(start, SeekOrigin.Begin);
+                                long rangeLength = end - start + 1;
+                                
+                                // Return 206 Partial Content with proper headers
+                                Response.StatusCode = 206;
+                                Response.Headers["Content-Range"] = $"bytes {start}-{end}/{totalBytes}";
+                                Response.Headers["Content-Length"] = rangeLength.ToString();
+                                Response.Headers["Accept-Ranges"] = "bytes";
+                                
+                                return File(stream, contentType);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // If range parsing fails, serve full file
+                }
+            }
+
+            // For non-video files or if no Range header, return full file
+            Response.Headers["Accept-Ranges"] = "bytes";
             return File(stream, contentType);
         }
 

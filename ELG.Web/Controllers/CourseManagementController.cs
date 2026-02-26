@@ -1130,13 +1130,16 @@ namespace ELG.Web.Controllers
         }
 
         [HttpPost]
-        [RequestSizeLimit(600L * 1024L * 1024L)]
-        [RequestFormLimits(MultipartBodyLengthLimit = 600L * 1024L * 1024L)]
         public async Task<ActionResult> UploadScormPackage([FromForm] ScormPackageUploadViewModel model)
         {
             ELG.Model.OrgAdmin.ControllerResponse response = new ELG.Model.OrgAdmin.ControllerResponse();
             try
             {
+                // Log incoming request info
+                long fileSize = model?.ScormPackage?.Length ?? 0;
+                System.Diagnostics.Debug.WriteLine($"[UploadScormPackage] Request received - File size: {fileSize} bytes ({fileSize / (1024.0 * 1024.0):F2} MB)");
+                Logger.Info($"UploadScormPackage: Received file upload - {fileSize} bytes");
+                
                 // Validate quota before proceeding
                 var moduleRep = new ModuleRep();
                 int currentCourseCount = moduleRep.GetCourseCountByOrganization((int)SessionHelper.CompanyId);

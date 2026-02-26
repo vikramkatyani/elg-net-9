@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 namespace ELG.Web.Areas.Learner.Controllers
 {
     [Area("Learner")]
+    [SessionCheck]
     [Route("Learner/RiskAssessment")]
     public class RiskAssessmentController : Controller
     {

@@ -14,6 +14,7 @@ using ELG.Model.OrgAdmin;
 namespace ELG.Web.Areas.Learner.Controllers
 {
     [Area("Learner")]
+    [SessionCheck]
     public class HomeController : Controller
     {
         private static readonly string ScormShimContent = ScormShimSource.ScormShim;

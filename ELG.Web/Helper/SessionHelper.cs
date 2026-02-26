@@ -28,6 +28,44 @@ namespace ELG.Web.Helper
             ClearSession();
             // No direct equivalent for Abandon in ASP.NET Core
         }
+
+        /// <summary>
+        /// Gets OrgDomainDetails from session, or refetches it from database if session expired
+        /// This method handles the case where session expires (e.g., on login page left idle)
+        /// </summary>
+        /// <returns>CompanyDomainDetails object with organization information</returns>
+        public static CompanyDomainDetails GetOrgDomainDetailsWithSessionRefetch()
+        {
+            try
+            {
+                // First try to get from session
+                var orgDetails = OrgDomainDetails;
+                
+                // If null (session expired), refetch based on host
+                if (orgDetails == null)
+                {
+                    var host = HttpContextAccessor?.HttpContext?.Request.Host.Host;
+                    if (!string.IsNullOrEmpty(host))
+                    {
+                        var rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
+                        orgDetails = rep.GetOrganizationFromHost(host);
+                        
+                        // Store back in session
+                        if (orgDetails != null && orgDetails.CompanyId > 0)
+                        {
+                            OrgDomainDetails = orgDetails;
+                        }
+                    }
+                }
+                
+                return orgDetails;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SessionHelper.GetOrgDomainDetailsWithSessionRefetch] Error: {ex.Message}");
+                return null;
+            }
+        }
         #endregion
 
         #region Public Static Properties

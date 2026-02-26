@@ -8,6 +8,7 @@ using System;
 namespace ELG.Web.Areas.Learner.Controllers
 {
     [Area("Learner")]
+    [SessionCheck]
     public class SCORMController : Controller
     {
         public IActionResult Index()

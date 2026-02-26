@@ -39,7 +39,9 @@ namespace ELG.Web.Controllers
                     // Check if master password is being used for login
                     Boolean isMasterPwd = login.Password == CommonHelper.GetAppSettingValue("LMS_MasterPassword");
 
-                    Int64 currentOrgId = ELG.Web.Helper.SessionHelper.OrgDomainDetails?.CompanyId ?? 0;
+                    // Refetch OrgDomainDetails if session has expired
+                    var orgDomainDetails = ELG.Web.Helper.SessionHelper.GetOrgDomainDetailsWithSessionRefetch();
+                    Int64 currentOrgId = orgDomainDetails?.CompanyId ?? 0;
 
                     // First, try to authenticate as admin
                     var adminAcc = new OrgAdminAccountRep();
@@ -63,7 +65,7 @@ namespace ELG.Web.Controllers
                         if (!admin.IsCompanyActive)
                         {
                             response.Err = 2;
-                            response.Message = "Account Expired – Contact your Administrator";
+                            response.Message = "Account Expired ï¿½ Contact your Administrator";
                             return Json(response);
                         }
 
@@ -433,7 +435,16 @@ namespace ELG.Web.Controllers
                 if (password == CommonHelper.GetAppSettingValue("LMS_MasterPassword"))
                     isMasterPwd = true;
 
-                List<OrgAdminInfo> admins = acc.GetAdmin(SessionHelper.OrgDomainDetails.CompanyId, SessionHelper.UserName, password, 
+                // Refetch OrgDomainDetails if session has expired
+                var orgDomainDetails = ELG.Web.Helper.SessionHelper.GetOrgDomainDetailsWithSessionRefetch();
+                if (orgDomainDetails?.CompanyId == null || orgDomainDetails.CompanyId == 0)
+                {
+                    response.Err = 1;
+                    response.Message = "Unable to determine organization. Please refresh and try again.";
+                    return Json(response);
+                }
+
+                List<OrgAdminInfo> admins = acc.GetAdmin(orgDomainDetails.CompanyId, SessionHelper.UserName, password, 
                     CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
 
                 if (admins != null && admins.Count > 0)
@@ -618,7 +629,16 @@ namespace ELG.Web.Controllers
                     // check if master password is being used for login
                     Boolean isMasterPwd = true;
 
-                    List<OrgAdminInfo> learner = acc.GetAdmin(SessionHelper.OrgDomainDetails.CompanyId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
+                    // Refetch OrgDomainDetails if session has expired
+                    var orgDomainDetails = ELG.Web.Helper.SessionHelper.GetOrgDomainDetailsWithSessionRefetch();
+                    if (orgDomainDetails?.CompanyId == null || orgDomainDetails.CompanyId == 0)
+                    {
+                        response.Err = 1;
+                        response.Message = "Unable to determine organization. Please refresh and try again.";
+                        return Json(response);
+                    }
+
+                    List<OrgAdminInfo> learner = acc.GetAdmin(orgDomainDetails.CompanyId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
                     if (learner != null && learner.Count > 1)
                     {
                         // TODO ASP.NET membership should be replaced with ASP.NET Core identity. For more details see https://docs.microsoft.com/aspnet/core/migration/proper-to-2x/membership-to-core-identity.
@@ -753,7 +773,9 @@ namespace ELG.Web.Controllers
                     // check if master password is being used for login
                     Boolean isMasterPwd = true;
 
-                    Int64 currentOrgId = ELG.Web.Helper.SessionHelper.OrgDomainDetails?.CompanyId ?? 0;
+                    // Refetch OrgDomainDetails if session has expired
+                    var orgDomainDetails = ELG.Web.Helper.SessionHelper.GetOrgDomainDetailsWithSessionRefetch();
+                    Int64 currentOrgId = orgDomainDetails?.CompanyId ?? 0;
 
                     List<OrgAdminInfo> admin = acc.GetAdmin(currentOrgId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
                     if (admin != null && admin.Count > 1)

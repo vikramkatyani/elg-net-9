@@ -1,5 +1,6 @@
 using ELG.DAL.LearnerDAL;
 using ELG.Model.Learner;
+using ELG.Web.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -8,6 +9,7 @@ using System.Text;
 namespace ELG.Web.Areas.Learner.Controllers
 {
     [Area("Learner")]
+    [SessionCheck]
     public class WidgetController : Controller
     {
         private readonly IConfiguration _configuration;

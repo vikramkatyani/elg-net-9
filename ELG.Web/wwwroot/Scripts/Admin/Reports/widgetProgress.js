@@ -144,7 +144,7 @@ var learningWidgetReportHandler = (function () {
         $testReportContainer.show();
         //progressReport.draw();
         $('#widgetProgressReport').DataTable().destroy();
-        $('#widgetProgressReport').DataTable({
+        var table = $('#widgetProgressReport').DataTable({
             "processing": true,
             "language": {
                 "processing": '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> ',
@@ -153,6 +153,7 @@ var learningWidgetReportHandler = (function () {
             "serverSide": true,
             "filter": false,
             "orderMulti": false,
+            "autoWidth": false,
             "ajax": {
                 "url": "LoadWidgetProgress",
                 "type": "POST",
@@ -172,21 +173,21 @@ var learningWidgetReportHandler = (function () {
                 }
             },
             "columns": [
-                { "data": "FirstName", "name": "c.strFirstName", "autoWidth": true },
-                { "data": "EmailId", "name": "c.strEmail", "autoWidth": true },
-                { "data": "Location", "name": "l.strLocation", "autoWidth": true },
-                { "data": "Department", "name": "d.strDepartment", "autoWidth": true },
-                { "data": "CourseName", "name": "co.strCourse", "autoWidth": true },
-                { "data": "QuesType", "autoWidth": true },
-                { "data": "Question", "autoWidth": true },
-                { "data": "Response", "autoWidth": true },
-                { "data": "Response_1", "autoWidth": true },
-                { "data": "Response_2", "autoWidth": true },
-                { "data": "Response_3",  "autoWidth": true },
-                { "data": "AfterQuestion", "autoWidth": true },
-                { "data": "AfterResponse",  "autoWidth": true },
-                { "data": "FeedBackResponse", "autoWidth": true },
-                { "data": "FeedBackResponseText", "autoWidth": true }
+                { "data": "FirstName", "name": "c.strFirstName" },
+                { "data": "EmailId", "name": "c.strEmail" },
+                { "data": "Location", "name": "l.strLocation" },
+                { "data": "Department", "name": "d.strDepartment" },
+                { "data": "CourseName", "name": "co.strCourse" },
+                { "data": "QuesType" },
+                { "data": "Question" },
+                { "data": "Response" },
+                { "data": "Response_1" },
+                { "data": "Response_2" },
+                { "data": "Response_3" },
+                { "data": "AfterQuestion" },
+                { "data": "AfterResponse" },
+                { "data": "FeedBackResponse" },
+                { "data": "FeedBackResponseText" }
             ],
             columnDefs: [{
                 // render learner name
@@ -209,6 +210,9 @@ var learningWidgetReportHandler = (function () {
                 }
             ]
         });
+
+        // Initialize column resizing functionality
+        initializeColumnResizing();
     });
 
     //clear search filters
@@ -228,6 +232,68 @@ var learningWidgetReportHandler = (function () {
         var selectedLoc = $(this).val();
         renderDepartmentDropDown(selectedLoc);
     });
+
+    // Function to initialize column resizing
+    function initializeColumnResizing() {
+        var table = $('#widgetProgressReport');
+        var resizingColumn = null;
+        var startX = 0;
+        var startWidth = 0;
+
+        // Create and attach resize handles to each column header
+        table.find('thead th').each(function () {
+            var $th = $(this);
+            
+            // Add resize handle to each header
+            var $handle = $('<div class="resize-handle"></div>');
+            $th.css('position', 'relative').append($handle);
+
+            // Mouse down on resize handle
+            $handle.on('mousedown', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                resizingColumn = $th;
+                startX = e.pageX;
+                startWidth = $th.outerWidth();
+
+                // Disable sorting during resize
+                table.find('thead th').addClass('resizing');
+
+                return false;
+            });
+        });
+
+        // Global mouse move
+        $(document).on('mousemove', function (e) {
+            if (resizingColumn) {
+                var newWidth = startWidth + (e.pageX - startX);
+                
+                // Minimum width check
+                if (newWidth > 50) {
+                    resizingColumn.css('width', newWidth + 'px');
+                    resizingColumn.css('min-width', newWidth + 'px');
+                }
+            }
+        });
+
+        // Global mouse up
+        $(document).on('mouseup', function (e) {
+            if (resizingColumn) {
+                resizingColumn = null;
+                table.find('thead th').removeClass('resizing');
+            }
+        });
+
+        // Prevent sort click when resizing
+        table.on('click', 'thead th', function (e) {
+            if ($(this).hasClass('resizing')) {
+                e.stopImmediatePropagation();
+                return false;
+            }
+        });
+    }
 
     return {
         init: init

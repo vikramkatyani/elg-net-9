@@ -6,7 +6,48 @@
     var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
+<style>
+    /* Make table resizable */
+    table.dataTable {
+        table-layout: auto;
+    }
 
+    table.dataTable thead th {
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Resize handle styling */
+    .resize-handle {
+        position: absolute;
+        right: -4px;
+        top: 0;
+        bottom: 0;
+        width: 8px;
+        cursor: col-resize;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        background: transparent;
+    }
+
+    .resize-handle:hover::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #4CAF50;
+    }
+
+    /* Prevent sorting while resizing */
+    table.dataTable thead th.resizing {
+        pointer-events: none;
+    }
+</style>
 <!-- Page Heading -->
 <div class="x_panel tile">
     <div class="x_title">

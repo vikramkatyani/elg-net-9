@@ -18,6 +18,7 @@ namespace ELG.Web.Areas.Learner.Controllers
         public string Status { get; set; }
     }
     [Area("Learner")]
+    [SessionCheck]
     public class DocumentController : Controller
     {
         // GET: Learner/Document/List

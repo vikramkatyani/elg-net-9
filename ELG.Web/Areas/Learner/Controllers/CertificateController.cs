@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Hosting;
 namespace ELG.Web.Areas.Learner.Controllers
 {
     [Area("Learner")]
+    [SessionCheck]
     public class CertificateController : Controller
     {
         private readonly IWebHostEnvironment _env;

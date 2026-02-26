@@ -1538,13 +1538,47 @@ namespace ELG.Web.Controllers
             {
                 var reportRep = new ReportRep();
 
+                if (searchCriteria == null)
+                {
+                    searchCriteria = new LearnerReportFilter();
+                }
+
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
 
-                if (searchCriteria == null)
+                string searchText = Request.Query["SearchText"].ToString();
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    searchCriteria.SearchText = searchText;
+                }
+                else
                 {
                     searchCriteria.SearchText = String.Empty;
+                }
+
+                string userStatus = Request.Query["UserStatus"].ToString();
+                if (int.TryParse(userStatus, out int parsedUserStatus))
+                {
+                    searchCriteria.UserStatus = parsedUserStatus;
+                }
+
+                string location = Request.Query["Location"].ToString();
+                if (long.TryParse(location, out long parsedLocation))
+                {
+                    searchCriteria.Location = parsedLocation;
+                }
+
+                string department = Request.Query["Department"].ToString();
+                if (long.TryParse(department, out long parsedDepartment))
+                {
+                    searchCriteria.Department = parsedDepartment;
+                }
+
+                string course = Request.Query["Course"].ToString();
+                if (long.TryParse(course, out long parsedCourse))
+                {
+                    searchCriteria.Course = parsedCourse;
                 }
 
                 //string fromDate = Request.QueryString["From"].ToString();
@@ -1557,10 +1591,50 @@ namespace ELG.Web.Controllers
 
                 progressReport = reportRep.DownloadWidgetReport(searchCriteria);
 
-                DataTable dtReport = CommonHelper.ListToDataTable(progressReport);
-                string[] columns = { "FirstName", "LastName", "EmailId", "Location", "Department", "CourseName", "AssignedOn", "LastAccessedOn", "CourseStatus", "CompletionDate" };
+                var dtReport = new DataTable();
+                dtReport.Columns.Add("User", typeof(string));
+                dtReport.Columns.Add("EmailId", typeof(string));
+                dtReport.Columns.Add("Location", typeof(string));
+                dtReport.Columns.Add("Department", typeof(string));
+                dtReport.Columns.Add("CourseName", typeof(string));
+                dtReport.Columns.Add("Widget", typeof(string));
+                dtReport.Columns.Add("Question", typeof(string));
+                dtReport.Columns.Add("Response", typeof(string));
+                dtReport.Columns.Add("Response_1", typeof(string));
+                dtReport.Columns.Add("Response_2", typeof(string));
+                dtReport.Columns.Add("Response_3", typeof(string));
+                dtReport.Columns.Add("AfterQuestion", typeof(string));
+                dtReport.Columns.Add("AfterResponse", typeof(string));
+                dtReport.Columns.Add("FeedBackResponse", typeof(string));
+                dtReport.Columns.Add("FeedBackResponseText", typeof(string));
 
-                string[] columns_header = { SessionHelper.CompanySettings.strFirstNameDescription, SessionHelper.CompanySettings.strSurnameDescription, SessionHelper.CompanySettings.emailIdDescription, SessionHelper.CompanySettings.strLocationDescription, SessionHelper.CompanySettings.strDepartmentDescription, "Course", "Assigned On", "Last Accessed", "Status", "Completion Date" };
+                foreach (var item in progressReport)
+                {
+                    string widgetType = item.QuesType == 1 ? "TIW" : item.QuesType == 2 ? "MAC" : "-";
+                    string userName = string.Join(" ", new[] { item.FirstName, item.LastName }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+                    dtReport.Rows.Add(
+                        userName,
+                        item.EmailId,
+                        item.Location,
+                        item.Department,
+                        item.CourseName,
+                        widgetType,
+                        item.Question,
+                        item.Response,
+                        item.Response_1,
+                        item.Response_2,
+                        item.Response_3,
+                        item.AfterQuestion,
+                        item.AfterResponse,
+                        item.FeedBackResponse,
+                        item.FeedBackResponseText
+                    );
+                }
+
+                string[] columns = { "User", "EmailId", "Location", "Department", "CourseName", "Widget", "Question", "Response", "Response_1", "Response_2", "Response_3", "AfterQuestion", "AfterResponse", "FeedBackResponse", "FeedBackResponseText" };
+
+                string[] columns_header = { "User", SessionHelper.CompanySettings.emailIdDescription, SessionHelper.CompanySettings.strLocationDescription, SessionHelper.CompanySettings.strDepartmentDescription, "Course", "Widget", "Question", "Response", "First Response", "Second Response", "Third Response", "Follow-up Que", "Follow-up Response", "Feedback", "Comment" };
 
                 byte[] filecontent = CommonHelper.ExportExcelWithHeader(dtReport, "Widget Progress Report", false, columns_header, columns);
                 return File(filecontent, CommonHelper.ExcelContentType, "WidgetReport.xlsx");
