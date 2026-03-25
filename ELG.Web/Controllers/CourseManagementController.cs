@@ -185,37 +185,42 @@ namespace ELG.Web.Controllers
 
 
         [HttpPost]
-        public ActionResult AllocateModuleLicenseToLearner_Multiple(LearnerModuleFilter searchCriteria, bool allSelected, long[] selectedUserList, long[] unselectedUserList)
+        public ActionResult AllocateModuleLicenseToLearner_Multiple([FromBody] AllocateModuleLicenseMultipleRequest request)
         {
             try
             {
                 int result = 0;
                 var moduleRep = new ModuleRep();
+                var searchCriteria = new LearnerModuleFilter();
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
+                searchCriteria.SearchText = request.SearchText;
+                searchCriteria.Location = request.Location;
+                searchCriteria.Department = request.Department;
+                searchCriteria.Course = request.Course;
 
                 string selectedLearners = "";
                 string unSelectedLearners = "";
 
-                if (allSelected)
+                if (request.AllSelected)
                 {
                     //remove unselected users
-                    if(unselectedUserList != null && unselectedUserList.Length > 0)
+                    if (request.UnselectedUserList != null && request.UnselectedUserList.Length > 0)
                     {
-                        unSelectedLearners = string.Join(",", unselectedUserList);
+                        unSelectedLearners = string.Join(",", request.UnselectedUserList);
                     }
                 }
                 else
                 {
                     // if few are selected
-                    if(selectedUserList != null && selectedUserList.Length > 0)
+                    if (request.SelectedUserList != null && request.SelectedUserList.Length > 0)
                     {
-                        selectedLearners = string.Join(",", selectedUserList);
+                        selectedLearners = string.Join(",", request.SelectedUserList);
                     }
 
                 }
-                result = moduleRep.AllocateModuleLicenseToLearner_All(searchCriteria,allSelected,selectedLearners,unSelectedLearners);
+                result = moduleRep.AllocateModuleLicenseToLearner_All(searchCriteria, request.AllSelected, selectedLearners, unSelectedLearners);
                 return Json(new { success = result });
             }
             catch (Exception ex)
@@ -223,6 +228,17 @@ namespace ELG.Web.Controllers
                 Logger.Error(ex.Message, ex);
                 return Json(new { success = -1 });
             }
+        }
+
+        public class AllocateModuleLicenseMultipleRequest
+        {
+            public bool AllSelected { get; set; }
+            public long[] SelectedUserList { get; set; }
+            public long[] UnselectedUserList { get; set; }
+            public string SearchText { get; set; }
+            public long Location { get; set; }
+            public long Department { get; set; }
+            public long Course { get; set; }
         }
 
         // get list of users with started modules(consumed license); on applied filter

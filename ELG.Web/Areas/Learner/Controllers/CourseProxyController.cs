@@ -300,6 +300,93 @@ namespace ELG.Web.Areas.Learner.Controllers
             var contentType = _storage.GetContentType(effectivePath);
             if (string.IsNullOrWhiteSpace(contentType)) contentType = "application/octet-stream";
 
+            // Handle HTTP Range requests for video seeking support BEFORE downloading full file
+            // For video/audio files, check for Range header and request only needed bytes from Azure
+            var rangeHeader = Request.Headers["Range"].ToString();
+            if (!string.IsNullOrEmpty(rangeHeader) && (contentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase) || 
+                contentType.StartsWith("audio/", StringComparison.OrdinalIgnoreCase)) && !isLocalFile)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CourseProxy] Range Request: {rangeHeader} for {effectivePath} (Content-Type: {contentType})");
+                try
+                {
+                    // For Azure blobs, get blob size first
+                    long totalBytes = await _storage.GetBlobSizeAsync(blobPath, isThumbnail: false);
+                    if (totalBytes <= 0)
+                    {
+                        totalBytes = stream?.Length ?? 0;
+                    }
+                    
+                    // Parse Range header (e.g., "bytes=1000-2000" or "bytes=1000-")
+                    if (rangeHeader.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var rangeValue = rangeHeader.Substring("bytes=".Length).Trim();
+                        var parts = rangeValue.Split('-');
+                        
+                        if (parts.Length == 2)
+                        {
+                            long start = 0;
+                            long? end = null;
+                            
+                            // Parse start position
+                            if (!string.IsNullOrEmpty(parts[0]) && long.TryParse(parts[0].Trim(), out long parsedStart))
+                            {
+                                start = parsedStart;
+                            }
+                            else if (string.IsNullOrEmpty(parts[0]) && !string.IsNullOrEmpty(parts[1]))
+                            {
+                                // Suffix range like "bytes=-500" means last 500 bytes
+                                if (long.TryParse(parts[1].Trim(), out long suffixLength))
+                                {
+                                    start = Math.Max(0, totalBytes - suffixLength);
+                                }
+                            }
+                            
+                            // Parse end position
+                            if (!string.IsNullOrEmpty(parts[1]) && long.TryParse(parts[1].Trim(), out long parsedEnd))
+                            {
+                                end = Math.Min(parsedEnd, totalBytes - 1);
+                            }
+                            else if (string.IsNullOrEmpty(parts[1]))
+                            {
+                                end = totalBytes - 1;
+                            }
+                            
+                            // Validate range
+                            if (start >= 0 && end.HasValue && start <= end && end < totalBytes)
+                            {
+                                // Request partial content directly from Azure Storage
+                                var rangeStream = await _storage.DownloadBlobRangeAsync(blobPath, start, end, isThumbnail: false);
+                                if (rangeStream != null)
+                                {
+                                    long rangeLength = end.Value - start + 1;
+                                    
+                                    // Set response headers for 206 Partial Content
+                                    Response.StatusCode = 206;
+                                    Response.Headers["Content-Range"] = $"bytes {start}-{end}/{totalBytes}";
+                                    Response.Headers["Content-Length"] = rangeLength.ToString();
+                                    Response.Headers["Accept-Ranges"] = "bytes";
+                                    Response.Headers["Cache-Control"] = "public, max-age=86400, immutable";
+                                    Response.ContentType = contentType;
+                                    
+                                    System.Diagnostics.Debug.WriteLine($"[CourseProxy] Returning 206: bytes {start}-{end}/{totalBytes} ({rangeLength} bytes from Azure)");
+                                    
+                                    // Stream the range directly to response with large buffer for video performance
+                                    const int streamBuffer = 1024 * 1024; // 1MB buffer for efficient video streaming
+                                    await rangeStream.CopyToAsync(Response.Body, streamBuffer);
+                                    await Response.Body.FlushAsync();
+                                    return new EmptyResult();
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CourseProxy] Range request error for {effectivePath}: {ex.Message}");
+                    // Fall through to normal download
+                }
+            }
+
             // If this is an HTML file, rewrite relative URLs to absolute Azure blob SAS URLs
             if (contentType.Contains("text/html", StringComparison.OrdinalIgnoreCase))
             {
@@ -346,6 +433,8 @@ namespace ELG.Web.Areas.Learner.Controllers
                         await writer.FlushAsync();
                         modifiedStream.Position = 0;
                         
+                        // Support Accept-Ranges header for HTML responses too
+                        Response.Headers["Accept-Ranges"] = "bytes";
                         return File(modifiedStream, contentType);
                     }
                 }
@@ -353,73 +442,28 @@ namespace ELG.Web.Areas.Learner.Controllers
                 {
                     // If rewriting fails, return original stream
                     stream.Position = 0;
+                    Response.Headers["Accept-Ranges"] = "bytes";
                     return File(stream, contentType);
                 }
             }
 
-            // Handle HTTP Range requests for video seeking support
-            // When a video player seeks to a timestamp, it sends a Range header like "Range: bytes=1000-2000"
-            // We need to support this by returning 206 Partial Content instead of 200 OK
-            var rangeHeader = Request.Headers["Range"].ToString();
-            if (!string.IsNullOrEmpty(rangeHeader) && contentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    // Get total file size
-                    long totalBytes = stream.Length;
-                    
-                    // Parse Range header (e.g., "bytes=1000-2000" or "bytes=1000-")
-                    if (rangeHeader.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var rangeValue = rangeHeader.Substring("bytes=".Length);
-                        var parts = rangeValue.Split('-');
-                        
-                        if (parts.Length == 2 && long.TryParse(parts[0], out long start))
-                        {
-                            long end;
-                            
-                            if (string.IsNullOrEmpty(parts[1]))
-                            {
-                                // "bytes=1000-" means from 1000 to end
-                                end = totalBytes - 1;
-                            }
-                            else if (long.TryParse(parts[1], out long parsedEnd))
-                            {
-                                // "bytes=1000-2000" means from 1000 to 2000
-                                end = Math.Min(parsedEnd, totalBytes - 1);
-                            }
-                            else
-                            {
-                                // Invalid range, serve full file
-                                return File(stream, contentType);
-                            }
-                            
-                            // Validate range
-                            if (start >= 0 && start <= end && end < totalBytes)
-                            {
-                                // Seek to start position
-                                stream.Seek(start, SeekOrigin.Begin);
-                                long rangeLength = end - start + 1;
-                                
-                                // Return 206 Partial Content with proper headers
-                                Response.StatusCode = 206;
-                                Response.Headers["Content-Range"] = $"bytes {start}-{end}/{totalBytes}";
-                                Response.Headers["Content-Length"] = rangeLength.ToString();
-                                Response.Headers["Accept-Ranges"] = "bytes";
-                                
-                                return File(stream, contentType);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    // If range parsing fails, serve full file
-                }
-            }
-
-            // For non-video files or if no Range header, return full file
+            // For non-video files or files where Range request wasn't handled by Azure, return full file
             Response.Headers["Accept-Ranges"] = "bytes";
+            
+            // Set aggressive caching for videos (immutable content, long expiry)
+            if (contentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase) || 
+                contentType.StartsWith("audio/", StringComparison.OrdinalIgnoreCase))
+            {
+                // Videos are immutable by nature (same file = same content hash)
+                // Cache for 30 days + CDN caching
+                Response.Headers["Cache-Control"] = "public, max-age=2592000, immutable";
+                Response.Headers["X-Content-Type-Options"] = "nosniff"; // Prevent MIME type sniffing
+            }
+            else
+            {
+                Response.Headers["Cache-Control"] = "public, max-age=86400";
+            }
+            
             return File(stream, contentType);
         }
 

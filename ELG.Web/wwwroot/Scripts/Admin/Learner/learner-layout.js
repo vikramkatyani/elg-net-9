@@ -2,6 +2,21 @@
 
 var adminModal = null;
 
+function setLearnerMobileMenuState(menu, isOpen) {
+    if (!menu) {
+        return;
+    }
+
+    menu.classList.toggle('show', isOpen);
+    menu.classList.toggle('active', isOpen);
+    menu.classList.toggle('open', isOpen);
+
+    var hamburger = document.querySelector('.hamburger');
+    if (hamburger) {
+        hamburger.classList.toggle('open', isOpen);
+    }
+}
+
 $(document).ready(function() {
     // Initialize modal once document is ready
     var modalElement = document.getElementById('adminSwitchModal');
@@ -12,7 +27,8 @@ $(document).ready(function() {
 
 function toggleMenu() {
     var menu = document.querySelector('.learner-menu-bar');
-    menu.classList.toggle('show');
+    var isOpen = !(menu && (menu.classList.contains('show') || menu.classList.contains('active') || menu.classList.contains('open')));
+    setLearnerMobileMenuState(menu, isOpen);
 }
 
 function switchToAdminView() {

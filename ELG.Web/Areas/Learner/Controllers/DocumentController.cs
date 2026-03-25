@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ELG.Web.Areas.Learner.Controllers
 {
@@ -135,6 +136,46 @@ namespace ELG.Web.Areas.Learner.Controllers
             {
                 Logger.Error(ex.Message, ex);
                 return Json(new { success = -1 });
+            }
+        }
+
+        // GET: Stream PDF document bytes through server for inline PDF.js rendering
+        // (Proxying avoids CORS issues that arise when PDF.js fetches directly from Azure Blob Storage)
+        [HttpGet]
+        public async Task<IActionResult> StreamDocument(int id)
+        {
+            try
+            {
+                var docRep = new DocumentRep();
+                Document doc = docRep.GetDocumentDetails(id, SessionHelper.UserId);
+                if (doc == null || string.IsNullOrEmpty(doc.DocumentPath))
+                    return NotFound();
+
+                string ext = Path.GetExtension(doc.DocumentPath).ToLowerInvariant();
+                if (ext != ".pdf")
+                    return BadRequest("Only PDF documents can be previewed via this endpoint.");
+
+                if (!doc.DocumentPath.Contains(".blob.core.windows.net"))
+                    return BadRequest("Document is not stored in Azure Blob Storage.");
+
+                var connectionString = CommonHelper.GetAppSettingValue("AZStorageConnectionString");
+                var blobServiceClient = new BlobServiceClient(connectionString);
+
+                Uri uri = new Uri(doc.DocumentPath);
+                string containerName = uri.Segments[1].TrimEnd('/');
+                string blobPath = string.Join("", uri.Segments.Skip(2));
+
+                var blobClient = blobServiceClient.GetBlobContainerClient(containerName).GetBlobClient(blobPath);
+                var blobStream = await blobClient.OpenReadAsync();
+
+                Response.Headers["Content-Disposition"] = "inline; filename=\"document.pdf\"";
+                Response.Headers["Cache-Control"] = "private, max-age=3600";
+                return File(blobStream, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return StatusCode(500);
             }
         }
 

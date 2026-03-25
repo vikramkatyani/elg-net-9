@@ -477,7 +477,7 @@ h1 {
         z-index: 1000;
     }
 
-    .learner-menu-bar.open {
+    .learner-menu-bar.active {
         transform: translateX(0); /* Show sidebar when open */
     }
 

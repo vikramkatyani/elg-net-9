@@ -1,13 +1,13 @@
 ﻿:root {
-    --color-primary: #4B8EF1;
+    --color-primary: #F97015;
     --color-secondary: #4FE2BA;
     --color-white: #FFF;
-    --color-dark: #2A2A2A;
+    --color-dark: #21242C;
     --color-light: #808080;
-    --color-hightlight: #4B8EF1;
+    --color-hightlight: #1C4F8D;
     --color-border: #D8D8D8;
     --color-black: #000000;
-    --color-grey: #BDBDBD;
+    --color-grey: #6B7280;
     --dash-complete: #0CC078;
     --dash-progress: #FCFC99;
     --dash-incomplete: #FB6962;
@@ -16,7 +16,7 @@
 }
 
 /** Font*/
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -98,7 +98,7 @@ body {
     font-size: 18px;
     height: 45px;
     /*width: 100%;*/
-    border-radius: 22.5px;
+    border-radius: 10px;
     font-weight: 500;
     line-height: 150%;
     padding: .375rem .75rem !important;
@@ -126,9 +126,15 @@ body {
 
 .elg-btn-transparent {
     background-color: transparent;
-    color: var(--color-primary);
-    border: 1px solid var(--color-primary);
+    color: #1c4F8D;
+    border: 1px solid #1c4F8D;
 }
+    .elg-btn-transparent:hover {
+        background-color: #1c4F8D;
+        color: #fff;
+        border: 1px solid #1c4F8D;
+        opacity: 1 !important;
+    }
 
 .elg-btn-search {
     background-color: transparent;
@@ -137,15 +143,23 @@ body {
 }
 
 .elg-course-card-primary {
-    background-color: var(--color-primary);
-    color: var(--color-white);
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border-radius: 10px !important;
 }
 
 .elg-course-card-secondary {
-    background-color: transparent;
-    color: var(--color-black);
-    border: 1px solid var(--color-black);
+    background-color: transparent !important;
+    color: #1c4F8D !important;
+    border: 1px solid #1c4F8D !important;
+    border-radius: 10px !important;
 }
+    .elg-course-card-secondary:hover {
+        background-color: #1c4F8D !important;
+        color: #fff !important;
+        border: 1px solid #1c4F8D !important;
+        opacity: 1 !important;
+    }
 
 .card-button-container {
     width: 100%;
@@ -174,7 +188,7 @@ h1 {
 
 .card-content h2 {
     font-size: 48px;
-    color: var(--color-primary) !important;
+    color: var(--color-hightlight) !important;
 }
 
 .page-heading {
@@ -380,9 +394,9 @@ form {
 
     .left-section {
         display: flex;
-        flex: 1;
+        flex: 1.5;
         position: relative;
-        background: url('landingBG.png') no-repeat center center;
+        background: url('elearningate-hero.jpeg') no-repeat center center;
         background-size: cover;
         color: var(--color-white);
         padding: 50px;
@@ -494,7 +508,9 @@ form {
     }
 
     #page-title {
-        font-size: 64px;
+        font-size: 3.75rem;
+        line-height: 1;
+        font-weight: bold;
     }
 
     .right-section {
@@ -709,7 +725,7 @@ padding: 0 !important;
 }
 
 .card-image img {
-    max-height: 300px;
+    /* max-height: 300px; */
 }
 
 /* Mobile Styles (Collapse Sidebar) */
@@ -723,7 +739,7 @@ padding: 0 !important;
         z-index: 1000;
     }
 
-        .learner-menu-bar.open {
+        .learner-menu-bar.active {
             transform: translateX(0); /* Show sidebar when open */
         }
 

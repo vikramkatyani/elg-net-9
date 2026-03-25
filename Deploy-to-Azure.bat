@@ -31,10 +31,11 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo.
 echo Uploading to Azure App Service...
-az webapp deployment source config-zip ^
+az webapp deploy ^
   --resource-group atf-prod-core-infra-rg ^
   --name elg-prod ^
-  --src ./publish.zip
+    --src-path ./publish.zip ^
+    --type zip
 
 if %ERRORLEVEL% NEQ 0 (
     echo ERROR: Azure deployment failed!

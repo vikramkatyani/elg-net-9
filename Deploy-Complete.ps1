@@ -41,10 +41,11 @@ Write-Host "Resource Group: $resourceGroup" -ForegroundColor Gray
 Write-Host "App Service: $appServiceName" -ForegroundColor Gray
 Write-Host ""
 
-az webapp deployment source config-zip `
+az webapp deploy `
   --resource-group $resourceGroup `
   --name $appServiceName `
-  --src ./publish.zip
+    --src-path ./publish.zip `
+    --type zip
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Azure deployment failed!" -ForegroundColor Red

@@ -383,9 +383,11 @@ namespace ELG.DAL.Utilities
 
                 var response = await blobClient.DownloadStreamingAsync(downloadOptions);
                 
-                // Buffer the stream into a MemoryStream so it outlives the HTTP response
+                // Buffer the stream into a MemoryStream with larger buffer for efficient video streaming
+                // Use 1MB buffer for faster copying (default is 81KB)
                 var memoryStream = new MemoryStream();
-                await response.Value.Content.CopyToAsync(memoryStream);
+                const int bufferSize = 1024 * 1024; // 1MB buffer for efficient streaming
+                await response.Value.Content.CopyToAsync(memoryStream, bufferSize);
                 memoryStream.Position = 0;
                 return memoryStream;
             }
@@ -475,7 +477,16 @@ namespace ELG.DAL.Utilities
                 ".svg" => "image/svg+xml",
                 ".pdf" => "application/pdf",
                 ".mp4" => "video/mp4",
+                ".webm" => "video/webm",
+                ".mkv" => "video/x-matroska",
+                ".mov" => "video/quicktime",
+                ".avi" => "video/x-msvideo",
+                ".flv" => "video/x-flv",
+                ".m4v" => "video/x-m4v",
                 ".mp3" => "audio/mpeg",
+                ".wav" => "audio/wav",
+                ".m4a" => "audio/mp4",
+                ".aac" => "audio/aac",
                 ".woff" => "font/woff",
                 ".woff2" => "font/woff2",
                 ".ttf" => "font/ttf",

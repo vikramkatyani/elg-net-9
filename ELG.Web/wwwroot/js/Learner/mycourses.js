@@ -356,7 +356,10 @@ var myCoursesHandler = (function () {
     function showRAReport(btn) {
         const subModuleId = btn.id.split('_').pop();
         const courseId = btn.getAttribute('data-course') || btn.dataset.course;
-        const url = hdnBaseUrl + "RiskAssessment/LoadRAReport/"
+        const riskAssessmentBaseUrl = (typeof learnerRiskAssessmentBaseUrl !== 'undefined' && learnerRiskAssessmentBaseUrl)
+            ? learnerRiskAssessmentBaseUrl
+            : (hdnBaseUrl || '/Learner/Home/').replace(/Home\/?$/i, '') + "RiskAssessment/";
+        const url = riskAssessmentBaseUrl + "LoadRAReport/"
             + encodeURIComponent(courseId) + "/" + encodeURIComponent(subModuleId);
         window.location.href = url;
     }

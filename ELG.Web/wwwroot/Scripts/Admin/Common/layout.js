@@ -3,6 +3,15 @@
 // Base URL - will be set from the server
 var hdnBaseUrl;
 
+function setMobileMenuState(menuBar, hamburger, isOpen) {
+    menuBar.classList.toggle('active', isOpen);
+    menuBar.classList.toggle('open', isOpen);
+
+    if (hamburger) {
+        hamburger.classList.toggle('open', isOpen);
+    }
+}
+
 // Function to switch to learner view (no password required)
 function switchToLearnerView() {
     $.ajax({
@@ -23,17 +32,12 @@ function switchToLearnerView() {
 
 // Toggle menu function for mobile hamburger
 function toggleMenu() {
-    console.log('toggleMenu() called');
     const menuBar = document.querySelector('.learner-menu-bar');
-    console.log('menuBar element:', menuBar);
+    const hamburger = document.querySelector('.hamburger');
     
     if (menuBar) {
-        menuBar.classList.toggle('active');
-        const isActive = menuBar.classList.contains('active');
-        console.log('Menu is now:', isActive ? 'OPEN' : 'CLOSED');
-        console.log('Menu classes:', menuBar.className);
-    } else {
-        console.error('Could not find .learner-menu-bar element');
+        const isOpen = !(menuBar.classList.contains('active') || menuBar.classList.contains('open'));
+        setMobileMenuState(menuBar, hamburger, isOpen);
     }
 }
 
@@ -46,7 +50,7 @@ function closeMenuOnClickOutside() {
         if (menuBar && hamburger) {
             // Check if click is outside both hamburger and menu
             if (!menuBar.contains(event.target) && !hamburger.contains(event.target)) {
-                menuBar.classList.remove('active');
+                setMobileMenuState(menuBar, hamburger, false);
             }
         }
     });
@@ -60,7 +64,8 @@ function closeMenuOnItemClick() {
     menuItems.forEach(item => {
         item.addEventListener('click', function() {
             if (menuBar && window.innerWidth <= 768) {
-                menuBar.classList.remove('active');
+                const hamburger = document.querySelector('.hamburger');
+                setMobileMenuState(menuBar, hamburger, false);
             }
         });
     });

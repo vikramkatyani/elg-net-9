@@ -12,7 +12,7 @@ Compress-Archive -Path './publish/*' -DestinationPath './publish.zip' -Force
 
 echo.
 echo Deploying to Azure...
-az webapp deployment source config-zip --resource-group atf-prod-core-infra-rg --name elg-prod --src ./publish.zip
+az webapp deploy --resource-group atf-prod-core-infra-rg --name elg-prod --src-path ./publish.zip --type zip
 
 echo.
 echo Deployment complete! Waiting for app to restart...
