@@ -47,7 +47,7 @@ namespace ELG.Web.Controllers
                 catch (Exception ex)
                 {
                     Logger.Error("Failed to set SessionHelper.CurrentUserId", ex);
-                    // continue — don't fail the whole page
+                    // continue ï¿½ don't fail the whole page
                 }
 
                 LearnerAdminRights learnerAdmin = null;
@@ -195,14 +195,25 @@ namespace ELG.Web.Controllers
             }
         }
 
+        public sealed class RemoveGlobalAdminRightsRequest
+        {
+            public long learner { get; set; }
+            public int adminLevel { get; set; }
+        }
+
         // remove global admin rights to the user
         [HttpPost]
-        public ActionResult RemoveGlobalAdminRights(Int64 learner, int adminLevel)
+        public ActionResult RemoveGlobalAdminRights([FromBody] RemoveGlobalAdminRightsRequest request)
         {
             try
             {
+                if (request == null || request.learner <= 0)
+                {
+                    return Content(System.Text.Json.JsonSerializer.Serialize(new { success = 0, message = "Invalid request payload." }), "application/json");
+                }
+
                 var adminRep = new AdminRep();
-                int result = adminRep.RemoveGlobalAdminRights(learner, adminLevel);
+                int result = adminRep.RemoveGlobalAdminRights(request.learner, request.adminLevel);
                 return Content(System.Text.Json.JsonSerializer.Serialize(new { success = result }), "application/json");
             }
             catch (Exception ex)

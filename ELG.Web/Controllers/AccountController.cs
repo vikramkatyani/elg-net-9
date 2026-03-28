@@ -777,21 +777,24 @@ namespace ELG.Web.Controllers
                     var orgDomainDetails = ELG.Web.Helper.SessionHelper.GetOrgDomainDetailsWithSessionRefetch();
                     Int64 currentOrgId = orgDomainDetails?.CompanyId ?? 0;
 
-                    List<OrgAdminInfo> admin = acc.GetAdmin(currentOrgId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
-                    if (admin != null && admin.Count > 1)
+                    var learnerAcc = new LearnerAccountRep();
+                    List<ELG.Model.Learner.LearnerInfo> learner = learnerAcc.GetLearnerInfoByUsernamePassword(currentOrgId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
+
+                   // List<OrgAdminInfo> admin = acc.GetAdmin(currentOrgId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
+                    if (learner != null && learner.Count > 1)
                     {
-                        SessionHelper.UserName = admin[0].EmailId;
+                        SessionHelper.UserName = learner[0].EmailId;
                         var redirectUrl = Url.Action("ValidateCompanyGenerateLoginLink");
                         response.Err = 0;
                         response.Url = redirectUrl;
                         response.Message = "Multiple records";
                     }
-                    else if (admin != null && admin.Count == 1)
+                    else if (learner != null && learner.Count == 1)
                     {
                         var companyRep = new ELG.DAL.OrgAdminDAL.CompanyRep();
-                        var org = companyRep.GetCompanyInfo(admin.FirstOrDefault().CompanyId);
+                        var org = companyRep.GetCompanyInfo(learner.FirstOrDefault().CompanyId);
                         string subject = $"{org.CompanyBrandName}: Account Login Link Inside";
-                        string adminEmail = admin.FirstOrDefault().EmailId;
+                        string adminEmail = learner.FirstOrDefault().EmailId;
                         //var baseUrl = CommonHelper.GetAppSettingValue("LMS_BaseURL");
                         var baseUrl = org.CompanyBaseURL; 
 
@@ -804,7 +807,7 @@ namespace ELG.Web.Controllers
                         {
                             baseUrl = org.CompanyBaseURL;
                         }
-                        string link = emailUti.CreateDirectLoginLinkToBeSendInMail(baseUrl, (int)admin.FirstOrDefault().UserID);
+                        string link = emailUti.CreateDirectLoginLinkToBeSendInMail(baseUrl, (int)learner.FirstOrDefault().UserID);
                         string emailTemplate = emailUti.GetEmailTemplate("DirectLoginLink.html");
                         emailTemplate = emailTemplate.Replace("{username}", $"{adminEmail}");
                         emailTemplate = emailTemplate.Replace("{tenantbrandname}", org.CompanyBrandName);

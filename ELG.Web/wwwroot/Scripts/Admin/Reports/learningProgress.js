@@ -24,6 +24,7 @@ var learningProgressReportHandler = (function () {
     var $searchBtn = $('#searchLearnerProgress');
     var $clearSearchBtn = $('#clearSearchProgressReport');
     var $downloadBtn = $('#downloadProgressReport');
+    var downloadLoaderId = 'learning-progress-download-loader';
 
     var $updateProgressModal = $('#updateLearningRecordModal');
     var $updateProgressTitle = $('#updateLearningRecordModalLabel');
@@ -141,6 +142,86 @@ var learningProgressReportHandler = (function () {
 
     }
 
+    function showDownloadLoader() {
+        hideDownloadLoader();
+
+        var loaderMarkup = [
+            '<div id="', downloadLoaderId, '" style="position:fixed; inset:0; background:rgba(255,255,255,0.8); z-index:2000; display:flex; align-items:center; justify-content:center;">',
+            '  <div class="text-center p-4 bg-white rounded shadow-sm">',
+            UTILS.LOADER,
+            '    <div class="mt-3 fw-semibold">Preparing your download...</div>',
+            '  </div>',
+            '</div>'
+        ].join('');
+
+        $('body').append(loaderMarkup);
+    }
+
+    function hideDownloadLoader() {
+        $('#' + downloadLoaderId).remove();
+    }
+
+    function getDownloadFileName(response) {
+        var disposition = response.headers.get('Content-Disposition') || '';
+        var utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+        if (utf8Match && utf8Match[1]) {
+            return decodeURIComponent(utf8Match[1]);
+        }
+
+        var asciiMatch = disposition.match(/filename="?([^";]+)"?/i);
+        if (asciiMatch && asciiMatch[1]) {
+            return asciiMatch[1];
+        }
+
+        var contentType = (response.headers.get('Content-Type') || '').toLowerCase();
+        return contentType.indexOf('text/csv') >= 0 ? 'LearningReport.csv' : 'LearningReport.xlsx';
+    }
+
+    function triggerBrowserDownload(blob, fileName) {
+        var blobUrl = window.URL.createObjectURL(blob);
+        var downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        window.URL.revokeObjectURL(blobUrl);
+    }
+
+    async function downloadLearningProgressReport(path, btn) {
+        showDownloadLoader();
+        UTILS.Alert.hide($alert);
+
+        try {
+            var response = await fetch(path, {
+                method: 'GET',
+                credentials: 'same-origin'
+            });
+
+            var contentType = (response.headers.get('Content-Type') || '').toLowerCase();
+
+            if (!response.ok) {
+                throw new Error('The report could not be downloaded.');
+            }
+
+            if (contentType.indexOf('text/html') >= 0) {
+                throw new Error('The report response was not a file.');
+            }
+
+            var fileName = getDownloadFileName(response);
+            var blob = await response.blob();
+            triggerBrowserDownload(blob, fileName);
+        }
+        catch (err) {
+            console.log(err);
+            UTILS.Alert.show($alert, 'error', 'Failed to generate the report download. Please try again later.');
+        }
+        finally {
+            hideDownloadLoader();
+            UTILS.resetButton(btn);
+        }
+    }
+
     //function to render list of all locations in organisation
     function renderCourseDropDown() {
         $ddlCourse.empty();
@@ -210,8 +291,7 @@ var learningProgressReportHandler = (function () {
         }
 
         var path = 'DownloadLearningProgress?' + $.param(data);
-        window.location = path;
-        UTILS.resetButton(btn);
+        downloadLearningProgressReport(path, btn);
     });
 
     //apply filters for search

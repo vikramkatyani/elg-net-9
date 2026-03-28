@@ -293,6 +293,8 @@ var documentReportHandler = (function () {
     
     //function to initialize the view, bind all drop downs
     function init() {
+        // Clear any auto-populated values from browser autofill/password managers
+        $document.val('').trigger('change');
         renderCategoryDropDown();
         showDefaultMessage();
     }

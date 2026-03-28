@@ -82,19 +82,17 @@ namespace ELG.Web.Controllers
         //download learning progress records
         public ActionResult DownloadLearningProgress(LearnerReportFilter searchCriteria)
         {
-            List<ELG.Model.OrgAdmin.DownloadCourseProgressReport> progressReport = new List<ELG.Model.OrgAdmin.DownloadCourseProgressReport>();
             try
             {
                 var reportRep = new ReportRep();
+
+                searchCriteria ??= new LearnerReportFilter();
 
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
 
-                if (searchCriteria == null)
-                {
-                    searchCriteria.SearchText = String.Empty;
-                }
+                searchCriteria.SearchText ??= String.Empty;
 
                 string fromDate = Request.Query["From"].ToString();
                 string toDate = Request.Query["To"].ToString();
@@ -104,13 +102,38 @@ namespace ELG.Web.Controllers
                 if (!String.IsNullOrEmpty(toDate))
                     searchCriteria.ToDate = Convert.ToDateTime(toDate);
 
-                progressReport = reportRep.DownloadLearningProgressReport(searchCriteria);
-
-                DataTable dtReport = CommonHelper.ListToDataTable(progressReport);
-                string[] columns = { "FirstName", "LastName", "EmailId", "Location", "Department", "CourseName", "AssignedOn", "LastAccessedOn",  "CourseStatus","CompletionDate" };
-
+                string[] columns        = { "FirstName", "LastName", "EmailId", "Location", "Department", "CourseName", "AssignedOn", "LastAccessedOn", "CourseStatus", "CompletionDate" };
                 string[] columns_header = { SessionHelper.CompanySettings.strFirstNameDescription, SessionHelper.CompanySettings.strSurnameDescription, SessionHelper.CompanySettings.emailIdDescription, SessionHelper.CompanySettings.strLocationDescription, SessionHelper.CompanySettings.strDepartmentDescription, "Course", "Assigned On", "Last Accessed", "Status", "Completion Date" };
 
+                const int xlsxRowLimit = 10000;
+                bool useCsvDownload = false;
+                try
+                {
+                    int totalCount = reportRep.GetLearningProgressTotalCount(searchCriteria);
+                    useCsvDownload = totalCount > xlsxRowLimit;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Failed to get learning progress export count. Falling back to Excel export.", ex);
+                }
+
+                if (useCsvDownload)
+                {
+                    try
+                    {
+                        // Large dataset: stream CSV row-by-row — no DataTable or Excel workbook in memory
+                        var csvStream = reportRep.DownloadLearningProgressAsCsvStream(searchCriteria, columns_header);
+                        return File(csvStream, "text/csv", "LearningReport.csv");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Failed to generate CSV export. Falling back to Excel export.", ex);
+                    }
+                }
+
+                // Small dataset: existing Excel path
+                var progressReport = reportRep.DownloadLearningProgressReport(searchCriteria);
+                DataTable dtReport = CommonHelper.ListToDataTable(progressReport);
                 byte[] filecontent = CommonHelper.ExportExcelWithHeader(dtReport, "Learning Report", false, columns_header, columns);
                 return File(filecontent, CommonHelper.ExcelContentType, "LearningReport.xlsx");
             }
@@ -118,7 +141,7 @@ namespace ELG.Web.Controllers
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View("LearningProgress");
+                return StatusCode(500, "Failed to generate report download.");
             }
         }
 

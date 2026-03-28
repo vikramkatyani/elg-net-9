@@ -236,7 +236,7 @@ h1 {
 
 .branding img {
     content: url("logo.png");
-    width: 250px;
+    max-width: 250px;
     margin-bottom: 10px;
 }
 

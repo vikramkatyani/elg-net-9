@@ -3,8 +3,10 @@ using ELG.Model.OrgAdmin;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Core.EntityClient;
 using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,15 +24,54 @@ namespace ELG.DAL.OrgAdminDAL
                 CourseProgressReport progressReport = new CourseProgressReport();
                 List<CourseProgressItem> progressRecord = new List<CourseProgressItem>();
 
+                string sortColumn = GetLearningProgressSortColumn(searchCriteria.SortCol);
+                string sortDirection = GetSortDirection(searchCriteria.SortColDir);
+                int skip = searchCriteria.Skip < 0 ? 0 : searchCriteria.Skip;
+                int pageSize = searchCriteria.PageSize < 1 ? 25 : searchCriteria.PageSize;
+
                 using (var context = new lmsdbEntities())
                 {
-                    var resultList = context.lms_admin_getLearnerProgressReport(searchCriteria.AdminRole, searchCriteria.AdminUserId, searchCriteria.SearchText, searchCriteria.UserStatus, searchCriteria.Location, searchCriteria.Department, searchCriteria.Status, searchCriteria.Course, searchCriteria.Company, searchCriteria.SortCol, searchCriteria.SortColDir, searchCriteria.FromDate, searchCriteria.ToDate, searchCriteria.AccessStatus).ToList();
+                    var resultList = context.Database.SqlQuery<LearningProgressPagedResult>(@"
+EXEC dbo.lms_admin_getLearnerProgressReport_Paged
+    @adminRole = @adminRole,
+    @adminUserId = @adminUserId,
+    @learnerName = @learnerName,
+    @learnerStatus = @learnerStatus,
+    @location = @location,
+    @department = @department,
+    @status = @status,
+    @course = @course,
+    @company = @company,
+    @sortCol = @sortCol,
+    @sortDir = @sortDir,
+    @fromDate = @fromDate,
+    @toDate = @toDate,
+    @accessStatus = @accessStatus,
+    @skip = @skip,
+    @pageSize = @pageSize",
+                        new SqlParameter("@adminRole", (object)searchCriteria.AdminRole ?? DBNull.Value),
+                        new SqlParameter("@adminUserId", (object)searchCriteria.AdminUserId ?? DBNull.Value),
+                        new SqlParameter("@learnerName", (object)searchCriteria.SearchText ?? string.Empty),
+                        new SqlParameter("@learnerStatus", (object)searchCriteria.UserStatus ?? DBNull.Value),
+                        new SqlParameter("@location", (object)searchCriteria.Location ?? 0),
+                        new SqlParameter("@department", (object)searchCriteria.Department ?? 0),
+                        new SqlParameter("@status", (object)searchCriteria.Status ?? DBNull.Value),
+                        new SqlParameter("@course", (object)searchCriteria.Course ?? 0),
+                        new SqlParameter("@company", searchCriteria.Company),
+                        new SqlParameter("@sortCol", sortColumn),
+                        new SqlParameter("@sortDir", sortDirection),
+                        new SqlParameter("@fromDate", (object)searchCriteria.FromDate ?? DBNull.Value),
+                        new SqlParameter("@toDate", (object)searchCriteria.ToDate ?? DBNull.Value),
+                        new SqlParameter("@accessStatus", (object)searchCriteria.AccessStatus ?? 1),
+                        new SqlParameter("@skip", skip),
+                        new SqlParameter("@pageSize", pageSize))
+                        .ToList();
+
                     if (resultList != null && resultList.Count > 0)
                     {
-                        progressReport.TotalRecords = resultList.Count();
-                        var data = resultList.Skip(searchCriteria.Skip).Take(searchCriteria.PageSize).ToList();
+                        progressReport.TotalRecords = resultList.FirstOrDefault()?.TotalRecords ?? 0;
 
-                        foreach (var item in data)
+                        foreach (var item in resultList)
                         {
                             CourseProgressItem progress = new CourseProgressItem();
                             progress.UserID = Convert.ToInt64(item.intContactID);
@@ -59,6 +100,53 @@ namespace ELG.DAL.OrgAdminDAL
             {
                 throw;
             }
+        }
+
+        private static string GetLearningProgressSortColumn(string sortCol)
+        {
+            switch (sortCol)
+            {
+                case "c.strFirstName":
+                case "c.strEmail":
+                case "l.strLocation":
+                case "d.strDepartment":
+                case "co.strCourse":
+                case "pd.dateAssignedOn":
+                case "pd.dateLastStarted":
+                case "pd.strStatus":
+                case "pd.intScore":
+                case "pd.dateCompletedOn":
+                    return sortCol;
+                default:
+                    return "c.intContactID";
+            }
+        }
+
+        private static string GetSortDirection(string sortDirection)
+        {
+            return string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase) ? "asc" : "desc";
+        }
+
+        private sealed class LearningProgressPagedResult
+        {
+            public int? intContactID { get; set; }
+            public int? intLocationID { get; set; }
+            public int? intDepartmentID { get; set; }
+            public int? intCourseId { get; set; }
+            public string strFirstName { get; set; }
+            public string strSurname { get; set; }
+            public string strEmail { get; set; }
+            public string strEmployeeNumber { get; set; }
+            public string strLocation { get; set; }
+            public string strDepartment { get; set; }
+            public string strCourse { get; set; }
+            public long intRecordID { get; set; }
+            public string strStatus { get; set; }
+            public int? intScore { get; set; }
+            public DateTime? dateAssignedOn { get; set; }
+            public DateTime? dateCompletedOn { get; set; }
+            public DateTime? dateLastStarted { get; set; }
+            public int TotalRecords { get; set; }
         }
         public CourseProgressReport GetLearningProgressReport_Historic(LearnerReportFilter searchCriteria)
         {
@@ -164,6 +252,139 @@ namespace ELG.DAL.OrgAdminDAL
             {
                 throw;
             }
+        }
+
+        // download progress report historic
+        // Returns the total row count for the current filter set, using the paged proc with pageSize=1.
+        // This is used to decide between Excel (small) and CSV (large) download paths.
+        public int GetLearningProgressTotalCount(LearnerReportFilter searchCriteria)
+        {
+            try
+            {
+                var countCriteria = new LearnerReportFilter
+                {
+                    AdminRole = searchCriteria.AdminRole,
+                    AdminUserId = searchCriteria.AdminUserId,
+                    SearchText = searchCriteria.SearchText,
+                    Company = searchCriteria.Company,
+                    Location = searchCriteria.Location,
+                    Department = searchCriteria.Department,
+                    Course = searchCriteria.Course,
+                    SortCol = searchCriteria.SortCol,
+                    SortColDir = searchCriteria.SortColDir,
+                    UserStatus = searchCriteria.UserStatus,
+                    AccessStatus = searchCriteria.AccessStatus,
+                    Status = searchCriteria.Status,
+                    FromDate = searchCriteria.FromDate,
+                    ToDate = searchCriteria.ToDate,
+                    Skip = 0,
+                    PageSize = 1
+                };
+
+                var result = GetLearningProgressReport(countCriteria);
+                return result?.TotalRecords ?? 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // Large-dataset download: rows fetched one-by-one via SqlDataReader — no .ToList(),
+        // no DataTable, no Excel workbook in memory.  Returns a MemoryStream (position 0)
+        // containing UTF-8 CSV with BOM so Excel opens it correctly.
+        public MemoryStream DownloadLearningProgressAsCsvStream(LearnerReportFilter searchCriteria, string[] columnHeaders)
+        {
+            try
+            {
+                string sortColumn = GetLearningProgressSortColumn(searchCriteria.SortCol);
+                string sortDirection = GetSortDirection(searchCriteria.SortColDir);
+
+                var ms = new MemoryStream();
+                using (var writer = new StreamWriter(ms, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: true), bufferSize: 8192, leaveOpen: true))
+                {
+                    writer.WriteLine(string.Join(",", columnHeaders.Select(h => CsvQuote(h))));
+
+                    using (var context = new lmsdbEntities())
+                    {
+                        var entityConnection = context.Database.Connection as EntityConnection;
+                        var storeConnection = entityConnection != null
+                            ? entityConnection.StoreConnection
+                            : context.Database.Connection;
+
+                        if (entityConnection != null && entityConnection.State != ConnectionState.Open)
+                        {
+                            entityConnection.Open();
+                        }
+                        else if (entityConnection == null && storeConnection.State != ConnectionState.Open)
+                        {
+                            storeConnection.Open();
+                        }
+
+                        using (var cmd = storeConnection.CreateCommand())
+                        {
+                            cmd.CommandText = "dbo.lms_admin_getLearnerProgressReport_Paged";
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.CommandTimeout = 300;
+                            cmd.Parameters.Add(new SqlParameter("@adminRole",    searchCriteria.AdminRole));
+                            cmd.Parameters.Add(new SqlParameter("@adminUserId",  searchCriteria.AdminUserId));
+                            cmd.Parameters.Add(new SqlParameter("@learnerName",  (object)searchCriteria.SearchText ?? string.Empty));
+                            cmd.Parameters.Add(new SqlParameter("@learnerStatus", searchCriteria.UserStatus));
+                            cmd.Parameters.Add(new SqlParameter("@location",     searchCriteria.Location));
+                            cmd.Parameters.Add(new SqlParameter("@department",   searchCriteria.Department));
+                            cmd.Parameters.Add(new SqlParameter("@status",       (object)searchCriteria.Status ?? DBNull.Value));
+                            cmd.Parameters.Add(new SqlParameter("@course",       searchCriteria.Course));
+                            cmd.Parameters.Add(new SqlParameter("@company",      searchCriteria.Company));
+                            cmd.Parameters.Add(new SqlParameter("@sortCol",      sortColumn));
+                            cmd.Parameters.Add(new SqlParameter("@sortDir",      sortDirection));
+                            cmd.Parameters.Add(new SqlParameter("@fromDate",     (object)searchCriteria.FromDate ?? DBNull.Value));
+                            cmd.Parameters.Add(new SqlParameter("@toDate",       (object)searchCriteria.ToDate ?? DBNull.Value));
+                            cmd.Parameters.Add(new SqlParameter("@accessStatus", searchCriteria.AccessStatus));
+                            cmd.Parameters.Add(new SqlParameter("@skip",         0));
+                            cmd.Parameters.Add(new SqlParameter("@pageSize",     int.MaxValue));
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    string assignedOn = reader.IsDBNull(reader.GetOrdinal("dateAssignedOn")) ? "" : Convert.ToDateTime(reader["dateAssignedOn"]).ToString("dd-MMM-yyyy");
+                                    string lastAccessed = reader.IsDBNull(reader.GetOrdinal("dateLastStarted")) ? "" : Convert.ToDateTime(reader["dateLastStarted"]).ToString("dd-MMM-yyyy");
+                                    string completedOn = reader.IsDBNull(reader.GetOrdinal("dateCompletedOn")) ? "" : Convert.ToDateTime(reader["dateCompletedOn"]).ToString("dd-MMM-yyyy");
+
+                                    writer.WriteLine(string.Join(",", new[]
+                                    {
+                                        CsvQuote(reader["strFirstName"]?.ToString()),
+                                        CsvQuote(reader["strSurname"]?.ToString()),
+                                        CsvQuote(reader["strEmail"]?.ToString()),
+                                        CsvQuote(reader["strLocation"]?.ToString()),
+                                        CsvQuote(reader["strDepartment"]?.ToString()),
+                                        CsvQuote(reader["strCourse"]?.ToString()),
+                                        CsvQuote(assignedOn),
+                                        CsvQuote(lastAccessed),
+                                        CsvQuote(reader["strStatus"]?.ToString()),
+                                        CsvQuote(completedOn)
+                                    }));
+                                }
+                            }
+                        }
+                    }
+                    writer.Flush();
+                }
+                ms.Position = 0;
+                return ms;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private static string CsvQuote(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return string.Empty;
+            if (value.IndexOfAny(new[] { ',', '"', '\n', '\r' }) >= 0)
+                return "\"" + value.Replace("\"", "\"\"") + "\"";
+            return value;
         }
 
         // download progress report historic
