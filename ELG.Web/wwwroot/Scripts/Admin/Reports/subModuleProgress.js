@@ -151,13 +151,14 @@ var subModuleProgressReportHandler = (function () {
             Location:$ddlLoc.val(),
             Department: $ddlDep.val(),
             Course: $ddlCourse.val(),
+            SubModuleId: $ddlSubModule.val(),
             AccessStatus: $ddlAccessStatus.val(),
             Status: $status.val(),
             From: $txtRptFrom.val(),
             To: $txtRptTo.val(),
         }
 
-        var path = 'DownloadLearningProgress?' + $.param(data);
+        var path = 'DownloadSubModuleLearningProgress?' + $.param(data);
         window.location = path;
         UTILS.resetButton(btn);
     });
@@ -181,7 +182,7 @@ var subModuleProgressReportHandler = (function () {
             "filter": false,
             "orderMulti": false,
             "ajax": {
-                "url": "LoadLearningProgress",
+                "url": "LoadSubModuleProgress",
                 "type": "POST",
                 "datatype": "json",
                 "data": function (data) {
@@ -190,6 +191,7 @@ var subModuleProgressReportHandler = (function () {
                     data.Location = $ddlLoc.val();
                     data.Department = $ddlDep.val();
                     data.Course = $ddlCourse.val();
+                    data.SubModuleId = $ddlSubModule.val();
                     data.AccessStatus = $ddlAccessStatus.val(),
                         data.Status = $status.val();
                     data.From = $txtRptFrom.val();
@@ -207,11 +209,10 @@ var subModuleProgressReportHandler = (function () {
                 { "data": "Location", "name": "l.strLocation", "autoWidth": true },
                 { "data": "Department", "name": "d.strDepartment", "autoWidth": true },
                 { "data": "CourseName", "name": "co.strCourse", "autoWidth": true },
-                { "data": "SubModuleName", "name": "sm.strCourse", "autoWidth": true },
+                { "data": "SubModuleName", "name": "co.strCourse", "autoWidth": true, "defaultContent": "" },
                 { "data": "AssignedOn", "name": "pd.dateAssignedOn", "autoWidth": true },
-                { "data": "LastAccessedDate", "name": "pd.dateLastStarted", "autoWidth": true },
-                { "data": "SubModuleStatus", "name": "sm.strStatus", "autoWidth": true },
-                { "data": "CompletionDate", "name": "pd.dateCompletedOn", "autoWidth": true }
+                { "data": "CourseStatus", "name": "pd.strStatus", "autoWidth": true },
+                { "data": "LastAccessedDate", "name": "pd.dateLastStarted", "autoWidth": true }
             ],
             columnDefs: [{
                 // render learner name

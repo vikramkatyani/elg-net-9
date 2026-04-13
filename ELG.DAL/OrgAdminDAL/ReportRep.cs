@@ -254,6 +254,75 @@ EXEC dbo.lms_admin_getLearnerProgressReport_Paged
             }
         }
 
+        // download sub-module progress report
+        public List<DownloadCourseProgressReport> DownloadSubModuleLearningProgressReport(LearnerSubModuleReportFilter searchCriteria)
+        {
+            try
+            {
+                List<DownloadCourseProgressReport> progressRecord = new List<DownloadCourseProgressReport>();
+
+                using (var context = new lmsdbEntities())
+                {
+                    var resultList = context.lms_admin_getLearnerProgressReport(searchCriteria.AdminRole, searchCriteria.AdminUserId, searchCriteria.SearchText, searchCriteria.UserStatus, searchCriteria.Location, searchCriteria.Department, searchCriteria.Status, searchCriteria.Course, searchCriteria.Company, searchCriteria.SortCol, searchCriteria.SortColDir, searchCriteria.FromDate, searchCriteria.ToDate, searchCriteria.AccessStatus).ToList();
+
+                    if (resultList != null && resultList.Count > 0)
+                    {
+                        Dictionary<long, string> selectedSubModuleByCourse = new Dictionary<long, string>();
+                        IEnumerable<lms_admin_getLearnerProgressReport_Result> filteredList = resultList;
+
+                        if (searchCriteria.SubModuleId > 0)
+                        {
+                            var courseIds = resultList.Where(x => x.intCourseId.HasValue).Select(x => Convert.ToInt64(x.intCourseId.Value)).Distinct().ToList();
+                            foreach (var courseId in courseIds)
+                            {
+                                var selectedSubModule = context.lms_admin_get_course_submodules(courseId).FirstOrDefault(x => x.smid == searchCriteria.SubModuleId);
+                                if (selectedSubModule != null)
+                                {
+                                    selectedSubModuleByCourse[courseId] = selectedSubModule.name ?? String.Empty;
+                                }
+                            }
+
+                            filteredList = resultList.Where(x => x.intCourseId.HasValue && selectedSubModuleByCourse.ContainsKey(Convert.ToInt64(x.intCourseId.Value)));
+                        }
+
+                        foreach (var item in filteredList)
+                        {
+                            DownloadCourseProgressReport progress = new DownloadCourseProgressReport();
+                            progress.FirstName = item.strFirstName;
+                            progress.LastName = item.strSurname;
+                            progress.EmailId = item.strEmail;
+                            progress.EmployeeNumber = item.strEmployeeNumber;
+                            progress.Location = item.strLocation;
+                            progress.Department = item.strDepartment;
+                            progress.CourseName = item.strCourse;
+                            progress.CourseStatus = item.strStatus;
+                            progress.AssignedOn = item.dateAssignedOn == null ? "" : (Convert.ToDateTime(item.dateAssignedOn)).ToString("dd-MMM-yyyy");
+                            progress.CompletionDate = item.dateCompletedOn == null ? "" : (Convert.ToDateTime(item.dateCompletedOn)).ToString("dd-MMM-yyyy");
+                            progress.LastAccessedOn = item.dateLastStarted == null ? "" : (Convert.ToDateTime(item.dateLastStarted)).ToString("dd-MMM-yyyy");
+
+                            if (item.intCourseId.HasValue)
+                            {
+                                selectedSubModuleByCourse.TryGetValue(Convert.ToInt64(item.intCourseId.Value), out string selectedSubModuleName);
+                                progress.SubModuleName = selectedSubModuleName ?? String.Empty;
+                            }
+                            else
+                            {
+                                progress.SubModuleName = String.Empty;
+                            }
+
+                            progressRecord.Add(progress);
+                        }
+                    }
+                }
+
+                return progressRecord;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         // download progress report historic
         // Returns the total row count for the current filter set, using the paged proc with pageSize=1.
         // This is used to decide between Excel (small) and CSV (large) download paths.
@@ -1878,8 +1947,26 @@ ORDER BY l.strLocation, c.strCourse";
                     var resultList = context.lms_admin_getLearnerProgressReport(searchCriteria.AdminRole, searchCriteria.AdminUserId, searchCriteria.SearchText, searchCriteria.UserStatus, searchCriteria.Location, searchCriteria.Department, searchCriteria.Status, searchCriteria.Course, searchCriteria.Company, searchCriteria.SortCol, searchCriteria.SortColDir, searchCriteria.FromDate, searchCriteria.ToDate, searchCriteria.AccessStatus).ToList();
                     if (resultList != null && resultList.Count > 0)
                     {
-                        progressReport.TotalRecords = resultList.Count();
-                        var data = resultList.Skip(searchCriteria.Skip).Take(searchCriteria.PageSize).ToList();
+                        Dictionary<long, string> selectedSubModuleByCourse = new Dictionary<long, string>();
+                        IEnumerable<lms_admin_getLearnerProgressReport_Result> filteredList = resultList;
+
+                        if (searchCriteria.SubModuleId > 0)
+                        {
+                            var courseIds = resultList.Where(x => x.intCourseId.HasValue).Select(x => Convert.ToInt64(x.intCourseId.Value)).Distinct().ToList();
+                            foreach (var courseId in courseIds)
+                            {
+                                var selectedSubModule = context.lms_admin_get_course_submodules(courseId).FirstOrDefault(x => x.smid == searchCriteria.SubModuleId);
+                                if (selectedSubModule != null)
+                                {
+                                    selectedSubModuleByCourse[courseId] = selectedSubModule.name ?? String.Empty;
+                                }
+                            }
+
+                            filteredList = resultList.Where(x => x.intCourseId.HasValue && selectedSubModuleByCourse.ContainsKey(Convert.ToInt64(x.intCourseId.Value)));
+                        }
+
+                        progressReport.TotalRecords = filteredList.Count();
+                        var data = filteredList.Skip(searchCriteria.Skip).Take(searchCriteria.PageSize).ToList();
 
                         foreach (var item in data)
                         {
@@ -1899,6 +1986,22 @@ ORDER BY l.strLocation, c.strCourse";
                             progress.AssignedOn = item.dateAssignedOn == null ? "" : (Convert.ToDateTime(item.dateAssignedOn)).ToString("dd-MMM-yyyy");
                             progress.CompletionDate = item.dateCompletedOn == null ? "" : (Convert.ToDateTime(item.dateCompletedOn)).ToString("dd-MMM-yyyy");
                             progress.LastAccessedDate = item.dateLastStarted == null ? "" : (Convert.ToDateTime(item.dateLastStarted)).ToString("dd-MMM-yyyy");
+
+                            if (searchCriteria.SubModuleId > 0)
+                            {
+                                progress.SubModuleId = searchCriteria.SubModuleId;
+                            }
+
+                            if (item.intCourseId.HasValue)
+                            {
+                                selectedSubModuleByCourse.TryGetValue(Convert.ToInt64(item.intCourseId.Value), out string selectedSubModuleName);
+                                progress.SubModuleName = selectedSubModuleName ?? String.Empty;
+                            }
+                            else
+                            {
+                                progress.SubModuleName = String.Empty;
+                            }
+
                             progressRecord.Add(progress);
                         }
                     }

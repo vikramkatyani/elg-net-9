@@ -143,6 +143,7 @@ namespace ELG.Model.OrgAdmin
         public string Location { get; set; }
         public string Department { get; set; }
         public String CourseName { get; set; }
+        public String SubModuleName { get; set; }
         public string AssignedOn { get; set; }
         public string LastAccessedOn { get; set; }
         public string CourseStatus { get; set; }

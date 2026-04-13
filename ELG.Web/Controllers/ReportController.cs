@@ -881,7 +881,7 @@ namespace ELG.Web.Controllers
                 if (!String.IsNullOrEmpty(Request.Form["From"].FirstOrDefault()))
                     searchCriteria.FromDate = Convert.ToDateTime(Request.Form["From"].FirstOrDefault());
 
-                if (!String.IsNullOrEmpty(Request.Form["From"].FirstOrDefault()))
+                if (!String.IsNullOrEmpty(Request.Form["To"].FirstOrDefault()))
                     searchCriteria.ToDate = Convert.ToDateTime(Request.Form["To"].FirstOrDefault());
 
                 searchCriteria.Draw = Request.Form["draw"].FirstOrDefault();
@@ -1819,7 +1819,7 @@ namespace ELG.Web.Controllers
                 if (!String.IsNullOrEmpty(Request.Form["From"].FirstOrDefault()))
                     searchCriteria.FromDate = Convert.ToDateTime(Request.Form["From"].FirstOrDefault());
 
-                if (!String.IsNullOrEmpty(Request.Form["From"].FirstOrDefault()))
+                if (!String.IsNullOrEmpty(Request.Form["To"].FirstOrDefault()))
                     searchCriteria.ToDate = Convert.ToDateTime(Request.Form["To"].FirstOrDefault());
 
                 searchCriteria.Draw = Request.Form["draw"].FirstOrDefault();
@@ -1907,19 +1907,20 @@ namespace ELG.Web.Controllers
             {
                 var reportRep = new ReportRep();
 
+                if (searchCriteria == null)
+                {
+                    searchCriteria = new LearnerSubModuleReportFilter();
+                }
+
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
-
-                if (searchCriteria == null)
-                {
-                    searchCriteria.SearchText = String.Empty;
-                }
+                searchCriteria.SearchText = searchCriteria.SearchText ?? String.Empty;
 
                 if (!String.IsNullOrEmpty(Request.Form["From"].FirstOrDefault()))
                     searchCriteria.FromDate = Convert.ToDateTime(Request.Form["From"].FirstOrDefault());
 
-                if (!String.IsNullOrEmpty(Request.Form["From"].FirstOrDefault()))
+                if (!String.IsNullOrEmpty(Request.Form["To"].FirstOrDefault()))
                     searchCriteria.ToDate = Convert.ToDateTime(Request.Form["To"].FirstOrDefault());
 
                 searchCriteria.Draw = Request.Form["draw"].FirstOrDefault();
@@ -1946,39 +1947,44 @@ namespace ELG.Web.Controllers
         }
 
         //download learning progress records
-        public ActionResult DownloadSubModuleLearningProgress(LearnerReportFilter searchCriteria)
+        public ActionResult DownloadSubModuleLearningProgress(LearnerSubModuleReportFilter searchCriteria)
         {
             List<ELG.Model.OrgAdmin.DownloadCourseProgressReport> progressReport = new List<ELG.Model.OrgAdmin.DownloadCourseProgressReport>();
             try
             {
                 var reportRep = new ReportRep();
 
+                if (searchCriteria == null)
+                {
+                    searchCriteria = new LearnerSubModuleReportFilter();
+                }
+
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
-
-                if (searchCriteria == null)
-                {
-                    searchCriteria.SearchText = String.Empty;
-                }
+                searchCriteria.SearchText = searchCriteria.SearchText ?? String.Empty;
 
                 string fromDate = Request.Query["From"].ToString();
                 string toDate = Request.Query["To"].ToString();
+                string subModuleId = Request.Query["SubModuleId"].ToString();
                 if (!String.IsNullOrEmpty(fromDate))
                     searchCriteria.FromDate = Convert.ToDateTime(fromDate);
 
                 if (!String.IsNullOrEmpty(toDate))
                     searchCriteria.ToDate = Convert.ToDateTime(toDate);
 
-                progressReport = reportRep.DownloadLearningProgressReport(searchCriteria);
+                if (!String.IsNullOrEmpty(subModuleId))
+                    searchCriteria.SubModuleId = Convert.ToInt64(subModuleId);
+
+                progressReport = reportRep.DownloadSubModuleLearningProgressReport(searchCriteria);
 
                 DataTable dtReport = CommonHelper.ListToDataTable(progressReport);
-                string[] columns = { "FirstName", "LastName", "EmailId", "Location", "Department", "CourseName", "AssignedOn", "LastAccessedOn", "CourseStatus", "CompletionDate" };
+                string[] columns = { "FirstName", "LastName", "EmailId", "Location", "Department", "CourseName", "SubModuleName", "AssignedOn", "LastAccessedOn", "CourseStatus", "CompletionDate" };
 
-                string[] columns_header = { SessionHelper.CompanySettings.strFirstNameDescription, SessionHelper.CompanySettings.strSurnameDescription, SessionHelper.CompanySettings.emailIdDescription, SessionHelper.CompanySettings.strLocationDescription, SessionHelper.CompanySettings.strDepartmentDescription, "Course", "Assigned On", "Last Accessed", "Status", "Completion Date" };
+                string[] columns_header = { SessionHelper.CompanySettings.strFirstNameDescription, SessionHelper.CompanySettings.strSurnameDescription, SessionHelper.CompanySettings.emailIdDescription, SessionHelper.CompanySettings.strLocationDescription, SessionHelper.CompanySettings.strDepartmentDescription, "Course", "Sub-module", "Assigned On", "Last Accessed", "Status", "Completion Date" };
 
-                byte[] filecontent = CommonHelper.ExportExcelWithHeader(dtReport, "Learning Report", false, columns_header, columns);
-                return File(filecontent, CommonHelper.ExcelContentType, "LearningReport.xlsx");
+                byte[] filecontent = CommonHelper.ExportExcelWithHeader(dtReport, "Sub-module Learning Report", false, columns_header, columns);
+                return File(filecontent, CommonHelper.ExcelContentType, "SubModuleLearningReport.xlsx");
             }
 
             catch (Exception ex)
