@@ -38,6 +38,36 @@ namespace ELG.Web.Controllers
         public Int64 department { get; set; }
     }
 
+    // Model for remove location admin rights
+    public class RemoveLocationAdminRightsRequest
+    {
+        public Int64 learner { get; set; }
+        public Int64 location { get; set; }
+    }
+
+    // Model for remove location supervisor rights
+    public class RemoveLocationSupervisorRightsRequest
+    {
+        public Int64 learner { get; set; }
+        public Int64 location { get; set; }
+    }
+
+    // Model for remove department admin rights
+    public class RemoveDepartmentAdminRightsRequest
+    {
+        public Int64 learner { get; set; }
+        public Int64 location { get; set; }
+        public Int64 department { get; set; }
+    }
+
+    // Model for remove department supervisor rights
+    public class RemoveDepartmentSupervisorRightsRequest
+    {
+        public Int64 learner { get; set; }
+        public Int64 location { get; set; }
+        public Int64 department { get; set; }
+    }
+
     [SessionCheck]
     public class RoleManagementController : Controller
     {
@@ -75,7 +105,7 @@ namespace ELG.Web.Controllers
                 catch (Exception ex)
                 {
                     Logger.Error("Failed to set SessionHelper.CurrentUserId", ex);
-                    // continue � don't fail the whole page
+                    // continue – don't fail the whole page
                 }
 
                 LearnerAdminRights learnerAdmin = null;
@@ -323,18 +353,31 @@ namespace ELG.Web.Controllers
 
         // remove location admin rights to the user
         [HttpPost]
-        public ActionResult RemoveLocationAdminRights(Int64 learner, Int64 location)
+        public ActionResult RemoveLocationAdminRights([FromBody] RemoveLocationAdminRightsRequest request)
         {
             try
             {
+                if (request == null || request.learner <= 0 || request.location <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
-                int result = adminRep.RemoveLocationAdminRights(learner, location);
-                return Json(new { success = result });
+                int result = adminRep.RemoveLocationAdminRights(request.learner, request.location);
+                
+                if (result > 0)
+                {
+                    return Json(new { success = 1, message = "Admin right removed successfully." });
+                }
+                else
+                {
+                    return Json(new { success = 0, message = "Failed to remove admin rights. Please try again later." });
+                }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View();
+                return Json(new { success = 0, message = "An error occurred while removing admin rights." });
             }
         }
 
@@ -415,18 +458,31 @@ namespace ELG.Web.Controllers
 
         // remove location supervisor rights to the user
         [HttpPost]
-        public ActionResult RemoveLocationSupervisorRights(Int64 learner, Int64 location)
+        public ActionResult RemoveLocationSupervisorRights([FromBody] RemoveLocationSupervisorRightsRequest request)
         {
             try
             {
+                if (request == null || request.learner <= 0 || request.location <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
-                int result = adminRep.RemoveLocationSupervisorRights(learner, location);
-                return Json(new { success = result });
+                int result = adminRep.RemoveLocationSupervisorRights(request.learner, request.location);
+                
+                if (result > 0)
+                {
+                    return Json(new { success = 1, message = "Supervisor right removed successfully." });
+                }
+                else
+                {
+                    return Json(new { success = 0, message = "Failed to remove supervisor rights. Please try again later." });
+                }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View();
+                return Json(new { success = 0, message = "An error occurred while removing supervisor rights." });
             }
         }
 
@@ -500,18 +556,31 @@ namespace ELG.Web.Controllers
 
         // remove department admin rights to the user
         [HttpPost]
-        public ActionResult RemoveDepartmentAdminRights(Int64 learner, Int64 location, Int64 department)
+        public ActionResult RemoveDepartmentAdminRights([FromBody] RemoveDepartmentAdminRightsRequest request)
         {
             try
             {
+                if (request == null || request.learner <= 0 || request.location <= 0 || request.department <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
-                int result = adminRep.RemoveDepartmentAdminRights(learner, location, department);
-                return Json(new { success = result });
+                int result = adminRep.RemoveDepartmentAdminRights(request.learner, request.location, request.department);
+                
+                if (result > 0)
+                {
+                    return Json(new { success = 1, message = "Admin right removed successfully." });
+                }
+                else
+                {
+                    return Json(new { success = 0, message = "Failed to remove admin rights. Please try again later." });
+                }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View();
+                return Json(new { success = 0, message = "An error occurred while removing admin rights." });
             }
         }
 
@@ -583,20 +652,33 @@ namespace ELG.Web.Controllers
             }
         }
 
-        // remove department admin rights to the user
+        // remove department supervisor rights to the user
         [HttpPost]
-        public ActionResult RemoveDepartmentSUpervisorRights(Int64 learner, Int64 location, Int64 department)
+        public ActionResult RemoveDepartmentSupervisorRights([FromBody] RemoveDepartmentSupervisorRightsRequest request)
         {
             try
             {
+                if (request == null || request.learner <= 0 || request.location <= 0 || request.department <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
-                int result = adminRep.RemoveDepartmentSupervisorRights(learner, location, department);
-                return Json(new { success = result });
+                int result = adminRep.RemoveDepartmentSupervisorRights(request.learner, request.location, request.department);
+                
+                if (result > 0)
+                {
+                    return Json(new { success = 1, message = "Supervisor right removed successfully." });
+                }
+                else
+                {
+                    return Json(new { success = 0, message = "Failed to remove supervisor rights. Please try again later." });
+                }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View();
+                return Json(new { success = 0, message = "An error occurred while removing supervisor rights." });
             }
         }
 
