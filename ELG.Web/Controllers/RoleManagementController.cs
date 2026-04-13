@@ -11,6 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ELG.Web.Controllers
 {
+    // Model for supervisor rights assignment
+    public class LocationSupervisorRightsRequest
+    {
+        public Int64 location { get; set; }
+        public Int64 learner { get; set; }
+    }
+
     [SessionCheck]
     public class RoleManagementController : Controller
     {
@@ -36,6 +43,7 @@ namespace ELG.Web.Controllers
                 if (!id.HasValue || id.Value <= 0)
                 {
                     SessionHelper.CurrentUserId = 0;
+                    ViewBag.LearnerId = 0;
                     return View();
                 }
 
@@ -70,12 +78,14 @@ namespace ELG.Web.Controllers
                 }
 
                 ViewBag.LearnerName = $"{learnerAdmin.FirstName} {learnerAdmin.LastName}";
+                ViewBag.LearnerId = id.Value;
                 return View();
             }
             catch (Exception ex)
             {
                 Logger.Error("Unhandled exception in AssignAdminRights", ex);
                 ViewBag.ErrorMessage = "An error occurred while loading the page.";
+                ViewBag.LearnerId = 0;
                 return View();
             }
         }
@@ -350,19 +360,31 @@ namespace ELG.Web.Controllers
 
         // to assign location supervisor rights to the user
         [HttpPost]
-        public ActionResult AssignLocationSupervisorRights(Int64 location)
+        public ActionResult AssignLocationSupervisorRights([FromBody] LocationSupervisorRightsRequest request)
         {
             try
             {
+                if (request == null)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
-                Int64 learner = SessionHelper.CurrentUserId;
-                int result = adminRep.AssignLocationSupervisorRights(learner, location);
+                Int64 targetLearner = request.learner > 0 ? request.learner : SessionHelper.CurrentUserId;
+                Int64 location = request.location;
+
+                if (location <= 0 || targetLearner <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid learner or location." });
+                }
+
+                int result = adminRep.AssignLocationSupervisorRights(targetLearner, location);
                 return Json(new { success = result });
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View();
+                return Json(new { success = 0, message = ex.Message });
             }
         }
 
