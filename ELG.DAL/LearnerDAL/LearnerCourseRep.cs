@@ -195,10 +195,10 @@ namespace ELG.DAL.LearnerDAL
                         progress.CourseName = item.strCourse;
                         progress.RecordId = Convert.ToInt64(item.intRecordID);
                         progress.CourseStatus = item.strStatus;
-                        progress.Score = Convert.ToInt32(item.intScore);
-                        progress.CPDScore = Convert.ToInt32(item.intcpdscore);
+                        progress.Score = item.intScore == null ? 0 : Convert.ToInt32(item.intScore);
+                        progress.CPDScore = item.intcpdscore == null ? 0 : Convert.ToInt32(item.intcpdscore);
                         progress.CompletionDate = item.dateCompletedOn == null ? "" : (Convert.ToDateTime(item.dateCompletedOn)).ToString("dd-MMM-yyyy");
-                        progress.CertificateNumber = item.certGUID == null ? "" : Convert.ToString(item.certGUID);
+                        progress.CertificateNumber = item.certGUID == Guid.Empty ? "" : Convert.ToString(item.certGUID);
                     }
                 }
                 return progress;
