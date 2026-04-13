@@ -122,7 +122,7 @@ var rightsAllocationHandler = (function () {
                 if (hasRights) {
                     return `
                 <button type="button"
-                        id="assign-la-${id}"
+                            id="assign-las-${id}"
                         class="btn btn-success mb-1 w-100"
                         disabled
                         data-bs-toggle="tooltip"
@@ -132,7 +132,7 @@ var rightsAllocationHandler = (function () {
                 } else {
                     return `
                 <button type="button"
-                        id="assign-la-${id}"
+                            id="assign-las-${id}"
                         class="btn btn-dark mb-1 w-100"
                         onclick="rightsAllocationHandler.assignLocationSupervisorRights(this)"
                         data-bs-toggle="tooltip"
@@ -451,10 +451,16 @@ var rightsAllocationHandler = (function () {
         const message = getConfirmationText(currentRole.title, currentRole.description);
         if (confirm(message)) {
 
-            var location = $btn.id.split('-').pop();
+            var location = parseInt($btn.id.split('-').pop(), 10);
+            var learner = parseInt($('#hdnSelectedLearnerId').val(), 10) || 0;
+            if (!location || location <= 0 || !learner || learner <= 0) {
+                UTILS.Alert.show($popUp_la_spv_Alert, "error", "Invalid learner or location data.");
+                return;
+            }
             var url = hdnBaseUrl + "RoleManagement/AssignLocationSupervisorRights";
             var data = {
-                location: location
+                location: location,
+                learner: learner
             }
             UTILS.makeAjaxCall(url, data, function (res) {
                 if (res.success == 1) {

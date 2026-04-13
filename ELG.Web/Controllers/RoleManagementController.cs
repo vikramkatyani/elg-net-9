@@ -18,6 +18,26 @@ namespace ELG.Web.Controllers
         public Int64 learner { get; set; }
     }
 
+    // Model for location admin rights assignment
+    public class LocationAdminRightsRequest
+    {
+        public Int64 location { get; set; }
+    }
+
+    // Model for department admin rights assignment
+    public class DepartmentAdminRightsRequest
+    {
+        public Int64 location { get; set; }
+        public Int64 department { get; set; }
+    }
+
+    // Model for department supervisor rights assignment
+    public class DepartmentSupervisorRightsRequest
+    {
+        public Int64 location { get; set; }
+        public Int64 department { get; set; }
+    }
+
     [SessionCheck]
     public class RoleManagementController : Controller
     {
@@ -280,13 +300,18 @@ namespace ELG.Web.Controllers
 
         // to assign location admin rights to the user
         [HttpPost]
-        public ActionResult AssignLocationAdminRights(Int64 location)
+        public ActionResult AssignLocationAdminRights([FromBody] LocationAdminRightsRequest request)
         {
             try
             {
+                if (request == null || request.location <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
                 Int64 learner = SessionHelper.CurrentUserId;
-                int result = adminRep.AssignLocationAdminRights(learner, location);
+                int result = adminRep.AssignLocationAdminRights(learner, request.location);
                 return Json(new { success = result });
             }
             catch (Exception ex)
@@ -452,13 +477,18 @@ namespace ELG.Web.Controllers
 
         // to assign department admin rights to the user
         [HttpPost]
-        public ActionResult AssignDepartmentAdminRights(Int64 location, Int64 department)
+        public ActionResult AssignDepartmentAdminRights([FromBody] DepartmentAdminRightsRequest request)
         {
             try
             {
+                if (request == null || request.location <= 0 || request.department <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
                 Int64 learner = SessionHelper.CurrentUserId;
-                int result = adminRep.AssignDepartmentAdminRights(learner, location, department);
+                int result = adminRep.AssignDepartmentAdminRights(learner, request.location, request.department);
                 return Json(new { success = result });
             }
             catch (Exception ex)
@@ -532,13 +562,18 @@ namespace ELG.Web.Controllers
 
         // to assign department Supervisor rights to the user
         [HttpPost]
-        public ActionResult AssignDepartmentSupervisorRights(Int64 location, Int64 department)
+        public ActionResult AssignDepartmentSupervisorRights([FromBody] DepartmentSupervisorRightsRequest request)
         {
             try
             {
+                if (request == null || request.location <= 0 || request.department <= 0)
+                {
+                    return Json(new { success = 0, message = "Invalid request." });
+                }
+
                 var adminRep = new AdminRep();
                 Int64 learner = SessionHelper.CurrentUserId;
-                int result = adminRep.AssignDepartmentSupervisorRights(learner, location, department);
+                int result = adminRep.AssignDepartmentSupervisorRights(learner, request.location, request.department);
                 return Json(new { success = result });
             }
             catch (Exception ex)
