@@ -41,14 +41,19 @@ namespace ELG.Web.Areas.Learner.Controllers
                 var reportRep = new LearnerCourseRep();
                 progress = reportRep.GetCertificateRecord(id);
 
+                if (progress == null || progress.RecordId <= 0)
+                {
+                    return NotFound();
+                }
+
                 // Construct path: use WebRootPath only (it already contains wwwroot)
                 string basePath = _env.WebRootPath ?? System.IO.Path.Combine(_env.ContentRootPath, "wwwroot");
                 string strFilePath = System.IO.Path.Combine(basePath, "content", "certificate");
 
-                string userName = progress.FirstName + " " + progress.LastName;
-                string courseName = progress.CourseName;
-                string completiondate = progress.CompletionDate;
-                string certificateNumber = progress.CertificateNumber;
+                string userName = $"{progress.FirstName ?? string.Empty} {progress.LastName ?? string.Empty}".Trim();
+                string courseName = progress.CourseName ?? string.Empty;
+                string completiondate = progress.CompletionDate ?? string.Empty;
+                string certificateNumber = progress.CertificateNumber ?? string.Empty;
                 string certificateText = "has successfully completed the online course";
 
                 string strPDFFileName = $"Certificate_{progress.RecordId}.pdf";
@@ -99,32 +104,32 @@ namespace ELG.Web.Areas.Learner.Controllers
                     // Draw Text Over Image Properly Center-Aligned
                     canvas.BeginText()
                         .SetFontAndSize(customFontDetails, 10)
-                        .SetTextMatrix(CenterTextX(customFontDetails, 10, "CERTIFICATE NUMBER: " + certificateNumber), 20)
-                        .ShowText("CERTIFICATE NUMBER: " + certificateNumber)
+                        .SetTextMatrix(CenterTextX(customFontDetails, 10, "CERTIFICATE NUMBER: " + SanitizePdfText(certificateNumber)), 20)
+                        .ShowText("CERTIFICATE NUMBER: " + SanitizePdfText(certificateNumber))
                         .EndText();
 
                     canvas.BeginText()
                         .SetFontAndSize(customFontName, 48)
-                        .SetTextMatrix(CenterTextX(customFontName, 48, userName), 420)
-                        .ShowText(userName)
+                        .SetTextMatrix(CenterTextX(customFontName, 48, SanitizePdfText(userName)), 420)
+                        .ShowText(SanitizePdfText(userName))
                         .EndText();
 
                     canvas.BeginText()
                         .SetFontAndSize(customFontDetails, 16)
-                        .SetTextMatrix(CenterTextX(customFontDetails, 16, certificateText), 390)
-                        .ShowText(certificateText)
+                        .SetTextMatrix(CenterTextX(customFontDetails, 16, SanitizePdfText(certificateText)), 390)
+                        .ShowText(SanitizePdfText(certificateText))
                         .EndText();
 
                     canvas.BeginText()
                         .SetFontAndSize(customFontDetails, 20)
-                        .SetTextMatrix(CenterTextX(customFontDetails, 20, courseName), 330)
-                        .ShowText(courseName)
+                        .SetTextMatrix(CenterTextX(customFontDetails, 20, SanitizePdfText(courseName)), 330)
+                        .ShowText(SanitizePdfText(courseName))
                         .EndText();
 
                     canvas.BeginText()
                         .SetFontAndSize(customFontDetails, 20)
-                        .SetTextMatrix(CenterTextX(customFontDetails, 20, completiondate), 250)
-                        .ShowText(completiondate)
+                        .SetTextMatrix(CenterTextX(customFontDetails, 20, SanitizePdfText(completiondate)), 250)
+                        .ShowText(SanitizePdfText(completiondate))
                         .EndText();
 
                     canvas.Stroke();
@@ -141,6 +146,16 @@ namespace ELG.Web.Areas.Learner.Controllers
                 // Logger.Error(ex.Message, ex);
                 return BadRequest($"Error generating certificate: {ex.Message}");
             }
+        }
+
+        private static string SanitizePdfText(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            return value.Replace("\r", " ").Replace("\n", " ").Trim();
         }
     }
 }

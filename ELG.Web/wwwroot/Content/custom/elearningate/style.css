@@ -19,7 +19,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: Montserrat, system-ui, sans-serif;
 }
 
 /** Background color */
@@ -394,9 +394,9 @@ form {
 
     .left-section {
         display: flex;
-        flex: 1.5;
+        flex: 1;
         position: relative;
-        background: url('elearningate-hero.jpeg') no-repeat center center;
+        background: url('login-hero-branded.jpg') no-repeat center center;
         background-size: cover;
         color: var(--color-white);
         padding: 50px;
@@ -508,7 +508,7 @@ form {
     }
 
     #page-title {
-        font-size: 3.75rem;
+        font-size: 3rem;
         line-height: 1;
         font-weight: bold;
     }

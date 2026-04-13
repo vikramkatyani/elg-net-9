@@ -47,13 +47,17 @@ namespace ELG.Web.Controllers
                 var reportRep = new ReportRep();
                 progress = reportRep.GetCertificateRecord(id);
 
+                if (progress == null || progress.RecordId <= 0)
+                {
+                    return NotFound();
+                }
+
                 string strFilePath = System.IO.Path.Combine(_env.WebRootPath, "content", "certificate") + System.IO.Path.DirectorySeparatorChar;
 
-                string userName = "";
-                string courseName = "";
-                string score = "";
-                string completiondate = "";
-                string certificateNumber = "";
+                string userName = $"{progress.FirstName ?? string.Empty} {progress.LastName ?? string.Empty}".Trim();
+                string courseName = progress.CourseName ?? string.Empty;
+                string completiondate = progress.CompletionDate ?? string.Empty;
+                string certificateNumber = progress.CertificateNumber ?? string.Empty;
                 string certificateText = "has successfully completed the online course";
                 //string certificateText_2 = "Donec aliquet lacus et nibh rutrum, non fringilla neque facilisis.";
                 //string cpdScore = "";
@@ -64,78 +68,81 @@ namespace ELG.Web.Controllers
                 using (var stream = new MemoryStream())
                 using (var writer = new PdfWriter(stream))
                 using (var pdf = new PdfDocument(writer))
-                using (var document = new iText.Layout.Document(pdf, PageSize.A4))
                 {
-                    if (!string.IsNullOrEmpty(progress.CertificateNumber))
-                        certificateNumber = progress.CertificateNumber;
-                    if (!string.IsNullOrEmpty(progress.FirstName) || !string.IsNullOrEmpty(progress.FirstName))
-                        userName = progress.FirstName + " " + progress.LastName;
-                    if (!string.IsNullOrEmpty(progress.CourseName))
-                        courseName = progress.CourseName;
-                    if (!string.IsNullOrEmpty(progress.CompletionDate))
-                        completiondate = progress.CompletionDate;
-                    if (!string.IsNullOrEmpty(Convert.ToString(progress.Score)))
-                        score = Convert.ToString(progress.Score);
-                    //if (progress.CPDScore > 0)
-                    //    cpdScore = Convert.ToString(progress.CPDScore);
-
-
-                    PdfFormXObject template = new PdfFormXObject(new Rectangle(0, 0, PageSize.A4.GetWidth(), PageSize.A4.GetHeight()));
-                    Canvas templateCanvas = new Canvas(template, pdf);
-
-                    //// Add image
-                    //Image img = new Image(ImageDataFactory
-                    //   .Create(strFilePath + certificateImage))
-                    //   .SetTextAlignment(TextAlignment.CENTER);
+                    PdfPage page = pdf.AddNewPage(PageSize.A4);
+                    var canvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
+                    using (var document = new iText.Layout.Document(pdf, PageSize.A4))
+                    {
                     Image img;
                     if (SessionHelper.CompanyCertificate != null && SessionHelper.CompanyCertificate.Length > 0)
                     {
 
                         img = new Image(ImageDataFactory
                            .Create(SessionHelper.CompanyCertificate))
-                           .SetTextAlignment(TextAlignment.CENTER);
+                           .ScaleAbsolute(PageSize.A4.GetWidth(), PageSize.A4.GetHeight())
+                           .SetFixedPosition(0, 0);
                     }
                     else
                     {
                         img = new Image(ImageDataFactory
                            .Create(strFilePath + "certificate_new.jpg"))
-                           .SetTextAlignment(TextAlignment.CENTER);
+                           .ScaleAbsolute(PageSize.A4.GetWidth(), PageSize.A4.GetHeight())
+                           .SetFixedPosition(0, 0);
                     }
+
+                    document.Add(img);
 
                     string ttf_file_path_1 = System.IO.Path.Combine(_env.WebRootPath, "content", "certificate", "fonts", "NeueHaasDisplayBold.ttf");
                     string ttf_file_path_2 = System.IO.Path.Combine(_env.WebRootPath, "content", "certificate", "fonts", "NeueHaasDisplayThin.ttf");
                     PdfFont customFont_name = PdfFontFactory.CreateFont(ttf_file_path_1, "Identity-H");
                     PdfFont customFont_details = PdfFontFactory.CreateFont(ttf_file_path_2, "Identity-H");
 
-                    Color certNoColor = new DeviceRgb(0, 0, 0);
+                    float pageWidth = PageSize.A4.GetWidth();
 
-                    // Add paragraph
+                    float CenterTextX(PdfFont font, float fontSize, string text)
+                    {
+                        float textWidth = font.GetWidth(text, fontSize);
+                        return (pageWidth - textWidth) / 2;
+                    }
 
-                    Paragraph paraCertNo = new Paragraph("CERTIFICATE NUMBER: " + certificateNumber).SetFont(customFont_details).SetFontSize(10).SetFontColor(certNoColor).SetTextAlignment(TextAlignment.CENTER);
-                    Paragraph parauserName = new Paragraph(userName).SetFont(customFont_name).SetFontSize(48).SetTextAlignment(TextAlignment.CENTER);
-                    Paragraph paracourseName = new Paragraph(courseName).SetFont(customFont_details).SetFontSize(20).SetTextAlignment(TextAlignment.CENTER);
-                    Paragraph paracompletiondate = new Paragraph(completiondate).SetFont(customFont_details).SetFontSize(20).SetTextAlignment(TextAlignment.CENTER);
-                    Paragraph paraCertText = new Paragraph(certificateText).SetFont(customFont_details).SetFontSize(16).SetTextAlignment(TextAlignment.CENTER);
-                    //Paragraph paraCertText_2 = new Paragraph(certificateText_2).SetFont(customFont_details).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER);
+                    string safeCertificateNo = SanitizePdfText(certificateNumber);
+                    string safeUserName = SanitizePdfText(userName);
+                    string safeCertText = SanitizePdfText(certificateText);
+                    string safeCourseName = SanitizePdfText(courseName);
+                    string safeCompletionDate = SanitizePdfText(completiondate);
 
-                    //Paragraph paraCPDTitle = new Paragraph().SetFont(customFont).SetFontSize(10).SetBold();
-                    //Paragraph paraCPDScore = new Paragraph("CPD Hour Credits: " + cpdScore).SetFont(customFont).SetFontSize(12);
+                    canvas.BeginText()
+                        .SetFontAndSize(customFont_details, 10)
+                        .SetTextMatrix(CenterTextX(customFont_details, 10, "CERTIFICATE NUMBER: " + safeCertificateNo), 20)
+                        .ShowText("CERTIFICATE NUMBER: " + safeCertificateNo)
+                        .EndText();
 
-                    templateCanvas.Add(img)
-                    .ShowTextAligned(paraCertNo, 255, 790, TextAlignment.LEFT)
-                    .ShowTextAligned(parauserName, 300, 420, TextAlignment.CENTER)
-                    .ShowTextAligned(paraCertText, 300, 390, TextAlignment.CENTER)
-                    //.ShowTextAligned(paraCertText_2, 300, 380, TextAlignment.CENTER)
-                    .ShowTextAligned(paracourseName, 300, 315, TextAlignment.CENTER)
-                    .ShowTextAligned(paracompletiondate, 300, 250, TextAlignment.CENTER);
+                    canvas.BeginText()
+                        .SetFontAndSize(customFont_name, 48)
+                        .SetTextMatrix(CenterTextX(customFont_name, 48, safeUserName), 420)
+                        .ShowText(safeUserName)
+                        .EndText();
 
-                    // In order to add a formXObject to the document, one can wrap it with an image
-                    document.Add(new Image(template));
-                    templateCanvas.Close();
+                    canvas.BeginText()
+                        .SetFontAndSize(customFont_details, 16)
+                        .SetTextMatrix(CenterTextX(customFont_details, 16, safeCertText), 390)
+                        .ShowText(safeCertText)
+                        .EndText();
 
-                    // Close document
-                    document.Close();
-                    document.Flush();
+                    canvas.BeginText()
+                        .SetFontAndSize(customFont_details, 20)
+                        .SetTextMatrix(CenterTextX(customFont_details, 20, safeCourseName), 330)
+                        .ShowText(safeCourseName)
+                        .EndText();
+
+                    canvas.BeginText()
+                        .SetFontAndSize(customFont_details, 20)
+                        .SetTextMatrix(CenterTextX(customFont_details, 20, safeCompletionDate), 250)
+                        .ShowText(safeCompletionDate)
+                        .EndText();
+
+                    canvas.Stroke();
+                    }
 
                     pdfBytes = stream.ToArray();
                 }
@@ -147,6 +154,16 @@ namespace ELG.Web.Controllers
                 Logger.Error(ex.Message, ex);
                 return View();
             }
+        }
+
+        private static string SanitizePdfText(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            return value.Replace("\r", " ").Replace("\n", " ").Trim();
         }
 
         // GET: Company Business Certificate
