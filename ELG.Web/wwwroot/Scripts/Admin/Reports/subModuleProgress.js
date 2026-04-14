@@ -209,10 +209,10 @@ var subModuleProgressReportHandler = (function () {
                 { "data": "Location", "name": "l.strLocation", "autoWidth": true },
                 { "data": "Department", "name": "d.strDepartment", "autoWidth": true },
                 { "data": "CourseName", "name": "co.strCourse", "autoWidth": true },
-                { "data": "SubModuleName", "name": "co.strCourse", "autoWidth": true, "defaultContent": "" },
+                { "data": "SubModuleName", "name": "sm.subModule_name", "autoWidth": true, "defaultContent": "" },
                 { "data": "AssignedOn", "name": "pd.dateAssignedOn", "autoWidth": true },
-                { "data": "CourseStatus", "name": "pd.strStatus", "autoWidth": true },
-                { "data": "LastAccessedDate", "name": "pd.dateLastStarted", "autoWidth": true }
+                { "data": "CourseStatus", "name": "smpd.strStatus", "autoWidth": true },
+                { "data": "LastAccessedDate", "name": "smpd.lastAccessedOn", "autoWidth": true }
             ],
             columnDefs: [{
                 // render learner name

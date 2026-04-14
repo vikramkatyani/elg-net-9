@@ -127,6 +127,25 @@ EXEC dbo.lms_admin_getLearnerProgressReport_Paged
             return string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase) ? "asc" : "desc";
         }
 
+        private static string GetSubModuleProgressSortColumn(string sortCol)
+        {
+            switch (sortCol)
+            {
+                case "c.strFirstName":
+                case "c.strEmail":
+                case "l.strLocation":
+                case "d.strDepartment":
+                case "co.strCourse":
+                case "sm.subModule_name":
+                case "pd.dateAssignedOn":
+                case "smpd.strStatus":
+                case "smpd.lastAccessedOn":
+                    return sortCol;
+                default:
+                    return "c.intContactID";
+            }
+        }
+
         private sealed class LearningProgressPagedResult
         {
             public int? intContactID { get; set; }
@@ -146,6 +165,28 @@ EXEC dbo.lms_admin_getLearnerProgressReport_Paged
             public DateTime? dateAssignedOn { get; set; }
             public DateTime? dateCompletedOn { get; set; }
             public DateTime? dateLastStarted { get; set; }
+            public int TotalRecords { get; set; }
+        }
+
+        private sealed class SubModuleProgressPagedResult
+        {
+            public int? intContactID { get; set; }
+            public int? intLocationID { get; set; }
+            public int? intDepartmentID { get; set; }
+            public int? intCourseId { get; set; }
+            public long? intSubModuleID { get; set; }
+            public string strFirstName { get; set; }
+            public string strSurname { get; set; }
+            public string strEmail { get; set; }
+            public string strEmployeeNumber { get; set; }
+            public string strLocation { get; set; }
+            public string strDepartment { get; set; }
+            public string strCourse { get; set; }
+            public string subModule_name { get; set; }
+            public long intRecordID { get; set; }
+            public string strStatus { get; set; }
+            public DateTime? dateAssignedOn { get; set; }
+            public DateTime? lastAccessedOn { get; set; }
             public int TotalRecords { get; set; }
         }
         public CourseProgressReport GetLearningProgressReport_Historic(LearnerReportFilter searchCriteria)
@@ -261,31 +302,52 @@ EXEC dbo.lms_admin_getLearnerProgressReport_Paged
             {
                 List<DownloadCourseProgressReport> progressRecord = new List<DownloadCourseProgressReport>();
 
+                string sortColumn = GetSubModuleProgressSortColumn(searchCriteria.SortCol);
+                string sortDirection = GetSortDirection(searchCriteria.SortColDir);
+
                 using (var context = new lmsdbEntities())
                 {
-                    var resultList = context.lms_admin_getLearnerProgressReport(searchCriteria.AdminRole, searchCriteria.AdminUserId, searchCriteria.SearchText, searchCriteria.UserStatus, searchCriteria.Location, searchCriteria.Department, searchCriteria.Status, searchCriteria.Course, searchCriteria.Company, searchCriteria.SortCol, searchCriteria.SortColDir, searchCriteria.FromDate, searchCriteria.ToDate, searchCriteria.AccessStatus).ToList();
+                    var resultList = context.Database.SqlQuery<SubModuleProgressPagedResult>(@"
+EXEC dbo.lms_admin_getLearnerSubModuleProgressReport_Paged
+    @adminRole = @adminRole,
+    @adminUserId = @adminUserId,
+    @learnerName = @learnerName,
+    @learnerStatus = @learnerStatus,
+    @location = @location,
+    @department = @department,
+    @status = @status,
+    @course = @course,
+    @subModuleId = @subModuleId,
+    @company = @company,
+    @sortCol = @sortCol,
+    @sortDir = @sortDir,
+    @fromDate = @fromDate,
+    @toDate = @toDate,
+    @accessStatus = @accessStatus,
+    @skip = @skip,
+    @pageSize = @pageSize",
+                        new SqlParameter("@adminRole", (object)searchCriteria.AdminRole ?? DBNull.Value),
+                        new SqlParameter("@adminUserId", (object)searchCriteria.AdminUserId ?? DBNull.Value),
+                        new SqlParameter("@learnerName", (object)searchCriteria.SearchText ?? string.Empty),
+                        new SqlParameter("@learnerStatus", (object)searchCriteria.UserStatus ?? DBNull.Value),
+                        new SqlParameter("@location", (object)searchCriteria.Location ?? 0),
+                        new SqlParameter("@department", (object)searchCriteria.Department ?? 0),
+                        new SqlParameter("@status", (object)searchCriteria.Status ?? DBNull.Value),
+                        new SqlParameter("@course", (object)searchCriteria.Course ?? 0),
+                        new SqlParameter("@subModuleId", (object)searchCriteria.SubModuleId ?? 0),
+                        new SqlParameter("@company", searchCriteria.Company),
+                        new SqlParameter("@sortCol", sortColumn),
+                        new SqlParameter("@sortDir", sortDirection),
+                        new SqlParameter("@fromDate", (object)searchCriteria.FromDate ?? DBNull.Value),
+                        new SqlParameter("@toDate", (object)searchCriteria.ToDate ?? DBNull.Value),
+                        new SqlParameter("@accessStatus", (object)searchCriteria.AccessStatus ?? 1),
+                        new SqlParameter("@skip", 0),
+                        new SqlParameter("@pageSize", int.MaxValue))
+                        .ToList();
 
                     if (resultList != null && resultList.Count > 0)
                     {
-                        Dictionary<long, string> selectedSubModuleByCourse = new Dictionary<long, string>();
-                        IEnumerable<lms_admin_getLearnerProgressReport_Result> filteredList = resultList;
-
-                        if (searchCriteria.SubModuleId > 0)
-                        {
-                            var courseIds = resultList.Where(x => x.intCourseId.HasValue).Select(x => Convert.ToInt64(x.intCourseId.Value)).Distinct().ToList();
-                            foreach (var courseId in courseIds)
-                            {
-                                var selectedSubModule = context.lms_admin_get_course_submodules(courseId).FirstOrDefault(x => x.smid == searchCriteria.SubModuleId);
-                                if (selectedSubModule != null)
-                                {
-                                    selectedSubModuleByCourse[courseId] = selectedSubModule.name ?? String.Empty;
-                                }
-                            }
-
-                            filteredList = resultList.Where(x => x.intCourseId.HasValue && selectedSubModuleByCourse.ContainsKey(Convert.ToInt64(x.intCourseId.Value)));
-                        }
-
-                        foreach (var item in filteredList)
+                        foreach (var item in resultList)
                         {
                             DownloadCourseProgressReport progress = new DownloadCourseProgressReport();
                             progress.FirstName = item.strFirstName;
@@ -295,20 +357,11 @@ EXEC dbo.lms_admin_getLearnerProgressReport_Paged
                             progress.Location = item.strLocation;
                             progress.Department = item.strDepartment;
                             progress.CourseName = item.strCourse;
+                            progress.SubModuleName = item.subModule_name ?? string.Empty;
                             progress.CourseStatus = item.strStatus;
                             progress.AssignedOn = item.dateAssignedOn == null ? "" : (Convert.ToDateTime(item.dateAssignedOn)).ToString("dd-MMM-yyyy");
-                            progress.CompletionDate = item.dateCompletedOn == null ? "" : (Convert.ToDateTime(item.dateCompletedOn)).ToString("dd-MMM-yyyy");
-                            progress.LastAccessedOn = item.dateLastStarted == null ? "" : (Convert.ToDateTime(item.dateLastStarted)).ToString("dd-MMM-yyyy");
-
-                            if (item.intCourseId.HasValue)
-                            {
-                                selectedSubModuleByCourse.TryGetValue(Convert.ToInt64(item.intCourseId.Value), out string selectedSubModuleName);
-                                progress.SubModuleName = selectedSubModuleName ?? String.Empty;
-                            }
-                            else
-                            {
-                                progress.SubModuleName = String.Empty;
-                            }
+                            progress.CompletionDate = "";
+                            progress.LastAccessedOn = item.lastAccessedOn == null ? "" : (Convert.ToDateTime(item.lastAccessedOn)).ToString("dd-MMM-yyyy");
 
                             progressRecord.Add(progress);
                         }
@@ -1942,33 +1995,56 @@ ORDER BY l.strLocation, c.strCourse";
                 CourseSubModuleProgressReport progressReport = new CourseSubModuleProgressReport();
                 List<CourseSubModuleProgressItem> progressRecord = new List<CourseSubModuleProgressItem>();
 
+                string sortColumn = GetSubModuleProgressSortColumn(searchCriteria.SortCol);
+                string sortDirection = GetSortDirection(searchCriteria.SortColDir);
+                int skip = searchCriteria.Skip < 0 ? 0 : searchCriteria.Skip;
+                int pageSize = searchCriteria.PageSize < 1 ? 25 : searchCriteria.PageSize;
+
                 using (var context = new lmsdbEntities())
                 {
-                    var resultList = context.lms_admin_getLearnerProgressReport(searchCriteria.AdminRole, searchCriteria.AdminUserId, searchCriteria.SearchText, searchCriteria.UserStatus, searchCriteria.Location, searchCriteria.Department, searchCriteria.Status, searchCriteria.Course, searchCriteria.Company, searchCriteria.SortCol, searchCriteria.SortColDir, searchCriteria.FromDate, searchCriteria.ToDate, searchCriteria.AccessStatus).ToList();
+                    var resultList = context.Database.SqlQuery<SubModuleProgressPagedResult>(@"
+EXEC dbo.lms_admin_getLearnerSubModuleProgressReport_Paged
+    @adminRole = @adminRole,
+    @adminUserId = @adminUserId,
+    @learnerName = @learnerName,
+    @learnerStatus = @learnerStatus,
+    @location = @location,
+    @department = @department,
+    @status = @status,
+    @course = @course,
+    @subModuleId = @subModuleId,
+    @company = @company,
+    @sortCol = @sortCol,
+    @sortDir = @sortDir,
+    @fromDate = @fromDate,
+    @toDate = @toDate,
+    @accessStatus = @accessStatus,
+    @skip = @skip,
+    @pageSize = @pageSize",
+                        new SqlParameter("@adminRole", (object)searchCriteria.AdminRole ?? DBNull.Value),
+                        new SqlParameter("@adminUserId", (object)searchCriteria.AdminUserId ?? DBNull.Value),
+                        new SqlParameter("@learnerName", (object)searchCriteria.SearchText ?? string.Empty),
+                        new SqlParameter("@learnerStatus", (object)searchCriteria.UserStatus ?? DBNull.Value),
+                        new SqlParameter("@location", (object)searchCriteria.Location ?? 0),
+                        new SqlParameter("@department", (object)searchCriteria.Department ?? 0),
+                        new SqlParameter("@status", (object)searchCriteria.Status ?? DBNull.Value),
+                        new SqlParameter("@course", (object)searchCriteria.Course ?? 0),
+                        new SqlParameter("@subModuleId", (object)searchCriteria.SubModuleId ?? 0),
+                        new SqlParameter("@company", searchCriteria.Company),
+                        new SqlParameter("@sortCol", sortColumn),
+                        new SqlParameter("@sortDir", sortDirection),
+                        new SqlParameter("@fromDate", (object)searchCriteria.FromDate ?? DBNull.Value),
+                        new SqlParameter("@toDate", (object)searchCriteria.ToDate ?? DBNull.Value),
+                        new SqlParameter("@accessStatus", (object)searchCriteria.AccessStatus ?? 1),
+                        new SqlParameter("@skip", skip),
+                        new SqlParameter("@pageSize", pageSize))
+                        .ToList();
+
                     if (resultList != null && resultList.Count > 0)
                     {
-                        Dictionary<long, string> selectedSubModuleByCourse = new Dictionary<long, string>();
-                        IEnumerable<lms_admin_getLearnerProgressReport_Result> filteredList = resultList;
+                        progressReport.TotalRecords = resultList.FirstOrDefault()?.TotalRecords ?? 0;
 
-                        if (searchCriteria.SubModuleId > 0)
-                        {
-                            var courseIds = resultList.Where(x => x.intCourseId.HasValue).Select(x => Convert.ToInt64(x.intCourseId.Value)).Distinct().ToList();
-                            foreach (var courseId in courseIds)
-                            {
-                                var selectedSubModule = context.lms_admin_get_course_submodules(courseId).FirstOrDefault(x => x.smid == searchCriteria.SubModuleId);
-                                if (selectedSubModule != null)
-                                {
-                                    selectedSubModuleByCourse[courseId] = selectedSubModule.name ?? String.Empty;
-                                }
-                            }
-
-                            filteredList = resultList.Where(x => x.intCourseId.HasValue && selectedSubModuleByCourse.ContainsKey(Convert.ToInt64(x.intCourseId.Value)));
-                        }
-
-                        progressReport.TotalRecords = filteredList.Count();
-                        var data = filteredList.Skip(searchCriteria.Skip).Take(searchCriteria.PageSize).ToList();
-
-                        foreach (var item in data)
+                        foreach (var item in resultList)
                         {
                             CourseSubModuleProgressItem progress = new CourseSubModuleProgressItem();
                             progress.UserID = Convert.ToInt64(item.intContactID);
@@ -1979,28 +2055,15 @@ ORDER BY l.strLocation, c.strCourse";
                             progress.Location = item.strLocation;
                             progress.Department = item.strDepartment;
                             progress.CourseName = item.strCourse;
-                            progress.Course = Convert.ToInt64(item.intCourseId);
+                            progress.Course = item.intCourseId.HasValue ? Convert.ToInt64(item.intCourseId.Value) : 0;
+                            progress.SubModuleId = item.intSubModuleID.HasValue ? Convert.ToInt64(item.intSubModuleID.Value) : 0;
+                            progress.SubModuleName = item.subModule_name ?? string.Empty;
                             progress.RecordId = Convert.ToInt64(item.intRecordID);
                             progress.CourseStatus = item.strStatus;
-                            progress.Score = Convert.ToInt32(item.intScore);
+                            progress.Score = 0;
                             progress.AssignedOn = item.dateAssignedOn == null ? "" : (Convert.ToDateTime(item.dateAssignedOn)).ToString("dd-MMM-yyyy");
-                            progress.CompletionDate = item.dateCompletedOn == null ? "" : (Convert.ToDateTime(item.dateCompletedOn)).ToString("dd-MMM-yyyy");
-                            progress.LastAccessedDate = item.dateLastStarted == null ? "" : (Convert.ToDateTime(item.dateLastStarted)).ToString("dd-MMM-yyyy");
-
-                            if (searchCriteria.SubModuleId > 0)
-                            {
-                                progress.SubModuleId = searchCriteria.SubModuleId;
-                            }
-
-                            if (item.intCourseId.HasValue)
-                            {
-                                selectedSubModuleByCourse.TryGetValue(Convert.ToInt64(item.intCourseId.Value), out string selectedSubModuleName);
-                                progress.SubModuleName = selectedSubModuleName ?? String.Empty;
-                            }
-                            else
-                            {
-                                progress.SubModuleName = String.Empty;
-                            }
+                            progress.CompletionDate = "";
+                            progress.LastAccessedDate = item.lastAccessedOn == null ? "" : (Convert.ToDateTime(item.lastAccessedOn)).ToString("dd-MMM-yyyy");
 
                             progressRecord.Add(progress);
                         }
