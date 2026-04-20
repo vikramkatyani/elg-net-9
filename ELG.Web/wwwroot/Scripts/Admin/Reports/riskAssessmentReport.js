@@ -22,6 +22,7 @@ var riskAssessmentReportHandler = (function () {
     var $searchBtn = $('#searchRiskAssessmentBtn');
     var $clearSearchBtn = $('#clearSearchRAReport');
     var $downloadBtn = $('#downloadRAReport');
+    var downloadLoaderId = 'ra-report-download-loader';
 
     var $raRespModal = $('#riskAssessmentResponseModal');
     var $userName = $('#spnRAUserName');
@@ -373,6 +374,65 @@ var riskAssessmentReportHandler = (function () {
     }
 
 
+    function showDownloadLoader() {
+        hideDownloadLoader();
+        $('body').append(
+            '<div id="' + downloadLoaderId + '" style="position:fixed; inset:0; background:rgba(255,255,255,0.8); z-index:2000; display:flex; align-items:center; justify-content:center;">'
+            + '    <div class="text-center">'
+            + '        <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>'
+            + '        <div class="mt-3 fw-semibold">Preparing your download...</div>'
+            + '    </div>'
+            + '</div>'
+        );
+    }
+
+    function hideDownloadLoader() {
+        $('#' + downloadLoaderId).remove();
+    }
+
+    function getDownloadFileName(response) {
+        var disposition = response.headers.get('Content-Disposition') || '';
+        var match = disposition.match(/filename[^;=\n]*=(['"]?)([^'"\n;]+)\1/);
+        if (match && match[2]) return match[2].trim();
+        var contentType = (response.headers.get('Content-Type') || '').toLowerCase();
+        return contentType.indexOf('text/csv') >= 0 ? 'RiskAssessmentReport.csv' : 'RiskAssessmentReport.xlsx';
+    }
+
+    function triggerBrowserDownload(blob, fileName) {
+        var blobUrl = URL.createObjectURL(blob);
+        var downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        setTimeout(function () { URL.revokeObjectURL(blobUrl); }, 10000);
+    }
+
+    async function downloadRAReport(path, btn) {
+        showDownloadLoader();
+        UTILS.Alert.hide($alert);
+        try {
+            var response = await fetch(path, { method: 'GET', credentials: 'same-origin' });
+            var contentType = (response.headers.get('Content-Type') || '').toLowerCase();
+            if (!response.ok) {
+                throw new Error('The report could not be downloaded.');
+            }
+            if (contentType.indexOf('text/html') >= 0) {
+                throw new Error('The report response was not a file.');
+            }
+            var fileName = getDownloadFileName(response);
+            var blob = await response.blob();
+            triggerBrowserDownload(blob, fileName);
+        } catch (err) {
+            console.log(err);
+            UTILS.Alert.show($alert, 'error', 'Failed to generate the report download. Please try again later.');
+        } finally {
+            hideDownloadLoader();
+            UTILS.resetButton(btn);
+        }
+    }
+
     //apply filters and download excel report
     $downloadBtn.click(function (e) {
         e.preventDefault();
@@ -388,11 +448,9 @@ var riskAssessmentReportHandler = (function () {
            SignedOff : $ddlSignedOff.val(),
            From : $txtRptFrom.val(),
            To : $txtRptTo.val(),
-        }
-
+        };
         var path = 'DownloadRiskAssessmentReport?' + $.param(data);
-        window.location = path;
-        UTILS.resetButton(btn);
+        downloadRAReport(path, btn);
     });
 
     //apply filters for search

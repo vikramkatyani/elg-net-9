@@ -180,32 +180,31 @@ namespace ELG.Web.Controllers
             {
                 var reportRep = new ReportRep();
 
-                searchCriteria.Company = SessionHelper.CompanyId;
-                searchCriteria.AdminRole = SessionHelper.UserRole;
+                searchCriteria ??= new ELG.Model.OrgAdmin.LearnerRAReportFilter();
+
+                searchCriteria.Company     = SessionHelper.CompanyId;
+                searchCriteria.AdminRole   = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
 
-                if (searchCriteria == null)
-                {
-                    searchCriteria.SearchText = String.Empty;
-                }
+                searchCriteria.SearchText ??= String.Empty;
 
-                if (!String.IsNullOrEmpty(Request.Form["From"]))
-                    searchCriteria.FromDate = Convert.ToDateTime(Request.Form["From"]);
+                if (!String.IsNullOrEmpty(Request.Form["From"].FirstOrDefault()))
+                    searchCriteria.FromDate = Convert.ToDateTime(Request.Form["From"].FirstOrDefault());
 
-                if (!String.IsNullOrEmpty(Request.Form["To"]))
-                    searchCriteria.ToDate = Convert.ToDateTime(Request.Form["To"]);
+                if (!String.IsNullOrEmpty(Request.Form["To"].FirstOrDefault()))
+                    searchCriteria.ToDate = Convert.ToDateTime(Request.Form["To"].FirstOrDefault());
 
-                searchCriteria.Draw = Request.Form["draw"];
-                searchCriteria.Start = Request.Form["start"];
-                searchCriteria.Length = Request.Form["length"];
+                searchCriteria.Draw   = Request.Form["draw"].FirstOrDefault();
+                searchCriteria.Start  = Request.Form["start"].FirstOrDefault();
+                searchCriteria.Length = Request.Form["length"].FirstOrDefault();
 
                 //Find Order Column
-                var orderColumn = Request.Form["order[0][column]"];
-                searchCriteria.SortCol = Request.Form[$"columns[{orderColumn}][name]"];
+                var orderColumn = Request.Form["order[0][column]"].FirstOrDefault();
+                searchCriteria.SortCol    = Request.Form[$"columns[{orderColumn}][name]"].FirstOrDefault();
                 searchCriteria.SortColDir = Request.Form["order[0][dir]"].FirstOrDefault();
 
-                searchCriteria.PageSize = searchCriteria.Length != null ? Convert.ToInt32(searchCriteria.Length) : 0;
-                searchCriteria.Skip = searchCriteria.Start != null ? Convert.ToInt32(searchCriteria.Start) : 0;
+                searchCriteria.PageSize   = searchCriteria.Length != null ? Convert.ToInt32(searchCriteria.Length) : 0;
+                searchCriteria.Skip       = searchCriteria.Start  != null ? Convert.ToInt32(searchCriteria.Start)  : 0;
                 searchCriteria.RecordTotal = 0;
 
                 raReport = reportRep.GetLearningRAReport(searchCriteria);
@@ -222,32 +221,57 @@ namespace ELG.Web.Controllers
         //download Risk Assessment records
         public ActionResult DownloadRiskAssessmentReport(ELG.Model.OrgAdmin.LearnerRAReportFilter searchCriteria)
         {
-            List<DownloadRAReport> raReport = new List<DownloadRAReport>();
             try
             {
                 var reportRep = new ReportRep();
 
-                searchCriteria.Company = SessionHelper.CompanyId;
-                searchCriteria.AdminRole = SessionHelper.UserRole;
+                searchCriteria ??= new ELG.Model.OrgAdmin.LearnerRAReportFilter();
+
+                searchCriteria.Company     = SessionHelper.CompanyId;
+                searchCriteria.AdminRole   = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
 
-                if (searchCriteria == null)
-                {
-                    searchCriteria.SearchText = String.Empty;
-                }
+                searchCriteria.SearchText ??= String.Empty;
 
                 string fromDate = Request.Query["From"].ToString();
-                string toDate = Request.Query["To"].ToString();
+                string toDate   = Request.Query["To"].ToString();
                 if (!String.IsNullOrEmpty(fromDate))
                     searchCriteria.FromDate = Convert.ToDateTime(fromDate);
 
                 if (!String.IsNullOrEmpty(toDate))
                     searchCriteria.ToDate = Convert.ToDateTime(toDate);
 
-                raReport = reportRep.DownloadRAReport(searchCriteria);
+                string[] columns_header = { SessionHelper.CompanySettings.strFirstNameDescription, SessionHelper.CompanySettings.strSurnameDescription, SessionHelper.CompanySettings.emailIdDescription, SessionHelper.CompanySettings.strLocationDescription, SessionHelper.CompanySettings.strDepartmentDescription, "Course", "Assigned On", "Issue Count", "Signed Off", "Signed Off Date", "Status", "Completion Date" };
 
+                const int xlsxRowLimit = 10000;
+                bool useCsvDownload = false;
+                try
+                {
+                    int totalCount = reportRep.GetRAReportTotalCount(searchCriteria);
+                    useCsvDownload = totalCount > xlsxRowLimit;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Failed to get RA report export count. Falling back to Excel export.", ex);
+                }
+
+                if (useCsvDownload)
+                {
+                    try
+                    {
+                        var csvStream = reportRep.DownloadRAReportAsCsvStream(searchCriteria, columns_header);
+                        return File(csvStream, "text/csv", "RiskAssessmentReport.csv");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Failed to generate CSV export. Falling back to Excel export.", ex);
+                    }
+                }
+
+                // Small dataset: Excel path
+                var raReport = reportRep.DownloadRAReport(searchCriteria);
                 DataTable dtReport = CommonHelper.ListToDataTable(raReport);
-                string[] columns = { "FirstName", "LastName", "EmailId", "Location", "Department", "CourseName", "AssignedOnDate", "IssueCount", "SignedOff", "SignedOffDate", "Status","CompletionDate" };
+                string[] columns = { "FirstName", "LastName", "EmailId", "Location", "Department", "CourseName", "AssignedOnDate", "IssueCount", "SignedOff", "SignedOffDate", "RAStatus", "CompletionDate" };
                 byte[] filecontent = CommonHelper.ExportExcel(dtReport, "Risk Assessment Report", true, columns);
                 return File(filecontent, CommonHelper.ExcelContentType, "RiskAssessmentReport.xlsx");
             }
@@ -255,7 +279,7 @@ namespace ELG.Web.Controllers
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View("RiskAssessmentReport");
+                return StatusCode(500, "Failed to generate report download.");
             }
         }
         

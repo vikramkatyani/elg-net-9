@@ -341,10 +341,15 @@ namespace ELG.Web.Controllers
 
         // revoke Module Access
         [HttpPost]
-        public ActionResult RevokeLearnerModuleAccess(LearnerModuleFilter searchCriteria)
+        public ActionResult RevokeLearnerModuleAccess([FromBody] LearnerModuleFilter searchCriteria)
         {
             try
             {
+                if (searchCriteria == null)
+                {
+                    return Json(new { success = 0 });
+                }
+
                 var moduleRep = new ModuleRep();
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
@@ -360,12 +365,24 @@ namespace ELG.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult RevokeLearnerModuleAccess_Multiple(LearnerModuleFilter searchCriteria, bool allSelected, long[] selectedUserList, long[] unselectedUserList)
+        public ActionResult RevokeLearnerModuleAccess_Multiple([FromBody] RevokeLearnerModuleAccessMultipleRequest request)
         {
             try
             {
+                if (request == null)
+                {
+                    return Json(new { success = 0 });
+                }
+
                 int result = 0;
                 var moduleRep = new ModuleRep();
+                var searchCriteria = new LearnerModuleFilter
+                {
+                    SearchText = request.SearchText,
+                    Location = request.Location,
+                    Department = request.Department,
+                    Course = request.Course
+                };
                 searchCriteria.Company = SessionHelper.CompanyId;
                 searchCriteria.AdminRole = SessionHelper.UserRole;
                 searchCriteria.AdminUserId = SessionHelper.UserId;
@@ -374,25 +391,25 @@ namespace ELG.Web.Controllers
                 string selectedLearners = "";
                 string unSelectedLearners = "";
 
-                if (allSelected)
+                if (request.AllSelected)
                 {
                     //remove unselected users
-                    if (unselectedUserList != null && unselectedUserList.Length > 0)
+                    if (request.UnselectedUserList != null && request.UnselectedUserList.Length > 0)
                     {
-                        unSelectedLearners = string.Join(",", unselectedUserList);
+                        unSelectedLearners = string.Join(",", request.UnselectedUserList);
                     }
                 }
                 else
                 {
                     // if few are selected
-                    if (selectedUserList != null && selectedUserList.Length > 0)
+                    if (request.SelectedUserList != null && request.SelectedUserList.Length > 0)
                     {
-                        selectedLearners = string.Join(",", selectedUserList);
+                        selectedLearners = string.Join(",", request.SelectedUserList);
                     }
 
                 }
 
-                result = moduleRep.RevokeModuleAccess_Multiple(searchCriteria, selectedLearners, unSelectedLearners, allSelected);
+                result = moduleRep.RevokeModuleAccess_Multiple(searchCriteria, selectedLearners, unSelectedLearners, request.AllSelected);
 
                 return Json(new { success = result });
             }
@@ -401,6 +418,17 @@ namespace ELG.Web.Controllers
                 Logger.Error(ex.Message, ex);
                 return Json(new { success = -1 });
             }
+        }
+
+        public class RevokeLearnerModuleAccessMultipleRequest
+        {
+            public bool AllSelected { get; set; }
+            public long[] SelectedUserList { get; set; }
+            public long[] UnselectedUserList { get; set; }
+            public string SearchText { get; set; }
+            public long Location { get; set; }
+            public long Department { get; set; }
+            public long Course { get; set; }
         }
 
         // get list of users with started modules(consumed license); on applied filter

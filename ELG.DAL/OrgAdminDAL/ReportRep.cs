@@ -146,6 +146,25 @@ EXEC dbo.lms_admin_getLearnerProgressReport_Paged
             }
         }
 
+        private static string GetRAReportSortColumn(string sortCol)
+        {
+            switch (sortCol)
+            {
+                case "c.strFirstName":
+                case "c.strEmail":
+                case "l.strLocation":
+                case "d.strDepartment":
+                case "co.strCourse":
+                case "ra.datCompleted":
+                case "ra.datSignoff":
+                case "ra.intIssueCount":
+                case "ra.dateAssignedOn":
+                    return sortCol;
+                default:
+                    return "c.intContactID";
+            }
+        }
+
         private sealed class LearningProgressPagedResult
         {
             public int? intContactID { get; set; }
@@ -187,6 +206,29 @@ EXEC dbo.lms_admin_getLearnerProgressReport_Paged
             public string strStatus { get; set; }
             public DateTime? dateAssignedOn { get; set; }
             public DateTime? lastAccessedOn { get; set; }
+            public int TotalRecords { get; set; }
+        }
+
+        private sealed class RAReportPagedResult
+        {
+            public int? intRiskAssessmentResultID { get; set; }
+            public int? intContactID { get; set; }
+            public int? intLocationID { get; set; }
+            public int? intDepartmentID { get; set; }
+            public int? intCourseId { get; set; }
+            public string strFirstName { get; set; }
+            public string strSurname { get; set; }
+            public string strEmail { get; set; }
+            public string strEmployeeNumber { get; set; }
+            public string strLocation { get; set; }
+            public string strDepartment { get; set; }
+            public string strCourse { get; set; }
+            public DateTime? datCompleted { get; set; }
+            public int? intIssueCount { get; set; }
+            public DateTime? datSignoff { get; set; }
+            public DateTime? dateAssignedOn { get; set; }
+            public string SignedOff { get; set; }
+            public string RAStatus { get; set; }
             public int TotalRecords { get; set; }
         }
         public CourseProgressReport GetLearningProgressReport_Historic(LearnerReportFilter searchCriteria)
@@ -341,8 +383,8 @@ EXEC dbo.lms_admin_getLearnerSubModuleProgressReport_Paged
                         new SqlParameter("@fromDate", (object)searchCriteria.FromDate ?? DBNull.Value),
                         new SqlParameter("@toDate", (object)searchCriteria.ToDate ?? DBNull.Value),
                         new SqlParameter("@accessStatus", (object)searchCriteria.AccessStatus ?? 1),
-                        new SqlParameter("@skip", 0),
-                        new SqlParameter("@pageSize", int.MaxValue))
+                        new SqlParameter("@skip",     (object)(int)0),
+                        new SqlParameter("@pageSize", (object)int.MaxValue))
                         .ToList();
 
                     if (resultList != null && resultList.Count > 0)
@@ -598,39 +640,79 @@ EXEC dbo.lms_admin_getLearnerSubModuleProgressReport_Paged
                 throw;
             }
         }
-        public CourseRAReport GetLearningRAReport(LearnerRAReportFilter searchCriteria )
+        public CourseRAReport GetLearningRAReport(LearnerRAReportFilter searchCriteria)
         {
             try
             {
                 CourseRAReport raReport = new CourseRAReport();
                 List<CourseRAReportItem> recordItems = new List<CourseRAReportItem>();
 
+                string sortColumn    = GetRAReportSortColumn(searchCriteria.SortCol);
+                string sortDirection = GetSortDirection(searchCriteria.SortColDir);
+                int skip     = searchCriteria.Skip     < 0 ? 0  : searchCriteria.Skip;
+                int pageSize = searchCriteria.PageSize < 1 ? 25 : searchCriteria.PageSize;
+
                 using (var context = new lmsdbEntities())
                 {
-                    var resultList = context.lms_admin_getLearnerRAReport(searchCriteria.AdminRole, searchCriteria.AdminUserId, searchCriteria.SearchText, searchCriteria.Location, searchCriteria.Department, searchCriteria.Course, searchCriteria.SignedOff, searchCriteria.RAStatus, searchCriteria.Issue, searchCriteria.Company, searchCriteria.FromDate, searchCriteria.ToDate, searchCriteria.SortCol, searchCriteria.SortColDir).ToList();
+                    var resultList = context.Database.SqlQuery<RAReportPagedResult>(@"
+EXEC dbo.lms_admin_getLearnerRAReport_Paged
+    @adminRole   = @adminRole,
+    @adminUserId = @adminUserId,
+    @learnerName = @learnerName,
+    @location    = @location,
+    @department  = @department,
+    @course      = @course,
+    @signedOff   = @signedOff,
+    @raStatus    = @raStatus,
+    @issues      = @issues,
+    @company     = @company,
+    @fromDate    = @fromDate,
+    @toDate      = @toDate,
+    @sortCol     = @sortCol,
+    @sortDir     = @sortDir,
+    @skip        = @skip,
+    @pageSize    = @pageSize",
+                        new SqlParameter("@adminRole",   (object)searchCriteria.AdminRole   ?? DBNull.Value),
+                        new SqlParameter("@adminUserId", (object)searchCriteria.AdminUserId ?? DBNull.Value),
+                        new SqlParameter("@learnerName", (object)searchCriteria.SearchText  ?? string.Empty),
+                        new SqlParameter("@location",    (object)searchCriteria.Location    ?? 0),
+                        new SqlParameter("@department",  (object)searchCriteria.Department  ?? 0),
+                        new SqlParameter("@course",      (object)searchCriteria.Course      ?? 0),
+                        new SqlParameter("@signedOff",   (object)searchCriteria.SignedOff   ?? 0),
+                        new SqlParameter("@raStatus",    (object)searchCriteria.RAStatus    ?? 0),
+                        new SqlParameter("@issues",      (object)searchCriteria.Issue       ?? 0),
+                        new SqlParameter("@company",     searchCriteria.Company),
+                        new SqlParameter("@fromDate",    (object)searchCriteria.FromDate    ?? DBNull.Value),
+                        new SqlParameter("@toDate",      (object)searchCriteria.ToDate      ?? DBNull.Value),
+                        new SqlParameter("@sortCol",     sortColumn),
+                        new SqlParameter("@sortDir",     sortDirection),
+                        new SqlParameter("@skip",        skip),
+                        new SqlParameter("@pageSize",    pageSize))
+                        .ToList();
+
                     if (resultList != null && resultList.Count > 0)
                     {
-                        raReport.TotalRecords = resultList.Count();
-                        var data = resultList.Skip(searchCriteria.Skip).Take(searchCriteria.PageSize).ToList();
+                        raReport.TotalRecords = resultList.FirstOrDefault()?.TotalRecords ?? 0;
 
-                        foreach (var item in data)
+                        foreach (var item in resultList)
                         {
                             CourseRAReportItem reportItem = new CourseRAReportItem();
-                            reportItem.RiskAssessmentId = Convert.ToInt64(item.intRiskAssessmentResultID);
-                            reportItem.UserID = Convert.ToInt64(item.intContactID);
-                            reportItem.FirstName = item.strFirstName;
-                            reportItem.LastName = item.strSurname;
-                            reportItem.EmployeeNumber = item.strEmployeeNumber;
-                            reportItem.EmailId = item.strEmail;
-                            reportItem.Location = item.strLocation;
-                            reportItem.Department = item.strDepartment;
-                            reportItem.Course = Convert.ToInt64(item.intCourseId);
-                            reportItem.CourseName = item.strCourse;
-                            reportItem.Issue = item.intIssueCount;
-                            reportItem.RAStatus = item.RAStatus;
-                            reportItem.CompletionDate = item.datCompleted == null ? "" : (Convert.ToDateTime(item.datCompleted)).ToString("dd-MMM-yyyy");
-                            reportItem.SignedOffDate = item.datSignoff == null ? "" : (Convert.ToDateTime(item.datSignoff)).ToString("dd-MMM-yyyy");
-                            reportItem.AssignedOnDate = item.dateAssignedOn == null ? "" : (Convert.ToDateTime(item.dateAssignedOn)).ToString("dd-MMM-yyyy");
+                            reportItem.RiskAssessmentId = item.intRiskAssessmentResultID.HasValue ? Convert.ToInt64(item.intRiskAssessmentResultID.Value) : 0;
+                            reportItem.UserID           = item.intContactID.HasValue ? Convert.ToInt64(item.intContactID.Value) : 0;
+                            reportItem.FirstName        = item.strFirstName;
+                            reportItem.LastName         = item.strSurname;
+                            reportItem.EmployeeNumber   = item.strEmployeeNumber;
+                            reportItem.EmailId          = item.strEmail;
+                            reportItem.Location         = item.strLocation;
+                            reportItem.Department       = item.strDepartment;
+                            reportItem.Course           = item.intCourseId.HasValue ? Convert.ToInt64(item.intCourseId.Value) : 0;
+                            reportItem.CourseName       = item.strCourse;
+                            reportItem.Issue            = item.intIssueCount ?? 0;
+                            reportItem.RAStatus         = item.RAStatus;
+                            reportItem.SignedOff        = item.SignedOff;
+                            reportItem.CompletionDate   = item.datCompleted   == null ? "" : Convert.ToDateTime(item.datCompleted).ToString("dd-MMM-yyyy");
+                            reportItem.SignedOffDate     = item.datSignoff     == null ? "" : Convert.ToDateTime(item.datSignoff).ToString("dd-MMM-yyyy");
+                            reportItem.AssignedOnDate   = item.dateAssignedOn == null ? "" : Convert.ToDateTime(item.dateAssignedOn).ToString("dd-MMM-yyyy");
                             recordItems.Add(reportItem);
                         }
                     }
@@ -644,38 +726,200 @@ EXEC dbo.lms_admin_getLearnerSubModuleProgressReport_Paged
             }
         }
 
-        // download Risk Assessment report
+        // Returns total RA record count for the current filter — used to choose Excel vs CSV download.
+        public int GetRAReportTotalCount(LearnerRAReportFilter searchCriteria)
+        {
+            try
+            {
+                var countCriteria = new LearnerRAReportFilter
+                {
+                    AdminRole   = searchCriteria.AdminRole,
+                    AdminUserId = searchCriteria.AdminUserId,
+                    SearchText  = searchCriteria.SearchText,
+                    Company     = searchCriteria.Company,
+                    Location    = searchCriteria.Location,
+                    Department  = searchCriteria.Department,
+                    Course      = searchCriteria.Course,
+                    SignedOff   = searchCriteria.SignedOff,
+                    RAStatus    = searchCriteria.RAStatus,
+                    Issue       = searchCriteria.Issue,
+                    SortCol     = searchCriteria.SortCol,
+                    SortColDir  = searchCriteria.SortColDir,
+                    FromDate    = searchCriteria.FromDate,
+                    ToDate      = searchCriteria.ToDate,
+                    Skip     = 0,
+                    PageSize = 1
+                };
+                var result = GetLearningRAReport(countCriteria);
+                return result?.TotalRecords ?? 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // download Risk Assessment report (full dataset — Excel path)
         public List<DownloadRAReport> DownloadRAReport(LearnerRAReportFilter searchCriteria)
         {
             try
             {
                 List<DownloadRAReport> raRecord = new List<DownloadRAReport>();
 
+                string sortColumn    = GetRAReportSortColumn(searchCriteria.SortCol);
+                string sortDirection = GetSortDirection(searchCriteria.SortColDir);
+                // Use local int variables — avoids the SqlParameter(string, SqlDbType) overload
+                // that C# picks when the literal 0 is used (SqlDbType.BigInt == 0).
+                int dlSkip     = 0;
+                int dlPageSize = int.MaxValue;
+
                 using (var context = new lmsdbEntities())
                 {
-                    var resultList = context.lms_admin_getLearnerRAReport(searchCriteria.AdminRole, searchCriteria.AdminUserId, searchCriteria.SearchText, searchCriteria.Location, searchCriteria.Department, searchCriteria.Course, searchCriteria.SignedOff, searchCriteria.RAStatus, searchCriteria.Issue, searchCriteria.Company, searchCriteria.FromDate, searchCriteria.ToDate, searchCriteria.SortCol, searchCriteria.SortColDir).ToList();
+                    context.Database.CommandTimeout = 300;
+
+                    var resultList = context.Database.SqlQuery<RAReportPagedResult>(@"
+EXEC dbo.lms_admin_getLearnerRAReport_Paged
+    @adminRole   = @adminRole,
+    @adminUserId = @adminUserId,
+    @learnerName = @learnerName,
+    @location    = @location,
+    @department  = @department,
+    @course      = @course,
+    @signedOff   = @signedOff,
+    @raStatus    = @raStatus,
+    @issues      = @issues,
+    @company     = @company,
+    @fromDate    = @fromDate,
+    @toDate      = @toDate,
+    @sortCol     = @sortCol,
+    @sortDir     = @sortDir,
+    @skip        = @skip,
+    @pageSize    = @pageSize",
+                        new SqlParameter("@adminRole",   (object)searchCriteria.AdminRole   ?? DBNull.Value),
+                        new SqlParameter("@adminUserId", (object)searchCriteria.AdminUserId ?? DBNull.Value),
+                        new SqlParameter("@learnerName", (object)searchCriteria.SearchText  ?? string.Empty),
+                        new SqlParameter("@location",    (object)searchCriteria.Location    ?? 0),
+                        new SqlParameter("@department",  (object)searchCriteria.Department  ?? 0),
+                        new SqlParameter("@course",      (object)searchCriteria.Course      ?? 0),
+                        new SqlParameter("@signedOff",   (object)searchCriteria.SignedOff   ?? 0),
+                        new SqlParameter("@raStatus",    (object)searchCriteria.RAStatus    ?? 0),
+                        new SqlParameter("@issues",      (object)searchCriteria.Issue       ?? 0),
+                        new SqlParameter("@company",     searchCriteria.Company),
+                        new SqlParameter("@fromDate",    (object)searchCriteria.FromDate    ?? DBNull.Value),
+                        new SqlParameter("@toDate",      (object)searchCriteria.ToDate      ?? DBNull.Value),
+                        new SqlParameter("@sortCol",     sortColumn),
+                        new SqlParameter("@sortDir",     sortDirection),
+                        new SqlParameter("@skip",        dlSkip),
+                        new SqlParameter("@pageSize",    dlPageSize))
+                        .ToList();
+
                     if (resultList != null && resultList.Count > 0)
                     {
                         foreach (var item in resultList)
                         {
                             DownloadRAReport raItem = new DownloadRAReport();
-                            raItem.FirstName = item.strFirstName;
-                            raItem.LastName = item.strSurname;
-                            raItem.EmailId = item.strEmail;
-                            raItem.Location = item.strLocation;
-                            raItem.Department = item.strDepartment;
-                            raItem.CourseName = item.strCourse;
-                            raItem.IssueCount = item.intIssueCount;
-                            raItem.SignedOff = item.SignedOff;
-                            raItem.RAStatus = item.RAStatus;
-                            raItem.CompletionDate = item.datCompleted == null ? "" : (Convert.ToDateTime(item.datCompleted)).ToString("dd-MMM-yyyy");
-                            raItem.SignedOffDate = item.datSignoff == null ? "" : (Convert.ToDateTime(item.datSignoff)).ToString("dd-MMM-yyyy");
-                            raItem.AssignedOnDate = item.dateAssignedOn == null ? "" : (Convert.ToDateTime(item.dateAssignedOn)).ToString("dd-MMM-yyyy");
+                            raItem.FirstName      = item.strFirstName;
+                            raItem.LastName       = item.strSurname;
+                            raItem.EmailId        = item.strEmail;
+                            raItem.Location       = item.strLocation;
+                            raItem.Department     = item.strDepartment;
+                            raItem.CourseName     = item.strCourse;
+                            raItem.IssueCount     = item.intIssueCount ?? 0;
+                            raItem.SignedOff      = item.SignedOff;
+                            raItem.RAStatus       = item.RAStatus;
+                            raItem.CompletionDate = item.datCompleted   == null ? "" : Convert.ToDateTime(item.datCompleted).ToString("dd-MMM-yyyy");
+                            raItem.SignedOffDate   = item.datSignoff     == null ? "" : Convert.ToDateTime(item.datSignoff).ToString("dd-MMM-yyyy");
+                            raItem.AssignedOnDate  = item.dateAssignedOn == null ? "" : Convert.ToDateTime(item.dateAssignedOn).ToString("dd-MMM-yyyy");
                             raRecord.Add(raItem);
                         }
                     }
                 }
                 return raRecord;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // Large-dataset RA download: streams CSV row-by-row via SqlDataReader — no DataTable or Excel in memory.
+        public MemoryStream DownloadRAReportAsCsvStream(LearnerRAReportFilter searchCriteria, string[] columnHeaders)
+        {
+            try
+            {
+                string sortColumn    = GetRAReportSortColumn(searchCriteria.SortCol);
+                string sortDirection = GetSortDirection(searchCriteria.SortColDir);
+
+                var ms = new MemoryStream();
+                using (var writer = new StreamWriter(ms, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: true), bufferSize: 8192, leaveOpen: true))
+                {
+                    writer.WriteLine(string.Join(",", columnHeaders.Select(h => CsvQuote(h))));
+
+                    using (var context = new lmsdbEntities())
+                    {
+                        var entityConnection = context.Database.Connection as EntityConnection;
+                        var storeConnection  = entityConnection != null
+                            ? entityConnection.StoreConnection
+                            : context.Database.Connection;
+
+                        if (entityConnection != null && entityConnection.State != ConnectionState.Open)
+                            entityConnection.Open();
+                        else if (entityConnection == null && storeConnection.State != ConnectionState.Open)
+                            storeConnection.Open();
+
+                        using (var cmd = storeConnection.CreateCommand())
+                        {
+                            cmd.CommandText    = "dbo.lms_admin_getLearnerRAReport_Paged";
+                            cmd.CommandType    = CommandType.StoredProcedure;
+                            cmd.CommandTimeout = 300;
+                            cmd.Parameters.Add(new SqlParameter("@adminRole",   searchCriteria.AdminRole));
+                            cmd.Parameters.Add(new SqlParameter("@adminUserId", searchCriteria.AdminUserId));
+                            cmd.Parameters.Add(new SqlParameter("@learnerName", (object)searchCriteria.SearchText ?? string.Empty));
+                            cmd.Parameters.Add(new SqlParameter("@location",    searchCriteria.Location));
+                            cmd.Parameters.Add(new SqlParameter("@department",  searchCriteria.Department));
+                            cmd.Parameters.Add(new SqlParameter("@course",      searchCriteria.Course));
+                            cmd.Parameters.Add(new SqlParameter("@signedOff",   searchCriteria.SignedOff));
+                            cmd.Parameters.Add(new SqlParameter("@raStatus",    searchCriteria.RAStatus));
+                            cmd.Parameters.Add(new SqlParameter("@issues",      searchCriteria.Issue));
+                            cmd.Parameters.Add(new SqlParameter("@company",     searchCriteria.Company));
+                            cmd.Parameters.Add(new SqlParameter("@fromDate",    (object)searchCriteria.FromDate ?? DBNull.Value));
+                            cmd.Parameters.Add(new SqlParameter("@toDate",      (object)searchCriteria.ToDate   ?? DBNull.Value));
+                            cmd.Parameters.Add(new SqlParameter("@sortCol",     sortColumn));
+                            cmd.Parameters.Add(new SqlParameter("@sortDir",     sortDirection));
+                            cmd.Parameters.Add(new SqlParameter("@skip",        0));
+                            cmd.Parameters.Add(new SqlParameter("@pageSize",    int.MaxValue));
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    string assignedOn     = reader.IsDBNull(reader.GetOrdinal("dateAssignedOn")) ? "" : Convert.ToDateTime(reader["dateAssignedOn"]).ToString("dd-MMM-yyyy");
+                                    string completionDate = reader.IsDBNull(reader.GetOrdinal("datCompleted"))   ? "" : Convert.ToDateTime(reader["datCompleted"]).ToString("dd-MMM-yyyy");
+                                    string signedOffDate  = reader.IsDBNull(reader.GetOrdinal("datSignoff"))     ? "" : Convert.ToDateTime(reader["datSignoff"]).ToString("dd-MMM-yyyy");
+
+                                    writer.WriteLine(string.Join(",", new[]
+                                    {
+                                        CsvQuote(reader["strFirstName"]?.ToString()),
+                                        CsvQuote(reader["strSurname"]?.ToString()),
+                                        CsvQuote(reader["strEmail"]?.ToString()),
+                                        CsvQuote(reader["strLocation"]?.ToString()),
+                                        CsvQuote(reader["strDepartment"]?.ToString()),
+                                        CsvQuote(reader["strCourse"]?.ToString()),
+                                        CsvQuote(assignedOn),
+                                        CsvQuote(reader["intIssueCount"]?.ToString()),
+                                        CsvQuote(reader["SignedOff"]?.ToString()),
+                                        CsvQuote(signedOffDate),
+                                        CsvQuote(reader["RAStatus"]?.ToString()),
+                                        CsvQuote(completionDate)
+                                    }));
+                                }
+                            }
+                        }
+                    }
+                    writer.Flush();
+                }
+                ms.Position = 0;
+                return ms;
             }
             catch (Exception)
             {

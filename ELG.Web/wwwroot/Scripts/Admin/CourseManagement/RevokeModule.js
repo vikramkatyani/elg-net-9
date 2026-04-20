@@ -35,14 +35,29 @@ var revokeModuleHandler = (function () {
     if (currentpageId == "suspend_ra_access")
         dataURL = hdnBaseUrl + "CourseManagement/LoadLearnerDataToRevokeRA";
 
+    function setRevokeButtonState(isEnabled) {
+        if (isEnabled) {
+            $revokeAllBtn.removeClass('disabled');
+            $revokeAllBtn.prop('disabled', false);
+            $revokeAllBtn.attr("title", "Suspend access from selected learners");
+        } else {
+            $revokeAllBtn.addClass('disabled');
+            $revokeAllBtn.prop('disabled', true);
+            $revokeAllBtn.attr("title", "Select some learners");
+        }
+    }
+
+    function syncRevokeButtonState() {
+        var hasSelection = selectAllUsers || selUsers.length > 0;
+        setRevokeButtonState(hasSelection);
+    }
+
     function resetSelections() {
         selUsers = [];
         unSelUsers = [];
         selectAllUsers = false;
         $selectAllChkBox.prop('checked', false);
-        $revokeAllBtn.addClass('disabled');
-        $revokeAllBtn.removeAttr("onclick", "revokeModuleHandler.revokeFromSelected()");
-        $revokeAllBtn.attr("title", "Select some learners");
+        setRevokeButtonState(false);
     }
 
     function showDefaultMessage() {
@@ -352,19 +367,16 @@ var revokeModuleHandler = (function () {
         if (this.checked) {
             selUsers = [];
             unSelUsers = [];
-            $revokeAllBtn.removeClass('disabled');
-            $revokeAllBtn.attr("onclick", "revokeModuleHandler.revokeFromSelected()");
-            $revokeAllBtn.attr("title", "Suspend access from selected learners");
-        } else {
-            $revokeAllBtn.addClass('disabled');
-            $revokeAllBtn.removeAttr("onclick", "revokeModuleHandler.revokeFromSelected()");
-            $revokeAllBtn.attr("title", "Select some learners");
         }
         revokeModuleHandler.selectAllRows();
+        syncRevokeButtonState();
     });
 
     // function to check learner checkbox click
-    $('#revokeModuleLearnerList tbody').on('change', 'input[type="checkbox"]', function () {
+    // Delegate from table because DataTables can recreate tbody during draw.
+    $('#revokeModuleLearnerList')
+        .off('change', 'tbody input.chk-user')
+        .on('change', 'tbody input.chk-user', function () {
         // If checkbox is not checked
         if (!this.checked) {
             var el = $selectAllChkBox.get(0);
@@ -379,11 +391,9 @@ var revokeModuleHandler = (function () {
 
         //push in selected array
         if (this.checked) {
-            selUsers.push(id);
-            // enable revoke to all button
-            $revokeAllBtn.removeClass('disabled');
-            $revokeAllBtn.attr("onclick", "revokeModuleHandler.revokeFromSelected()");
-            $revokeAllBtn.attr("title", "Suspend from all selected learners");
+            if ($.inArray(id, selUsers) === -1) {
+                selUsers.push(id);
+            }
 
             // remove id if exist in unselected array
             if (unSelUsers.length > 0) {
@@ -398,7 +408,9 @@ var revokeModuleHandler = (function () {
         else {
 
             //push in unselected array
-            unSelUsers.push(id);
+            if ($.inArray(id, unSelUsers) === -1) {
+                unSelUsers.push(id);
+            }
 
             // remove id if exist in selected array
             if (selUsers.length > 0) {
@@ -410,7 +422,9 @@ var revokeModuleHandler = (function () {
                 }
             }
         }
-    });
+
+        syncRevokeButtonState();
+        });
 
     // function to render rows on page change
     function selectAllRows() {
@@ -442,6 +456,8 @@ var revokeModuleHandler = (function () {
             }
 
         })
+
+        syncRevokeButtonState();
     }
 
 
@@ -489,6 +505,14 @@ var revokeModuleHandler = (function () {
         }
 
     }
+
+    $revokeAllBtn.on('click', function (e) {
+        e.preventDefault();
+        if ($(this).hasClass('disabled') || $(this).prop('disabled')) {
+            return false;
+        }
+        revokeFromSelected();
+    });
 
     return {
         init: init,
