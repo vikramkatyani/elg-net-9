@@ -110,6 +110,85 @@
 
 @Html.Partial("_EditLearnerInfo")
 
+<style>
+    #registeredLearnerList .um-status-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 106px;
+        padding: 0.28rem 0.72rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        line-height: 1.1;
+    }
+
+    #registeredLearnerList .um-status-active {
+        background: #dff5ea;
+        color: #1f9b5f;
+        border-color: #a9dfc2;
+    }
+
+    #registeredLearnerList .um-status-suspended {
+        background: #ffe8e8;
+        color: #de4545;
+        border-color: #f5b7b7;
+    }
+
+    #registeredLearnerList .um-row-actions-trigger {
+        width: 2.2rem;
+        height: 2.2rem;
+        border: 1px solid #c8dbe3 !important;
+        background: #edf5f9 !important;
+        color: #2b5a67 !important;
+        font-size: 1rem;
+        line-height: 1;
+    }
+
+    #registeredLearnerList .um-row-actions-trigger:hover,
+    #registeredLearnerList .um-row-actions.show .um-row-actions-trigger,
+    #registeredLearnerList .um-row-actions-trigger:focus-visible {
+        border-color: var(--color-primary, #0b7d78) !important;
+        background: var(--color-primary, #0b7d78) !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 0 0.18rem rgba(11, 125, 120, 0.2);
+        outline: none;
+    }
+
+    #registeredLearnerList .um-row-actions-menu {
+        min-width: 220px;
+        border: 1px solid #d7e6ea;
+        border-radius: 12px;
+        box-shadow: 0 14px 28px rgba(16, 40, 46, 0.14);
+        padding: 0.35rem;
+    }
+
+    #registeredLearnerList .um-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    #registeredLearnerList .um-row-actions-item-icon {
+        width: 18px;
+        text-align: center;
+        color: #2e6f7c;
+        opacity: 0.95;
+    }
+
+    #registeredLearnerList .um-row-actions-item:hover,
+    #registeredLearnerList .um-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+</style>
+
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/Admin/ManageLearner/manageLearners.js?v=1.5"></script>
 }

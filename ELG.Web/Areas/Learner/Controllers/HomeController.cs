@@ -36,7 +36,26 @@ namespace ELG.Web.Areas.Learner.Controllers
         public IActionResult MyCourses()
         {
             ViewBag.Title = "My Courses";
+            if (string.Equals(SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase))
+                return View("MyCoursesModern");
+
             return View();
+        }
+
+        // GET: Learner/Home/SetLearnerViewMode
+        [HttpGet]
+        public ActionResult SetLearnerViewMode(string style, string returnUrl)
+        {
+            SessionHelper.LearnerViewMode = string.Equals(style, "modern", StringComparison.OrdinalIgnoreCase)
+                ? "modern"
+                : "classic";
+
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("MyCourses");
         }
 
         // POST: Get learner courses

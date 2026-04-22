@@ -312,6 +312,55 @@ h3.degrees {
     opacity: .75;
 }
 
+/* Admin flat button treatment: disable gradient fills for page and popup buttons. */
+body .main_container .btn,
+body .main_container button,
+body .main_container input[type="button"],
+body .main_container input[type="submit"],
+body .main_container input[type="reset"],
+body .main_container a.btn,
+body .main_container [class*="-btn-primary"],
+body .main_container [class*="-btn-secondary"],
+body .main_container [class*="-btn-success"],
+body .main_container [class*="-btn-warning"],
+body .main_container [class*="-btn-danger"],
+body .modal .btn,
+body .modal button,
+body .modal input[type="button"],
+body .modal input[type="submit"],
+body .modal input[type="reset"],
+body .modal [class*="-btn-primary"],
+body .modal [class*="-btn-secondary"],
+body .modal [class*="-btn-success"],
+body .modal [class*="-btn-warning"],
+body .modal [class*="-btn-danger"] {
+    background-image: none !important;
+}
+
+body .main_container .btn:hover,
+body .main_container .btn:focus,
+body .main_container .btn:active,
+body .main_container button:hover,
+body .main_container button:focus,
+body .main_container button:active,
+body .modal .btn:hover,
+body .modal .btn:focus,
+body .modal .btn:active,
+body .modal button:hover,
+body .modal button:focus,
+body .modal button:active {
+    background-image: none !important;
+}
+
+body .main_container .btn-primary,
+body .modal .btn-primary,
+body .main_container [class*="-btn-primary"],
+body .modal [class*="-btn-primary"] {
+    background-color: var(--color-primary, #0b7d78) !important;
+    border-color: var(--color-primary, #0b7d78) !important;
+    color: #fff !important;
+}
+
 
 .elg-btn-primary, .btn-primary, .btn-dark {
     /*background-color: var(--color-primary);*/

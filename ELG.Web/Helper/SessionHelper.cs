@@ -472,6 +472,38 @@ namespace ELG.Web.Helper
                 Session?.SetString("OrgAdminAvailableMenu", value);
             }
         }
+
+        /// <summary>
+        /// Gets/Sets admin UI view mode (classic | modern).
+        /// </summary>
+        public static string AdminViewMode
+        {
+            get
+            {
+                var value = Session?.GetString("AdminViewMode");
+                return string.IsNullOrWhiteSpace(value) ? "classic" : value;
+            }
+            set
+            {
+                Session?.SetString("AdminViewMode", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets learner UI view mode (classic | modern).
+        /// </summary>
+        public static string LearnerViewMode
+        {
+            get
+            {
+                var value = Session?.GetString("LearnerViewMode");
+                return string.IsNullOrWhiteSpace(value) ? "classic" : value;
+            }
+            set
+            {
+                Session?.SetString("LearnerViewMode", value);
+            }
+        }
         #endregion
     }
 }

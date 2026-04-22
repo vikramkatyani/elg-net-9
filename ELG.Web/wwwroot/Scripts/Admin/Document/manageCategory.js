@@ -61,14 +61,17 @@ var categoryReportHandler = (function () {
                 render: function (a, b, data, d) {
                     let html = `<span data-bs-toggle="tooltip" title="${data.CategoryDesc}">${data.CategoryName}</span>`;
                     if (data.SubCategoryList.length > 0) {
-                        html += '<div class="mt-3"><table class="table table-sm table-borderless mb-0">';
+                        html += '<div class="dc-sub-actions">';
                         data.SubCategoryList.forEach(sub => {
-                            html += `<tr><td><span class="sub-desc-info" data-bs-toggle="tooltip" title="${sub.SubCategoryDesc}">${sub.SubCategoryName}</span></td><td class="text-end">`;
-                            html += `<button type="button" class="btn btn-sm me-1" onclick="subcategoryReportHandler.showUpdateSubCategoryPopUP(this)" id="edit-sub-category-${sub.SubCategoryId}"><i class="fa fa-edit"></i></button>`;
-                            html += `<button type="button" class="btn btn-sm btn-del-cat" onclick="subcategoryReportHandler.deleteSubCategory(this)" id="delete-sub-category-${sub.SubCategoryId}"><i class="fa fa-trash"></i></button>`;
-                            html += '</td></tr>';
+                            html += `<div class="dc-sub-item">`;
+                            html += `<span class="dc-sub-item-name sub-desc-info" data-bs-toggle="tooltip" title="${sub.SubCategoryDesc}">${sub.SubCategoryName}</span>`;
+                            html += `<span class="dc-sub-item-actions">`;
+                            html += `<button type="button" class="dc-sub-action-btn" data-bs-toggle="tooltip" title="Edit: ${sub.SubCategoryName}" onclick="subcategoryReportHandler.showUpdateSubCategoryPopUP(this)" id="edit-sub-category-${sub.SubCategoryId}"><i class="fa fa-edit"></i></button>`;
+                            html += `<button type="button" class="dc-sub-action-btn btn-del-cat" data-bs-toggle="tooltip" title="Delete: ${sub.SubCategoryName}" onclick="subcategoryReportHandler.deleteSubCategory(this)" id="delete-sub-category-${sub.SubCategoryId}"><i class="fa fa-trash"></i></button>`;
+                            html += `</span>`;
+                            html += `</div>`;
                         });
-                        html += '</table></div>';
+                        html += '</div>';
                     }
                     return html;
                 }
@@ -79,21 +82,20 @@ var categoryReportHandler = (function () {
                 render: function (a, b, data, d) {
                     const id = data.CategoryId;
                     return `
-                    <div class="dropdown">
-                        <button class="btn btn-sm border-0 p-2 rounded-circle" type="button"
-                                id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="width: 2.5rem; height: 2.5rem;">
+                    <div class="dropdown dc-row-actions">
+                        <button class="btn btn-sm rounded-circle dc-row-actions-trigger" type="button"
+                                id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-ellipsis-v"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionDropdown-${id}">
-                            <li><a class="dropdown-item" href="#" id="edit-category-${id}" onclick="categoryReportHandler.showUpdateCategoryPopUP(this)">
-                                <i class="fa fa-edit me-2"></i>Edit</a></li>
-                            <li><a class="dropdown-item btn-del-cat" href="#" id="delete-category-${id}" onclick="categoryReportHandler.deleteCategory(this)">
-                                <i class="fa fa-trash me-2"></i>Delete</a></li>
-                            <li><a class="dropdown-item" href="#" id="add-sub-category-${id}" onclick="addSubCategoryHandler.showCreateSubCategoryPopUp(this)">
-                                <i class="fa fa-plus-circle me-2"></i>Add Sub Category</a></li>
-                            <li><a class="dropdown-item btn-map-cat" href="#" id="map-loc-category-${id}" onclick="categoryReportHandler.mapLocationCategory(this)">
-                                <i class="fa fa-link me-2"></i>Assign Location</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end dc-row-actions-menu" aria-labelledby="actionDropdown-${id}">
+                            <li><a class="dropdown-item dc-row-actions-item" href="#" id="edit-category-${id}" onclick="categoryReportHandler.showUpdateCategoryPopUP(this)">
+                                <i class="fa fa-edit dc-row-actions-item-icon"></i>Edit</a></li>
+                            <li><a class="dropdown-item dc-row-actions-item btn-del-cat" href="#" id="delete-category-${id}" onclick="categoryReportHandler.deleteCategory(this)">
+                                <i class="fa fa-trash dc-row-actions-item-icon"></i>Delete</a></li>
+                            <li><a class="dropdown-item dc-row-actions-item" href="#" id="add-sub-category-${id}" onclick="addSubCategoryHandler.showCreateSubCategoryPopUp(this)">
+                                <i class="fa fa-plus-circle dc-row-actions-item-icon"></i>Add Sub Category</a></li>
+                            <li><a class="dropdown-item dc-row-actions-item btn-map-cat" href="#" id="map-loc-category-${id}" onclick="categoryReportHandler.mapLocationCategory(this)">
+                                <i class="fa fa-link dc-row-actions-item-icon"></i>Assign Location</a></li>
                         </ul>
                     </div>`;
                 }

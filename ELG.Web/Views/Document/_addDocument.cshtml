@@ -1,13 +1,13 @@
 
 <div class="modal fade" id="addDocumentModal" tabindex="-1" aria-labelledby="addDocumentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content shadow-sm">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="addDocumentModalLabel">Add Document</h5>
+        <div class="modal-content shadow-sm doc-modal-content">
+            <div class="modal-header doc-modal-header">
+                <h5 class="modal-title fw-bold doc-modal-title" id="addDocumentModalLabel">Add Document</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body doc-modal-body">
                 @if (ELG.Web.Helper.SessionHelper.CompanySettings.UploadDocEnabled)
                 {
                     <input type="hidden" id="hdnDocUpload" value="1" />
@@ -87,8 +87,8 @@
 
                         <!-- File Upload -->
                         <div class="col-md-12">
-                            <label for="newDocFile" class="form-label">Upload Document</label>
-                            <input class="form-control" type="file" id="newDocFile" name="newDocFile" required>
+                            <label for="newDocFile" class="form-label doc-modal-file-label">Upload Document</label>
+                            <input class="form-control doc-modal-file" type="file" id="newDocFile" name="newDocFile" required>
                             <div class="form-text">File size should not be more than 5 MB</div>
                         </div>
 
@@ -96,9 +96,9 @@
                 </form>
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" id="btnAddNewDoc" data-loading-text="Creating..." data-original-text="Add">Add</button>
+            <div class="modal-footer doc-modal-footer">
+                <button type="button" class="btn doc-modal-btn doc-modal-btn-soft" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn doc-modal-btn doc-modal-btn-primary" id="btnAddNewDoc" data-loading-text="Creating..." data-original-text="Add">Add</button>
             </div>
         </div>
     </div>
@@ -107,13 +107,13 @@
 <!--update document-->
 <div class="modal fade" id="updateDocumentModal" tabindex="-1" aria-labelledby="updateDocumentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content shadow-sm">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="updateDocumentModalLabel">Update Document</h5>
+        <div class="modal-content shadow-sm doc-modal-content">
+            <div class="modal-header doc-modal-header">
+                <h5 class="modal-title fw-bold doc-modal-title" id="updateDocumentModalLabel">Update Document</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body doc-modal-body">
                 <!-- Alert Message -->
                 <div class="alert alert-danger d-none" role="alert" id="updateDocumentMessage"></div>
 
@@ -185,11 +185,107 @@
                 </form>
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnUpdateDoc" data-loading-text="Updating..." data-original-text="Update">Update</button>
+            <div class="modal-footer doc-modal-footer">
+                <button type="button" class="btn doc-modal-btn doc-modal-btn-soft" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn doc-modal-btn doc-modal-btn-primary" id="btnUpdateDoc" data-loading-text="Updating..." data-original-text="Update">Update</button>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    #addDocumentModal .doc-modal-content,
+    #updateDocumentModal .doc-modal-content {
+        border: 1px solid #d8e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+    }
+
+    #addDocumentModal .doc-modal-header,
+    #updateDocumentModal .doc-modal-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #addDocumentModal .doc-modal-title,
+    #updateDocumentModal .doc-modal-title {
+        color: #1f4652;
+    }
+
+    #addDocumentModal .doc-modal-body,
+    #updateDocumentModal .doc-modal-body {
+        background: #fcfefe;
+    }
+
+    #addDocumentModal .form-floating .form-control,
+    #addDocumentModal .form-floating .form-select,
+    #updateDocumentModal .form-floating .form-control,
+    #updateDocumentModal .form-floating .form-select {
+        border-color: #cfe1e6;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    #addDocumentModal .form-floating .form-control:focus,
+    #addDocumentModal .form-floating .form-select:focus,
+    #updateDocumentModal .form-floating .form-control:focus,
+    #updateDocumentModal .form-floating .form-select:focus {
+        border-color: #8cc9c5;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #addDocumentModal .doc-modal-file-label {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #526a74;
+        font-weight: 700;
+    }
+
+    #addDocumentModal .doc-modal-file {
+        border-color: #cfe1e6;
+        border-radius: 10px;
+    }
+
+    #addDocumentModal .doc-modal-footer,
+    #updateDocumentModal .doc-modal-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    #addDocumentModal .doc-modal-btn,
+    #updateDocumentModal .doc-modal-btn {
+        min-width: 104px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+    }
+
+    #addDocumentModal .doc-modal-btn-primary,
+    #updateDocumentModal .doc-modal-btn-primary {
+        color: #fff;
+        background: #0b7d78;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #addDocumentModal .doc-modal-btn-soft,
+    #updateDocumentModal .doc-modal-btn-soft {
+        color: #2e515d;
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+    }
+
+    @@media (max-width: 767px) {
+        #addDocumentModal .modal-dialog,
+        #updateDocumentModal .modal-dialog {
+            margin: 0.6rem;
+        }
+    }
+</style>
 

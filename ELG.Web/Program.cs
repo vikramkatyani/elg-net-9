@@ -14,6 +14,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.DataProtection;
+using ELG.Web.Helper;
 
 try
 {
@@ -90,9 +91,14 @@ try
         options.Cookie.IsEssential = true;
     });
 
+    builder.Services.AddScoped<AdminViewModeFilter>();
+
     // Add services to the container.
     // Preserve server property names (PascalCase) in JSON responses
-    builder.Services.AddControllersWithViews()
+    builder.Services.AddControllersWithViews(options =>
+        {
+            options.Filters.AddService<AdminViewModeFilter>();
+        })
         .AddJsonOptions(opts =>
         {
             opts.JsonSerializerOptions.PropertyNamingPolicy = null;

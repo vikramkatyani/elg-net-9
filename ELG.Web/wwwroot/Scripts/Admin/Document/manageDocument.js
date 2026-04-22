@@ -254,25 +254,24 @@ var documentReportHandler = (function () {
                         const id = data.DocumentID;
                         const isArchived = data.DocIsArchived == 1;
                         const archiveBtn = isArchived
-                            ? `<li><a class="dropdown-item" href="#" id="activate-doc-${id}" onclick="documentReportHandler.activateDocument(this)">
-                            <i class="fa fa-sync me-2"></i>Activate</a></li>`
-                            : `<li><a class="dropdown-item" href="#" id="archive-doc-${id}" onclick="documentReportHandler.archiveDocument(this)">
-                            <i class="fa fa-power-off me-2"></i>Archive</a></li>`;
+                            ? `<li><a class="dropdown-item dm-row-actions-item" href="#" id="activate-doc-${id}" onclick="documentReportHandler.activateDocument(this)">
+                            <i class="fa fa-sync dm-row-actions-item-icon"></i>Activate</a></li>`
+                            : `<li><a class="dropdown-item dm-row-actions-item" href="#" id="archive-doc-${id}" onclick="documentReportHandler.archiveDocument(this)">
+                            <i class="fa fa-power-off dm-row-actions-item-icon"></i>Archive</a></li>`;
 
                         return `
-                <div class="dropdown">
-                    <button class="btn btn-sm border-0 p-2 rounded-circle" type="button"
-                            id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false"
-                            style="width: 2.5rem; height: 2.5rem;">
+                <div class="dropdown dm-row-actions">
+                    <button class="btn btn-sm rounded-circle dm-row-actions-trigger" type="button"
+                            id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-ellipsis-v"></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionDropdown-${id}">
-                        <li><a class="dropdown-item" href="#" id="edit-doc-${id}" onclick="documentReportHandler.showUpdateDocumentPopUP(this)">
-                            <i class="fa fa-edit me-2"></i>Edit</a></li>
-                        <li><a class="dropdown-item" href="${data.DocumentPath}" target="_blank" id="preview-doc-${id}">
-                            <i class="fa fa-eye me-2"></i>Preview</a></li>
-                        <li><a class="dropdown-item btn-del-doc" href="#" id="delete-doc-${id}" onclick="documentReportHandler.deleteDocument(this)">
-                            <i class="fa fa-trash me-2"></i>Delete</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end dm-row-actions-menu" aria-labelledby="actionDropdown-${id}">
+                        <li><a class="dropdown-item dm-row-actions-item" href="#" id="edit-doc-${id}" onclick="documentReportHandler.showUpdateDocumentPopUP(this)">
+                            <i class="fa fa-edit dm-row-actions-item-icon"></i>Edit</a></li>
+                        <li><a class="dropdown-item dm-row-actions-item" href="${data.DocumentPath}" target="_blank" id="preview-doc-${id}">
+                            <i class="fa fa-eye dm-row-actions-item-icon"></i>Preview</a></li>
+                        <li><a class="dropdown-item dm-row-actions-item btn-del-doc" href="#" id="delete-doc-${id}" onclick="documentReportHandler.deleteDocument(this)">
+                            <i class="fa fa-trash dm-row-actions-item-icon"></i>Delete</a></li>
                         ${archiveBtn}
                     </ul>
                 </div>`;

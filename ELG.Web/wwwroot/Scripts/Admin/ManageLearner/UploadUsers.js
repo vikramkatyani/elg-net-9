@@ -2,9 +2,11 @@
     UTILS.activateNavigationLink('userLink');
     UTILS.activateMenuNavigationLink('menu-upload-user');
 
-    if (document.getElementById("flmyPostedFile").files.length == 0) {
+    var fileInput = document.getElementById("flmyPostedFile");
+    if (fileInput && fileInput.files.length == 0) {
         $('#btnUploadUsersFile').attr('disabled', 'disabled');
     }
+
     var uploadStatus = $("#hdnUploadStatus").val()
     if (uploadStatus != "" && uploadStatus != null) {
         $('#divUploadStatusMessage').html(uploadStatus)
@@ -13,11 +15,17 @@
 });
 
 $('#flmyPostedFile').on('change', function () {
-    //get the file name
-    var fileName = document.getElementById("flmyPostedFile").files[0].name;
-    $('#spnFileName').html(fileName);
+    var fileInput = document.getElementById("flmyPostedFile");
+    var hasFile = fileInput && fileInput.files.length > 0;
+    var fileName = hasFile ? fileInput.files[0].name : 'No file selected';
 
-    if (document.getElementById("flmyPostedFile").files.length == 0) {
+    if ($('#spnFileName').length)
+        $('#spnFileName').html(fileName);
+
+    if ($('#txtSelectedFile').length)
+        $('#txtSelectedFile').val(hasFile ? fileName : '');
+
+    if (!hasFile) {
         $('#btnUploadUsersFile').attr('disabled', 'disabled');
     } else {
         $('#btnUploadUsersFile').removeAttr('disabled');

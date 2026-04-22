@@ -517,6 +517,10 @@ namespace ELG.Web.Controllers
                 searchCriteria.Skip = searchCriteria.Start != null ? Convert.ToInt32(searchCriteria.Start) : 0;
                 searchCriteria.RecordTotal = 0;
 
+                var statsFilterRaw = Request.Form["CourseStatsFilter"].FirstOrDefault();
+                if (int.TryParse(statsFilterRaw, out var statsFilter))
+                    searchCriteria.CourseStatsFilter = statsFilter;
+
                 orgModuleList = moduleRep.GetModules(searchCriteria);
 
                 // Process thumbnail URLs for public container access
@@ -540,6 +544,49 @@ namespace ELG.Web.Controllers
             {
                 Logger.Error(ex.Message, ex);
                 return Json(new { draw = searchCriteria.Draw, recordsFiltered = orgModuleList.TotalModules, recordsTotal = orgModuleList.TotalModules, data = orgModuleList.ModuleList });
+            }
+        }
+
+        [HttpGet]
+        public ActionResult LoadCourseQuickStats()
+        {
+            try
+            {
+                var moduleRep = new ModuleRep();
+                var criteria = new DataTableFilter
+                {
+                    SearchText = string.Empty,
+                    Company = Convert.ToInt64(SessionHelper.CompanyId),
+                    SortCol = "strCourse",
+                    SortColDir = "asc",
+                    Skip = 0,
+                    PageSize = int.MaxValue,
+                    CourseStatsFilter = 0
+                };
+
+                var moduleList = moduleRep.GetModules(criteria);
+                int totalCourses = moduleList?.TotalModules ?? 0;
+                int coursesWithSubmodules = moduleList?.ModuleList?.Count(x => x.SubModuleCount > 0) ?? 0;
+                int coursesWithNoAssignments = totalCourses - coursesWithSubmodules;
+
+                return Json(new
+                {
+                    success = 1,
+                    totalCourses,
+                    coursesWithNoAssignments,
+                    coursesWithSubmodules
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return Json(new
+                {
+                    success = -1,
+                    totalCourses = 0,
+                    coursesWithNoAssignments = 0,
+                    coursesWithSubmodules = 0
+                });
             }
         }
 

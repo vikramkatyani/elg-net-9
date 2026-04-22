@@ -1,0 +1,369 @@
+@{
+    ViewBag.Title = "Create User";
+
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="ca-modern-page">
+    <section class="ca-hero">
+        <div>
+            <h1 class="ca-title">Create User Account</h1>
+            <p class="ca-subtitle">Set up a learner profile and send an activation email instantly.</p>
+        </div>
+        <div class="ca-hero-badges">
+            <span class="ca-badge"><i class="fa fa-user-plus"></i> Quick Onboarding</span>
+            <span class="ca-badge"><i class="fa fa-envelope"></i> Auto Activation Email</span>
+        </div>
+    </section>
+
+    <section class="ca-panel">
+        <div class="ca-panel-head">
+            <h2>Account Details</h2>
+            <p>All fields marked with * are required.</p>
+        </div>
+
+        <div class="alert alert-danger d-none" role="alert" id="divAddLearnerErrorMessage"></div>
+
+        <form id="createLearnerForm" novalidate>
+            <input type="hidden" id="txtAddTitle" value="" />
+
+            <div class="ca-form-grid">
+                <div class="ca-field">
+                    <label class="form-label ca-label" for="txtAddEmail">@ELG.Web.Helper.SessionHelper.CompanySettings.emailIdDescription *</label>
+                    <div class="ca-control">
+                        <span class="ca-control-icon"><i class="fa fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="txtAddEmail" placeholder="name@company.com" required>
+                    </div>
+                </div>
+
+                <div class="ca-field">
+                    <label class="form-label ca-label" for="txtAddFirstName">@ELG.Web.Helper.SessionHelper.CompanySettings.strFirstNameDescription *</label>
+                    <div class="ca-control">
+                        <span class="ca-control-icon"><i class="fa fa-id-card"></i></span>
+                        <input type="text" class="form-control" id="txtAddFirstName" placeholder="Enter first name" required>
+                    </div>
+                </div>
+
+                <div class="ca-field">
+                    <label class="form-label ca-label" for="txtAddLastName">@ELG.Web.Helper.SessionHelper.CompanySettings.strSurnameDescription *</label>
+                    <div class="ca-control">
+                        <span class="ca-control-icon"><i class="fa fa-id-card-o"></i></span>
+                        <input type="text" class="form-control" id="txtAddLastName" placeholder="Enter last name" required>
+                    </div>
+                </div>
+
+                <div class="ca-field">
+                    <label class="form-label ca-label" for="ddlAddLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription *</label>
+                    <div class="ca-control">
+                        <span class="ca-control-icon"><i class="fa fa-map-marker"></i></span>
+                        <select class="form-select" id="ddlAddLocation" required>
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="ca-field">
+                    <label class="form-label ca-label" for="ddlAddDpartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription *</label>
+                    <div class="ca-control">
+                        <span class="ca-control-icon"><i class="fa fa-sitemap"></i></span>
+                        <select class="form-select" id="ddlAddDpartment" required>
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="ca-field d-none">
+                    <label class="form-label ca-label" for="txtAddEmpNo">@ELG.Web.Helper.SessionHelper.CompanySettings.strEmployeeNumberDescription</label>
+                    <div class="ca-control">
+                        <span class="ca-control-icon"><i class="fa fa-hashtag"></i></span>
+                        <input type="text" class="form-control" id="txtAddEmpNo" placeholder="Optional">
+                    </div>
+                </div>
+
+                <div class="ca-field ca-actions-wrap">
+                    <div class="ca-actions">
+                        <button type="button"
+                                id="btnAddNewUser"
+                                class="btn ca-btn ca-btn-primary"
+                                data-loading-text="Creating User..."
+                                data-original-text="Create User">
+                            <i class="fa fa-user-plus"></i>Create User
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+
+<style>
+    .ca-modern-page {
+        --ca-surface: #ffffff;
+        --ca-line: #d5e5e7;
+        --ca-text: #17343c;
+        --ca-muted: #63808a;
+        --ca-brand: var(--color-primary, #0b7d78);
+        --ca-brand-alt: var(--color-secondary, #0f968f);
+        --ca-brand-soft: #e6f5f4;
+        --ca-shadow: 0 14px 30px rgba(14, 42, 48, 0.08);
+        color: var(--ca-text);
+        direction: ltr;
+    }
+
+    .ca-modern-page *,
+    .ca-modern-page *::before,
+    .ca-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .ca-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .ca-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .ca-subtitle {
+        margin: 0.28rem 0 0;
+        color: var(--ca-muted);
+    }
+
+    .ca-hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+    }
+
+    .ca-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.34rem;
+        border: 1px solid #cce2df;
+        background: #fff;
+        color: #2e5562;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 0.31rem 0.64rem;
+        white-space: nowrap;
+    }
+
+    .ca-panel {
+        background: var(--ca-surface);
+        border: 1px solid var(--ca-line);
+        border-radius: 14px;
+        box-shadow: var(--ca-shadow);
+        padding: 1.05rem;
+        width: min(100%, 980px);
+        overflow: hidden;
+    }
+
+    .ca-modern-page #createLearnerForm {
+        width: 100%;
+        max-width: 900px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ca-panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .ca-panel-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .ca-panel-head p {
+        margin: 0;
+        font-size: 0.82rem;
+        color: var(--ca-muted);
+    }
+
+    .ca-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #55707b;
+        margin-bottom: 0.3rem;
+    }
+
+    .ca-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        gap: 0.95rem 1rem;
+        align-items: end;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ca-field {
+        min-width: 0;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        float: none !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .ca-label {
+        display: inline-block;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        transform: none !important;
+        position: static !important;
+    }
+
+    .ca-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfdfe3;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+        margin: 0 !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .ca-control:hover {
+        border-color: #bad6dc;
+    }
+
+    .ca-control-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        min-width: 50px;
+        background: var(--ca-brand-soft);
+        color: var(--ca-brand);
+        border-right: 1px solid #cde3df;
+    }
+
+    .ca-control .form-control,
+    .ca-control .form-select {
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        box-shadow: none;
+        background: transparent;
+        margin: 0 !important;
+        transform: none !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        float: none !important;
+    }
+
+    .ca-control:focus-within {
+        border-color: #92c9c5;
+        box-shadow: 0 0 0 0.2rem rgba(10, 127, 121, 0.14);
+    }
+
+    .ca-actions {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 0.2rem;
+    }
+
+    .ca-actions-wrap {
+        grid-column: 1 / -1;
+    }
+
+    .ca-btn {
+        min-width: 160px;
+        height: 42px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        font-size: 0.86rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .ca-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .ca-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .ca-btn-primary {
+        background: var(--ca-brand);
+        color: #fff;
+        box-shadow: 0 9px 18px rgba(11, 125, 120, 0.22);
+    }
+
+    .ca-btn-primary:hover,
+    .ca-btn-primary:focus {
+        color: #fff;
+    }
+
+    @@media (max-width: 991px) {
+        .ca-hero {
+            flex-direction: column;
+        }
+
+        .ca-form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ca-panel-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ca-panel {
+            padding: 0.85rem;
+            border-radius: 12px;
+        }
+
+        .ca-actions {
+            justify-content: stretch;
+        }
+
+        .ca-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script type="text/javascript" src="~/Scripts/Admin/ManageLearner/createlearner.js?v=1.1"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/Common/formValidate.js"></script>
+}

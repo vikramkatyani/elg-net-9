@@ -1,0 +1,534 @@
+@using ELG.Web.Helper
+@{
+    ViewBag.Title = "Upload SCORM Package";
+
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+
+    var currentCount = ViewBag.CurrentCourseCount ?? 0;
+    var maxCount = ViewBag.MaxAllowedCourses ?? 0;
+    var exhausted = ViewBag.QuotaExhausted == true;
+}
+
+<div class="sp-modern-page">
+    <section class="sp-hero">
+        <div>
+            <h1 class="sp-title">Upload SCORM Package</h1>
+            <p class="sp-subtitle">Create a new course by uploading a SCORM ZIP package and optional thumbnail.</p>
+        </div>
+        <div class="sp-hero-badges">
+            <span class="sp-badge"><i class="fa fa-file-archive-o"></i> SCORM ZIP</span>
+            <span class="sp-badge"><i class="fa fa-image"></i> Thumbnail Optional</span>
+        </div>
+    </section>
+
+    <section class="sp-status-grid" aria-label="Course quota status">
+        <article class="sp-status-card">
+            <div class="sp-status-label">Courses Used</div>
+            <div class="sp-status-value">@currentCount</div>
+        </article>
+        <article class="sp-status-card">
+            <div class="sp-status-label">Courses Allowed</div>
+            <div class="sp-status-value">@maxCount</div>
+        </article>
+        <article class="sp-status-card @(exhausted ? "is-danger" : "is-success")">
+            <div class="sp-status-label">Upload Status</div>
+            <div class="sp-status-value">@(exhausted ? "Quota Reached" : "Available")</div>
+        </article>
+    </section>
+
+    @if (exhausted)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong><i class="fa fa-exclamation-circle"></i> Quota Exhausted</strong>
+            <div class="mt-1">You have reached the maximum allowed courses: <strong>@currentCount / @maxCount</strong>. Delete existing courses or contact support to proceed.</div>
+        </div>
+    }
+
+    <section class="sp-form-card">
+        <div class="sp-form-head">
+            <h2>Course Package Details</h2>
+            <p>Fields marked with * are required.</p>
+        </div>
+
+        <form id="scormUploadForm" enctype="multipart/form-data" method="post" action="@Url.Action("UploadScormPackage", "CourseManagement")" novalidate>
+            <div class="sp-form-grid">
+                <div class="sp-field sp-field-full">
+                    <label class="form-label sp-label" for="CourseTitle">Course Title <span class="text-danger">*</span></label>
+                    <div class="sp-control">
+                        <span class="sp-control-icon"><i class="fa fa-book"></i></span>
+                        <input type="text" class="form-control" id="CourseTitle" name="CourseTitle" placeholder="Enter course title" maxlength="100" required @(exhausted ? "disabled" : "")>
+                    </div>
+                    <div class="sp-hint">Maximum 100 characters</div>
+                </div>
+
+                <div class="sp-field sp-field-full">
+                    <label class="form-label sp-label" for="CourseDescription">Course Description</label>
+                    <textarea class="form-control sp-textarea" id="CourseDescription" name="CourseDescription" rows="4" placeholder="Enter course description" maxlength="400" @(exhausted ? "disabled" : "")></textarea>
+                    <div class="sp-hint">Maximum 400 characters</div>
+                </div>
+
+                <div class="sp-field sp-field-full">
+                    <label class="form-label sp-label" for="ScormPackage">SCORM Package (ZIP) <span class="text-danger">*</span></label>
+                    <input type="file" class="d-none" id="ScormPackage" name="ScormPackage" accept=".zip" required @(exhausted ? "disabled" : "") onchange="window.validateZipFile && window.validateZipFile(this); syncScormFileName(this);">
+
+                    <div class="sp-file-row">
+                        <button type="button" class="btn sp-btn sp-btn-soft" onclick="document.getElementById('ScormPackage').click();" @(exhausted ? "disabled" : "")>
+                            <i class="fa fa-folder-open"></i>Select ZIP File
+                        </button>
+                        <div class="sp-file-pill" id="spScormFileName">No file selected</div>
+                    </div>
+
+                    <div class="sp-hint">Only ZIP files are allowed. Maximum file size: 500 MB</div>
+                    <div id="zipFileError" class="text-danger mt-2" style="display: none;"></div>
+                </div>
+
+                <div class="sp-field sp-field-full">
+                    <label class="form-label sp-label" for="Thumbnail">Course Thumbnail (Optional)</label>
+                    <input type="file" class="d-none" id="Thumbnail" name="Thumbnail" accept="image/*" @(exhausted ? "disabled" : "") onchange="window.validateThumbnail && window.validateThumbnail(this); syncThumbnailFileName(this);">
+
+                    <div class="sp-file-row">
+                        <button type="button" class="btn sp-btn sp-btn-soft" onclick="document.getElementById('Thumbnail').click();" @(exhausted ? "disabled" : "")>
+                            <i class="fa fa-image"></i>Select Image
+                        </button>
+                        <div class="sp-file-pill" id="spThumbnailFileName">No image selected</div>
+                    </div>
+
+                    <div class="sp-hint">Supported formats: JPEG, PNG, GIF, WebP. Maximum file size: 5 MB</div>
+                    <div id="thumbnailError" class="text-danger mt-2" style="display: none;"></div>
+                    <div id="thumbnailPreview" class="sp-thumb-preview mt-3"></div>
+                </div>
+
+                <div class="sp-field sp-field-full">
+                    <div class="sp-actions">
+                        <button type="submit" class="btn sp-btn sp-btn-primary" id="uploadBtn" @(exhausted ? "disabled" : "")>
+                            <i class="fa fa-upload"></i>Upload SCORM Package
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+
+<style>
+    .sp-modern-page {
+        --sp-surface: #ffffff;
+        --sp-line: #d9e6ea;
+        --sp-text: #14323c;
+        --sp-muted: #637f8a;
+        --sp-brand: var(--color-primary, #0b7d78);
+        --sp-brand-alt: var(--color-secondary, #0f968f);
+        --sp-brand-soft: #e8f5f3;
+        --sp-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--sp-text);
+        direction: ltr;
+    }
+
+    .sp-modern-page *,
+    .sp-modern-page *::before,
+    .sp-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .sp-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .sp-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .sp-subtitle {
+        margin: 0.28rem 0 0;
+        color: var(--sp-muted);
+    }
+
+    .sp-hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+    }
+
+    .sp-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid #cce2df;
+        background: #fff;
+        color: #2f5662;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 0.31rem 0.64rem;
+        white-space: nowrap;
+    }
+
+    .sp-status-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .sp-status-card {
+        background: #fff;
+        border: 1px solid #d9e6ea;
+        border-radius: 12px;
+        box-shadow: 0 8px 18px rgba(17, 39, 47, 0.08);
+        padding: 0.72rem 0.9rem;
+    }
+
+    .sp-status-card.is-success {
+        border-color: #bfe8cf;
+        background: #f4fbf7;
+    }
+
+    .sp-status-card.is-danger {
+        border-color: #f1c4c4;
+        background: #fff5f5;
+    }
+
+    .sp-status-label {
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #57717d;
+    }
+
+    .sp-status-value {
+        margin-top: 0.2rem;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #1f4652;
+    }
+
+    .sp-form-card {
+        background: var(--sp-surface);
+        border: 1px solid var(--sp-line);
+        border-radius: 14px;
+        box-shadow: var(--sp-shadow);
+        padding: 1.05rem;
+        overflow: hidden;
+    }
+
+    .sp-modern-page #scormUploadForm {
+        width: 100%;
+        max-width: 980px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sp-form-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .sp-form-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .sp-form-head p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--sp-muted);
+    }
+
+    .sp-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        gap: 0.95rem 1rem;
+        align-items: end;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sp-field {
+        min-width: 0;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        float: none !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .sp-field-full {
+        grid-column: 1 / -1;
+    }
+
+    .sp-label {
+        display: inline-block;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        float: none !important;
+    }
+
+    .sp-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+        margin: 0 !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        float: none !important;
+    }
+
+    .sp-control:hover {
+        border-color: #b9d5db;
+    }
+
+    .sp-control:focus-within {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .sp-control-icon {
+        width: 48px;
+        min-width: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--sp-brand-soft);
+        color: var(--sp-brand);
+        border-right: 1px solid #cde2de;
+    }
+
+    .sp-control .form-control {
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        box-shadow: none;
+        background: transparent;
+        margin: 0 !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        float: none !important;
+    }
+
+    .sp-textarea {
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        min-height: 110px;
+        width: 100%;
+        box-shadow: none;
+        margin: 0 !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        float: none !important;
+    }
+
+    .sp-textarea:focus {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .sp-file-row {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sp-file-pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+        border: 1px solid #d2e2e8;
+        border-radius: 999px;
+        padding: 0.35rem 0.75rem;
+        background: #f7fbfd;
+        color: #2e515d;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .sp-hint {
+        margin-top: 0.28rem;
+        font-size: 0.78rem;
+        color: #69828d;
+    }
+
+    .sp-thumb-preview img {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+        border: 1px solid #d5e3e8;
+        padding: 4px;
+        background: #fff;
+    }
+
+    .sp-actions {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sp-btn {
+        min-width: 150px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-weight: 700;
+        font-size: 0.84rem;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .sp-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .sp-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .sp-btn-primary {
+        background: var(--sp-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .sp-btn-primary:hover,
+    .sp-btn-primary:focus {
+        color: #fff;
+    }
+
+    .sp-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    input:disabled,
+    textarea:disabled,
+    button:disabled {
+        background-color: #e9ecef !important;
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        opacity: 0.62 !important;
+    }
+
+    @@media (max-width: 991px) {
+        .sp-hero {
+            flex-direction: column;
+        }
+
+        .sp-status-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sp-form-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sp-form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .sp-form-card {
+            padding: 0.85rem;
+            border-radius: 12px;
+        }
+
+        .sp-file-row {
+            align-items: stretch;
+        }
+
+        .sp-file-pill,
+        .sp-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+
+    <script>
+        window.quotaExhausted = @(exhausted ? "true" : "false");
+        window.maxAllowedCourses = @maxCount;
+        window.currentCourseCount = @currentCount;
+
+        function syncScormFileName(input) {
+            var name = (input && input.files && input.files.length > 0) ? input.files[0].name : 'No file selected';
+            var target = document.getElementById('spScormFileName');
+            if (target) target.textContent = name;
+        }
+
+        function syncThumbnailFileName(input) {
+            var name = (input && input.files && input.files.length > 0) ? input.files[0].name : 'No image selected';
+            var target = document.getElementById('spThumbnailFileName');
+            if (target) target.textContent = name;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('scormUploadForm');
+            if (!form) return;
+
+            form.addEventListener('reset', function () {
+                var scormTarget = document.getElementById('spScormFileName');
+                var thumbTarget = document.getElementById('spThumbnailFileName');
+                if (scormTarget) scormTarget.textContent = 'No file selected';
+                if (thumbTarget) thumbTarget.textContent = 'No image selected';
+            });
+        });
+    </script>
+
+    <script src="~/js/course-management/upload-scorm.js?v=1.1"></script>
+}

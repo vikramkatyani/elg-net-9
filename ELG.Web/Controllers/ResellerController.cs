@@ -2,7 +2,6 @@ using ELG.Model.OrgAdmin;
 using System;
 using ELG.Web.Helper;
 using System.Linq;
-using ELG.Model.OrgAdmin;
 using ELG.DAL.OrgAdminDAL;
 using System.Collections.Generic;
 using System.Data;

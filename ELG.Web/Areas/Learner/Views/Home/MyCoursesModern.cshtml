@@ -1,0 +1,562 @@
+@{
+    ViewBag.Title = "My Courses";
+    Layout = "~/Areas/Learner/Views/Shared/_Layout.cshtml";
+}
+
+<div class="lm-page">
+    <section class="lm-hero">
+        <div class="lm-hero-main">
+            <span class="lm-hero-chip">Learning Journey</span>
+            <h1 class="lm-title">Welcome back, @(ELG.Web.Helper.SessionHelper.UserDisplayName ?? "Learner")</h1>
+            <p class="lm-subtitle">Keep progressing through your assigned learning with quick launch and status tracking.</p>
+        </div>
+        <div class="lm-hero-stats" aria-label="Course overview stats">
+            <article class="lm-stat-pill">
+                <div class="lm-stat-icon"><i class="fa fa-book"></i></div>
+                <div>
+                    <div class="lm-stat-value" id="lmTotalAssigned">-</div>
+                    <div class="lm-stat-label">Assigned</div>
+                </div>
+            </article>
+            <article class="lm-stat-pill">
+                <div class="lm-stat-icon is-success"><i class="fa fa-check-circle"></i></div>
+                <div>
+                    <div class="lm-stat-value" id="lmTotalCompleted">-</div>
+                    <div class="lm-stat-label">Completed</div>
+                </div>
+            </article>
+            <article class="lm-stat-pill">
+                <div class="lm-stat-icon is-warning"><i class="fa fa-clock-o"></i></div>
+                <div>
+                    <div class="lm-stat-value" id="lmTotalInProgress">-</div>
+                    <div class="lm-stat-label">In Progress</div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="lm-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-7 col-md-12">
+                <label class="form-label lm-label" for="txtSearchCourseModern">Search</label>
+                <div class="lm-control">
+                    <span class="lm-control-icon"><i class="fa fa-search"></i></span>
+                    <input id="txtSearchCourseModern" type="text" class="form-control" placeholder="Search courses...">
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12">
+                <div class="lm-actions">
+                    <button id="btnSearchCourseModern" class="btn lm-btn lm-btn-primary"><i class="fa fa-search"></i> Search</button>
+                    <button id="btnClearSearchCourseModern" class="btn lm-btn lm-btn-soft"><i class="fa fa-refresh"></i> Clear</button>
+                    <div class="lm-view-toggle">
+                        <button id="lmListViewBtn" type="button" class="btn lm-view-btn"><i class="fa fa-list"></i> List</button>
+                        <button id="lmGridViewBtn" type="button" class="btn lm-view-btn is-active"><i class="fa fa-th-large"></i> Grid</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="divNoLicenceCourses"></div>
+
+    <section class="lm-content-card">
+        <div id="lmCourseListContainer" class="d-none"></div>
+        <div id="lmCourseGridContainer" class="lm-grid"></div>
+    </section>
+</div>
+
+<div class="modal fade" id="courseLaunchConfirmationModal" tabindex="-1" aria-labelledby="courseLaunchModalLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseLaunchModalLabel">
+                    <i class="fa fa-book-open me-2 text-primary"></i> You've already completed this course.
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="div-confrm-msg" class="text-dark"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times me-1"></i> Close</button>
+                <button type="button" class="btn btn-success" id="confirmLaunchBtn"><i class="fa fa-play me-1"></i> Launch</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalTrainerInfo" tabindex="-1" role="dialog" aria-labelledby="modalTrainerInfo" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Training Coordinator</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="card text-center shadow mb-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-gray-900"><span id="spnCompanyName"></span></h5>
+                        <p class="card-text">For any question about this course assignment, contact:</p>
+                        <p><span id="spnTrainer"></span></p>
+                        <p><span id="spnTrainerEmail"></span></p>
+                        <p><span id="spnTrainerPhone"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{ Html.RenderPartial("_CourseProgressHistory"); }
+
+<div class="modal fade" id="submodulesModal" tabindex="-1" role="dialog" aria-labelledby="submodulesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: 2px solid var(--lm-brand, #0c867c);">
+                <h5 class="modal-title" id="submodulesModalLabel" style="color: var(--lm-brand, #0c867c); font-weight: 700;"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="submodulesModalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times me-1"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #submodulesModal {
+        --lm-brand: var(--color-primary, #0c867c);
+        --lm-soft: #eaf7f5;
+    }
+
+    .lm-page {
+        --lm-surface: #ffffff;
+        --lm-line: #d6e5e9;
+        --lm-text: #12323c;
+        --lm-muted: #5f7882;
+        --lm-brand: var(--color-primary, #0c867c);
+        --lm-soft: #eaf7f5;
+        --lm-shadow: 0 12px 30px rgba(19, 44, 52, 0.08);
+    }
+
+    .lm-hero {
+        border: 1px solid #cbe2e1;
+        background: linear-gradient(130deg, #85d6c6, #8bd2e8);
+        border-radius: 22px;
+        padding: 1.4rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .lm-hero-chip {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(17, 43, 51, 0.15);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.58);
+        padding: 0.2rem 0.66rem;
+        font-weight: 700;
+        margin-bottom: 0.45rem;
+    }
+
+    .lm-title {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e1212;
+    }
+
+    .lm-subtitle { margin: 0.35rem 0 0; color: #1f3f49; font-size: 1.08rem; }
+
+    .lm-hero-stats { display: flex; gap: 1rem; align-items: stretch; }
+
+    .lm-stat-pill {
+        border-radius: 14px;
+        padding: 1.1rem 0.9rem;
+        background: rgba(255, 255, 255, 0.92);
+        min-width: 130px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        align-items: center;
+        justify-content: center;
+        flex: 1 1 auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        text-align: center;
+    }
+
+    .lm-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f5a57;
+        background: #d9efea;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .lm-stat-icon.is-success { background: #ddf4ea; color: #187a50; }
+    .lm-stat-icon.is-warning { background: #fff1dd; color: #9a6a18; }
+
+    .lm-stat-value { font-size: 1.8rem; font-weight: 800; line-height: 1.1; color: #1f1313; margin: 0; }
+    .lm-stat-label { color: #324b56; font-size: 0.9rem; font-weight: 500; margin: 0; }
+
+    .lm-stat-pill > div:last-child {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        align-items: center;
+        width: 100%;
+    }
+
+    .lm-filter-card,
+    .lm-content-card {
+        background: var(--lm-surface);
+        border: 1px solid var(--lm-line);
+        border-radius: 14px;
+        box-shadow: var(--lm-shadow);
+    }
+
+    .lm-filter-card { padding: 1rem; margin-bottom: 1rem; }
+    .lm-content-card { padding: 1rem; }
+
+    .lm-label { font-size: 0.78rem; text-transform: uppercase; color: #5c7480; letter-spacing: 0.04em; }
+
+    .lm-control {
+        display: flex;
+        border: 1px solid #cee1e5;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .lm-control-icon {
+        width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--lm-soft);
+        color: var(--lm-brand);
+        border-right: 1px solid #cbe2df;
+    }
+
+    .lm-control .form-control { border: 0; box-shadow: none; }
+
+    .lm-actions { display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: flex-end; }
+
+    .lm-btn { border-radius: 10px; padding: 0.58rem 0.92rem; font-weight: 700; }
+    .lm-btn i { margin-right: 0.3rem; }
+
+    .lm-btn-primary { background: var(--lm-brand); border-color: var(--lm-brand); color: #fff; }
+    .lm-btn-primary:hover { filter: brightness(0.88); color: #fff; }
+
+    .lm-btn-soft { background: #eef4f6; border-color: #d4e2e8; color: #27434f; }
+
+    .lm-view-toggle {
+        display: inline-flex;
+        border: 1px solid #c8dce2;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .lm-view-btn {
+        border: 0;
+        background: #fff;
+        color: #33515d;
+        padding: 0.58rem 0.82rem;
+        font-weight: 700;
+    }
+
+    .lm-view-btn.is-active {
+        background: var(--lm-brand);
+        color: #fff;
+    }
+
+    .lm-grid {
+        display: grid;
+        gap: 0.9rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .lm-course-card {
+        border: 1px solid #d7e6eb;
+        border-radius: 14px;
+        overflow: visible;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .lm-course-banner {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        background: #eef6f9;
+        border-radius: 14px 14px 0 0;
+        display: block;
+    }
+
+    .lm-course-body { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.55rem; overflow: visible; }
+
+    .lm-course-title { margin: 0; font-size: 1.07rem; font-weight: 800; color: #173642; }
+
+    .lm-course-meta { display: flex; flex-wrap: wrap; gap: 0.45rem; font-size: 0.83rem; color: #55717c; }
+
+    .lm-status-chip {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 0.16rem 0.5rem;
+        font-weight: 700;
+        font-size: 0.73rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .lm-status-passed { background: #e5f7ee; color: #0c7a4f; }
+    .lm-status-inprogress { background: #fff2de; color: #996413; }
+    .lm-status-notstarted { background: #edf3f8; color: #4f6571; }
+
+    .lm-course-desc { color: #405e69; font-size: 0.9rem; line-height: 1.45; }
+    .lm-course-desc.is-clamped {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .lm-desc-toggle {
+        border: 0;
+        background: transparent;
+        color: var(--lm-brand);
+        font-weight: 700;
+        padding: 0;
+        font-size: 0.84rem;
+        text-align: left;
+    }
+
+    .lm-course-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .lm-launch-btn {
+        flex: 1 1 auto;
+        border-radius: 10px;
+        padding: 0.7rem 0.85rem;
+        font-weight: 800;
+        font-size: 0.95rem;
+        border: 1px solid var(--lm-brand);
+        background: var(--lm-brand);
+        color: #fff;
+    }
+
+    .lm-launch-btn:hover { filter: brightness(0.88); color: #fff; }
+
+    .lm-action-trigger {
+        border: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #eef4f7;
+        color: #274551;
+    }
+
+    .lm-submodules {
+        display: block;
+        margin-top: 0.2rem;
+        border-top: 1px dashed #d8e7ec;
+        padding-top: 0.6rem;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0s 0.3s;
+    }
+
+    .lm-submodules.is-open {
+        max-height: 500px;
+        opacity: 1;
+        visibility: visible;
+        overflow: visible;
+        transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0s;
+    }
+
+    .lm-submodule-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        align-items: center;
+        border: 1px solid #deeaef;
+        border-radius: 10px;
+        padding: 0.5rem 0.58rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .lm-submodule-name { font-weight: 700; color: #20414c; font-size: 0.86rem; }
+    .lm-submodule-status { color: #5e7884; font-size: 0.78rem; }
+
+    .lm-submodule-launch {
+        border: 1px solid #d3e4ea;
+        background: #fff;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 0.32rem 0.56rem;
+        color: #29505d;
+    }
+
+    .lm-list-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .lm-list-thead th {
+        background: #f2f8fb;
+        color: #35525d;
+        border-bottom: 2px solid #d7e6ec;
+        border-top: 1px solid #d7e6ec;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 700;
+        vertical-align: middle;
+        padding: 0.65rem 0.75rem;
+    }
+
+    .lm-list-table-row td {
+        border-color: #e1ecef;
+        vertical-align: middle;
+        padding: 0.65rem 0.75rem;
+    }
+
+    .lm-list-table-row td:first-child {
+        width: 90px;
+    }
+
+    .lm-list-table .lm-launch-btn {
+        flex: none;
+        padding: 0.34rem 0.58rem;
+        font-size: 0.84rem;
+        width: auto;
+        min-width: 84px;
+        white-space: nowrap;
+    }
+
+    .lm-list-table .lm-action-trigger {
+        width: 36px;
+        height: 36px;
+    }
+
+    .lm-list-thumb {
+        width: 80px;
+        height: 54px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #dce8ec;
+        display: block;
+    }
+
+    .lm-list-thumb-wrap {
+        width: 80px;
+        height: 54px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .lm-modal-submodules {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .lm-modal-submodule-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border: 1px solid #deeaef;
+        border-left: 4px solid var(--lm-brand);
+        border-radius: 10px;
+        background: #f9fcfd;
+        transition: all 0.2s ease;
+    }
+
+    .lm-modal-submodule-item:hover {
+        background: #f0f8f7;
+        border-left-color: var(--lm-brand);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .lm-modal-submodule-info {
+        flex: 1;
+    }
+
+    .lm-modal-submodule-name {
+        font-weight: 700;
+        color: #20414c;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .lm-modal-submodule-status {
+        color: #5e7884;
+        font-size: 0.8rem;
+    }
+
+    .lm-modal-submodule-action {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .lm-modal-launch-btn {
+        border: 1px solid var(--lm-brand);
+        background: var(--lm-brand);
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 0.4rem 0.75rem;
+        color: #fff;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: all 0.2s ease;
+    }
+
+    .lm-modal-launch-btn:hover {
+        filter: brightness(0.88);
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .lm-modal-launch-btn:active {
+        transform: translateY(0);
+    }
+
+    @@media (max-width: 992px) {
+        .lm-hero { flex-direction: column; }
+        .lm-hero-stats { width: 100%; flex-wrap: wrap; }
+        .lm-stat-pill { flex: 1 1 150px; }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript">
+        var scormTrackingUrl = '@Url.Content("~/Learner/SCORM/")';
+        var learnerRiskAssessmentBaseUrl = '@Url.Content("~/Learner/RiskAssessment/")';
+    </script>
+    <script type="text/javascript" src="~/js/Learner/mycourses-modern.js?v=1.0.0"></script>
+    <script type="text/javascript" src="~/js/Learner/progressHistory.js"></script>
+    <script type="text/javascript" src="~/js/SCORM/module.js?v=1.5"></script>
+}

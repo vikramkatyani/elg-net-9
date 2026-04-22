@@ -23,6 +23,12 @@ namespace ELG.Web.Controllers
     [SessionCheck]
     public class ReportController : Controller
     {
+        // GET: modern reports hub
+        public ActionResult InsightsReports()
+        {
+            return View();
+        }
+
         #region Learning Progress Report
         // GET: Learning Progress Report
         public ActionResult LearningProgress()

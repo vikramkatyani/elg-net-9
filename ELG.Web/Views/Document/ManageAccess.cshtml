@@ -1,4 +1,3 @@
-
 @{
     ViewBag.Title = "Manage Document Access";
     //check admin privileges
@@ -13,85 +12,368 @@
     }
 }
 
-<!-- Page Heading -->
-<style type="text/css">
-    .date-input {
-        z-index: 4000 !important;
-    }
-</style>
-<div class="x_panel tile">
-    <div class="x_title">
-        <h1 class="h3 mb-3 text-primary fw-bold">Access Control</h1>
+<div class="da-modern-page" id="manageAccessPage">
+    <section class="da-hero">
+        <div>
+            <h1 class="da-title">Manage Document Access</h1>
+            <p class="da-subtitle">Control auto and individual assignment visibility for each document.</p>
+        </div>
+    </section>
 
-        <!-- Filter Section -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row g-3 align-items-end">
+    <section class="da-filter-card">
+        <div class="da-filter-head">
+            <h2>Filters</h2>
+            <p>Refine by document, category, and sub-category.</p>
+        </div>
 
-                    <!-- Document Name -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="form-floating">
-                            <input type="text" id="txtDoc" class="form-control" placeholder="Document name">
-                            <label for="txtDoc">Document</label>
-                        </div>
-                    </div>
-
-                    <!-- Category -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="form-floating">
-                            <select id="ddlCategory" class="form-select ddlCat">
-                                <option value="0">Select</option>
-                            </select>
-                            <label for="ddlCategory">Category</label>
-                        </div>
-                    </div>
-
-                    <!-- Sub Category -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="form-floating">
-                            <select id="ddlSubCategory" class="form-select ddlSubCat">
-                                <option value="0">Select</option>
-                            </select>
-                            <label for="ddlSubCategory">Sub Category</label>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="col-md-6 col-lg-3 d-flex gap-2 justify-content-end">
-                        <button id="searchDoc" class="btn btn-primary">
-                            <i class="fa fa-search me-1"></i> Search
-                        </button>
-                        <button id="clearSearchDoc" class="btn btn-secondary">
-                            <i class="fa fa-times me-1"></i> Clear
-                        </button>
-                    </div>
+        <div class="row g-3 align-items-end">
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label da-label" for="txtDoc">Document</label>
+                <div class="da-control">
+                    <span class="da-control-icon"><i class="fa fa-file-text-o"></i></span>
+                    <input type="text" id="txtDoc" class="form-control" placeholder="Search document name">
                 </div>
             </div>
 
-        </div>
-    </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label da-label" for="ddlCategory">Category</label>
+                <div class="da-control da-control-select">
+                    <span class="da-control-icon"><i class="fa fa-folder-open-o"></i></span>
+                    <select id="ddlCategory" class="form-select ddlCat">
+                        <option value="0">Select</option>
+                    </select>
+                </div>
+            </div>
 
-        <!-- Table Section -->
-        <div class="x_content">
-            <div id="messageDocument"></div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label da-label" for="ddlSubCategory">Sub Category</label>
+                <div class="da-control da-control-select">
+                    <span class="da-control-icon"><i class="fa fa-folder-o"></i></span>
+                    <select id="ddlSubCategory" class="form-select ddlSubCat">
+                        <option value="0">Select</option>
+                    </select>
+                </div>
+            </div>
 
-            <div class="table-responsive" id="div-report-container">
-                <table class="table table-striped table-hover table-bordered align-middle" id="orgDocumentList" width="100%" cellspacing="0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Sub Category</th>
-                            <th>Version Number</th>
-                            <th>Date Published</th>
-                            <th>Date of Review</th>
-                            <th class="text-center" style="width: 5%;">Action</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12">
+                <div class="da-actions">
+                    <button id="searchDoc" class="btn da-btn da-btn-primary">
+                        <i class="fa fa-search"></i>Search
+                    </button>
+                    <button id="clearSearchDoc" class="btn da-btn da-btn-soft">
+                        <i class="fa fa-times"></i>Clear
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-        @section Scripts{
-            <script type="text/javascript" src="~/Scripts/Admin/Document/manageDocumentAccess.js?v=1.0.2"></script>
-        }
+    </section>
+
+    <section class="da-table-card">
+        <div class="da-table-head">
+            <h2>Document Access</h2>
+            <span class="da-table-hint">Use the action menu to configure auto assign or individual assign visibility.</span>
+        </div>
+
+        <div id="messageDocument" class="mb-3"></div>
+
+        <div class="table-responsive" id="div-report-container">
+            <table class="table table-hover align-middle" id="orgDocumentList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Version Number</th>
+                        <th>Date Published</th>
+                        <th>Date of Review</th>
+                        <th style="width: 5%;">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>
+
+<style>
+    .da-modern-page {
+        --da-surface: #ffffff;
+        --da-line: #d9e6ea;
+        --da-text: #14323c;
+        --da-muted: #627f8a;
+        --da-brand: var(--color-primary, #0b7d78);
+        --da-brand-alt: var(--color-secondary, #0f968f);
+        --da-brand-soft: #e8f5f3;
+        --da-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--da-text);
+        direction: ltr;
+    }
+
+    .da-modern-page *,
+    .da-modern-page *::before,
+    .da-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .da-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 13px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .da-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .da-subtitle {
+        margin: 0.28rem 0 0;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--da-muted);
+    }
+
+    .da-filter-card,
+    .da-table-card {
+        background: var(--da-surface);
+        border: 1px solid var(--da-line);
+        border-radius: 14px;
+        box-shadow: var(--da-shadow);
+    }
+
+    .da-filter-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .da-filter-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .da-filter-head h2 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+    }
+
+    .da-filter-head p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--da-muted);
+    }
+
+    .da-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    .da-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .da-control:hover {
+        border-color: #bad6dc;
+    }
+
+    .da-control:focus-within {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .da-control-icon {
+        width: 46px;
+        min-width: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--da-brand-soft);
+        color: var(--da-brand);
+        border-right: 1px solid #cde2de;
+    }
+
+    .da-control .form-control,
+    .da-control .form-select {
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        box-shadow: none;
+    }
+
+    .da-control.da-control-select .form-select {
+        background-position: right 0.9rem center;
+    }
+
+    .da-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .da-btn {
+        min-width: 114px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.84rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .da-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .da-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .da-btn-primary {
+        color: #fff;
+        background: var(--da-brand);
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .da-btn-primary:hover,
+    .da-btn-primary:focus {
+        color: #fff;
+    }
+
+    .da-btn-soft {
+        color: #2e515d;
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+    }
+
+    .da-table-card {
+        padding: 1rem;
+    }
+
+    .da-table-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 0.65rem;
+        flex-wrap: wrap;
+    }
+
+    .da-table-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .da-table-hint {
+        color: var(--da-muted);
+        font-size: 0.8rem;
+    }
+
+    .da-modern-page table.dataTable thead th {
+        background: #f4faf9;
+        border-bottom: 1px solid #dce9eb;
+        color: #32515c;
+        font-size: 0.82rem;
+        vertical-align: middle;
+    }
+
+    .da-modern-page .table-hover tbody tr:hover {
+        background: #f5fbff;
+    }
+
+    .da-modern-page table.dataTable tbody td {
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+        border-color: #e1ecef;
+        vertical-align: middle;
+    }
+
+    .da-modern-page .da-row-actions-trigger {
+        width: 2.45rem;
+        height: 2.45rem;
+        border: 1px solid #d2e2e8;
+        background: #f7fbfd;
+        color: #2f5662;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .da-modern-page .da-row-actions-trigger:hover {
+        transform: translateY(-1px);
+        background: #eef7fb;
+        color: #204652;
+    }
+
+    .da-modern-page .da-row-actions-trigger:focus-visible,
+    .da-modern-page .da-row-actions.show .da-row-actions-trigger {
+        outline: none;
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+        color: var(--da-brand);
+    }
+
+    .da-modern-page .da-row-actions-menu {
+        min-width: 220px;
+        border: 1px solid #d7e6ea;
+        border-radius: 12px;
+        box-shadow: 0 14px 28px rgba(16, 40, 46, 0.14);
+        padding: 0.35rem;
+    }
+
+    .da-modern-page .da-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    .da-modern-page .da-row-actions-item-icon {
+        width: 18px;
+        text-align: center;
+        color: #2e6f7c;
+        opacity: 0.95;
+    }
+
+    .da-modern-page .da-row-actions-item:hover,
+    .da-modern-page .da-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Document/manageDocumentAccess.js?v=1.0.2"></script>
+}

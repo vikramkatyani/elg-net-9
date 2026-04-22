@@ -30,9 +30,165 @@
     <link href="~/content/css/courseCard.css" rel="stylesheet">
     @* <link href="~/content/css/learner.css" rel="stylesheet"> *@
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <style>
+        /* ── Learner Modern View – Sidebar ─────────────────────────────────────── */
+        .learner-modern-view .learner-menu-bar {
+            --tenant-primary: var(--color-primary, var(--bs-primary, #ff8a46));
+            --menu-text-color: #3f2f2b;
+            background: #efedeb;
+            border-right: 1px solid #ded9d4;
+            box-shadow: 8px 0 30px rgba(42, 28, 24, 0.08);
+            padding-top: 12px;
+        }
+
+        .learner-modern-view .learner-menu-bar .logo {
+            background: transparent;
+            border-bottom: 0;
+            padding: 10px 16px 14px;
+        }
+
+        /* Hide inline <i> nav icons; replace with ::before pseudo-elements */
+        .learner-modern-view .learner-menu .nav-item > a i.fa:first-child,
+        .learner-modern-view .learner-menu .parent-menu-a i.fa:first-child {
+            display: none;
+        }
+
+        .learner-modern-view .learner-menu .nav-item > a,
+        .learner-modern-view .learner-menu .parent-menu-a {
+            position: relative;
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 18px;
+            margin: 6px 16px;
+            padding: 12px 16px;
+            min-height: 46px;
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: 0.1px;
+            transition: all 0.22s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .learner-modern-view .learner-menu .nav-item:not(.active) > a:hover,
+        .learner-modern-view .learner-menu .parent-menu-a:hover {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+            border-color: var(--tenant-primary);
+            transform: none;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .learner-modern-view .learner-menu .nav-item.active > a,
+        .learner-modern-view .learner-menu .nav-item > a.active {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .learner-modern-view .learner-menu .nav-item.active > a:hover,
+        .learner-modern-view .learner-menu .nav-item > a.active:hover {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
+        .learner-modern-view .learner-menu .nav-item > a::before,
+        .learner-modern-view .learner-menu .parent-menu-a::before {
+            font-family: FontAwesome;
+            font-size: 16px;
+            width: 18px;
+            text-align: center;
+            opacity: 0.85;
+            font-weight: 400;
+            flex: 0 0 18px;
+        }
+
+        /* Learner menu icon mappings */
+        .learner-modern-view #dashboardLink > a::before  { content: "\f00a"; }
+        .learner-modern-view #myCourseLink > a::before   { content: "\f02d"; }
+        .learner-modern-view #raLink > a::before          { content: "\f132"; }
+        .learner-modern-view #docLink > a::before         { content: "\f15b"; }
+        .learner-modern-view #settingsLink > a::before    { content: "\f013"; }
+        .learner-modern-view #logoutLink > a::before      { content: "\f08b"; }
+
+        .learner-modern-view .learner-menu .child_menu {
+            background: transparent;
+            border-radius: 12px;
+            margin: 0 16px 8px;
+            padding: 2px 0 8px;
+            border-left: 2px solid var(--tenant-primary);
+        }
+
+        .learner-modern-view .learner-menu .child_menu li a {
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 15px;
+            margin: 2px 0 2px 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .learner-modern-view .learner-menu .child_menu li a:hover {
+            color: #ffffff;
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+        }
+
+        .learner-modern-view .learner-menu .child_menu li a.active,
+        .learner-modern-view .learner-menu .child_menu li a.active:hover {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff;
+        }
+
+        .learner-modern-view .line-partition {
+            border-color: #ded3cb !important;
+            margin-top: 18px !important;
+        }
+
+        .learner-modern-view .profile-details span {
+            color: #8c7c72;
+        }
+
+        .learner-modern-view .profile-details h2 {
+            color: #352823;
+        }
+
+        .learner-modern-view .learner-viewmode-item {
+            margin-left: 0;
+            margin-right: 0;
+            padding: 6px 0 4px;
+        }
+
+        .learner-modern-view .learner-viewmode-label {
+            color: #4f3e38;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.78rem;
+        }
+
+        .learner-modern-view .learner-viewmode-item .learner-viewmode-row {
+            margin-left: 12px;
+            margin-right: 8px;
+        }
+
+        .learner-modern-view .learner-main-content {
+            background: radial-gradient(circle at 0% 0%, #fff8f3 0%, #f8fbfd 36%, #ffffff 100%);
+        }
+    </style>
 </head>
 
-<body>
+<body class="@(string.Equals(ELG.Web.Helper.SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase) ? "learner-modern-view" : "learner-classic-view")">
     <div class="learner-content-container">
 
         <!-- Hamburger Menu Icon -->
@@ -109,6 +265,7 @@
                         </a>
                     </li>
                 }
+                @Html.Partial("_LearnerViewModeToggle")
                 <li class="nav-item" id="logoutLink">
                     <a id="menu-logout" href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class="fa fa-power-off"></i> Log Out

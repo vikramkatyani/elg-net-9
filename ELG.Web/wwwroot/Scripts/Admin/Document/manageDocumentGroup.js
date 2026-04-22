@@ -93,21 +93,20 @@ var docGroupReportHandler = (function () {
                     render: function (a, b, data, d) {
                         const id = data.GroupId;
                         return `
-                    <div class="dropdown">
-                        <button class="btn btn-sm border-0 p-2 rounded-circle" type="button"
-                                id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="width: 2.5rem; height: 2.5rem;">
+                    <div class="dropdown dg-row-actions">
+                        <button class="btn btn-sm rounded-circle dg-row-actions-trigger" type="button"
+                                id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-ellipsis-v"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionDropdown-${id}">
-                            <li><a class="dropdown-item" href="#" id="edit-docGroup-${id}" onclick="docGroupReportHandler.showUpdateDocGroupPopUP(this)">
-                                <i class="fa fa-edit me-2"></i>Edit</a></li>
-                            <li><a class="dropdown-item btn-del-grp" href="#" id="delete-docGroup-${id}" onclick="docGroupReportHandler.deleteDocGroup(this)">
-                                <i class="fa fa-trash me-2"></i>Delete</a></li>
-                            <li><a class="dropdown-item" href="#" id="map-docGroup-${id}" onclick="docGroupReportHandler.showMapDocGroup(this)">
-                                <i class="fa fa-plus-circle me-2"></i>Map Document</a></li>
-                            <li><a class="dropdown-item btn-map-grp" href="#" id="map-user-docGroup-${id}" onclick="docGroupReportHandler.mapDocGroupToUser(this)">
-                                <i class="fa fa-link me-2"></i>Assign to Users</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end dg-row-actions-menu" aria-labelledby="actionDropdown-${id}">
+                            <li><a class="dropdown-item dg-row-actions-item" href="#" id="edit-docGroup-${id}" onclick="docGroupReportHandler.showUpdateDocGroupPopUP(this)">
+                                <i class="fa fa-edit dg-row-actions-item-icon"></i>Edit</a></li>
+                            <li><a class="dropdown-item dg-row-actions-item btn-del-grp" href="#" id="delete-docGroup-${id}" onclick="docGroupReportHandler.deleteDocGroup(this)">
+                                <i class="fa fa-trash dg-row-actions-item-icon"></i>Delete</a></li>
+                            <li><a class="dropdown-item dg-row-actions-item" href="#" id="map-docGroup-${id}" onclick="docGroupReportHandler.showMapDocGroup(this)">
+                                <i class="fa fa-plus-circle dg-row-actions-item-icon"></i>Map Document</a></li>
+                            <li><a class="dropdown-item dg-row-actions-item btn-map-grp" href="#" id="map-user-docGroup-${id}" onclick="docGroupReportHandler.mapDocGroupToUser(this)">
+                                <i class="fa fa-link dg-row-actions-item-icon"></i>Assign to Users</a></li>
                         </ul>
                     </div>`;
                     }

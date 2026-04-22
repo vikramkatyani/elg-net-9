@@ -1,36 +1,212 @@
 <div class="modal fade" id="mapRAPopup" tabindex="-1" aria-labelledby="mapRAPopupLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold text-primary">
+    <div class="modal-content cm-ra-content">
+      <div class="modal-header cm-ra-header">
+        <h5 class="modal-title cm-ra-title">
+          <i class="fa fa-link"></i>
           Map Risk Assessment: <span id="mapRAPopupTitle"></span>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body cm-ra-body">
         <div class="alert alert-danger collapse" id="mapRAPopupMessage"></div>
         <div class="row g-3">
           <div class="col-md-8">
-            <div class="form-floating">
+            <label class="form-label cm-ra-label" for="txtSearchRA_map">Search Risk Assessment</label>
+            <div class="cm-ra-control">
+              <span class="cm-ra-icon"><i class="fa fa-search"></i></span>
               <input type="text" class="form-control" id="txtSearchRA_map" placeholder="Search Risk Assessment">
-              <label for="txtSearchRA_map">Search Risk Assessment</label>
             </div>
           </div>
-          <div class="col-md-4 d-grid">
-            <button type="button" id="btnSearchRA_map" class="btn btn-outline-primary">Search</button>
+          <div class="col-md-4 d-grid align-items-end">
+            <button type="button" id="btnSearchRA_map" class="btn cm-ra-btn cm-ra-btn-primary">Search</button>
           </div>
           <div class="col-md-12">
-            <div id="raListContainer_map" style="max-height:300px; overflow:auto; border:1px solid #e3e3e3; padding:10px; border-radius:4px;">
+            <div id="raListContainer_map" class="cm-ra-list">
               <div class="text-muted">Search to load risk assessments...</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="fa fa-times me-1"></i> Close
+      <div class="modal-footer cm-ra-footer">
+        <button type="button" class="btn cm-ra-btn cm-ra-btn-soft" data-bs-dismiss="modal">
+          <i class="fa fa-times"></i>Close
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+    #mapRAPopup {
+        --cm-brand: var(--color-primary, #0b7d78);
+        --cm-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+  #mapRAPopup .modal-dialog {
+    max-width: 760px;
+  }
+
+    #mapRAPopup .cm-ra-content {
+        border: 1px solid #d8e6ea;
+        border-radius: 14px;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+        overflow: hidden;
+      animation: cmRaPopupIn 0.2s ease-out;
+    }
+
+    #mapRAPopup .cm-ra-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #mapRAPopup .cm-ra-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: #1f4652;
+        font-weight: 700;
+    }
+
+    #mapRAPopup .cm-ra-body {
+        background: #fcfefe;
+      padding: 1rem;
+    }
+
+    #mapRAPopup .cm-ra-label {
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    #mapRAPopup .cm-ra-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    #mapRAPopup .cm-ra-icon {
+        width: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5f3;
+        color: #0b7d78;
+        border-right: 1px solid #cde2de;
+    }
+
+    #mapRAPopup .cm-ra-control .form-control {
+        border: 0;
+        border-radius: 0;
+        height: 42px;
+        box-shadow: none;
+    }
+
+    #mapRAPopup .cm-ra-control:focus-within {
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #mapRAPopup .cm-ra-list {
+        max-height: 300px;
+        overflow: auto;
+        border: 1px solid #d7e6ea;
+        padding: 10px;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    #mapRAPopup .cm-ra-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    #mapRAPopup .cm-ra-btn {
+        min-width: 110px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      #mapRAPopup .cm-ra-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      #mapRAPopup .cm-ra-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #mapRAPopup .cm-ra-btn-primary {
+        background: var(--cm-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #mapRAPopup .cm-ra-btn-primary:hover,
+    #mapRAPopup .cm-ra-btn-primary:focus {
+        color: #fff;
+    }
+
+    #mapRAPopup .cm-ra-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    @@keyframes cmRaPopupIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.995);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+      #mapRAPopup .cm-ra-content {
+        animation: none;
+      }
+
+      #mapRAPopup .cm-ra-btn {
+        transition: none;
+      }
+    }
+
+    @@media (max-width: 767px) {
+      #mapRAPopup .modal-dialog {
+        margin: 0.55rem;
+      }
+
+      #mapRAPopup .cm-ra-body {
+        padding: 0.85rem;
+      }
+
+      #mapRAPopup .cm-ra-footer {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      #mapRAPopup .cm-ra-btn {
+        width: 100%;
+      }
+    }
+</style>

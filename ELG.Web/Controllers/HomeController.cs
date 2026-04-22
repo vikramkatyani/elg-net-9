@@ -144,9 +144,32 @@ namespace ELG.Web.Controllers
 
         #region Dashboard
         [SessionCheck]
-        public ActionResult Dashboard()
+        public ActionResult Dashboard(string style = null)
         {
+            if (!string.IsNullOrWhiteSpace(style))
+            {
+                SessionHelper.AdminViewMode = string.Equals(style.Trim(), "modern", StringComparison.OrdinalIgnoreCase)
+                    ? "modern"
+                    : "classic";
+            }
+
             return View();
+        }
+
+        [SessionCheck]
+        [HttpGet]
+        public ActionResult SetViewMode(string style, string returnUrl)
+        {
+            SessionHelper.AdminViewMode = string.Equals(style, "modern", StringComparison.OrdinalIgnoreCase)
+                ? "modern"
+                : "classic";
+
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Dashboard", "Home");
         }
 
 

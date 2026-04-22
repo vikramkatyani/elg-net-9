@@ -1,0 +1,651 @@
+@{
+    ViewBag.Title = "Course Setup";
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="cm-modern-page">
+    <section class="cm-hero">
+        <div>
+            <h1 class="cm-title">Course Setup</h1>
+            <p class="cm-subtitle">Search courses, review sub-module counts, and manage course actions from one view.</p>
+        </div>
+        <div class="cm-hero-badges">
+            <span class="cm-badge"><i class="fa fa-book"></i> Course Management</span>
+            <span class="cm-badge"><i class="fa fa-sitemap"></i> Sub-Module Control</span>
+        </div>
+    </section>
+
+    <section class="cm-stats-grid" aria-label="Course summary stats">
+        <article class="cm-stat-pill is-selected" data-course-filter="0" role="button" tabindex="0" aria-label="Show all courses">
+            <div class="cm-stat-icon"><i class="fa fa-book"></i></div>
+            <div>
+                <div class="cm-stat-label">Total Courses</div>
+                <div class="cm-stat-value" id="pillTotalCourses">-</div>
+            </div>
+        </article>
+        <article class="cm-stat-pill" data-course-filter="1" role="button" tabindex="0" aria-label="Show courses with no assignments">
+            <div class="cm-stat-icon is-muted"><i class="fa fa-ban"></i></div>
+            <div>
+                <div class="cm-stat-label">No Assignments</div>
+                <div class="cm-stat-value" id="pillNoAssignmentCourses">-</div>
+            </div>
+        </article>
+        <article class="cm-stat-pill" data-course-filter="2" role="button" tabindex="0" aria-label="Show courses with submodules">
+            <div class="cm-stat-icon is-active"><i class="fa fa-sitemap"></i></div>
+            <div>
+                <div class="cm-stat-label">With Submodules</div>
+                <div class="cm-stat-value" id="pillWithSubmoduleCourses">-</div>
+            </div>
+        </article>
+    </section>
+
+    <section class="cm-filter-card">
+        <div class="cm-filter-head">
+            <h2>Filters</h2>
+            <p>Search by course name and update the table instantly.</p>
+        </div>
+
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-8 col-md-7 col-sm-12">
+                <label class="form-label cm-label" for="txtModule">Course Name</label>
+                <div class="cm-control">
+                    <span class="cm-control-icon"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" id="txtModule" placeholder="Search course by name">
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-5 col-sm-12">
+                <div class="cm-actions">
+                    <button id="searchModuleBtn" class="btn cm-btn cm-btn-primary">
+                        <i class="fa fa-search"></i>Search
+                    </button>
+                    <button id="clearSearchModuleBtn" class="btn cm-btn cm-btn-soft">
+                        <i class="fa fa-times"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cm-table-card">
+        <div class="cm-table-head">
+            <h2>Courses</h2>
+            <div class="cm-table-head-right">
+                <span class="cm-table-hint">Use the action menu to edit course, add sub-module, or add risk assessment.</span>
+                <div class="cm-view-toggle">
+                    <button id="courseViewListBtn" type="button" class="btn cm-view-btn is-active">
+                        <i class="fa fa-list"></i> List
+                    </button>
+                    <button id="courseViewGridBtn" type="button" class="btn cm-view-btn">
+                        <i class="fa fa-th-large"></i> Grid
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="message_course_setup" class="mb-3"></div>
+
+        <div class="table-responsive" id="course-setup-container">
+            <table class="table table-hover align-middle" id="configureModuleList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">Thumbnail</th>
+                        <th>Course</th>
+                        <th>Sub-Module</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="courseGridContainer" class="row g-3 d-none"></div>
+    </section>
+</div>
+
+@Html.Partial("_addSubModule")
+@Html.Partial("_courseSubModule")
+@Html.Partial("_mapRiskAssessment")
+@Html.Partial("_createRiskAssessment")
+@Html.Partial("_editCourse")
+
+<style>
+    .cm-modern-page {
+        --cm-surface: #ffffff;
+        --cm-line: #d9e6ea;
+        --cm-text: #14323c;
+        --cm-muted: #627f8a;
+        --cm-brand: var(--color-primary, #0b7d78);
+        --cm-brand-alt: var(--color-secondary, #0f968f);
+        --cm-brand-soft: #e8f5f3;
+        --cm-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--cm-text);
+        direction: ltr;
+    }
+
+    .cm-modern-page *,
+    .cm-modern-page *::before,
+    .cm-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .cm-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .cm-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .cm-subtitle {
+        margin: 0.28rem 0 0;
+        color: var(--cm-muted);
+    }
+
+    .cm-hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+    }
+
+    .cm-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid #cce2df;
+        background: #fff;
+        color: #2f5763;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 0.31rem 0.64rem;
+        white-space: nowrap;
+    }
+
+    .cm-filter-card,
+    .cm-table-card {
+        background: var(--cm-surface);
+        border: 1px solid var(--cm-line);
+        border-radius: 14px;
+        box-shadow: var(--cm-shadow);
+    }
+
+    .cm-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .cm-stat-pill {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        border: 1px solid #d9e6ea;
+        border-radius: 12px;
+        background: #ffffff;
+        padding: 0.78rem 0.85rem;
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+
+    .cm-stat-pill:hover {
+        border-color: #8bc8c3;
+        box-shadow: 0 10px 20px rgba(12, 71, 80, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .cm-stat-pill.is-selected {
+        border-color: #0b7d78;
+        background: #eaf7f5;
+    }
+
+    .cm-stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e6f3f4;
+        color: #0b7d78;
+    }
+
+    .cm-stat-icon.is-active {
+        background: #e3f5ef;
+        color: #187f59;
+    }
+
+    .cm-stat-icon.is-muted {
+        background: #f3f5f7;
+        color: #6b7f89;
+    }
+
+    .cm-stat-label {
+        font-size: 0.76rem;
+        color: #60757f;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .cm-stat-value {
+        font-size: 1.35rem;
+        line-height: 1.1;
+        font-weight: 800;
+        color: #173943;
+    }
+
+    .cm-filter-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .cm-filter-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .cm-filter-head h2 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+    }
+
+    .cm-filter-head p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--cm-muted);
+    }
+
+    .cm-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    .cm-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .cm-control:hover {
+        border-color: #bad6dc;
+    }
+
+    .cm-control:focus-within {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .cm-control-icon {
+        width: 48px;
+        min-width: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--cm-brand-soft);
+        color: var(--cm-brand);
+        border-right: 1px solid #cde2de;
+    }
+
+    .cm-control .form-control {
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        box-shadow: none;
+    }
+
+    .cm-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .cm-btn {
+        min-width: 112px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-weight: 700;
+        font-size: 0.84rem;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .cm-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .cm-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .cm-btn-primary {
+        background: var(--cm-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .cm-btn-primary:hover,
+    .cm-btn-primary:focus {
+        color: #fff;
+    }
+
+    .cm-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    .cm-table-card {
+        padding: 1rem;
+    }
+
+    .cm-table-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .cm-table-head-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .cm-table-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .cm-table-hint {
+        color: var(--cm-muted);
+        font-size: 0.8rem;
+    }
+
+    .cm-view-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .cm-view-btn {
+        border: 1px solid #d2e2e8;
+        background: #f7fbfd;
+        color: #2f5662;
+        border-radius: 10px;
+        height: 34px;
+        padding: 0 0.7rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .cm-view-btn.is-active {
+        background: var(--cm-brand);
+        color: #fff;
+        border-color: var(--cm-brand);
+    }
+
+    .cm-card {
+        border: 1px solid #d9e5ea;
+        border-radius: 12px;
+        background: #fff;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        box-shadow: 0 4px 12px rgba(17, 42, 48, 0.06);
+    }
+
+    .cm-card-head {
+        width: 100%;
+        height: 182px;
+        overflow: hidden;
+        border-bottom: 1px solid #d9e5ea;
+        background: #f3f8fb;
+    }
+
+    .cm-card-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0;
+        border: 0;
+        background: #f7fbfd;
+    }
+
+    .cm-card-body {
+        padding: 0.85rem;
+    }
+
+    .cm-card-title {
+        margin: 0 0 0.7rem;
+        font-weight: 700;
+        color: #1d3c47;
+        min-height: 44px;
+    }
+
+    .cm-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .cm-card-submodule-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+    }
+
+    .cm-card-actions .cm-row-actions {
+        margin: 0;
+    }
+
+    .cm-card-actions .cm-row-actions-trigger-card {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 8px;
+        border: 0 !important;
+        background: transparent !important;
+        color: #2f5662;
+        box-shadow: none !important;
+    }
+
+    .cm-card-actions .cm-row-actions-trigger-card:hover {
+        border: 0 !important;
+        background: transparent !important;
+        color: #204652;
+        box-shadow: none !important;
+    }
+
+    .cm-card-actions .cm-row-actions.show .cm-row-actions-trigger-card,
+    .cm-card-actions .cm-row-actions-trigger-card:focus,
+    .cm-card-actions .cm-row-actions-trigger-card:focus-visible {
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .cm-card-submodule {
+        font-size: 0.82rem;
+        color: #4c6a75;
+    }
+
+    .cm-modern-page table.dataTable thead th {
+        background: #f6fbfd;
+        border-bottom: 1px solid #d7e6ea;
+        color: #1f4b58;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+        vertical-align: middle;
+    }
+
+    .cm-modern-page table.dataTable thead .sorting::before,
+    .cm-modern-page table.dataTable thead .sorting::after,
+    .cm-modern-page table.dataTable thead .sorting_asc::before,
+    .cm-modern-page table.dataTable thead .sorting_asc::after,
+    .cm-modern-page table.dataTable thead .sorting_desc::before,
+    .cm-modern-page table.dataTable thead .sorting_desc::after {
+        display: none !important;
+    }
+
+    .cm-modern-page table.dataTable thead .sorting,
+    .cm-modern-page table.dataTable thead .sorting_asc,
+    .cm-modern-page table.dataTable thead .sorting_desc {
+        padding-right: 0.75rem !important;
+    }
+
+    .cm-modern-page .table-hover tbody tr:hover {
+        background: #f5fbff;
+    }
+
+    .cm-modern-page table.dataTable tbody td {
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+    }
+
+    .cm-modern-page .cm-row-actions-trigger {
+        width: 2.45rem;
+        height: 2.45rem;
+        border: 1px solid #d2e2e8;
+        background: #f7fbfd;
+        color: #2f5662;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .cm-modern-page .cm-row-actions-trigger:hover {
+        transform: translateY(-1px);
+        background: #eef7fb;
+        color: #204652;
+    }
+
+    .cm-modern-page .cm-row-actions-trigger:focus-visible,
+    .cm-modern-page .cm-row-actions.show .cm-row-actions-trigger {
+        outline: none;
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+        color: var(--cm-brand);
+    }
+
+    .cm-modern-page .cm-row-actions-menu {
+        min-width: 220px;
+        border: 1px solid #d7e6ea;
+        border-radius: 12px;
+        box-shadow: 0 14px 28px rgba(16, 40, 46, 0.14);
+        padding: 0.35rem;
+    }
+
+    .cm-modern-page .cm-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    .cm-modern-page .cm-row-actions-item-icon {
+        width: 18px;
+        text-align: center;
+        color: #2e6f7c;
+        opacity: 0.95;
+    }
+
+    .cm-modern-page .cm-row-actions-item:hover,
+    .cm-modern-page .cm-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+
+    .cm-modern-page .cm-row-actions-item:hover .cm-row-actions-item-icon,
+    .cm-modern-page .cm-row-actions-item:focus .cm-row-actions-item-icon {
+        color: var(--cm-brand);
+    }
+
+    @@media (max-width: 991px) {
+        .cm-hero {
+            flex-direction: column;
+        }
+
+        .cm-filter-head,
+        .cm-table-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .cm-table-head-right {
+            justify-content: flex-start;
+        }
+
+        .cm-actions {
+            justify-content: flex-start;
+        }
+
+        .cm-btn {
+            min-width: 0;
+            flex: 1 1 30%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .cm-filter-card,
+        .cm-table-card {
+            padding: 0.85rem;
+
+        .cm-stats-grid {
+            grid-template-columns: 1fr;
+        }
+            border-radius: 12px;
+        }
+
+        .cm-btn {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/CourseManagement/ManageModule.js?v=1.1"></script>
+}

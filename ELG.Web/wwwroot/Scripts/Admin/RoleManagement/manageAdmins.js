@@ -86,45 +86,45 @@ var adminReportHandler = (function () {
 
                     let btn = `
         <div class="d-flex justify-content-center align-items-center">
-            <div class="dropdown">
-                <button class="btn btn-sm border-0 p-2 rounded-circle" type="button"
+            <div class="dropdown rm-row-actions">
+                <button class="btn btn-sm border-0 p-2 rounded-circle rm-row-actions-trigger" type="button"
                         id="adminActionDropdown-${userId}" data-bs-toggle="dropdown" aria-expanded="false"
-                        style="width: 2.5rem; height: 2.5rem;">
+                        >
                     <i class="fa fa-ellipsis-v"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminActionDropdown-${userId}">`;
+                <ul class="dropdown-menu dropdown-menu-end rm-row-actions-menu" aria-labelledby="adminActionDropdown-${userId}">`;
 
                     // Show rights based on AdminLevel
                     if (adminLevel === 2) {
                         btn += `
                 <li>
-                    <a class="dropdown-item" href="#" id="show-dep-admin-${userId}"
+                    <a class="dropdown-item rm-row-actions-item" href="#" id="show-dep-admin-${userId}"
                        onclick="manageDepartmentAdminHandler.showDepRights(this)">
-                        <i class="fa fa-fw fa-eye me-2"></i>Show
+                        <i class="fa fa-fw fa-eye rm-row-actions-item-icon"></i><span>Show</span>
                     </a>
                 </li>`;
                     } else if (adminLevel === 3) {
                         btn += `
                 <li>
-                    <a class="dropdown-item" href="#" id="show-loc-admin-${userId}"
+                    <a class="dropdown-item rm-row-actions-item" href="#" id="show-loc-admin-${userId}"
                        onclick="manageLocationAdminHandler.showLocRights(this)">
-                        <i class="fa fa-fw fa-eye me-2"></i>Show
+                        <i class="fa fa-fw fa-eye rm-row-actions-item-icon"></i><span>Show</span>
                     </a>
                 </li>`;
                     } else if (adminLevel === 8) {
                         btn += `
                 <li>
-                    <a class="dropdown-item" href="#" id="show-loc-supervisor-${userId}"
+                    <a class="dropdown-item rm-row-actions-item" href="#" id="show-loc-supervisor-${userId}"
                        onclick="manageLocationSupervisorHandler.showLocSupervisorRights(this)">
-                        <i class="fa fa-fw fa-eye me-2"></i>Show
+                        <i class="fa fa-fw fa-eye rm-row-actions-item-icon"></i><span>Show</span>
                     </a>
                 </li>`;
                     } else if (adminLevel === 9) {
                         btn += `
                 <li>
-                    <a class="dropdown-item" href="#" id="show-dep-supervisor-${userId}"
+                    <a class="dropdown-item rm-row-actions-item" href="#" id="show-dep-supervisor-${userId}"
                        onclick="manageDepartmentSupervisorHandler.showDepSupervisorRights(this)">
-                        <i class="fa fa-fw fa-eye me-2"></i>Show
+                        <i class="fa fa-fw fa-eye rm-row-actions-item-icon"></i><span>Show</span>
                     </a>
                 </li>`;
                     }
@@ -132,9 +132,9 @@ var adminReportHandler = (function () {
                     // Remove rights
                     btn += `
                 <li>
-                    <a class="dropdown-item" href="#" id="remove-admin-${userId}"
+                    <a class="dropdown-item rm-row-actions-item" href="#" id="remove-admin-${userId}"
                        onclick="adminReportHandler.removeRights(${adminLevel}, ${userId})">
-                        <i class="fa fa-fw fa-trash me-2"></i>Remove
+                        <i class="fa fa-fw fa-trash rm-row-actions-item-icon"></i><span>Remove</span>
                     </a>
                 </li>
                 </ul>
@@ -577,17 +577,17 @@ var assignAdminHandler = (function () {
 
                         return `
         <div class="d-flex justify-content-center align-items-center">
-            <div class="dropdown">
-                <button class="btn btn-sm border-0 p-2 rounded-circle" type="button"
+            <div class="dropdown al-row-actions">
+                <button class="btn btn-sm border-0 p-2 rounded-circle al-row-actions-trigger" type="button"
                         id="actionDropdown-${userId}" data-bs-toggle="dropdown" aria-expanded="false"
-                        style="width: 2.5rem; height: 2.5rem;">
+                        >
                     <i class="fa fa-ellipsis-v"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionDropdown-${userId}">
+                <ul class="dropdown-menu dropdown-menu-end al-row-actions-menu" aria-labelledby="actionDropdown-${userId}">
                     <li>
-                        <a class="dropdown-item" href="#" id="assign-user-${userId}"
+                        <a class="dropdown-item al-row-actions-item" href="#" id="assign-user-${userId}"
                            onclick="assignAdminHandler.assignRights(this)">
-                            <i class="fa fa-fw fa-plus-circle me-2"></i>Assign
+                            <i class="fa fa-fw fa-plus-circle al-row-actions-item-icon"></i><span>Assign</span>
                         </a>
                     </li>
                 </ul>

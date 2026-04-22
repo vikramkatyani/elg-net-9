@@ -353,6 +353,15 @@ namespace ELG.DAL.OrgAdminDAL
                 using (var context = new lmsdbEntities())
                 {
                     var resultList = context.lms_admin_getOrganisationModules(searchCriteria.SearchText, searchCriteria.Course, searchCriteria.Company, searchCriteria.SortCol, searchCriteria.SortColDir).ToList();
+
+                    if (searchCriteria != null && searchCriteria.CourseStatsFilter > 0)
+                    {
+                        if (searchCriteria.CourseStatsFilter == 1)
+                            resultList = resultList.Where(x => (x.subModuleCount ?? 0) == 0).ToList();
+                        else if (searchCriteria.CourseStatsFilter == 2)
+                            resultList = resultList.Where(x => (x.subModuleCount ?? 0) > 0).ToList();
+                    }
+
                     if (resultList != null && resultList.Count > 0)
                     {
                         orgModuleList.TotalModules = resultList.Count();

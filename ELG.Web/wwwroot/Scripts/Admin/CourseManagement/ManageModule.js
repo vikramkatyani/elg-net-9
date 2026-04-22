@@ -5,6 +5,18 @@
     $('[data-toggle="tooltip"]').tooltip();
 });
 
+function getCourseNameFromSource(btn) {
+    var $row = $(btn).closest('tr');
+    if ($row.length > 0) {
+        return $row.find('.td-moduleName').html();
+    }
+    var dataName = $(btn).attr('data-course-name');
+    if (dataName) {
+        return dataName;
+    }
+    return '';
+}
+
 
 var addSubModuleHandler = (function () {
     var $modal = $('#addSubModuleModal');
@@ -19,7 +31,7 @@ var addSubModuleHandler = (function () {
     var selectedCourseId = 0;
 
     function showAddSubModulePopUP(btn) {
-        var courseName = $(btn).closest('tr').find('.td-moduleName').html();
+        var courseName = getCourseNameFromSource(btn);
         $title.html(courseName);
         var courseId = btn.id.split('-').pop();
         selectedCourseId = courseId;
@@ -119,6 +131,13 @@ var editCourseHandler = (function () {
         // Get course data from DataTable
         moduleTable = $('#configureModuleList').DataTable();
         var rowData = moduleTable.row($(btn).closest('tr')).data();
+        if (!rowData && typeof configureModuleHandler !== 'undefined' && configureModuleHandler.getCourseDataById) {
+            rowData = configureModuleHandler.getCourseDataById(courseId);
+        }
+        if (!rowData) {
+            UTILS.Alert.show($alert, "error", "Unable to load selected course details.");
+            return;
+        }
         
         // Populate form
         $('#editCourseId').val(rowData.ModuleID);
@@ -220,7 +239,7 @@ var mapRAHandler = (function () {
     var selectedCourseId = 0;
 
     function showMapRAPopup(btn) {
-        var courseName = $(btn).closest('tr').find('.td-moduleName').html();
+        var courseName = getCourseNameFromSource(btn);
         UTILS.Alert.hide($alert);
         $title.html(courseName);
         selectedCourseId = btn.id.split('-').pop();
@@ -315,16 +334,209 @@ var configureModuleHandler = (function () {
     var $course = $('#txtModule')
     var $searchBtn = $('#searchModuleBtn')
     var $clearSearchBtn = $('#clearSearchModuleBtn')
+    var $listViewBtn = $('#courseViewListBtn')
+    var $gridViewBtn = $('#courseViewGridBtn')
+    var $gridContainer = $('#courseGridContainer')
+    var $pillTotalCourses = $('#pillTotalCourses')
+    var $pillNoAssignmentCourses = $('#pillNoAssignmentCourses')
+    var $pillWithSubmoduleCourses = $('#pillWithSubmoduleCourses')
+    var $courseStatsPills = $('.cm-stat-pill[data-course-filter]')
+    var viewStorageKey = 'courseSetupViewMode';
+    var moduleDataById = {};
+    var selectedCourseStatsFilter = 0;
+    var savedViewMode = localStorage.getItem(viewStorageKey);
+    var currentViewMode = (savedViewMode === 'list' || savedViewMode === 'grid') ? savedViewMode : 'grid';
 
     var $courseSubModuleModal = $('#courseSubModuleModal');
     var $courseSubModuleTitle = $('#courseSubModuleTitle');  
 
     var mainCourseId = 0;
 
+    function getDefaultSvg() {
+        return 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2214%22 fill=%22%23999%22%3ENo Thumbnail%3C/text%3E%3C/svg%3E';
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function updateCourseCache(rows) {
+        moduleDataById = {};
+        (rows || []).forEach(function (row) {
+            moduleDataById[row.ModuleID] = row;
+        });
+    }
+
+    function getActionMenuHtml(data, isGrid) {
+        var id = data["ModuleID"];
+        var dropdownId = (isGrid ? 'grid-actionDropdown-' : 'actionDropdown-') + id;
+        var prefix = isGrid ? 'grid-' : '';
+        var triggerClass = isGrid ? 'cm-row-actions-trigger cm-row-actions-trigger-card' : 'cm-row-actions-trigger rounded-circle';
+        var safeCourseName = escapeHtml(data["ModuleName"] || '');
+        return (
+            '<div class="dropdown text-center cm-row-actions">' +
+            '<button class="btn btn-sm ' + triggerClass + '" type="button" id="' + dropdownId + '" data-bs-toggle="dropdown" aria-expanded="false">' +
+            '<i class="fa fa-ellipsis-h"></i>' +
+            '</button>' +
+            '<ul class="dropdown-menu dropdown-menu-end cm-row-actions-menu" aria-labelledby="' + dropdownId + '">' +
+            '<li><a class="dropdown-item cm-row-actions-item" href="#" id="' + prefix + 'edit-course-' + id + '" data-course-name="' + safeCourseName + '" onclick="editCourseHandler.showEditCoursePopup(this)"><i class="fa fa-edit cm-row-actions-item-icon"></i><span>Edit course</span></a></li>' +
+            '<li><a class="dropdown-item cm-row-actions-item" href="#" id="' + prefix + 'add-submodule-' + id + '" data-course-name="' + safeCourseName + '" onclick="addSubModuleHandler.showAddSubModulePopUP(this)"><i class="fa fa-plus cm-row-actions-item-icon"></i><span>Add sub-module</span></a></li>' +
+            '<li><a class="dropdown-item cm-row-actions-item" href="#" id="' + prefix + 'create-ra-' + id + '" data-course-name="' + safeCourseName + '" onclick="createRAHandler.showCreateRAPopup(this)"><i class="fa fa-file-excel-o cm-row-actions-item-icon"></i><span>Add risk assessment</span></a></li>' +
+            '</ul>' +
+            '</div>'
+        );
+    }
+
+    function renderGridCourses(rows) {
+        if (!$gridContainer.length) {
+            return;
+        }
+        var defaultSvg = getDefaultSvg();
+        $gridContainer.empty();
+
+        if (!rows || rows.length === 0) {
+            $gridContainer.append('<div class="col-12"><div class="alert alert-light border">No record(s) found.</div></div>');
+            return;
+        }
+
+        rows.forEach(function (row) {
+            var safeCourseName = escapeHtml(row.ModuleName || '');
+            var thumbUrl = row.CourseLogo ? row.CourseLogo : defaultSvg;
+            var subModuleHtml = row.SubModuleCount > 0
+                ? '<button type="button" id="grid-view-sm-' + row.ModuleID + '" data-course-name="' + safeCourseName + '" class="btn btn-primary btn-sm" onclick="configureModuleHandler.showCourseSubModules(this)">' + row.SubModuleCount + '</button>'
+                : '<span class="badge bg-secondary">0</span>';
+
+            var cardHtml =
+                '<div class="col-12 col-sm-6 col-lg-4 col-xl-3">' +
+                '<div class="cm-card">' +
+                '<div class="cm-card-head">' +
+                '<img src="' + thumbUrl + '" alt="Course Thumbnail" class="cm-card-thumb" onerror="this.src=\'' + defaultSvg + '\'">' +
+                '</div>' +
+                '<div class="cm-card-body">' +
+                '<h3 class="cm-card-title">' + safeCourseName + '</h3>' +
+                '<div class="cm-card-footer">' +
+                '<div class="cm-card-submodule-group">' +
+                '<span class="cm-card-submodule">Sub-Modules</span>' +
+                subModuleHtml +
+                '</div>' +
+                '<div class="cm-card-actions">' +
+                getActionMenuHtml(row, true) +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+            $gridContainer.append(cardHtml);
+        });
+    }
+
+    function updateViewToggleState() {
+        if (currentViewMode === 'grid') {
+            $gridViewBtn.addClass('is-active active btn-primary').removeClass('btn-outline-primary');
+            $listViewBtn.removeClass('is-active active btn-primary').addClass('btn-outline-primary');
+        } else {
+            $listViewBtn.addClass('is-active active btn-primary').removeClass('btn-outline-primary');
+            $gridViewBtn.removeClass('is-active active btn-primary').addClass('btn-outline-primary');
+        }
+    }
+
+    function applyViewMode() {
+        var $wrapper = $('#configureModuleList_wrapper');
+        if (currentViewMode === 'grid') {
+            $('#course-setup-container').addClass('d-none');
+            $wrapper.addClass('d-none');
+            $gridContainer.removeClass('d-none');
+        } else {
+            $('#course-setup-container').removeClass('d-none');
+            $wrapper.removeClass('d-none');
+            $gridContainer.addClass('d-none');
+        }
+        updateViewToggleState();
+    }
+
+    function setViewMode(mode) {
+        currentViewMode = (mode === 'grid') ? 'grid' : 'list';
+        localStorage.setItem(viewStorageKey, currentViewMode);
+        applyViewMode();
+    }
+
+    function getCourseStatsFilter() {
+        return selectedCourseStatsFilter;
+    }
+
+    function setActiveCourseStatsPill(filterValue) {
+        if (!$courseStatsPills.length) {
+            return;
+        }
+
+        $courseStatsPills.removeClass('is-selected');
+        $courseStatsPills.filter('[data-course-filter="' + filterValue + '"]').addClass('is-selected');
+    }
+
+    function initCourseStatsPills() {
+        if (!$courseStatsPills.length) {
+            return;
+        }
+
+        setActiveCourseStatsPill(selectedCourseStatsFilter);
+
+        $courseStatsPills.off('click keydown').on('click keydown', function (e) {
+            if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') {
+                return;
+            }
+
+            if (e.type === 'keydown') {
+                e.preventDefault();
+            }
+
+            selectedCourseStatsFilter = Number($(this).data('course-filter')) || 0;
+            setActiveCourseStatsPill(selectedCourseStatsFilter);
+            moduleTable.draw();
+        });
+    }
+
+    function loadCourseQuickStats() {
+        if (!$pillTotalCourses.length || !$pillNoAssignmentCourses.length || !$pillWithSubmoduleCourses.length) {
+            return;
+        }
+
+        $pillTotalCourses.html('<i class="fa fa-spinner fa-spin"></i>');
+        $pillNoAssignmentCourses.html('<i class="fa fa-spinner fa-spin"></i>');
+        $pillWithSubmoduleCourses.html('<i class="fa fa-spinner fa-spin"></i>');
+
+        $.ajax({
+            type: 'get',
+            url: hdnBaseUrl + 'CourseManagement/LoadCourseQuickStats',
+            dataType: 'json',
+            success: function (res) {
+                if (res && res.success == 1) {
+                    $pillTotalCourses.text(res.totalCourses);
+                    $pillNoAssignmentCourses.text(res.coursesWithNoAssignments);
+                    $pillWithSubmoduleCourses.text(res.coursesWithSubmodules);
+                } else {
+                    $pillTotalCourses.text('-');
+                    $pillNoAssignmentCourses.text('-');
+                    $pillWithSubmoduleCourses.text('-');
+                }
+            },
+            error: function () {
+                $pillTotalCourses.text('-');
+                $pillNoAssignmentCourses.text('-');
+                $pillWithSubmoduleCourses.text('-');
+            }
+        });
+    }
+
     var moduleTable = $('#configureModuleList').DataTable({
         lengthChange: false,
         "processing": true,
-        "scrollX": true, 
+        "scrollX": false,
         "language": {
             "processing": '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> ',
             "emptyTable": "No record(s) found."
@@ -332,12 +544,20 @@ var configureModuleHandler = (function () {
         "serverSide": true,
         "filter": false,
         "orderMulti": true,
+        "drawCallback": function () {
+            var json = this.api().ajax.json();
+            var rows = (json && json.data) ? json.data : [];
+            updateCourseCache(rows);
+            renderGridCourses(rows);
+            applyViewMode();
+        },
         "ajax": {
             "url": hdnBaseUrl + 'CourseManagement/LoadModuleData',
             "type": "POST",
             "datatype": "json",
             "data": function (data) {
                 data.SearchText = $course.val();
+                data.CourseStatsFilter = getCourseStatsFilter();
             },
             "error": function (xhr, error, code) {
                 console.log(xhr);
@@ -357,7 +577,7 @@ var configureModuleHandler = (function () {
             // render course thumbnail
             targets: [0], orderable: false, render: function (a, b, data, d) {
                 var thumbnailUrl = data["CourseLogo"];
-                var defaultSvg = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2214%22 fill=%22%23999%22%3ENo Thumbnail%3C/text%3E%3C/svg%3E';
+                var defaultSvg = getDefaultSvg();
                 var imgUrl = thumbnailUrl ? thumbnailUrl : defaultSvg;
                 return '<img src="' + imgUrl + '" alt="Course Thumbnail" class="img-thumbnail" style="max-width: 100px; height: auto;" onerror="this.src=\'' + defaultSvg + '\'">';
             }
@@ -370,30 +590,27 @@ var configureModuleHandler = (function () {
             // render submodule count
             targets: [2], render: function (a, b, data, d) {
                 if (data["SubModuleCount"] > 0)
-                    return '<button type="button" id="view-sm-' + data["ModuleID"] + '" class="btn btn-primary" onclick="configureModuleHandler.showCourseSubModules(this)"><i class="fa fa-fw fa-eye"></i><span>' + data["SubModuleCount"] +'</span></button> ';
+                    return '<button type="button" id="view-sm-' + data["ModuleID"] + '" data-course-name="' + escapeHtml(data["ModuleName"] || '') + '" class="btn btn-primary" onclick="configureModuleHandler.showCourseSubModules(this)"><span>' + data["SubModuleCount"] +'</span></button> ';
                 else
                     return '<span>0</span>';
             }
         }, {
             // render action menu
             targets: [3], render: function (a, b, data, d) {
-                var id = data["ModuleID"];
-                return (
-                    '<div class="dropdown text-center">' +
-                    '<button class="btn btn-sm rounded-circle" type="button" id="actionDropdown-' + id + '" data-bs-toggle="dropdown" aria-expanded="false" style="width:2.5rem;height:2.5rem;">' +
-                    '<i class="fa fa-ellipsis-v"></i>' +
-                    '</button>' +
-                    '<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionDropdown-' + id + '">' +
-                    '<li><a class="dropdown-item" href="#" id="edit-course-' + id + '" onclick="editCourseHandler.showEditCoursePopup(this)"><i class="fa fa-edit me-2"></i>Edit course</a></li>' +
-                    '<li><a class="dropdown-item" href="#" id="add-submodule-' + id + '" onclick="addSubModuleHandler.showAddSubModulePopUP(this)"><i class="fa fa-plus me-2"></i>Add sub-module</a></li>' +
-                    '<li><a class="dropdown-item" href="#" id="create-ra-' + id + '" onclick="createRAHandler.showCreateRAPopup(this)"><i class="fa fa-file-excel-o me-2"></i>Add risk assessment</a></li>' +
-                    //'<li><a class="dropdown-item" href="#" id="map-ra-' + id + '" onclick="mapRAHandler.showMapRAPopup(this)"><i class="fa fa-link me-2"></i>Map existing risk assessment</a></li>' +
-                    '</ul>' +
-                    '</div>'
-                );
+                return getActionMenuHtml(data, false);
             }
         }],
     });
+
+    $listViewBtn.on('click', function () {
+        setViewMode('list');
+    });
+
+    $gridViewBtn.on('click', function () {
+        setViewMode('grid');
+    });
+
+    setViewMode(currentViewMode);
 
     //apply filters for search
     $searchBtn.on('click', function (e) {
@@ -405,13 +622,22 @@ var configureModuleHandler = (function () {
     $clearSearchBtn.click(function (e) {
         e.preventDefault();
         $course.val('');
+        selectedCourseStatsFilter = 0;
+        setActiveCourseStatsPill(0);
         moduleTable.draw();
     });
+
+    initCourseStatsPills();
+    loadCourseQuickStats();
 
     //function to open modal for update score
     function showCourseSubModules(btn) {
         mainCourseId = btn.id.split('-').pop();
-        var moduleName = moduleTable.row(btn.closest('tr')).data()["ModuleName"];
+        var rowData = moduleTable.row($(btn).closest('tr')).data();
+        if (!rowData) {
+            rowData = moduleDataById[mainCourseId];
+        }
+        var moduleName = rowData ? rowData["ModuleName"] : getCourseNameFromSource(btn);
         $courseSubModuleTitle.html(moduleName);
 
         $('#courseSubModuleList').DataTable().destroy();
@@ -456,9 +682,15 @@ var configureModuleHandler = (function () {
     function refreshDatatable() {
         $('#configureModuleList').DataTable().draw(); 
     }
+
+    function getCourseDataById(courseId) {
+        return moduleDataById[courseId] || null;
+    }
+
     return {
         showCourseSubModules: showCourseSubModules,
-        refreshDatatable: refreshDatatable
+        refreshDatatable: refreshDatatable,
+        getCourseDataById: getCourseDataById
     }
 })();
 
@@ -498,7 +730,7 @@ var createRAHandler = (function () {
     }
 
     function showCreateRAPopup(btn) {
-        var courseName = $(btn).closest('tr').find('.td-moduleName').html();
+        var courseName = getCourseNameFromSource(btn);
         selectedCourseId = btn.id.split('-').pop();
         resetModal();
         $title.text(courseName);

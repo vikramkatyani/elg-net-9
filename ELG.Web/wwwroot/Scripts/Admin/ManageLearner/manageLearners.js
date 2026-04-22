@@ -15,12 +15,22 @@ var learnerReportHandler = (function () {
     var $clearSearchBtn = $('#clearSearchLearner')
     var $downloadBtn = $('#downloadLearnerList');
     var $alert = $('#message_learner_list');
+    var $toggleAdvancedBtn = $('#toggleAdvancedFilters');
+    var $advancedLocFilter = $('#advancedLocationFilter');
+    var $advancedDepFilter = $('#advancedDepartmentFilter');
+    var $advancedFilterIcon = $('#advancedFilterIcon');
+
+    var $pillTotalUsers = $('#pillTotalUsers');
+    var $pillActiveUsers = $('#pillActiveUsers');
+    var $pillInactiveUsers = $('#pillInactiveUsers');
+    var $statusPills = $('.um-stat-pill[data-status]');
 
     var $ddlLoc = $('.ddl-loc');
     var $ddlDep = $('.ddl-dep');
 
     var adminPrev = 0;
     var ssoOrg = 0;
+    var selectedStatus = 0;
 
     //var learnerTable = 
 
@@ -49,7 +59,7 @@ var learnerReportHandler = (function () {
                     data.SearchText = $learner.val().replace(/'/g, "''''");
                     data.SearchLocation = $location.val();
                     data.SearchDepartment = $department.val();
-                    data.SearchStatus = $status.val();
+                    data.SearchStatus = getSearchStatus();
                 },
                 "error": function (xhr, error, code) {
                     console.log(xhr);
@@ -66,11 +76,6 @@ var learnerReportHandler = (function () {
 
                 if (ssoOrg)
                     $('.sso-btns').remove();
-            },
-            "createdRow": function (row, data, dataIndex) {
-                if (data["IsDeactive"] == true) {
-                    $(row).addClass('table-danger');
-                }
             },
             "columns": [
                 { "data": "FirstName", "name": "c.strFirstName", "autoWidth": true },
@@ -91,6 +96,15 @@ var learnerReportHandler = (function () {
                     return '<span class="spn-al-uemail">' + data["EmailId"] + '</span>'
                 }
                 }, {
+                    // render status as badge chip instead of row background color
+                    targets: [4],
+                    render: function (a, b, data, d) {
+                        var isInactive = data["IsDeactive"] === true;
+                        var statusText = isInactive ? 'Suspended' : 'Active';
+                        var statusClass = isInactive ? 'um-status-badge um-status-suspended' : 'um-status-badge um-status-active';
+                        return '<span class="' + statusClass + '">' + statusText + '</span>';
+                    }
+                }, {
                     targets: [5], // Adjust if your "Action" column index is different
                     orderable: false,
                     searchable: false,
@@ -101,48 +115,48 @@ var learnerReportHandler = (function () {
 
                         let btn = `
         <div class="d-flex justify-content-center align-items-center">
-            <div class="dropdown">
-                <button class="btn btn-sm border-0 p-2 rounded-circle" type="button"
+            <div class="dropdown um-row-actions">
+                <button class="btn border-0 um-row-actions-trigger" type="button"
                         id="dropdownMenu-${userId}" data-bs-toggle="dropdown" aria-expanded="false"
-                        style="width: 2.5rem; height: 2.5rem;">
-                    <i class="fa fa-ellipsis-v"></i>
+                        >
+                    <i class="fa fa-ellipsis-h"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu-${userId}">`;
+                <ul class="dropdown-menu dropdown-menu-end um-row-actions-menu" aria-labelledby="dropdownMenu-${userId}">`;
 
                         btn += `
-            <a class="dropdown-item" href="#" id="edit-user-${userId}" onclick="updateLearnerHandler.updateLearner(this)">
-                <i class="fa fa-fw fa-edit me-2"></i>Edit
+            <a class="dropdown-item um-row-actions-item" href="#" id="edit-user-${userId}" onclick="updateLearnerHandler.updateLearner(this)">
+                <i class="fa fa-fw fa-edit um-row-actions-item-icon"></i><span>Edit</span>
             </a>`;
 
                         if (isDeactive) {
                             btn += `
-            <a class="dropdown-item" href="#" id="update-user-${userId}" onclick="learnerReportHandler.updateActiveStatus(this, false)">
-                <i class="fa fa-fw fa-refresh me-2"></i>Activate
+            <a class="dropdown-item um-row-actions-item" href="#" id="update-user-${userId}" onclick="learnerReportHandler.updateActiveStatus(this, false)">
+                <i class="fa fa-fw fa-refresh um-row-actions-item-icon"></i><span>Activate</span>
             </a>
-            <a class="dropdown-item dlt-usr-btn" href="#" id="delete-user-${userId}" onclick="learnerReportHandler.deleteLearner(this)"
+            <a class="dropdown-item um-row-actions-item dlt-usr-btn" href="#" id="delete-user-${userId}" onclick="learnerReportHandler.deleteLearner(this)"
                data-loading-text="Deleting..." data-button-icon="trash" data-original-text="Delete">
-                <i class="fa fa-fw fa-trash me-2"></i>Delete
+                <i class="fa fa-fw fa-trash um-row-actions-item-icon"></i><span>Delete</span>
             </a>
-            <a class="dropdown-item sso-btns disabled" href="#" id="reset-pswd-${userId}">
-                <i class="fa fa-fw fa-refresh me-2"></i>Reset Password
+            <a class="dropdown-item um-row-actions-item sso-btns disabled" href="#" id="reset-pswd-${userId}">
+                <i class="fa fa-fw fa-refresh um-row-actions-item-icon"></i><span>Reset Password</span>
             </a>
-            <a class="dropdown-item sso-btns disabled" href="#" id="resend-mail-${userId}">
-                <i class="fa fa-fw fa-paper-plane me-2"></i>Resend Activation Email
+            <a class="dropdown-item um-row-actions-item sso-btns disabled" href="#" id="resend-mail-${userId}">
+                <i class="fa fa-fw fa-paper-plane um-row-actions-item-icon"></i><span>Resend Activation Email</span>
             </a>`;
                         } else {
                             btn += `
-            <a class="dropdown-item" href="#" id="update-user-${userId}" onclick="learnerReportHandler.updateActiveStatus(this, true)">
-                <i class="fa fa-fw fa-power-off me-2"></i>Deactivate
+            <a class="dropdown-item um-row-actions-item" href="#" id="update-user-${userId}" onclick="learnerReportHandler.updateActiveStatus(this, true)">
+                <i class="fa fa-fw fa-power-off um-row-actions-item-icon"></i><span>Deactivate</span>
             </a>
-            <a class="dropdown-item dlt-usr-btn" href="#" id="delete-user-${userId}" onclick="learnerReportHandler.deleteLearner(this)"
+            <a class="dropdown-item um-row-actions-item dlt-usr-btn" href="#" id="delete-user-${userId}" onclick="learnerReportHandler.deleteLearner(this)"
                data-loading-text="Deleting..." data-button-icon="trash" data-original-text="Delete">
-                <i class="fa fa-fw fa-trash me-2"></i>Delete
+                <i class="fa fa-fw fa-trash um-row-actions-item-icon"></i><span>Delete</span>
             </a>
-            <a class="dropdown-item sso-btns" href="#" id="reset-pswd-${userId}" onclick="learnerReportHandler.resetLearnerPassword(this)">
-                <i class="fa fa-fw fa-refresh me-2"></i>Reset Password
+            <a class="dropdown-item um-row-actions-item sso-btns" href="#" id="reset-pswd-${userId}" onclick="learnerReportHandler.resetLearnerPassword(this)">
+                <i class="fa fa-fw fa-refresh um-row-actions-item-icon"></i><span>Reset Password</span>
             </a>
-            <a class="dropdown-item sso-btns" href="#" id="resend-mail-${userId}" onclick="learnerReportHandler.resendLearnerActivationEmail(this)">
-                <i class="fa fa-fw fa-paper-plane me-2"></i>Resend Activation Email
+            <a class="dropdown-item um-row-actions-item sso-btns" href="#" id="resend-mail-${userId}" onclick="learnerReportHandler.resendLearnerActivationEmail(this)">
+                <i class="fa fa-fw fa-paper-plane um-row-actions-item-icon"></i><span>Resend Activation Email</span>
             </a>`;
                         }
 
@@ -166,7 +180,11 @@ var learnerReportHandler = (function () {
         $learner.val('');
         $location.val('0');
         $department.val('0');
-        $status.val('0');
+        selectedStatus = 0;
+        if ($status.length)
+            $status.val('0');
+
+        setActiveStatusPill(0);
         //learnerTable.draw();
         $('#registeredLearnerList').DataTable().draw();
     });
@@ -180,7 +198,7 @@ var learnerReportHandler = (function () {
             SearchText: $learner.val(),
             Location: $location.val(),
             Department: $department.val(),
-            Status: $status.val()
+            Status: getSearchStatus()
         }
 
         var path = 'DownloadLearners?' + $.param(data);
@@ -200,6 +218,95 @@ var learnerReportHandler = (function () {
         var message = '<div > <b>How to use this page:</b> <ul>  <li>Select filter criteria from the dropdowns or input fields.</li>  <li>Click <i class="fa fa-search me-1"></i> Search to display the matching users.</li> <li>Click <i class="fa fa-download me-1"></i> Download to export the displayed records to Excel.</li> <li>Click <i class="fa fa-times me-1"></i> Clear to reset all filters and start over.</li> </ul></div>';
         UTILS.Alert.show($alert, 'default', message);
         renderLocationDropDown();
+        initModernFilterToggle();
+        initStatusPills();
+        loadQuickStats();
+    }
+
+    function getSearchStatus() {
+        if ($status.length)
+            return $status.val();
+
+        return selectedStatus;
+    }
+
+    function setActiveStatusPill(status) {
+        if (!$statusPills.length)
+            return;
+
+        $statusPills.removeClass('is-selected');
+        $statusPills.filter('[data-status="' + status + '"]').addClass('is-selected');
+    }
+
+    function initStatusPills() {
+        if (!$statusPills.length)
+            return;
+
+        setActiveStatusPill(selectedStatus);
+
+        $statusPills.off('click keydown').on('click keydown', function (e) {
+            if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ')
+                return;
+
+            if (e.type === 'keydown')
+                e.preventDefault();
+
+            selectedStatus = Number($(this).data('status')) || 0;
+            if ($status.length)
+                $status.val(String(selectedStatus));
+
+            setActiveStatusPill(selectedStatus);
+            $searchBtn.trigger('click');
+        });
+    }
+
+    function initModernFilterToggle() {
+        if (!$toggleAdvancedBtn.length || !$advancedLocFilter.length || !$advancedDepFilter.length)
+            return;
+
+        $toggleAdvancedBtn.off('click').on('click', function (e) {
+            e.preventDefault();
+
+            $advancedLocFilter.toggleClass('d-none');
+            $advancedDepFilter.toggleClass('d-none');
+
+            var isHidden = $advancedLocFilter.hasClass('d-none');
+            if ($advancedFilterIcon.length) {
+                $advancedFilterIcon.toggleClass('fa-sliders', isHidden);
+                $advancedFilterIcon.toggleClass('fa-filter', !isHidden);
+            }
+        });
+    }
+
+    function loadQuickStats() {
+        if (!$pillTotalUsers.length || !$pillActiveUsers.length || !$pillInactiveUsers.length)
+            return;
+
+        $pillTotalUsers.html('<i class="fa fa-spinner fa-spin"></i>');
+        $pillActiveUsers.html('<i class="fa fa-spinner fa-spin"></i>');
+        $pillInactiveUsers.html('<i class="fa fa-spinner fa-spin"></i>');
+
+        $.ajax({
+            type: 'get',
+            url: 'LoadLearnerQuickStats',
+            dataType: 'json',
+            success: function (res) {
+                if (res && res.success == 1) {
+                    $pillTotalUsers.text(res.totalUsers);
+                    $pillActiveUsers.text(res.activeUsers);
+                    $pillInactiveUsers.text(res.inactiveUsers);
+                } else {
+                    $pillTotalUsers.text('-');
+                    $pillActiveUsers.text('-');
+                    $pillInactiveUsers.text('-');
+                }
+            },
+            error: function () {
+                $pillTotalUsers.text('-');
+                $pillActiveUsers.text('-');
+                $pillInactiveUsers.text('-');
+            }
+        });
     }
 
     //function to render list of all locations in organisation

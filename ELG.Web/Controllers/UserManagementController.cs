@@ -37,6 +37,9 @@ namespace ELG.Web.Controllers
         // GET: list of all registered learners
         public ActionResult Accounts()
         {
+            if (string.Equals(SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase))
+                return View("AccountsModern");
+
             return View("Accounts");
         }
 
@@ -77,6 +80,54 @@ namespace ELG.Web.Controllers
             {
                 Logger.Error(ex.Message, ex);
                 return View("Accounts");
+            }
+        }
+
+        // quick summary stats used by modern user directory pills
+        [HttpGet]
+        public ActionResult LoadLearnerQuickStats()
+        {
+            try
+            {
+                var learnerRep = new LearnerRep();
+
+                var criteria = new AdminLearnerFilter
+                {
+                    SearchText = string.Empty,
+                    SearchLocation = 0,
+                    SearchDepartment = 0,
+                    SearchStatus = 0,
+                    Company = Convert.ToInt64(SessionHelper.CompanyId),
+                    SortCol = "c.strFirstName",
+                    SortColDir = "asc",
+                    Skip = 0,
+                    PageSize = int.MaxValue
+                };
+
+                OrganisationLearnerList learnerList = learnerRep.GetRegisteredLearners(criteria, SessionHelper.UserId, SessionHelper.UserRole);
+
+                int totalUsers = learnerList?.TotalLearners ?? 0;
+                int inactiveUsers = learnerList?.LearnerList?.Count(x => x.IsDeactive) ?? 0;
+                int activeUsers = totalUsers - inactiveUsers;
+
+                return Json(new
+                {
+                    success = 1,
+                    totalUsers,
+                    activeUsers,
+                    inactiveUsers
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return Json(new
+                {
+                    success = -1,
+                    totalUsers = 0,
+                    activeUsers = 0,
+                    inactiveUsers = 0
+                });
             }
         }
 
@@ -224,7 +275,13 @@ namespace ELG.Web.Controllers
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View();
+                return Json(new
+                {
+                    success = -1,
+                    learnerInfo = (LearnerInfo)null,
+                    locationList = new List<OrganisationLocation>(),
+                    departmentList = new List<OrganisationDepartment>()
+                });
             }
         }
 
@@ -249,7 +306,13 @@ namespace ELG.Web.Controllers
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return View();
+                return Json(new
+                {
+                    success = -1,
+                    learnerInfo = (LearnerInfo)null,
+                    locationList = new List<OrganisationLocation>(),
+                    departmentList = new List<OrganisationDepartment>()
+                });
             }
         }
 

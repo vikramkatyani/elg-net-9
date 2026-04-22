@@ -6,104 +6,330 @@
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
 
-<div class="x_panel tile">
-    <div class="x_title">
-        <h1 class="h3 mb-3 text-primary fw-bold">Hand-Picked Allocation – Risk Assessments</h1>
+<div id="raAllocationPage" class="x_panel tile ra-alloc-shell">
+    <div class="ra-alloc-hero">
+        <div>
+            <h1 class="ra-alloc-title">Hand-Picked Allocation - Risk Assessments</h1>
+            <p class="ra-alloc-subtitle">Target the right learners quickly and allocate risk assessments with focused filters.</p>
+        </div>
+    </div>
 
-        <!-- Filter Section -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row g-3 align-items-end">
+    <div class="ra-alloc-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6 col-lg-3">
+                <label for="ddlCourse" class="ra-alloc-label">Risk Assessment</label>
+                <select id="ddlCourse" class="form-select ddl-course ra-alloc-input">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
 
-                    <!-- Risk Assessment Dropdown -->
-                    <div class="col-md-4 col-lg-3">
-                        <div class="form-floating">
-                            <select id="ddlCourse" class="form-select ddl-course">
-                                <option value="0">Select All</option>
-                            </select>
-                            <label for="ddlCourse">Risk Assessment</label>
-                        </div>
-                    </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="txtLearner" class="ra-alloc-label">User</label>
+                <input type="text" id="txtLearner" class="form-control ra-alloc-input" placeholder="Name or email">
+            </div>
 
-                    <!-- User Search -->
-                    <div class="col-md-4 col-lg-3">
-                        <div class="form-floating">
-                            <input type="text" id="txtLearner" class="form-control" placeholder="Name/Email">
-                            <label for="txtLearner">User</label>
-                        </div>
-                    </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="ddlLocation" class="ra-alloc-label">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                <select id="ddlLocation" class="form-select ddl-loc ra-alloc-input">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
 
-                    <!-- Location Filter -->
-                    <div class="col-md-4 col-lg-3">
-                        <div class="form-floating">
-                            <select id="ddlLocation" class="form-select ddl-loc">
-                                <option value="0">Select All</option>
-                            </select>
-                            <label for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
-                        </div>
-                    </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="ddlDepartment" class="ra-alloc-label">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                <select id="ddlDepartment" class="form-select ddl-dep ra-alloc-input">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
 
-                    <!-- Department Filter -->
-                    <div class="col-md-4 col-lg-3">
-                        <div class="form-floating">
-                            <select id="ddlDepartment" class="form-select ddl-dep">
-                                <option value="0">Select All</option>
-                            </select>
-                            <label for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="col-12 d-flex justify-content-end gap-2 mt-3">
-                        <button id="searchAllocateModule" class="btn btn-primary">
-                            <i class="fa fa-search me-1"></i> Search
-                        </button>
-                        <button id="clearSearchAllocateModule" class="btn btn-secondary">
-                            <i class="fa fa-times me-1"></i> Clear
-                        </button>
-                    </div>
-                </div>
+            <div class="col-12 ra-alloc-filter-actions">
+                <button id="searchAllocateModule" class="btn ra-alloc-btn ra-alloc-btn-primary">
+                    <i class="fa fa-search me-1"></i>Search
+                </button>
+                <button id="clearSearchAllocateModule" class="btn ra-alloc-btn ra-alloc-btn-soft">
+                    <i class="fa fa-times me-1"></i>Clear
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Table Section -->
-    <div class="x_content">
+    <div class="x_content ra-alloc-content">
         <div id="divMessage_AllocateModule"></div>
 
-        <div class="table-responsive" id="div-report-container">
-
-            <!-- Info Message -->
-            <div id="divLicAllocateInfoMessage" class="alert alert-default mt-4">
-                <strong>Important:</strong> The results will only display users who do not currently hold a license for the selected risk assessment.
+        <div id="div-report-container" class="ra-alloc-table-card">
+            <div id="divLicAllocateInfoMessage" class="ra-alloc-info">
+                <i class="fa fa-info-circle"></i>
+                <span>The results only display users who do not currently hold a license for the selected risk assessment.</span>
             </div>
 
-            <div class="d-flex justify-content-end mb-2">
-                <button type="button" class="btn btn-dark disabled" id="btnAllocateToSelected"
-                        data-bs-toggle="tooltip" title="Select some learners"
+            <div class="ra-alloc-table-actions">
+                <button type="button" class="btn ra-alloc-btn ra-alloc-btn-dark disabled" id="btnAllocateToSelected"
+                        data-bs-toggle="tooltip" data-toggle="tooltip" title="Select some learners"
                         data-loading-text="Please wait..." data-original-text="Allocate to Selected">
-                    Allocate to Selected
+                    <i class="fa fa-user-plus me-1"></i>Allocate to Selected
                 </button>
             </div>
 
-            <table class="table table-striped table-hover table-bordered align-middle" id="allocateModuleLearnerList" width="100%" cellspacing="0">
-                <thead class="table-light">
-                    <tr>
-                        <th style="width: 5%;">
-                            <input type="checkbox" name="chk_slc_all_user_ma" id="chk_slc_all_user_ma" value="1">
-                            <span class="ms-1">Select All</span>
-                        </th>
-                        <th>User</th>
-                        <th>Email</th>
-                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
-                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
-                        <th class="text-center" style="width: 5%;">Action</th>
-                    </tr>
-                </thead>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="allocateModuleLearnerList" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" name="chk_slc_all_user_ma" id="chk_slc_all_user_ma" value="1">
+                                <span class="ms-1">Select All</span>
+                            </th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    #raAllocationPage {
+        --ra-alloc-brand: var(--color-primary, #0b7d78);
+        --ra-alloc-brand-alt: var(--color-secondary, #0f968f);
+        border: 1px solid #d7e7eb;
+        border-radius: 16px;
+        background: radial-gradient(circle at 100% 0, #f4fbff 0%, #ffffff 48%);
+        box-shadow: 0 14px 30px rgba(19, 48, 56, 0.08);
+        padding: 1rem;
+    }
+
+    #raAllocationPage.ra-alloc-shell,
+    #raAllocationPage .x_content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    #raAllocationPage .ra-alloc-hero {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.8rem;
+        margin-bottom: 0.95rem;
+    }
+
+    #raAllocationPage .ra-alloc-title {
+        margin: 0;
+        font-size: clamp(1.25rem, 1.2rem + 0.35vw, 1.55rem);
+        line-height: 1.18;
+        font-weight: 800;
+        color: #214c59;
+    }
+
+    #raAllocationPage .ra-alloc-subtitle {
+        margin: 0.28rem 0 0;
+        color: #59717b;
+        font-size: 0.93rem;
+    }
+
+    #raAllocationPage .ra-alloc-filter-card,
+    #raAllocationPage .ra-alloc-table-card {
+        border: 1px solid #dce9ee;
+        border-radius: 13px;
+        background: #ffffff;
+    }
+
+    #raAllocationPage .ra-alloc-filter-card {
+        padding: 0.95rem;
+        margin-bottom: 0.9rem;
+    }
+
+    #raAllocationPage .ra-alloc-label {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #526a74;
+        font-weight: 700;
+    }
+
+    #raAllocationPage .ra-alloc-input {
+        min-height: 42px;
+        border-color: #cfe1e6;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    #raAllocationPage .ra-alloc-input:focus {
+        border-color: #8cc9c5;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #raAllocationPage .ra-alloc-filter-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+    }
+
+    #raAllocationPage .ra-alloc-btn {
+        min-width: 114px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.32rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #raAllocationPage .ra-alloc-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    #raAllocationPage .ra-alloc-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #raAllocationPage .ra-alloc-btn-primary {
+        color: #fff;
+        background: linear-gradient(130deg, var(--ra-alloc-brand), var(--ra-alloc-brand-alt));
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #raAllocationPage .ra-alloc-btn-primary:hover,
+    #raAllocationPage .ra-alloc-btn-primary:focus {
+        color: #fff;
+    }
+
+    #raAllocationPage .ra-alloc-btn-soft {
+        background: #f7fbfd;
+        color: #2e515d;
+        border-color: #d2e2e8;
+    }
+
+    #raAllocationPage .ra-alloc-btn-dark {
+        color: #fff;
+        background: linear-gradient(135deg, #233d4a, #355a6c);
+        box-shadow: 0 8px 16px rgba(23, 40, 50, 0.2);
+    }
+
+    #raAllocationPage .ra-alloc-btn-dark.disabled,
+    #raAllocationPage .ra-alloc-btn-dark:disabled {
+        opacity: 0.55;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    #raAllocationPage .ra-alloc-table-card {
+        padding: 0.9rem;
+    }
+
+    #raAllocationPage .ra-alloc-info {
+        display: flex;
+        gap: 0.5rem;
+        align-items: flex-start;
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.62rem 0.7rem;
+        margin-bottom: 0.7rem;
+        font-size: 0.85rem;
+    }
+
+    #raAllocationPage .ra-alloc-table-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 0.55rem;
+    }
+
+    #raAllocationPage #allocateModuleLearnerList {
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100% !important;
+    }
+
+    #raAllocationPage #allocateModuleLearnerList thead th {
+        background: #f2f8fb;
+        color: #35525d;
+        border-bottom: 1px solid #d7e6ec;
+        border-top: 1px solid #d7e6ec;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 700;
+        vertical-align: middle;
+    }
+
+    #raAllocationPage #allocateModuleLearnerList tbody td {
+        border-color: #e1ecef;
+        vertical-align: middle;
+    }
+
+    #raAllocationPage #allocateModuleLearnerList tbody tr:hover {
+        background: #f7fcfd;
+    }
+
+    #raAllocationPage #allocateModuleLearnerList button[id^='assign-user-'] {
+        width: 2.2rem;
+        height: 2.2rem;
+        padding: 0;
+        border-radius: 999px;
+        border: 1px solid #cfe0e5;
+        background: #eff7fa;
+        color: #275361;
+        transition: all 0.15s ease;
+    }
+
+    #raAllocationPage #allocateModuleLearnerList button[id^='assign-user-']:hover {
+        background: #e1f2f5;
+        border-color: #b9d6df;
+        color: #184756;
+    }
+
+    #raAllocationPage .dataTables_wrapper .dataTables_info,
+    #raAllocationPage .dataTables_wrapper .dataTables_paginate {
+        margin-top: 0.5rem;
+    }
+
+    @@media (max-width: 991px) {
+        #raAllocationPage .ra-alloc-filter-actions {
+            justify-content: stretch;
+        }
+
+        #raAllocationPage .ra-alloc-btn {
+            flex: 1;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        #raAllocationPage {
+            padding: 0.72rem;
+        }
+
+        #raAllocationPage .ra-alloc-filter-card,
+        #raAllocationPage .ra-alloc-table-card {
+            padding: 0.72rem;
+            border-radius: 12px;
+        }
+
+        #raAllocationPage .ra-alloc-filter-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.45rem;
+        }
+
+        #raAllocationPage .ra-alloc-btn {
+            width: 100%;
+        }
+    }
+</style>
 
 @section Scripts{
     <script>const currentpageId = "allocate_ra";</script>

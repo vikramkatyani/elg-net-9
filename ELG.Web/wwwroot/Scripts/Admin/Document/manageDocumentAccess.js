@@ -96,21 +96,20 @@ var documentReportHandler = (function () {
                     render: function (a, b, data, d) {
                         const id = data.DocumentID;
                         return `
-                <div class="dropdown">
-                    <button class="btn btn-sm border-0 p-2 rounded-circle" type="button"
-                            id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false"
-                            style="width: 2.5rem; height: 2.5rem;">
+                <div class="dropdown da-row-actions">
+                    <button class="btn btn-sm rounded-circle da-row-actions-trigger" type="button"
+                            id="actionDropdown-${id}" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-ellipsis-v"></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionDropdown-${id}">
+                    <ul class="dropdown-menu dropdown-menu-end da-row-actions-menu" aria-labelledby="actionDropdown-${id}">
                         <li>
-                            <a class="dropdown-item btn-doc-auto" href="#" id="doc-auto-${id}" onclick="documentReportHandler.editDocumentVisibility(this)">
-                                <i class="fa fa-link me-2"></i>Auto Assign
+                            <a class="dropdown-item da-row-actions-item btn-doc-auto" href="#" id="doc-auto-${id}" onclick="documentReportHandler.editDocumentVisibility(this)">
+                                <i class="fa fa-link da-row-actions-item-icon"></i>Auto Assign
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#" id="doc-indv-${id}" onclick="documentReportHandler.editIndividualDocVisibility(this)">
-                                <i class="fa fa-user me-2"></i>Individual Assign
+                            <a class="dropdown-item da-row-actions-item" href="#" id="doc-indv-${id}" onclick="documentReportHandler.editIndividualDocVisibility(this)">
+                                <i class="fa fa-user da-row-actions-item-icon"></i>Individual Assign
                             </a>
                         </li>
                     </ul>

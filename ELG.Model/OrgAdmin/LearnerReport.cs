@@ -28,6 +28,7 @@ namespace ELG.Model.OrgAdmin
         public int RecordTotal { get; set; }
 
         public string SearchText { get; set; }
+        public int CourseStatsFilter { get; set; }
         public Int64 Company { get; set; }
         public Int64 Location { get; set; }
         public Int64 Department { get; set; }

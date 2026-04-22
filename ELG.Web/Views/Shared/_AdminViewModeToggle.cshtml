@@ -1,0 +1,127 @@
+@using Newtonsoft.Json.Linq
+@{
+    bool showViewModeToggle = false;
+    var orgMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgAdminAvailableMenu as string;
+
+    if (!string.IsNullOrWhiteSpace(orgMenuSettingsJson))
+    {
+        try
+        {
+            var menuSettings = JObject.Parse(orgMenuSettingsJson);
+
+            // Show only when explicitly enabled for this admin in config.
+            if (menuSettings.TryGetValue("viewModeToggle", StringComparison.OrdinalIgnoreCase, out var explicitToggleToken))
+            {
+                showViewModeToggle = explicitToggleToken.Type == JTokenType.Boolean && explicitToggleToken.Value<bool>();
+            }
+            else if (menuSettings.TryGetValue("modernViewToggle", StringComparison.OrdinalIgnoreCase, out var modernToggleToken))
+            {
+                showViewModeToggle = modernToggleToken.Type == JTokenType.Boolean && modernToggleToken.Value<bool>();
+            }
+            else if (menuSettings.TryGetValue("adminViewModeToggle", StringComparison.OrdinalIgnoreCase, out var adminToggleToken))
+            {
+                showViewModeToggle = adminToggleToken.Type == JTokenType.Boolean && adminToggleToken.Value<bool>();
+            }
+        }
+        catch
+        {
+            // Hide toggle when configuration cannot be trusted.
+            showViewModeToggle = false;
+        }
+    }
+
+    var isModernViewMode = string.Equals(ELG.Web.Helper.SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase);
+}
+
+@if (showViewModeToggle)
+{
+    <li class="admin-viewmode-item" id="view-mode-toggle">
+        <div class="admin-viewmode-row">
+            <span class="admin-viewmode-label">Modern View</span>
+            <label class="admin-viewmode-switch" title="Toggle modern view">
+                <input type="checkbox" id="admin-viewmode-checkbox" @(isModernViewMode ? "checked" : "") onchange="toggleAdminViewMode(this.checked)">
+                <span class="admin-viewmode-slider"></span>
+            </label>
+        </div>
+        <div class="admin-viewmode-caption">Uses modern page design where available.</div>
+    </li>
+
+    <style>
+        .admin-viewmode-item {
+            list-style: none;
+            padding: 0.25rem 0.8rem;
+        }
+
+        .admin-viewmode-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.65rem;
+        }
+
+        .admin-viewmode-label {
+            font-size: 0.9rem;
+            color: #4b5a65;
+            font-weight: 600;
+        }
+
+        .admin-viewmode-caption {
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: #7d8c97;
+        }
+
+        .admin-viewmode-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+            flex: 0 0 auto;
+        }
+
+        .admin-viewmode-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .admin-viewmode-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #c7d2db;
+            transition: .2s;
+            border-radius: 999px;
+        }
+
+        .admin-viewmode-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            top: 3px;
+            background-color: #fff;
+            transition: .2s;
+            border-radius: 50%;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        .admin-viewmode-switch input:checked + .admin-viewmode-slider {
+            background: #0a7f72;
+        }
+
+        .admin-viewmode-switch input:checked + .admin-viewmode-slider:before {
+            transform: translateX(22px);
+        }
+    </style>
+
+    <script>
+        function toggleAdminViewMode(isModern) {
+            var style = isModern ? 'modern' : 'classic';
+            var returnUrl = window.location.pathname + window.location.search;
+            var baseUrl = (typeof hdnBaseUrl !== 'undefined' ? hdnBaseUrl : '/');
+            window.location.href = baseUrl + 'Home/SetViewMode?style=' + encodeURIComponent(style) + '&returnUrl=' + encodeURIComponent(returnUrl);
+        }
+    </script>
+}

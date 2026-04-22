@@ -13,6 +13,7 @@
     @{
         string host = HttpContextAccessor.HttpContext?.Request.Host.Value;
         var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
+        var isModernViewMode = string.Equals(ELG.Web.Helper.SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase);
         if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
         {
             ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
@@ -47,9 +48,178 @@
 
     <link href="~/content/vendor/treeComponent/css/d3-mitch-tree.min.css" rel="stylesheet">
     <link href="~/content/vendor/treeComponent/css/d3-mitch-tree-theme-default.min.css" rel="stylesheet">
+
+    <style>
+        .admin-modern-view .learner-menu-bar {
+            --tenant-primary: var(--color-primary, var(--bs-primary, #ff8a46));
+            --menu-text-color: #3f2f2b;
+            background: #efedeb;
+            border-right: 1px solid #ded9d4;
+            box-shadow: 8px 0 30px rgba(42, 28, 24, 0.08);
+            padding-top: 12px;
+        }
+
+        .admin-modern-view .learner-menu-bar .logo {
+            background: transparent;
+            border-bottom: 0;
+            padding: 10px 16px 14px;
+        }
+
+        .admin-modern-view .learner-menu .menu-icon {
+            display: none;
+        }
+
+        .admin-modern-view .learner-menu .nav-item > a,
+        .admin-modern-view .learner-menu .parent-menu-a {
+            position: relative;
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 18px;
+            margin: 6px 16px;
+            padding: 12px 16px;
+            min-height: 46px;
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: 0.1px;
+            transition: all 0.22s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .admin-modern-view .learner-menu .nav-item:not(.active) > a:hover,
+        .admin-modern-view .learner-menu .parent-menu-a:hover {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+            border-color: var(--tenant-primary);
+            transform: none;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .admin-modern-view .learner-menu .nav-item.active > a,
+        .admin-modern-view .learner-menu .nav-item > a.active {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .admin-modern-view .learner-menu .nav-item.active > a:hover,
+        .admin-modern-view .learner-menu .nav-item > a.active:hover {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
+        .admin-modern-view .learner-menu .nav-item.active > a span,
+        .admin-modern-view .learner-menu .nav-item > a.active span {
+            color: #ffffff;
+        }
+
+        .admin-modern-view .learner-menu .nav-item > a::before,
+        .admin-modern-view .learner-menu .parent-menu-a::before {
+            font-family: FontAwesome;
+            font-size: 16px;
+            width: 18px;
+            text-align: center;
+            opacity: 0.85;
+            font-weight: 400;
+            flex: 0 0 18px;
+        }
+
+        .admin-modern-view #dashboardLink > a::before { content: "\f00a"; }
+        .admin-modern-view #userLink > a::before { content: "\f0c0"; }
+        .admin-modern-view #moduleLink > a::before { content: "\f02d"; }
+        .admin-modern-view #manageRALink > a::before { content: "\f132"; }
+        .admin-modern-view #docLink > a::before { content: "\f15b"; }
+        .admin-modern-view #reportLink > a::before { content: "\f1fe"; }
+        .admin-modern-view #settingsLink > a::before,
+        .admin-modern-view #settingLink > a::before { content: "\f013"; }
+        .admin-modern-view #resourcesLink > a::before { content: "\f0b1"; }
+        .admin-modern-view #helpLink > a::before { content: "\f059"; }
+        .admin-modern-view #toggleLearnerLink > a::before { content: "\f19d"; }
+        .admin-modern-view #logout > a::before { content: "\f08b"; }
+
+        .admin-modern-view .learner-menu .child_menu {
+            background: transparent;
+            border-radius: 12px;
+            margin: 0 16px 8px;
+            padding: 2px 0 8px;
+            border-left: 2px solid var(--tenant-primary);
+        }
+
+        .admin-modern-view .learner-menu .child_menu li a {
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 15px;
+            margin: 2px 0 2px 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .admin-modern-view .learner-menu .child_menu li a:hover {
+            color: #ffffff;
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+        }
+
+        .admin-modern-view .learner-menu .child_menu li a.active,
+        .admin-modern-view .learner-menu .child_menu li a.active:hover {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff;
+        }
+
+        .admin-modern-view .line-partition {
+            border-color: #ded3cb !important;
+            margin-top: 18px !important;
+        }
+
+        .admin-modern-view .profile-details span {
+            color: #8c7c72;
+        }
+
+        .admin-modern-view .profile-details h2 {
+            color: #352823;
+        }
+
+        .admin-modern-view .admin-viewmode-item {
+            margin-left: 0;
+            margin-right: 0;
+            padding: 6px 0 4px;
+        }
+
+        .admin-modern-view .admin-viewmode-label {
+            color: #4f3e38;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.78rem;
+        }
+
+        .admin-modern-view .admin-viewmode-caption {
+            color: #89786f;
+            font-size: 0.72rem;
+        }
+
+        .admin-modern-view .admin-viewmode-item .admin-viewmode-row,
+        .admin-modern-view .admin-viewmode-item .admin-viewmode-caption {
+            margin-left: 12px;
+            margin-right: 8px;
+        }
+
+        .admin-modern-view .learner-main-content {
+            background: radial-gradient(circle at 0% 0%, #fff8f3 0%, #f8fbfd 36%, #ffffff 100%);
+        }
+    </style>
 </head>
 
-<body>
+<body class="@(string.Equals(ELG.Web.Helper.SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase) ? "admin-modern-view" : "admin-classic-view")">
     <div class="learner-content-container">
 
         <!-- Hamburger Menu Icon -->
@@ -83,6 +253,7 @@
                             </a>
                         </li>
                     }
+
                     @if (learnerMenuSettings == null || learnerMenuSettings.manageUsers == true)
                     {
                         <li class="nav-item parent-menu" id="userLink">
@@ -183,39 +354,50 @@
 
                     @if (learnerMenuSettings == null || learnerMenuSettings.viewReports == true)
                     {
-                        <li class="nav-item parent-menu" id="reportLink">
-                            <a class="parent-menu-a">
-                                @*<i class="fa fa-file"></i>*@
-                                <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports <span class="fa fa-chevron-down"></span>
-                            </a>
-                            <ul class="nav child_menu">
-                                @if (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true)
-                                {
-                                    <li><a class="collapse-item" id="menu-summary-report" href="@Url.Action("Summary", "Report")">Overview</a></li>
-                                }
-                                @if (learnerMenuSettings == null || learnerMenuSettings.learningReport == true)
-                                {
-                                    <li><a class="collapse-item" id="menu-learning-report" href="@Url.Action("LearningProgress", "Report")">Course Progress</a></li>
-                                    <li><a class="collapse-item" id="menu-historic-report" href="@Url.Action("HistoricRecords", "Report")">Historic Records</a></li>
-                                }
-                                @if (learnerMenuSettings == null || learnerMenuSettings.raReport == true)
-                                {
-                                    <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("RiskAssessmentReport", "Report")">Risk Assessment Summary</a></li>
-                                }
-                                @if (learnerMenuSettings == null || learnerMenuSettings.documentReport == true)
-                                {
-                                    <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("DocumentReport", "Report")">Document Report</a></li>
-                                }
-                                @*@if (learnerMenuSettings == null || learnerMenuSettings.announcmentReport == true)
+                        @if (string.Equals(ELG.Web.Helper.SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <li class="nav-item" id="reportLink">
+                                <a id="menu-reports-hub" href="@Url.Action("InsightsReports", "Report")">
+                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item parent-menu" id="reportLink">
+                                <a class="parent-menu-a">
+                                    @*<i class="fa fa-file"></i>*@
+                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports <span class="fa fa-chevron-down"></span>
+                                </a>
+                                <ul class="nav child_menu">
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true)
                                     {
-                                        <li><a class="collapse-item" id="menu-announcement-report" href="@Url.Action("AnnouncementReport", "Report")">Announcement Engagement</a></li>
-                                    }*@
-                                @if (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true)
-                                {
-                                    <li><a class="collapse-item" id="menu-trainingcard-report" href="@Url.Action("TrainingCard", "Report")">Learner Account Snapshot</a></li>
-                                }
-                            </ul>
-                        </li>
+                                        <li><a class="collapse-item" id="menu-summary-report" href="@Url.Action("Summary", "Report")">Overview</a></li>
+                                    }
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.learningReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-learning-report" href="@Url.Action("LearningProgress", "Report")">Course Progress</a></li>
+                                        <li><a class="collapse-item" id="menu-historic-report" href="@Url.Action("HistoricRecords", "Report")">Historic Records</a></li>
+                                    }
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.raReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("RiskAssessmentReport", "Report")">Risk Assessment Summary</a></li>
+                                    }
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.documentReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("DocumentReport", "Report")">Document Report</a></li>
+                                    }
+                                    @*@if (learnerMenuSettings == null || learnerMenuSettings.announcmentReport == true)
+                                        {
+                                            <li><a class="collapse-item" id="menu-announcement-report" href="@Url.Action("AnnouncementReport", "Report")">Announcement Engagement</a></li>
+                                        }*@
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-trainingcard-report" href="@Url.Action("TrainingCard", "Report")">Learner Account Snapshot</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
                     }
                     @*<li class="nav-item" id="certificateLink">
                             <a id="menu-certificate" href="@Url.Action("External" , "Certificate")"><i class="fa fa-certificate"></i> External Certificate </a>
@@ -256,6 +438,7 @@
                         <img class="menu-icon" src="~/Content/images/icons/logout.png" alt="Logout" /> Log Out
                     </a>
                 </li>
+                @Html.Partial("_AdminViewModeToggle")
             </ul>
             <div class="profile">
                 @{
