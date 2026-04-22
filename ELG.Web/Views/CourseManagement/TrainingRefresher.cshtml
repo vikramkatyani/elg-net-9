@@ -1,4 +1,4 @@
-
+﻿
 @{
     ViewBag.Title = "Reset Training";
     //check admin privileges
@@ -6,311 +6,101 @@
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
 
-<div id="cmTrainingRefresherPage" class="x_panel tile cm-tr-shell">
-    <div class="cm-tr-hero">
-        <div>
-            <h1 class="cm-tr-title">Refresher Training</h1>
-            <p class="cm-tr-subtitle">Search assigned learners and reset training records in bulk or individually.</p>
+<div class="x_panel tile">
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Refresher Training</h1>
+
+        <!-- Filter Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+
+                    <!-- User Search -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <input type="text" id="txtLearner" class="form-control" placeholder="Name/Email">
+                            <label for="txtLearner">User</label>
+                        </div>
+                    </div>
+
+                    <!-- Location Filter -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <select id="ddlLocation" class="form-select ddl-loc">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        </div>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <select id="ddlDepartment" class="form-select ddl-dep">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        </div>
+                    </div>
+
+                    <!-- Course Dropdown -->
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-floating">
+                            <select id="ddlCourse" class="form-select ddl-course">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlCourse">Course</label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                        <button id="searchAllocatedModule" class="btn btn-primary">
+                            <i class="fa fa-search me-1"></i> Search
+                        </button>
+                        <button id="clearSearchAllocateModule" class="btn btn-secondary">
+                            <i class="fa fa-times me-1"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="cm-tr-filter-card">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-6 col-lg-3">
-                <label for="txtLearner" class="cm-tr-label">User</label>
-                <input type="text" id="txtLearner" class="form-control cm-tr-input" placeholder="Name or email">
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <label for="ddlLocation" class="cm-tr-label">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
-                <select id="ddlLocation" class="form-select ddl-loc cm-tr-input">
-                    <option value="0">Select All</option>
-                </select>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <label for="ddlDepartment" class="cm-tr-label">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
-                <select id="ddlDepartment" class="form-select ddl-dep cm-tr-input">
-                    <option value="0">Select All</option>
-                </select>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <label for="ddlCourse" class="cm-tr-label">Course</label>
-                <select id="ddlCourse" class="form-select ddl-course cm-tr-input">
-                    <option value="0">Select All</option>
-                </select>
-            </div>
-
-            <div class="col-12 cm-tr-filter-actions">
-                <button id="searchAllocatedModule" class="btn cm-tr-btn cm-tr-btn-primary">
-                    <i class="fa fa-search me-1"></i>Search
-                </button>
-                <button id="clearSearchAllocateModule" class="btn cm-tr-btn cm-tr-btn-soft">
-                    <i class="fa fa-times me-1"></i>Clear
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="x_content cm-tr-content">
+    <!-- Table Section -->
+    <div class="x_content">
         <div id="divMessage_LearnerAssignedModule"></div>
 
-        <div id="div-report-container" class="cm-tr-table-card">
-            <div class="cm-tr-table-actions">
-                <button type="button" class="btn cm-tr-btn cm-tr-btn-dark disabled" id="btnResetForSelected"
-                        data-bs-toggle="tooltip" data-toggle="tooltip" title="Select some records"
+        <div class="table-responsive" id="div-report-container">
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-dark disabled" id="btnResetForSelected"
+                        data-bs-toggle="tooltip" title="Select some records"
                         data-loading-text="Please wait..." data-original-text="Reset selected training records">
-                    <i class="fa fa-refresh me-1"></i>Reset Training
+                    Reset Training
                 </button>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover align-middle" id="learnerAssignedModuleList" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox" name="chk_slc_all_user_rtm" id="chk_slc_all_user_rtm" value="1">
-                                <span class="ms-1">Select All</span>
-                            </th>
-                            <th>User</th>
-                            <th>Email</th>
-                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
-                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
-                            <th>Course</th>
-                            <th>Assigned On</th>
-                            <th>Status</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+            <table class="table table-striped table-hover table-bordered align-middle" id="learnerAssignedModuleList" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 5%;">
+                            <input type="checkbox" name="chk_slc_all_user_rtm" id="chk_slc_all_user_rtm" value="1">
+                            <span class="ms-1">Select All</span>
+                        </th>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Course</th>
+                        <th>Assigned On</th>
+                        <th>Status</th>
+                        <th class="text-center" style="width: 5%;">Action</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
-
-<style>
-    #cmTrainingRefresherPage {
-        --cm-tr-brand: var(--color-primary, #0b7d78);
-        --cm-tr-brand-alt: var(--color-secondary, #0f968f);
-        border: 1px solid #d7e7eb;
-        border-radius: 16px;
-        background: radial-gradient(circle at 100% 0, #f4fbff 0%, #ffffff 48%);
-        box-shadow: 0 14px 30px rgba(19, 48, 56, 0.08);
-        padding: 1rem;
-    }
-
-    #cmTrainingRefresherPage.cm-tr-shell,
-    #cmTrainingRefresherPage .x_content {
-        width: 100%;
-        max-width: none;
-        margin: 0;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-hero {
-        margin-bottom: 0.95rem;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-title {
-        margin: 0;
-        font-size: clamp(1.25rem, 1.2rem + 0.35vw, 1.55rem);
-        line-height: 1.18;
-        font-weight: 800;
-        color: #214c59;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-subtitle {
-        margin: 0.28rem 0 0;
-        color: #59717b;
-        font-size: 0.93rem;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-filter-card,
-    #cmTrainingRefresherPage .cm-tr-table-card {
-        border: 1px solid #dce9ee;
-        border-radius: 13px;
-        background: #ffffff;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-filter-card {
-        padding: 0.95rem;
-        margin-bottom: 0.9rem;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-label {
-        display: block;
-        margin-bottom: 0.35rem;
-        font-size: 0.74rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: #526a74;
-        font-weight: 700;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-input {
-        min-height: 42px;
-        border-color: #cfe1e6;
-        border-radius: 10px;
-        box-shadow: none;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-input:focus {
-        border-color: #8cc9c5;
-        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
-    }
-
-    #cmTrainingRefresherPage .cm-tr-filter-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        margin-top: 0.25rem;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn {
-        min-width: 120px;
-        height: 38px;
-        border-radius: 10px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.32rem;
-        font-size: 0.82rem;
-        font-weight: 700;
-        border: 1px solid transparent;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn:hover {
-        transform: translateY(-1px);
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn-primary {
-        color: #fff;
-        background: var(--cm-tr-brand);
-        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn-primary:hover,
-    #cmTrainingRefresherPage .cm-tr-btn-primary:focus {
-        color: #fff;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn-soft {
-        background: #f7fbfd;
-        color: #2e515d;
-        border-color: #d2e2e8;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn-dark {
-        color: #fff;
-        background: #233d4a;
-        box-shadow: 0 8px 16px rgba(23, 40, 50, 0.2);
-    }
-
-    #cmTrainingRefresherPage .cm-tr-btn-dark.disabled,
-    #cmTrainingRefresherPage .cm-tr-btn-dark:disabled {
-        opacity: 0.55;
-        box-shadow: none;
-        cursor: not-allowed;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-table-card {
-        padding: 0.9rem;
-    }
-
-    #cmTrainingRefresherPage .cm-tr-table-actions {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 0.55rem;
-    }
-
-    #cmTrainingRefresherPage #learnerAssignedModuleList {
-        margin-bottom: 0;
-        border-collapse: separate;
-        border-spacing: 0;
-        width: 100% !important;
-    }
-
-    #cmTrainingRefresherPage #learnerAssignedModuleList thead th {
-        background: #f2f8fb;
-        color: #35525d;
-        border-bottom: 1px solid #d7e6ec;
-        border-top: 1px solid #d7e6ec;
-        font-size: 0.76rem;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        font-weight: 700;
-        vertical-align: middle;
-    }
-
-    #cmTrainingRefresherPage #learnerAssignedModuleList tbody td {
-        border-color: #e1ecef;
-        vertical-align: middle;
-    }
-
-    #cmTrainingRefresherPage #learnerAssignedModuleList tbody tr:hover {
-        background: #f7fcfd;
-    }
-
-    #cmTrainingRefresherPage #learnerAssignedModuleList button.btn-sm.rounded-circle {
-        width: 2.2rem;
-        height: 2.2rem;
-        padding: 0;
-        border-radius: 999px;
-        border: 1px solid #cfe0e5;
-        background: #eff7fa;
-        color: #275361;
-        transition: all 0.15s ease;
-    }
-
-    #cmTrainingRefresherPage #learnerAssignedModuleList button.btn-sm.rounded-circle:hover {
-        background: #e1f2f5;
-        border-color: #b9d6df;
-        color: #184756;
-    }
-
-    #cmTrainingRefresherPage .dataTables_wrapper .dataTables_info,
-    #cmTrainingRefresherPage .dataTables_wrapper .dataTables_paginate {
-        margin-top: 0.5rem;
-    }
-
-    @@media (max-width: 991px) {
-        #cmTrainingRefresherPage .cm-tr-filter-actions {
-            justify-content: stretch;
-        }
-
-        #cmTrainingRefresherPage .cm-tr-btn {
-            flex: 1;
-        }
-    }
-
-    @@media (max-width: 767px) {
-        #cmTrainingRefresherPage {
-            padding: 0.72rem;
-        }
-
-        #cmTrainingRefresherPage .cm-tr-filter-card,
-        #cmTrainingRefresherPage .cm-tr-table-card {
-            padding: 0.72rem;
-            border-radius: 12px;
-        }
-
-        #cmTrainingRefresherPage .cm-tr-filter-actions {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.45rem;
-        }
-
-        #cmTrainingRefresherPage .cm-tr-btn {
-            width: 100%;
-        }
-    }
-</style>
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/Admin/CourseManagement/refreshTraining_Manual.js"></script>
 }

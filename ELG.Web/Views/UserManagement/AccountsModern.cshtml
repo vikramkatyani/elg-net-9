@@ -67,19 +67,23 @@
             </div>
 
             <div class="col-lg-4 col-md-12">
-                <div class="um-actions">
-                    <button id="toggleAdvancedFilters" class="btn um-btn um-btn-filter" title="Show/Hide Location and Department filters">
-                        <i id="advancedFilterIcon" class="fa fa-sliders me-1"></i>Filters
-                    </button>
-                    <button id="searchLearner" class="btn um-btn um-btn-primary">
-                        <i class="fa fa-search me-1"></i>Search
-                    </button>
-                    <button id="downloadLearnerList" class="btn um-btn um-btn-soft">
-                        <i class="fa fa-download me-1"></i>Download
-                    </button>
-                    <button id="clearSearchLearner" class="btn um-btn um-btn-soft">
-                        <i class="fa fa-refresh me-1"></i>Clear
-                    </button>
+                <div class="um-actions-panel">
+                    <div class="um-actions-top">
+                        <button id="toggleAdvancedFilters" class="btn um-btn um-btn-filter" title="Show/Hide Location and Department filters">
+                            <i id="advancedFilterIcon" class="fa fa-sliders me-1"></i>Filters
+                        </button>
+                    </div>
+                    <div class="um-actions-bottom">
+                        <button id="searchLearner" class="btn um-btn um-btn-primary">
+                            <i class="fa fa-search me-1"></i>Search
+                        </button>
+                        <button id="downloadLearnerList" class="btn um-btn um-btn-soft">
+                            <i class="fa fa-download me-1"></i>Download
+                        </button>
+                        <button id="clearSearchLearner" class="btn um-btn um-btn-soft">
+                            <i class="fa fa-refresh me-1"></i>Clear
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -272,12 +276,26 @@
         color: var(--um-brand);
     }
 
-    .um-actions {
+    .um-actions-panel {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 0.6rem;
+    }
+
+    .um-actions-top,
+    .um-actions-bottom {
         display: flex;
         gap: 0.5rem;
-        flex-wrap: wrap;
         justify-content: flex-end;
         align-items: flex-end;
+        width: 100%;
+    }
+
+    .um-actions-bottom {
+        flex-wrap: nowrap;
     }
 
     .um-btn {
@@ -470,7 +488,12 @@
             grid-template-columns: repeat(1, minmax(0, 1fr));
         }
 
-        .um-actions {
+        .um-actions-panel {
+            align-items: stretch;
+        }
+
+        .um-actions-top,
+        .um-actions-bottom {
             justify-content: flex-start;
         }
 
@@ -487,8 +510,20 @@
             border-radius: 12px;
         }
 
-        .um-actions {
+        .um-actions-panel {
             width: 100%;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
+
+        .um-actions-top,
+        .um-actions-bottom {
+            width: 100%;
+            justify-content: stretch;
+        }
+
+        .um-actions-bottom {
+            flex-wrap: wrap;
         }
 
         .um-btn {
