@@ -74,6 +74,104 @@
 @Html.Partial("_addCategory")
 @Html.Partial("_addSubCategory")
 
+<style>
+    #docCategoryList .dc-row-actions-trigger {
+        width: 2rem;
+        height: 2rem;
+        border: 1px solid #d2e2e8;
+        border-radius: 8px;
+        background: #f7fbfd;
+        color: #2f5662;
+    }
+
+    #docCategoryList .dc-row-actions-trigger:hover,
+    #docCategoryList .dc-row-actions.show .dc-row-actions-trigger {
+        background: #eef7fb;
+        border-color: #bfd7dd;
+        color: #204652;
+    }
+
+    #docCategoryList .dc-row-actions-menu {
+        min-width: 220px;
+        border: 1px solid #d7e6ea;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(16, 40, 46, 0.12);
+        padding: 0.35rem;
+    }
+
+    #docCategoryList .dc-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.42rem 0.52rem;
+    }
+
+    #docCategoryList .dc-row-actions-item-icon {
+        width: 16px;
+        text-align: center;
+        color: #2e6f7c;
+    }
+
+    #docCategoryList .dc-row-actions-item:hover,
+    #docCategoryList .dc-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+
+    #docCategoryList .dc-sub-actions {
+        margin-top: 0.45rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    #docCategoryList .dc-sub-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        background: #f8fcfd;
+        border: 1px solid #dfecf0;
+        border-radius: 8px;
+        padding: 0.25rem 0.4rem;
+    }
+
+    #docCategoryList .dc-sub-item-name {
+        font-size: 0.9rem;
+        color: #345965;
+        line-height: 1.2;
+    }
+
+    #docCategoryList .dc-sub-item-actions {
+        display: inline-flex;
+        gap: 0.3rem;
+        flex: 0 0 auto;
+    }
+
+    #docCategoryList .dc-sub-action-btn {
+        width: 1.9rem;
+        height: 1.9rem;
+        border: 1px solid #d2e2e8;
+        border-radius: 7px;
+        background: #f7fbfd;
+        color: #2f5662;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    #docCategoryList .dc-sub-action-btn:hover {
+        background: #eef7fb;
+        border-color: #bfd7dd;
+        color: #204652;
+    }
+</style>
+
 
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/Admin/Document/manageCategory.js"></script>
