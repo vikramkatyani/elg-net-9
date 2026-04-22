@@ -499,11 +499,13 @@ namespace ELG.Web.Controllers
             {
                 var moduleRep = new ModuleRep();
 
-                searchCriteria.Company = Convert.ToInt64(SessionHelper.CompanyId);
                 if (searchCriteria == null)
                 {
-                    searchCriteria.SearchText = String.Empty;
+                    searchCriteria = new DataTableFilter();
+                    searchCriteria.SearchText = string.Empty;
                 }
+
+                searchCriteria.Company = Convert.ToInt64(SessionHelper.CompanyId);
 
                 searchCriteria.Draw = Request.Form["draw"].FirstOrDefault();
                 searchCriteria.Start = Request.Form["start"].FirstOrDefault();
@@ -543,7 +545,7 @@ namespace ELG.Web.Controllers
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                return Json(new { draw = searchCriteria.Draw, recordsFiltered = orgModuleList.TotalModules, recordsTotal = orgModuleList.TotalModules, data = orgModuleList.ModuleList });
+                return Json(new { draw = searchCriteria?.Draw, recordsFiltered = orgModuleList.TotalModules, recordsTotal = orgModuleList.TotalModules, data = orgModuleList.ModuleList });
             }
         }
 

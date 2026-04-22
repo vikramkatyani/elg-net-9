@@ -344,8 +344,9 @@ var configureModuleHandler = (function () {
     var viewStorageKey = 'courseSetupViewMode';
     var moduleDataById = {};
     var selectedCourseStatsFilter = 0;
+    var hasViewToggle = $listViewBtn.length > 0 && $gridViewBtn.length > 0;
     var savedViewMode = localStorage.getItem(viewStorageKey);
-    var currentViewMode = (savedViewMode === 'list' || savedViewMode === 'grid') ? savedViewMode : 'grid';
+    var currentViewMode = (savedViewMode === 'list' || savedViewMode === 'grid') ? savedViewMode : (hasViewToggle ? 'grid' : 'list');
 
     var $courseSubModuleModal = $('#courseSubModuleModal');
     var $courseSubModuleTitle = $('#courseSubModuleTitle');  
@@ -437,6 +438,10 @@ var configureModuleHandler = (function () {
     }
 
     function updateViewToggleState() {
+        if (!hasViewToggle) {
+            return;
+        }
+
         if (currentViewMode === 'grid') {
             $gridViewBtn.addClass('is-active active btn-primary').removeClass('btn-outline-primary');
             $listViewBtn.removeClass('is-active active btn-primary').addClass('btn-outline-primary');
@@ -448,6 +453,15 @@ var configureModuleHandler = (function () {
 
     function applyViewMode() {
         var $wrapper = $('#configureModuleList_wrapper');
+
+        if (!hasViewToggle) {
+            $('#course-setup-container').removeClass('d-none');
+            $wrapper.removeClass('d-none');
+            $gridContainer.addClass('d-none');
+            currentViewMode = 'list';
+            return;
+        }
+
         if (currentViewMode === 'grid') {
             $('#course-setup-container').addClass('d-none');
             $wrapper.addClass('d-none');
@@ -461,6 +475,13 @@ var configureModuleHandler = (function () {
     }
 
     function setViewMode(mode) {
+        if (!hasViewToggle) {
+            currentViewMode = 'list';
+            localStorage.setItem(viewStorageKey, currentViewMode);
+            applyViewMode();
+            return;
+        }
+
         currentViewMode = (mode === 'grid') ? 'grid' : 'list';
         localStorage.setItem(viewStorageKey, currentViewMode);
         applyViewMode();
@@ -602,13 +623,15 @@ var configureModuleHandler = (function () {
         }],
     });
 
-    $listViewBtn.on('click', function () {
-        setViewMode('list');
-    });
+    if (hasViewToggle) {
+        $listViewBtn.on('click', function () {
+            setViewMode('list');
+        });
 
-    $gridViewBtn.on('click', function () {
-        setViewMode('grid');
-    });
+        $gridViewBtn.on('click', function () {
+            setViewMode('grid');
+        });
+    }
 
     setViewMode(currentViewMode);
 
