@@ -144,6 +144,12 @@ namespace ELG.Web.Controllers
 
                         // Get landing page and redirect
                         string landingPage = GetLandingPageFromMenu(SessionHelper.OrgAdminAvailableMenu as string);
+                        if (string.Equals(SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase)
+                            && (string.Equals(landingPage, "Dashboard", StringComparison.OrdinalIgnoreCase)
+                                || string.Equals(landingPage, "Index", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            landingPage = "MyCourses";
+                        }
                         var redirectUrl = Url.Action(landingPage, "Home", new { area = "Learner" });
 
                         // Redirect to password reset if needed
@@ -500,6 +506,22 @@ namespace ELG.Web.Controllers
             SessionHelper.IsLearnerUser = false;
             SessionHelper.HasAdminRights = true;
 
+            // Default to modern view if viewModeToggle is enabled in org settings.
+            if (!string.IsNullOrWhiteSpace(admin.MenuItems))
+            {
+                try
+                {
+                    var menuObj = Newtonsoft.Json.Linq.JObject.Parse(admin.MenuItems);
+                    if (menuObj.TryGetValue("viewModeToggle", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                        && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
+                        && (bool)toggleToken)
+                    {
+                        SessionHelper.AdminViewMode = "modern";
+                    }
+                }
+                catch { /* ignore malformed JSON */ }
+            }
+
             if (admin.CompanyLogo != null)
             {
                 string companyLogoBase64Data = Convert.ToBase64String(admin.CompanyLogo);
@@ -554,6 +576,49 @@ namespace ELG.Web.Controllers
             }
 
             SessionHelper.IsSSOLogin = false;
+
+                // Default to modern view when enabled in org menu settings.
+                // Check learnerMenuSettings first, then fall back to adminMenuSettings.
+                bool viewModeToggleEnabled = false;
+                if (!string.IsNullOrWhiteSpace(learner.MenuItems))
+                {
+                    try
+                    {
+                        var menuObj = Newtonsoft.Json.Linq.JObject.Parse(learner.MenuItems);
+                        if (menuObj.TryGetValue("viewModeToggle", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                            && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
+                            && (bool)toggleToken)
+                        {
+                            viewModeToggleEnabled = true;
+                        }
+                    }
+                    catch { }
+                }
+
+                if (!viewModeToggleEnabled && learner.CompanyId > 0)
+                {
+                    try
+                    {
+                        var adminAcc = new OrgAdminAccountRep();
+                        string adminMenuSettings = adminAcc.GetOrgAdminMenuSettings(learner.CompanyId);
+                        if (!string.IsNullOrWhiteSpace(adminMenuSettings))
+                        {
+                            var menuObj = Newtonsoft.Json.Linq.JObject.Parse(adminMenuSettings);
+                            if (menuObj.TryGetValue("viewModeToggle", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                                && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
+                                && (bool)toggleToken)
+                            {
+                                viewModeToggleEnabled = true;
+                            }
+                        }
+                    }
+                    catch { }
+                }
+
+                if (viewModeToggleEnabled)
+                {
+                    SessionHelper.LearnerViewMode = "modern";
+                }
         }
 
         /// <summary>
@@ -574,7 +639,6 @@ namespace ELG.Web.Controllers
                 return "Dashboard";
             }
         }
-
         #endregion
 
         private void SetSessionCompanySettings(int CompanyId)

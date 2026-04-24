@@ -285,5 +285,26 @@ namespace ELG.DAL.OrgAdminDAL
                 throw;
             }
         }
+
+        /// <summary>
+        /// Gets adminMenuSettings JSON for the given organisation.
+        /// Used as fallback when learnerMenuSettings does not contain viewModeToggle.
+        /// </summary>
+        public string GetOrgAdminMenuSettings(long orgId)
+        {
+            try
+            {
+                using (var context = new lmsdbEntities())
+                {
+                    return context.Database.SqlQuery<string>(
+                        "SELECT adminMenuSettings FROM tborganisation WHERE intOrganisationID = @p0",
+                        orgId).FirstOrDefault();
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }
