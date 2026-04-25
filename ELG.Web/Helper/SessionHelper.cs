@@ -474,6 +474,22 @@ namespace ELG.Web.Helper
         }
 
         /// <summary>
+        /// Gets/Sets learner menu settings for dual-role users.
+        /// </summary>
+        public static String OrgLearnerAvailableMenu
+        {
+            get
+            {
+                var value = Session?.GetString("OrgLearnerAvailableMenu");
+                return value;
+            }
+            set
+            {
+                Session?.SetString("OrgLearnerAvailableMenu", value ?? string.Empty);
+            }
+        }
+
+        /// <summary>
         /// Gets/Sets admin UI view mode (classic | modern).
         /// </summary>
         public static string AdminViewMode

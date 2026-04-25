@@ -510,6 +510,9 @@ namespace ELG.Web.Controllers
         /// </summary>
         private void SetAdminSessionDetails(OrgAdminInfo admin)
         {
+            string learnerMenuItems = GetLearnerMenuSettingsForUser(admin.UserID);
+            string mergedMenuItems = MergeMenuSettings(admin.MenuItems, learnerMenuItems);
+
             SessionHelper.UserId = admin.UserID;
             SessionHelper.UserName = admin.EmailId;
             SessionHelper.UserDisplayName = admin.FirstName + " " + admin.LastName;
@@ -519,16 +522,17 @@ namespace ELG.Web.Controllers
             SessionHelper.AccidentIncidentFeature = admin.AccidentIncidentFeature;
             SessionHelper.TrainingRenewalMode = admin.TrainingRenewalMode;
             SessionHelper.CompanyCourseAssignmentMode = admin.CourseAssignMode;
-            SessionHelper.OrgAdminAvailableMenu = admin.MenuItems;
+            SessionHelper.OrgAdminAvailableMenu = mergedMenuItems;
+            SessionHelper.OrgLearnerAvailableMenu = learnerMenuItems;
             SessionHelper.IsLearnerUser = false;
             SessionHelper.HasAdminRights = true;
 
             // Default to modern view if modernViewEnabled is enabled in org settings.
-            if (!string.IsNullOrWhiteSpace(admin.MenuItems))
+            if (!string.IsNullOrWhiteSpace(mergedMenuItems))
             {
                 try
                 {
-                    var menuObj = Newtonsoft.Json.Linq.JObject.Parse(admin.MenuItems);
+                    var menuObj = Newtonsoft.Json.Linq.JObject.Parse(mergedMenuItems);
                     if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
                         && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
                         && (bool)toggleToken)
@@ -574,6 +578,7 @@ namespace ELG.Web.Controllers
             SessionHelper.CompanyNumber = learner.CompanyNumber;
             SessionHelper.AccidentIncidentFeature = learner.AccidentIncidentFeature;
             SessionHelper.OrgAdminAvailableMenu = learner.MenuItems;
+            SessionHelper.OrgLearnerAvailableMenu = learner.MenuItems;
             SessionHelper.IsLearnerUser = true;
             SessionHelper.HasLearnerRights = true;
 
@@ -655,6 +660,67 @@ namespace ELG.Web.Controllers
             catch
             {
                 return false;
+            }
+        }
+
+        private string GetLearnerMenuSettingsForUser(long userId)
+        {
+            if (userId <= 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                var learnerAcc = new LearnerAccountRep();
+                var learnerInfo = learnerAcc.GetLearnerInfoByUserID((int)userId);
+
+                if (learnerInfo != null && learnerInfo.UserID > 0 && !string.IsNullOrWhiteSpace(learnerInfo.MenuItems))
+                {
+                    return learnerInfo.MenuItems;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+            }
+
+            return null;
+        }
+
+        private static string MergeMenuSettings(string primaryMenuJson, string secondaryMenuJson)
+        {
+            if (string.IsNullOrWhiteSpace(primaryMenuJson))
+            {
+                return secondaryMenuJson;
+            }
+
+            if (string.IsNullOrWhiteSpace(secondaryMenuJson))
+            {
+                return primaryMenuJson;
+            }
+
+            try
+            {
+                var mergedMenu = new Newtonsoft.Json.Linq.JObject();
+                var secondaryMenu = Newtonsoft.Json.Linq.JObject.Parse(secondaryMenuJson);
+                var primaryMenu = Newtonsoft.Json.Linq.JObject.Parse(primaryMenuJson);
+
+                foreach (var property in secondaryMenu.Properties())
+                {
+                    mergedMenu[property.Name] = property.Value.DeepClone();
+                }
+
+                foreach (var property in primaryMenu.Properties())
+                {
+                    mergedMenu[property.Name] = property.Value.DeepClone();
+                }
+
+                return mergedMenu.ToString(Newtonsoft.Json.Formatting.None);
+            }
+            catch
+            {
+                return primaryMenuJson;
             }
         }
 
@@ -1030,8 +1096,10 @@ namespace ELG.Web.Controllers
                 var adminMenuSettings = acc.GetOrgAdminMenuSettings(adminInfo.CompanyId);
                 if (ShouldLandAdminOnAdminPage(adminMenuSettings))
                 {
+                    string learnerMenuSettings = GetLearnerMenuSettingsForUser(adminInfo.UserID);
                     SessionHelper.IsLearnerUser = false;
-                    SessionHelper.OrgAdminAvailableMenu = adminMenuSettings;
+                    SessionHelper.OrgAdminAvailableMenu = MergeMenuSettings(adminMenuSettings, learnerMenuSettings);
+                    SessionHelper.OrgLearnerAvailableMenu = learnerMenuSettings;
                     string adminLandingPage = GetLandingPageFromMenu(adminMenuSettings);
                     return RedirectToAction(adminLandingPage, "Home");
                 }

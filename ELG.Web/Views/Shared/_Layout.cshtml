@@ -99,6 +99,17 @@
             display: none;
         }
 
+        .admin-modern-view .learner-menu .menu-section-title {
+            color: #7d6f67;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 14px 16px 6px;
+            margin: 10px 10px 2px;
+            list-style: none;
+        }
+
         .admin-modern-view .learner-menu .nav-item > a,
         .admin-modern-view .learner-menu .parent-menu-a {
             position: relative;
@@ -169,6 +180,11 @@
         .admin-modern-view #settingLink > a::before { content: "\f013"; }
         .admin-modern-view #resourcesLink > a::before { content: "\f0b1"; }
         .admin-modern-view #helpLink > a::before { content: "\f059"; }
+        .admin-modern-view #learnerDashboardLink > a::before { content: "\f00a"; }
+        .admin-modern-view #learnerCoursesLink > a::before { content: "\f19d"; }
+        .admin-modern-view #learnerRiskLink > a::before { content: "\f132"; }
+        .admin-modern-view #learnerDocsLink > a::before { content: "\f0f6"; }
+        .admin-modern-view #learnerSettingsLink > a::before { content: "\f013"; }
         .admin-modern-view #toggleLearnerLink > a::before { content: "\f19d"; }
         .admin-modern-view #logout > a::before { content: "\f08b"; }
 
@@ -267,6 +283,15 @@
             dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
                 ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
                 : null;
+
+            var learnerSectionMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgLearnerAvailableMenu as string;
+            if (string.IsNullOrEmpty(learnerSectionMenuSettingsJson))
+            {
+                learnerSectionMenuSettingsJson = learnerMenuSettingsJson;
+            }
+            dynamic learnerSectionMenuSettings = !string.IsNullOrEmpty(learnerSectionMenuSettingsJson)
+                ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerSectionMenuSettingsJson)
+                : null;
         }
         <nav class="learner-menu-bar">
             <div class="logo">
@@ -274,6 +299,11 @@
             </div>
             <div class="menu-container">
                 <ul class="learner-menu">
+                    @if (isModernViewMode)
+                    {
+                        <li class="menu-section-title">Admin</li>
+                    }
+
                     @if (learnerMenuSettings == null || learnerMenuSettings.dashboard == true)
                     {
                         <li class="nav-item" id="dashboardLink">
@@ -483,23 +513,67 @@
 
 
 
-                    <li class="nav-item parent-menu" id="settingsLink">
-                        <a class="parent-menu-a">
-                            @*<i class="fa fa-cog"></i>*@
-                            <img class="menu-icon" src="~/Content/images/icons/settings.png" alt="Settings" /> Settings <span class="fa fa-chevron-down"></span>
-                        </a>
-                        <ul class="nav child_menu">
-                            <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile" , "Home")"> Profile</a></li>
-                            <li><a id="menu-user-password" href="@Url.Action("ChangePassword" , "Home")"> Update password </a></li>
-                        </ul>
-                    </li>
+                    @if (!(isModernViewMode && ELG.Web.Helper.SessionHelper.HasLearnerRights))
+                    {
+                        <li class="nav-item parent-menu" id="settingsLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-cog"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/settings.png" alt="Settings" /> Settings <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile" , "Home")"> Profile</a></li>
+                                <li><a id="menu-user-password" href="@Url.Action("ChangePassword" , "Home")"> Update password </a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (isModernViewMode && ELG.Web.Helper.SessionHelper.HasLearnerRights)
+                    {
+                        <li class="menu-section-title">Learner</li>
+
+                        @if (learnerSectionMenuSettings == null || learnerSectionMenuSettings.dashboard == true)
+                        {
+                            <li class="nav-item" id="learnerDashboardLink">
+                                <a id="menu-learner-dashboard" href="@Url.Action("Dashboard", "Home", new { area = "Learner" })">Dashboard</a>
+                            </li>
+                        }
+
+                        <li class="nav-item" id="learnerCoursesLink">
+                            <a id="menu-learner-courses" href="@Url.Action("MyCourses", "Home", new { area = "Learner" })">My Courses</a>
+                        </li>
+
+                        @if (learnerSectionMenuSettings == null || learnerSectionMenuSettings.ra == true)
+                        {
+                            <li class="nav-item" id="learnerRiskLink">
+                                <a id="menu-learner-ra" href="@Url.Action("Assessment", "RiskAssessment", new { area = "Learner" })">Risk Assessments</a>
+                            </li>
+                        }
+
+                        @if (learnerSectionMenuSettings == null || learnerSectionMenuSettings.doc == true)
+                        {
+                            <li class="nav-item" id="learnerDocsLink">
+                                <a id="menu-learner-docs" href="@Url.Action("List", "Document", new { area = "Learner" })">Documents</a>
+                            </li>
+                        }
+
+                        <li class="nav-item parent-menu" id="learnerSettingsLink">
+                            <a class="parent-menu-a">Settings <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li><a class="user-profile-btn" id="menu-learner-profile" data-id="btnLearnerProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })">Profile</a></li>
+                                <li><a id="menu-learner-password" href="@Url.Action("ChangePassword", "Home")">Update password</a></li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
             <div class="line-partition mx-4 mt-5"></div>
             <ul class="learner-menu">
-                <li class="nav-item" id="toggleLearnerLink">
-                    <a id="menu-switch-view" href="#" onclick="switchToLearnerView(); return false;">Learner View</a>
-                </li>
+                @if (!isModernViewMode)
+                {
+                    <li class="nav-item" id="toggleLearnerLink">
+                        <a id="menu-switch-view" href="#" onclick="switchToLearnerView(); return false;">Learner View</a>
+                    </li>
+                }
                 <li class="nav-item" id="logout">
                     <a id="menu-logout" href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         @*<i class="fa fa-power-off me-1"></i>*@
