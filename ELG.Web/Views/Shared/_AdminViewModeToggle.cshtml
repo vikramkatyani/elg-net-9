@@ -10,7 +10,7 @@
             var menuSettings = JObject.Parse(orgMenuSettingsJson);
 
             // Show only when explicitly enabled for this admin in config.
-            if (menuSettings.TryGetValue("viewModeToggle", StringComparison.OrdinalIgnoreCase, out var explicitToggleToken))
+            if (menuSettings.TryGetValue("modernViewEnabled", StringComparison.OrdinalIgnoreCase, out var explicitToggleToken))
             {
                 showViewModeToggle = explicitToggleToken.Type == JTokenType.Boolean && explicitToggleToken.Value<bool>();
             }

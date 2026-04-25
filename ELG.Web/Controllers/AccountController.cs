@@ -73,6 +73,23 @@ namespace ELG.Web.Controllers
                         var learnerAcc = new LearnerAccountRep();
                         var learnerInfo = learnerAcc.GetLearnerInfoByUserID((int)admin.UserID);
 
+                        if (ShouldLandAdminOnAdminPage(admin.MenuItems))
+                        {
+                            SetAdminSessionDetails(admin);
+                            SessionHelper.HasLearnerRights = learnerInfo != null && learnerInfo.UserID > 0;
+
+                            string adminLandingPage = GetLandingPageFromMenu(admin.MenuItems);
+                            var adminRedirectUrl = Url.Action(adminLandingPage, "Home");
+
+                            if (!admin.IsPasswordReset)
+                                adminRedirectUrl = emailUti.CreatePasswordResetLink(admin.UserID);
+
+                            response.Err = 0;
+                            response.Url = adminRedirectUrl;
+                            response.Message = "success";
+                            return Json(response);
+                        }
+
                         // Set learner session (login as learner first)
                         if (learnerInfo != null && learnerInfo.UserID > 0)
                         {
@@ -506,13 +523,13 @@ namespace ELG.Web.Controllers
             SessionHelper.IsLearnerUser = false;
             SessionHelper.HasAdminRights = true;
 
-            // Default to modern view if viewModeToggle is enabled in org settings.
+            // Default to modern view if modernViewEnabled is enabled in org settings.
             if (!string.IsNullOrWhiteSpace(admin.MenuItems))
             {
                 try
                 {
                     var menuObj = Newtonsoft.Json.Linq.JObject.Parse(admin.MenuItems);
-                    if (menuObj.TryGetValue("viewModeToggle", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                    if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
                         && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
                         && (bool)toggleToken)
                     {
@@ -579,23 +596,23 @@ namespace ELG.Web.Controllers
 
                 // Default to modern view when enabled in org menu settings.
                 // Check learnerMenuSettings first, then fall back to adminMenuSettings.
-                bool viewModeToggleEnabled = false;
+                bool modernViewEnabled = false;
                 if (!string.IsNullOrWhiteSpace(learner.MenuItems))
                 {
                     try
                     {
                         var menuObj = Newtonsoft.Json.Linq.JObject.Parse(learner.MenuItems);
-                        if (menuObj.TryGetValue("viewModeToggle", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                        if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
                             && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
                             && (bool)toggleToken)
                         {
-                            viewModeToggleEnabled = true;
+                            modernViewEnabled = true;
                         }
                     }
                     catch { }
                 }
 
-                if (!viewModeToggleEnabled && learner.CompanyId > 0)
+                if (!modernViewEnabled && learner.CompanyId > 0)
                 {
                     try
                     {
@@ -604,21 +621,41 @@ namespace ELG.Web.Controllers
                         if (!string.IsNullOrWhiteSpace(adminMenuSettings))
                         {
                             var menuObj = Newtonsoft.Json.Linq.JObject.Parse(adminMenuSettings);
-                            if (menuObj.TryGetValue("viewModeToggle", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                            if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
                                 && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
                                 && (bool)toggleToken)
                             {
-                                viewModeToggleEnabled = true;
+                                modernViewEnabled = true;
                             }
                         }
                     }
                     catch { }
                 }
 
-                if (viewModeToggleEnabled)
+                if (modernViewEnabled)
                 {
                     SessionHelper.LearnerViewMode = "modern";
                 }
+        }
+
+        private static bool ShouldLandAdminOnAdminPage(string menuJson)
+        {
+            if (string.IsNullOrWhiteSpace(menuJson))
+            {
+                return false;
+            }
+
+            try
+            {
+                var menuObj = Newtonsoft.Json.Linq.JObject.Parse(menuJson);
+                return menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                    && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
+                    && (bool)toggleToken;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -989,6 +1026,15 @@ namespace ELG.Web.Controllers
                 SessionHelper.IsSSOLogin = false;
                 SetSessionCompanySettings(Convert.ToInt32(adminInfo.CompanyId));
                 SetSessionAdminPriveleges(adminInfo.UserID);
+
+                var adminMenuSettings = acc.GetOrgAdminMenuSettings(adminInfo.CompanyId);
+                if (ShouldLandAdminOnAdminPage(adminMenuSettings))
+                {
+                    SessionHelper.IsLearnerUser = false;
+                    SessionHelper.OrgAdminAvailableMenu = adminMenuSettings;
+                    string adminLandingPage = GetLandingPageFromMenu(adminMenuSettings);
+                    return RedirectToAction(adminLandingPage, "Home");
+                }
 
                 string landingPage = GetLandingPageFromMenu(SessionHelper.OrgAdminAvailableMenu as string);
                 var redirectUrl = Url.Action(landingPage, "Home", new { area = "Learner" });

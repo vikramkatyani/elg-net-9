@@ -288,7 +288,7 @@ namespace ELG.DAL.OrgAdminDAL
 
         /// <summary>
         /// Gets adminMenuSettings JSON for the given organisation.
-        /// Used as fallback when learnerMenuSettings does not contain viewModeToggle.
+        /// Used as fallback when learnerMenuSettings does not contain modernViewEnabled.
         /// </summary>
         public string GetOrgAdminMenuSettings(long orgId)
         {

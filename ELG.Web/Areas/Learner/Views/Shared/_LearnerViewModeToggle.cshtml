@@ -17,7 +17,7 @@
             {
                 showViewModeToggle = learnerModernToggleToken.Type == JTokenType.Boolean && learnerModernToggleToken.Value<bool>();
             }
-            else if (menuSettings.TryGetValue("viewModeToggle", StringComparison.OrdinalIgnoreCase, out var commonToggleToken))
+            else if (menuSettings.TryGetValue("modernViewEnabled", StringComparison.OrdinalIgnoreCase, out var commonToggleToken))
             {
                 showViewModeToggle = commonToggleToken.Type == JTokenType.Boolean && commonToggleToken.Value<bool>();
             }
