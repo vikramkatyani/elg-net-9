@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+var learnerHomeBaseUrl = (typeof window.learnerHomeBaseUrl !== 'undefined' && window.learnerHomeBaseUrl)
+    ? window.learnerHomeBaseUrl
+    : '/Learner/Home/';
+
 var myCoursesHandler = (function () {
     const container = document.querySelector("#divMyCourseHolder");
     const searchInput = document.querySelector('#txtSearchCoure');
@@ -94,7 +98,7 @@ var myCoursesHandler = (function () {
         container.innerHTML = '';
         container.innerHTML = UTILS.LOADER;
 
-        const url = hdnBaseUrl + "GetCourses";
+        const url = learnerHomeBaseUrl + "GetCourses";
         const searchTxt = searchInput ? (searchInput.value || '') : '';
         const data = {
             course: searchTxt,
@@ -224,7 +228,7 @@ var myCoursesHandler = (function () {
     // Function to create certificate
     function createCertificate(btn) {
         const recordId = btn.id.split("-").pop();
-        const baseUrl = hdnBaseUrl.replace('/Home/', '/');
+        const baseUrl = learnerHomeBaseUrl.replace('/Home/', '/');
         const url = baseUrl + "Certificate/GetCertificate/" + recordId;
         window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
     }
@@ -271,7 +275,7 @@ var myCoursesHandler = (function () {
         const recordId = btn.id.split('-').pop();
         const courseId = btn.dataset.course;
         if (confirm('Are you sure you want to continue?\nThis action will assign course as fresh and move the current progress to history.')) {
-            const url = hdnBaseUrl + "ResetProgress";
+            const url = learnerHomeBaseUrl + "ResetProgress";
             const data = {
                 "Course": courseId,
                 "RecordId": recordId
@@ -290,7 +294,7 @@ var myCoursesHandler = (function () {
 
     function showTrainerInfoPopUp() {
         new bootstrap.Modal(document.querySelector("#modalTrainerInfo")).show();
-        UTILS.makeAjaxCall(hdnBaseUrl + "Common/GetCompanyTrainerDetails", {}, function (res) {
+        UTILS.makeAjaxCall(learnerHomeBaseUrl + "Common/GetCompanyTrainerDetails", {}, function (res) {
             document.querySelector('#modalTrainerInfo #spnCompanyName').innerHTML = res.trainer.Company;
             document.querySelector('#modalTrainerInfo #spnTrainer').innerHTML = res.trainer.Trainer;
             document.querySelector('#modalTrainerInfo #spnTrainerEmail').innerHTML = res.trainer.Email;
@@ -324,7 +328,7 @@ var myCoursesHandler = (function () {
         const showSubModulesBtn = cardButtonContainer ? cardButtonContainer.querySelector('.accordion-toggle-button') : null;
         const subModuleId = btn.id.split('_').pop();
         const path = btn.dataset.path;
-        const url = hdnBaseUrl + "LaunchSubModule";
+        const url = learnerHomeBaseUrl + "LaunchSubModule";
         const data = { subModuleId };
 
         UTILS.makeAjaxCall(url, data, function (response) {
@@ -358,7 +362,7 @@ var myCoursesHandler = (function () {
         const courseId = btn.getAttribute('data-course') || btn.dataset.course;
         const riskAssessmentBaseUrl = (typeof learnerRiskAssessmentBaseUrl !== 'undefined' && learnerRiskAssessmentBaseUrl)
             ? learnerRiskAssessmentBaseUrl
-            : (hdnBaseUrl || '/Learner/Home/').replace(/Home\/?$/i, '') + "RiskAssessment/";
+            : (learnerHomeBaseUrl || '/Learner/Home/').replace(/Home\/?$/i, '') + "RiskAssessment/";
         const url = riskAssessmentBaseUrl + "LoadRAReport/"
             + encodeURIComponent(courseId) + "/" + encodeURIComponent(subModuleId);
         window.location.href = url;

@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSessionLearnerHandler.getSessionUserInfo();
 });
 
+const learnerApiBaseUrl = (typeof window.learnerHomeBaseUrl !== 'undefined' && window.learnerHomeBaseUrl)
+    ? window.learnerHomeBaseUrl
+    : '/Learner/Home/';
+
 const _imgLearnerProfileEl = document.querySelector('#imgLearnerProfile');
 let initialProfilePic = _imgLearnerProfileEl ? _imgLearnerProfileEl.src : '../Content/img/no-pic.png';
 
@@ -88,7 +92,7 @@ const updateSessionLearnerHandler = (() => {
     function getSessionUserInfo(session_learnerId) {
         session_isSessionUser = true;
         const data = { UserID: session_learnerId };
-        const url = `${hdnBaseUrl}GetSessionLearnerInfo`;
+        const url = `${learnerApiBaseUrl}GetSessionLearnerInfo`;
         UTILS.makeAjaxCall(url, data, (info) => {
             session_populateData(info);
         }, (status) => {
@@ -217,7 +221,7 @@ const updateSessionLearnerHandler = (() => {
             uploadProfilePic();
         }
 
-        const url = `${hdnBaseUrl}home/UpdateLearnerInfo`;
+        const url = `${learnerApiBaseUrl}UpdateLearnerInfo`;
         const learner = {
             UserID: session_learnerId,
             EmployeeNumber: session_empno.value,
@@ -295,7 +299,7 @@ const updateSessionLearnerHandler = (() => {
             const imageData = new FormData();
             imageData.append(uploadProfileFile.files[0].name, uploadProfileFile.files[0]);
 
-            fetch(`${hdnBaseUrl}home/UploadProfilePic/`, {
+            fetch(`${learnerApiBaseUrl}UploadProfilePic/`, {
                 method: "POST",
                 body: imageData
             })
@@ -313,7 +317,7 @@ const updateSessionLearnerHandler = (() => {
                     UTILS.Alert.show(alertProfilePic, "error", "Failed to upload profile picture. Please try again later.");
                 });
         } else if (removedProfilePic === 1) {
-            fetch(`${hdnBaseUrl}home/RemoveProfilePic/`, {
+            fetch(`${learnerApiBaseUrl}RemoveProfilePic/`, {
                 method: "POST"
             })
                 .then(res => res.json())

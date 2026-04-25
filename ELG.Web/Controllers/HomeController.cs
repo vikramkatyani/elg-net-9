@@ -146,12 +146,8 @@ namespace ELG.Web.Controllers
         [SessionCheck]
         public ActionResult Dashboard(string style = null)
         {
-            if (!string.IsNullOrWhiteSpace(style))
-            {
-                SessionHelper.AdminViewMode = string.Equals(style.Trim(), "modern", StringComparison.OrdinalIgnoreCase)
-                    ? "modern"
-                    : "classic";
-            }
+            var adminMenuJson = SessionHelper.OrgAdminAvailableMenu as string;
+            SessionHelper.AdminViewMode = IsModernViewEnabled(adminMenuJson) ? "modern" : "classic";
 
             return View();
         }
@@ -160,9 +156,8 @@ namespace ELG.Web.Controllers
         [HttpGet]
         public ActionResult SetViewMode(string style, string returnUrl)
         {
-            SessionHelper.AdminViewMode = string.Equals(style, "modern", StringComparison.OrdinalIgnoreCase)
-                ? "modern"
-                : "classic";
+            var adminMenuJson = SessionHelper.OrgAdminAvailableMenu as string;
+            SessionHelper.AdminViewMode = IsModernViewEnabled(adminMenuJson) ? "modern" : "classic";
 
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
@@ -170,6 +165,26 @@ namespace ELG.Web.Controllers
             }
 
             return RedirectToAction("Dashboard", "Home");
+        }
+
+        private static bool IsModernViewEnabled(string menuJson)
+        {
+            if (string.IsNullOrWhiteSpace(menuJson))
+            {
+                return false;
+            }
+
+            try
+            {
+                var menuObj = Newtonsoft.Json.Linq.JObject.Parse(menuJson);
+                return menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                    && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
+                    && (bool)toggleToken;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 

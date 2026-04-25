@@ -1,6 +1,8 @@
 @{
     ViewBag.Title = "My Courses";
-    Layout = "~/Areas/Learner/Views/Shared/_Layout.cshtml";
+    Layout = ELG.Web.Helper.SessionHelper.IsLearnerUser
+        ? "~/Areas/Learner/Views/Shared/_Layout.cshtml"
+        : "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="lm-page">
@@ -553,10 +555,12 @@
 
 @section Scripts{
     <script type="text/javascript">
+        // Keep learner API base page-local so admin scripts keep their own global base URL.
+        window.learnerHomeBaseUrl = '@Url.Content("~/Learner/Home/")';
         var scormTrackingUrl = '@Url.Content("~/Learner/SCORM/")';
         var learnerRiskAssessmentBaseUrl = '@Url.Content("~/Learner/RiskAssessment/")';
     </script>
-    <script type="text/javascript" src="~/js/Learner/mycourses-modern.js?v=1.0.0"></script>
+    <script type="text/javascript" src="~/js/Learner/mycourses-modern.js?v=1.0.1"></script>
     <script type="text/javascript" src="~/js/Learner/progressHistory.js"></script>
     <script type="text/javascript" src="~/js/SCORM/module.js?v=1.5"></script>
 }

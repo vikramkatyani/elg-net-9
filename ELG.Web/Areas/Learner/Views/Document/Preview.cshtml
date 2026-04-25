@@ -1,7 +1,9 @@
 
 @{
     ViewBag.Title = "Document Preview";
-    Layout = "~/Areas/Learner/Views/Shared/_Layout.cshtml";
+    Layout = ELG.Web.Helper.SessionHelper.IsLearnerUser
+        ? "~/Areas/Learner/Views/Shared/_Layout.cshtml"
+        : "~/Views/Shared/_Layout.cshtml";
 }
 <style>
     body {

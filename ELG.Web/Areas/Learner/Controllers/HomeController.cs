@@ -36,6 +36,12 @@ namespace ELG.Web.Areas.Learner.Controllers
         public IActionResult MyCourses()
         {
             ViewBag.Title = "My Courses";
+            var learnerMenuJson = SessionHelper.OrgLearnerAvailableMenu as string;
+            var adminMenuJson = SessionHelper.OrgAdminAvailableMenu as string;
+            var learnerModernSetting = GetModernViewEnabledSetting(learnerMenuJson);
+            var isModern = learnerModernSetting ?? (GetModernViewEnabledSetting(adminMenuJson) ?? false);
+            SessionHelper.LearnerViewMode = isModern ? "modern" : "classic";
+
             if (string.Equals(SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase))
                 return View("MyCoursesModern");
 
@@ -46,9 +52,11 @@ namespace ELG.Web.Areas.Learner.Controllers
         [HttpGet]
         public ActionResult SetLearnerViewMode(string style, string returnUrl)
         {
-            SessionHelper.LearnerViewMode = string.Equals(style, "modern", StringComparison.OrdinalIgnoreCase)
-                ? "modern"
-                : "classic";
+            var learnerMenuJson = SessionHelper.OrgLearnerAvailableMenu as string;
+            var adminMenuJson = SessionHelper.OrgAdminAvailableMenu as string;
+            var learnerModernSetting = GetModernViewEnabledSetting(learnerMenuJson);
+            var isModern = learnerModernSetting ?? (GetModernViewEnabledSetting(adminMenuJson) ?? false);
+            SessionHelper.LearnerViewMode = isModern ? "modern" : "classic";
 
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
@@ -56,6 +64,35 @@ namespace ELG.Web.Areas.Learner.Controllers
             }
 
             return RedirectToAction("MyCourses");
+        }
+
+        private static bool IsModernViewEnabled(string menuJson)
+        {
+            return GetModernViewEnabledSetting(menuJson) ?? false;
+        }
+
+        private static bool? GetModernViewEnabledSetting(string menuJson)
+        {
+            if (string.IsNullOrWhiteSpace(menuJson))
+            {
+                return null;
+            }
+
+            try
+            {
+                var menuObj = Newtonsoft.Json.Linq.JObject.Parse(menuJson);
+                if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                    && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean)
+                {
+                    return (bool)toggleToken;
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         // POST: Get learner courses

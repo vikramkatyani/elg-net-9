@@ -232,52 +232,36 @@ namespace ELG.Web.Controllers
                     OrgAdminInfo admin = acc.GetOrgAdmin(companyNumber, Convert.ToString(SessionHelper.UserName));
                     if (admin != null && admin.CompanyId > 0)
                     {
-                        // set session value for UserName
-                        // TODO ASP.NET membership should be replaced with ASP.NET Core identity. For more details see https://docs.microsoft.com/aspnet/core/migration/proper-to-2x/membership-to-core-identity.
-                                                // TODO: Set authentication cookie using ASP.NET Core Identity if needed
-                        SessionHelper.UserId = admin.UserID;
-                        SessionHelper.UserName = admin.EmailId;
-                        SessionHelper.UserDisplayName = admin.FirstName + " " + admin.LastName;
-                        SessionHelper.CompanyId = admin.CompanyId;
-                        SessionHelper.CompanyName = admin.CompanyName;
-                        SessionHelper.CompanyNumber = admin.CompanyNumber;
-                        SessionHelper.AccidentIncidentFeature = admin.AccidentIncidentFeature;
-                        SessionHelper.TrainingRenewalMode = admin.TrainingRenewalMode;
-                        SessionHelper.CompanyCourseAssignmentMode = admin.CourseAssignMode;
-                        
-                        // Check if admin has learner rights and use learner menu if available
+                        // Check if admin has learner rights and use learner menu if available.
                         var learnerAccRep = new LearnerAccountRep();
                         var learnerInfo = learnerAccRep.GetLearnerInfoByUserID((int)admin.UserID);
                         
-                        if (learnerInfo != null && !string.IsNullOrEmpty(learnerInfo.MenuItems))
+                        if (learnerInfo != null && learnerInfo.UserID > 0)
                         {
-                            SessionHelper.OrgAdminAvailableMenu = learnerInfo.MenuItems;
+                            SetLearnerSessionDetails(learnerInfo);
                         }
                         else
                         {
-                            SessionHelper.OrgAdminAvailableMenu = admin.MenuItems;
+                            var minimalLearner = new ELG.Model.Learner.LearnerInfo
+                            {
+                                UserID = admin.UserID,
+                                EmailId = admin.EmailId,
+                                FirstName = admin.FirstName,
+                                LastName = admin.LastName,
+                                CompanyId = admin.CompanyId,
+                                CompanyName = admin.CompanyName,
+                                CompanyNumber = admin.CompanyNumber,
+                                AccidentIncidentFeature = admin.AccidentIncidentFeature,
+                                MenuItems = admin.MenuItems,
+                                CompanyLogo = admin.CompanyLogo,
+                                ProfilePic = admin.ProfilePic,
+                                CompanyCertificate = admin.CompanyCertificate
+                            };
+                            SetLearnerSessionDetails(minimalLearner);
                         }
                         
-                        // IMPORTANT: Login as learner, not admin
-                        SessionHelper.IsLearnerUser = true;
+                        // IMPORTANT: Login as learner, not admin.
                         SessionHelper.HasAdminRights = true;
-
-                        if (admin.CompanyLogo != null)
-                        {
-                            string companyLogoBase64Data = Convert.ToBase64String(admin.CompanyLogo);
-                            SessionHelper.CompanyLogo = string.Format("data:image/png;base64,{0}", companyLogoBase64Data);
-                        }
-
-
-                        if (admin.ProfilePic != null)
-                        {
-                            string learnerProfileBase64Data = Convert.ToBase64String(admin.ProfilePic);
-                            SessionHelper.ProfilePic = string.Format("data:image/png;base64,{0}", learnerProfileBase64Data);
-                        }
-
-
-                        SessionHelper.CompanyCertificate = admin.CompanyCertificate;
-                        SessionHelper.IsSSOLogin = false;
 
                         // Skip admin privilege setup since we're logging in as learner
                         // SetSessionCompanySettings(Convert.ToInt32(admin.CompanyId));
@@ -343,30 +327,8 @@ namespace ELG.Web.Controllers
                     
                     if (learner != null && learner.CompanyId > 0)
                     {
-                        // Set session variables for learner
-                        SessionHelper.UserId = learner.UserID;
-                        SessionHelper.UserName = learner.EmailId;
-                        SessionHelper.UserDisplayName = learner.FirstName + " " + learner.LastName;
-                        SessionHelper.CompanyId = learner.CompanyId;
-                        SessionHelper.CompanyName = learner.CompanyName;
-                        SessionHelper.CompanyNumber = learner.CompanyNumber;
-                        SessionHelper.AccidentIncidentFeature = learner.AccidentIncidentFeature;
-                        SessionHelper.IsLearnerUser = true;
-
-                        if (learner.CompanyLogo != null)
-                        {
-                            string companyLogoBase64Data = Convert.ToBase64String(learner.CompanyLogo);
-                            SessionHelper.CompanyLogo = string.Format("data:image/png;base64,{0}", companyLogoBase64Data);
-                        }
-
-                        if (learner.ProfilePic != null)
-                        {
-                            string learnerProfileBase64Data = Convert.ToBase64String(learner.ProfilePic);
-                            SessionHelper.ProfilePic = string.Format("data:image/png;base64,{0}", learnerProfileBase64Data);
-                        }
-
-                        SessionHelper.CompanyCertificate = learner.CompanyCertificate;
-                        SessionHelper.IsSSOLogin = false;
+                        // Use centralized learner session setup so view mode is reset deterministically.
+                        SetLearnerSessionDetails(learner);
 
                         // Redirect to learner dashboard
                         var redirectUrl = Url.Action("Dashboard", "Home", new { area = "Learner" });
@@ -527,21 +489,16 @@ namespace ELG.Web.Controllers
             SessionHelper.IsLearnerUser = false;
             SessionHelper.HasAdminRights = true;
 
-            // Default to modern view if modernViewEnabled is enabled in org settings.
-            if (!string.IsNullOrWhiteSpace(mergedMenuItems))
-            {
-                try
-                {
-                    var menuObj = Newtonsoft.Json.Linq.JObject.Parse(mergedMenuItems);
-                    if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
-                        && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
-                        && (bool)toggleToken)
-                    {
-                        SessionHelper.AdminViewMode = "modern";
-                    }
-                }
-                catch { /* ignore malformed JSON */ }
-            }
+            // Reset both view modes on sign-in to avoid carrying stale values from previous session state.
+            SessionHelper.AdminViewMode = "classic";
+            SessionHelper.LearnerViewMode = "classic";
+
+            // Force view mode from config.
+            SessionHelper.AdminViewMode = IsModernViewEnabled(mergedMenuItems) ? "modern" : "classic";
+            var learnerModernSetting = GetModernViewEnabledSetting(learnerMenuItems);
+            SessionHelper.LearnerViewMode = learnerModernSetting.HasValue
+                ? (learnerModernSetting.Value ? "modern" : "classic")
+                : SessionHelper.AdminViewMode;
 
             if (admin.CompanyLogo != null)
             {
@@ -581,6 +538,26 @@ namespace ELG.Web.Controllers
             SessionHelper.OrgLearnerAvailableMenu = learner.MenuItems;
             SessionHelper.IsLearnerUser = true;
             SessionHelper.HasLearnerRights = true;
+            SessionHelper.AdminViewMode = "classic";
+            SessionHelper.LearnerViewMode = "classic";
+
+            // Force learner view mode from learner menu first.
+            var learnerModernSetting = GetModernViewEnabledSetting(learner.MenuItems);
+            bool learnerModernEnabled = learnerModernSetting ?? false;
+
+            // Fallback only when learner config is missing (not when explicitly false).
+            if (!learnerModernSetting.HasValue && learner.CompanyId > 0)
+            {
+                try
+                {
+                    var adminAcc = new OrgAdminAccountRep();
+                    string adminMenuSettings = adminAcc.GetOrgAdminMenuSettings((int)learner.CompanyId);
+                    learnerModernEnabled = GetModernViewEnabledSetting(adminMenuSettings) ?? false;
+                }
+                catch { }
+            }
+
+            SessionHelper.LearnerViewMode = learnerModernEnabled ? "modern" : "classic";
 
             if (learner.CompanyLogo != null)
             {
@@ -598,68 +575,39 @@ namespace ELG.Web.Controllers
             }
 
             SessionHelper.IsSSOLogin = false;
-
-                // Default to modern view when enabled in org menu settings.
-                // Check learnerMenuSettings first, then fall back to adminMenuSettings.
-                bool modernViewEnabled = false;
-                if (!string.IsNullOrWhiteSpace(learner.MenuItems))
-                {
-                    try
-                    {
-                        var menuObj = Newtonsoft.Json.Linq.JObject.Parse(learner.MenuItems);
-                        if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
-                            && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
-                            && (bool)toggleToken)
-                        {
-                            modernViewEnabled = true;
-                        }
-                    }
-                    catch { }
-                }
-
-                if (!modernViewEnabled && learner.CompanyId > 0)
-                {
-                    try
-                    {
-                        var adminAcc = new OrgAdminAccountRep();
-                        string adminMenuSettings = adminAcc.GetOrgAdminMenuSettings(learner.CompanyId);
-                        if (!string.IsNullOrWhiteSpace(adminMenuSettings))
-                        {
-                            var menuObj = Newtonsoft.Json.Linq.JObject.Parse(adminMenuSettings);
-                            if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
-                                && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
-                                && (bool)toggleToken)
-                            {
-                                modernViewEnabled = true;
-                            }
-                        }
-                    }
-                    catch { }
-                }
-
-                if (modernViewEnabled)
-                {
-                    SessionHelper.LearnerViewMode = "modern";
-                }
         }
 
         private static bool ShouldLandAdminOnAdminPage(string menuJson)
         {
+            return IsModernViewEnabled(menuJson);
+        }
+
+        private static bool IsModernViewEnabled(string menuJson)
+        {
+            return GetModernViewEnabledSetting(menuJson) ?? false;
+        }
+
+        private static bool? GetModernViewEnabledSetting(string menuJson)
+        {
             if (string.IsNullOrWhiteSpace(menuJson))
             {
-                return false;
+                return null;
             }
 
             try
             {
                 var menuObj = Newtonsoft.Json.Linq.JObject.Parse(menuJson);
-                return menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
-                    && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
-                    && (bool)toggleToken;
+                if (menuObj.TryGetValue("modernViewEnabled", System.StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                    && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean)
+                {
+                    return (bool)toggleToken;
+                }
+
+                return null;
             }
             catch
             {
-                return false;
+                return null;
             }
         }
 
@@ -1093,7 +1041,7 @@ namespace ELG.Web.Controllers
                 SetSessionCompanySettings(Convert.ToInt32(adminInfo.CompanyId));
                 SetSessionAdminPriveleges(adminInfo.UserID);
 
-                var adminMenuSettings = acc.GetOrgAdminMenuSettings(adminInfo.CompanyId);
+                var adminMenuSettings = acc.GetOrgAdminMenuSettings((int)adminInfo.CompanyId);
                 if (ShouldLandAdminOnAdminPage(adminMenuSettings))
                 {
                     string learnerMenuSettings = GetLearnerMenuSettingsForUser(adminInfo.UserID);

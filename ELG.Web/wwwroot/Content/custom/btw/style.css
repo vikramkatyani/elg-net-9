@@ -1,0 +1,786 @@
+﻿:root {
+    --color-primary: #E25D21;
+    --color-secondary: #4FE2BA;
+    --color-white: #FFF;
+    --color-dark: #21242C;
+    --color-light: #808080;
+    --color-hightlight: #1C4F8D;
+    --color-border: #D8D8D8;
+    --color-black: #000000;
+    --color-grey: #6B7280;
+    --dash-complete: #0CC078;
+    --dash-progress: #FCFC99;
+    --dash-incomplete: #FB6962;
+    --dash-notstarted: #D3D3D3;
+    --dash-line-graph: #79DE79;
+}
+
+/** Font*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: Montserrat, system-ui, sans-serif;
+}
+
+/** Background color */
+.bg-body {
+    background-color: var(--color-white) !important;
+}
+
+.bg-primary {
+    background-color: var(--color-primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--color-secondary) !important;
+}
+
+.bg-white {
+    background-color: var(--color-white) !important;
+}
+
+.bg-highlight {
+    background-color: var(--color-hightlight) !important;
+}
+
+.bg-dark {
+    background-color: var(--color-dark) !important;
+}
+
+.bg-light {
+    background-color: var(--color-light) !important;
+}
+
+/** Text color */
+
+.txt-primary {
+    color: var(--color-primary) !important;
+}
+
+.txt-secondary {
+    color: var(--color-secondary) !important;
+}
+
+.txt-white {
+    color: var(--color-white) !important;
+}
+
+.txt-highlight {
+    color: var(--color-hightlight) !important;
+}
+
+.txt-dark {
+    color: var(--color-dark) !important;
+}
+
+.txt-light {
+    color: var(--color-light) !important;
+}
+
+/** Buttons */
+
+.elg-lnk-btn {
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    height: 24px;
+    /*width: 100%;*/
+    border: none;
+    font-weight: 450;
+    line-height: 150%;
+    text-decoration: none;
+    color: var(--color-primary) !important;
+}
+
+.elg-btn, .btn {
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    height: 45px;
+    /*width: 100%;*/
+    border-radius: 10px;
+    font-weight: 500;
+    line-height: 150%;
+    padding: .375rem .75rem !important;
+}
+
+.btn-sm {
+    height: auto;
+    max-width: 40%;
+}
+
+.elg-btn:hover, .btn:hover {
+    opacity: .75;
+}
+
+
+.elg-btn-primary, .btn-primary, .btn-dark {
+    background-color: var(--color-primary);
+    color: var(--color-white) !important;
+}
+
+.elg-btn-secondary, btn-secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+}
+
+.elg-btn-transparent {
+    background-color: transparent;
+    color: #1c4F8D;
+    border: 1px solid #1c4F8D;
+}
+    .elg-btn-transparent:hover {
+        background-color: #1c4F8D;
+        color: #fff;
+        border: 1px solid #1c4F8D;
+        opacity: 1 !important;
+    }
+
+.elg-btn-search {
+    background-color: transparent;
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+
+.elg-course-card-primary {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border-radius: 10px !important;
+}
+
+.elg-course-card-secondary {
+    background-color: transparent !important;
+    color: #1c4F8D !important;
+    border: 1px solid #1c4F8D !important;
+    border-radius: 10px !important;
+}
+    .elg-course-card-secondary:hover {
+        background-color: #1c4F8D !important;
+        color: #fff !important;
+        border: 1px solid #1c4F8D !important;
+        opacity: 1 !important;
+    }
+
+.card-button-container {
+    width: 100%;
+}
+
+    .card-button-container button {
+        width: auto !important;
+        font-size: 15px !important;
+        padding: 0 15px;
+        margin-right: 10px;
+    }
+
+/** Text Element*/
+
+
+p {
+    font-size: 16px;
+    font-weight: 450;
+    line-height: 150%;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 36px;
+}
+
+.card-content h2 {
+    font-size: 48px;
+    color: var(--color-hightlight) !important;
+}
+
+.page-heading {
+    color: var(--color-grey) !important;
+    display: none;
+}
+
+#courseSearchForm {
+    margin: 0 !important;
+}
+/**************************************************************     END TEXT ELEMENTS     *******************************************************************/
+/* Login Screen */
+/* Login Page Container - Main wrapper */
+.login-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Left Section */
+.left-section {
+    display: none;
+}
+
+    .left-section .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .left-section .content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding-right: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+
+.branding img {
+    content: url("btw-logo.svg");
+    width: 200px;
+    margin-bottom: 15px;
+}
+
+.footer-branding {
+    display: none;
+}
+
+/* Right Section */
+.right-section {
+    flex: 1;
+    color: var(--color-dark);
+    padding: 20px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+}
+
+.left-section .branding {
+    display: none;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: center;
+    width: 100%;
+    max-width: 350px;
+}
+
+    form input {
+        margin-bottom: 12px;
+        padding: 10px 12px;
+        font-size: 16px;
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+.password-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+    .password-container input {
+        width: 100%;
+        padding-right: 40px;
+    }
+
+    .password-container i {
+        position: absolute;
+        right: 12px;
+        cursor: pointer;
+        color: var(--color-light);
+    }
+
+.left-section .line-partition {
+    display: none !important;
+}
+
+.left-section h1 {
+    display: none !important;
+}
+
+.line-partition {
+    border-top: 1px solid var(--color-border);
+    margin: 12px 0;
+    padding-top: 12px;
+    width: 100%;
+}
+
+#page-title {
+    font-size: 24px;
+    margin: 10px 0 5px 0;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+#page-title .txt-highlight {
+    color: var(--color-primary);
+}
+
+.right-section > p {
+    font-size: 14px;
+    margin: 5px 0 10px 0;
+    line-height: 1.4;
+    max-width: 350px;
+}
+
+.brand-content {
+    margin-bottom: 10px;
+}
+
+    .brand-content .branding img {
+        width: 120px;
+    max-height: 128px;
+    }
+
+/* Alert message styling */
+.alert {
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Responsive buttons on login page */
+.right-section .elg-btn,
+.right-section .elg-lnk-btn {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+    .right-section .elg-btn {
+        width: 100%;
+        max-width: 300px;
+        height: 40px;
+    }
+
+    .right-section .elg-lnk-btn {
+        font-size: 14px;
+        height: auto;
+        margin-top: 5px;
+    }
+
+.right-section .elg-btn-transparent {
+    width: 100%;
+    max-width: 300px;
+    height: 40px;
+}
+
+/* Mobile First - Compact Layout */
+.mt-2 {
+    margin-top: 8px !important;
+}
+
+.mb-2 {
+    margin-bottom: 8px !important;
+}
+
+/* Tablet and Desktop Styles */
+@media (min-width: 768px) {
+    .login-page-container {
+        flex-direction: row;
+    }
+
+    .left-section {
+        display: flex;
+        flex: 1;
+        position: relative;
+        background: url('landingbg.png') no-repeat center center;
+        background-size: cover;
+        color: var(--color-white);
+        padding: 50px;
+        text-align: left;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .left-section h1 {
+            display: block;
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--color-white);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .left-section .content {
+            justify-content: flex-start;
+            padding-right: 80px;
+        }
+
+        .left-section .line-partition {
+            display: block;
+            width: 80px;
+            margin: 30px 0;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+    .branding {
+        margin-bottom: 50px;
+    }
+
+        .branding img {
+            width: 200px;
+            margin-bottom: 15px;
+        }
+
+    .right-section {
+        flex: 1;
+        padding: 40px 60px;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    #page-title {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .right-section > p {
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
+
+    form {
+        margin: 20px 0;
+    }
+
+        form input {
+            padding: 12px 14px;
+            font-size: 16px;
+            margin-bottom: 14px;
+        }
+
+    .right-section .elg-btn {
+        width: auto;
+        max-width: none;
+        min-width: 240px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .right-section .elg-lnk-btn {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    .right-section .elg-btn-transparent {
+        width: auto;
+        max-width: none;
+        min-width: 240px;
+        height: 45px;
+    }
+
+    .line-partition {
+        margin: 20px 0;
+        padding-top: 20px;
+    }
+
+    .brand-content {
+        margin-bottom: 20px;
+    }
+
+        .brand-content .branding img {
+            width: 180px;
+        }
+
+    .alert {
+        max-width: 100%;
+    }
+}
+
+/* Large Desktop Optimization */
+@media (min-width: 1024px) {
+    .left-section h1 {
+        font-size: 56px;
+    }
+
+    #page-title {
+        font-size: 3rem;
+        line-height: 1;
+        font-weight: bold;
+    }
+
+    .right-section {
+        padding: 50px 80px;
+    }
+
+    .right-section > p {
+        font-size: 16px;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .login-page-container {
+        min-height: auto;
+    }
+
+    .right-section {
+        padding: 15px 12px;
+        min-height: auto;
+    }
+
+    #page-title {
+        font-size: 22px;
+        margin: 8px 0 4px 0;
+    }
+
+    .right-section > p {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    form {
+        margin: 10px 0;
+        max-width: 100%;
+    }
+
+        form input {
+            padding: 9px 10px;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+    .right-section .elg-btn {
+        height: 36px;
+        font-size: 15px;
+        max-width: 100%;
+    }
+
+    .line-partition {
+        margin: 10px 0;
+        padding-top: 10px;
+    }
+
+    .brand-content .branding img {
+        width: 100px;
+    }
+
+    .alert {
+        font-size: 13px;
+        padding: 8px;
+    }
+}
+
+/**************************************************************     END LOGIN SCREEN     *******************************************************************/
+
+/* Learner page */
+.learner-content-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none; /* Hidden by default for larger screens */
+    cursor: pointer;
+    padding: 10px;
+    /*background-color: var(--color-primary);*/
+    color: white;
+}
+
+    .hamburger span {
+        display: block;
+        height: 3px;
+        background-color: var(--color-primary);
+        margin: 5px 0;
+        width: 25px;
+    }
+
+/* side menu */
+.learner-menu-bar {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    width: 270px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    overflow-y: scroll;
+}
+
+    .learner-menu-bar.closed {
+        transform: translateX(-100%);
+    }
+
+
+
+.learner-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.learner-menu-bar .logo img {
+    content: url("btw-logo.svg");
+
+padding: 0 !important;
+    max-height: 128px;
+    max-width: 100%;
+    margin: 20px auto;
+    display: block;
+}
+
+.learner-menu li {
+    margin: 10px 0;
+}
+
+.learner-menu a i {
+    margin: 0 10px;
+}
+
+.learner-menu a {
+    text-decoration: none;
+    color: #7f8c8d;
+    padding: 10px;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.parent-menu-a, .profile-details {
+    color: #7f8c8d !important;
+}
+
+.learner-menu .parent-menu a:hover, .learner-menu a:hover, .learner-menu a.active {
+    background-color: var(--color-hightlight);
+    color: var(--color-white) !important;
+    cursor: pointer;
+}
+
+/* Hide the submenu by default */
+.child_menu {
+    display: none;
+    list-style-type: none;
+    padding-left: 20px; /* Indent child menu items */
+    margin: 0;
+}
+
+/* Show submenu when the parent has 'open' class */
+.parent-menu.open .child_menu {
+    display: block;
+}
+
+/* Profile Section */
+.profile {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    /*position: fixed;*/
+    margin-top: 100px;
+    background-color: var(--color-white);
+}
+
+    .profile img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px; /* Space between the image and text */
+    }
+
+.profile-details {
+    display: flex;
+    flex-direction: column; /* Stack "Welcome" and username vertically */
+}
+
+    .profile-details span {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.25;
+    }
+
+    .profile-details h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.25;
+    }
+
+#imgLearnerProfile_noPic {
+    content: url("no-pic.png");
+}
+
+
+.learner-main-content {
+    margin-left: 270px; /* Match the width of the sidebar */
+    transition: margin-left 0.3s ease; /* Smooth transition */
+    padding: 20px 20px 20px 50px;
+}
+
+.card-image img {
+    /* max-height: 300px; */
+}
+
+/* Mobile Styles (Collapse Sidebar) */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show hamburger menu on mobile */
+    }
+
+    .learner-menu-bar {
+        transform: translateX(-100%); /* Hide sidebar by default in mobile */
+        z-index: 1000;
+    }
+
+        .learner-menu-bar.active {
+            transform: translateX(0); /* Show sidebar when open */
+        }
+
+    .learner-main-content {
+        margin-left: 0; /* Adjust content margin when sidebar is hidden */
+    }
+}
+
+.search-box {
+    font-size: 15px;
+    color: var(--color-black);
+    outline: none;
+    height: 46px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid var(--color-black);
+    width: 100%;
+}
+
+/** Course card*/
+.postcard {
+    box-shadow: unset !important;
+    border-radius: 20px;
+}
+
+
+/******************************************* DATA TABLES **************************************************/
+.dataTables_paginate a {
+    background: var(--color-black) !important;
+    margin: 1px;
+    color: var(--color-white);
+    text-decoration: none;
+    background-color: transparent;
+    padding: 0.25rem;
+}
+
+    .dataTables_paginate a:hover {
+        cursor: pointer;
+    }
+
+    .dataTables_paginate a.disabled {
+        cursor: not-allowed;
+        background: var(--color-grey) !important;
+    }

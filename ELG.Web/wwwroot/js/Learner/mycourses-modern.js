@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     myCoursesModernHandler.init();
 });
 
+var learnerHomeBaseUrl = (typeof window.learnerHomeBaseUrl !== 'undefined' && window.learnerHomeBaseUrl)
+    ? window.learnerHomeBaseUrl
+    : '/Learner/Home/';
+
 var myCoursesModernHandler = (function () {
     var allCourses = [];
     var filteredCourses = [];
@@ -193,7 +197,7 @@ var myCoursesModernHandler = (function () {
     }
 
     function getCourses() {
-        var url = hdnBaseUrl + 'GetCourses';
+        var url = learnerHomeBaseUrl + 'GetCourses';
         UTILS.makeAjaxCall(url, { course: '', sort: '0' }, function (res) {
             allCourses = (res && Array.isArray(res.courses)) ? res.courses : [];
             applySearch();
@@ -455,7 +459,7 @@ var myCoursesModernHandler = (function () {
     }
 
     function createCertificate(recordId) {
-        var baseUrl = hdnBaseUrl.replace('/Home/', '/');
+        var baseUrl = learnerHomeBaseUrl.replace('/Home/', '/');
         var url = baseUrl + 'Certificate/GetCertificate/' + recordId;
         window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
     }
@@ -465,7 +469,7 @@ var myCoursesModernHandler = (function () {
             return;
         }
 
-        UTILS.makeAjaxCall(hdnBaseUrl + 'ResetProgress', { Course: courseId, RecordId: recordId }, function (resp) {
+        UTILS.makeAjaxCall(learnerHomeBaseUrl + 'ResetProgress', { Course: courseId, RecordId: recordId }, function (resp) {
             if (resp && resp.reset === 1) {
                 getCourses();
             }
@@ -477,7 +481,7 @@ var myCoursesModernHandler = (function () {
             return;
         }
 
-        UTILS.makeAjaxCall(hdnBaseUrl + 'LaunchSubModule', { subModuleId: subModuleId }, function () {
+        UTILS.makeAjaxCall(learnerHomeBaseUrl + 'LaunchSubModule', { subModuleId: subModuleId }, function () {
             getCourses();
             if (path) {
                 window.open(path, '_blank');
@@ -492,14 +496,14 @@ var myCoursesModernHandler = (function () {
     function showRAReport(courseId, subModuleId) {
         var riskAssessmentBaseUrl = (typeof learnerRiskAssessmentBaseUrl !== 'undefined' && learnerRiskAssessmentBaseUrl)
             ? learnerRiskAssessmentBaseUrl
-            : (hdnBaseUrl || '/Learner/Home/').replace(/Home\/?$/i, '') + 'RiskAssessment/';
+            : (learnerHomeBaseUrl || '/Learner/Home/').replace(/Home\/?$/i, '') + 'RiskAssessment/';
         var url = riskAssessmentBaseUrl + 'LoadRAReport/' + encodeURIComponent(courseId) + '/' + encodeURIComponent(subModuleId);
         window.location.href = url;
     }
 
     function showTrainerInfoPopUp() {
         new bootstrap.Modal(document.getElementById('modalTrainerInfo')).show();
-        UTILS.makeAjaxCall(hdnBaseUrl + 'Common/GetCompanyTrainerDetails', {}, function (res) {
+        UTILS.makeAjaxCall(learnerHomeBaseUrl + 'Common/GetCompanyTrainerDetails', {}, function (res) {
             if (!res || !res.trainer) {
                 return;
             }
