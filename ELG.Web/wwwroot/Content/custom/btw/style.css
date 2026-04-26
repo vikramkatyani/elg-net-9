@@ -1,13 +1,13 @@
 ﻿:root {
     --color-primary: #E25D21;
-    --color-secondary: #4FE2BA;
+    --color-secondary: #23282D;
     --color-white: #FFF;
-    --color-dark: #21242C;
-    --color-light: #808080;
-    --color-hightlight: #1C4F8D;
-    --color-border: #D8D8D8;
-    --color-black: #000000;
-    --color-grey: #6B7280;
+    --color-dark: #23282D;
+    --color-light: #6F6F6F;
+    --color-hightlight: #E25D21;
+    --color-border: #E2E2E2;
+    --color-black: #242424;
+    --color-grey: #6F6F6F;
     --dash-complete: #0CC078;
     --dash-progress: #FCFC99;
     --dash-incomplete: #FB6962;
@@ -16,10 +16,10 @@
 }
 
 /** Font*/
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap');
 
 body {
-    font-family: Montserrat, system-ui, sans-serif;
+    font-family: "Avenir LT Std", "Avenir Next", "Nunito Sans", system-ui, sans-serif;
 }
 
 /** Background color */
@@ -98,8 +98,8 @@ body {
     font-size: 18px;
     height: 45px;
     /*width: 100%;*/
-    border-radius: 10px;
-    font-weight: 500;
+    border-radius: 999px;
+    font-weight: 600;
     line-height: 150%;
     padding: .375rem .75rem !important;
 }
@@ -121,18 +121,18 @@ body {
 
 .elg-btn-secondary, btn-secondary {
     background-color: var(--color-secondary);
-    color: var(--color-primary);
+    color: var(--color-white);
 }
 
 .elg-btn-transparent {
     background-color: transparent;
-    color: #1c4F8D;
-    border: 1px solid #1c4F8D;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
 }
     .elg-btn-transparent:hover {
-        background-color: #1c4F8D;
-        color: #fff;
-        border: 1px solid #1c4F8D;
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        border: 1px solid var(--color-primary);
         opacity: 1 !important;
     }
 
@@ -150,14 +150,14 @@ body {
 
 .elg-course-card-secondary {
     background-color: transparent !important;
-    color: #1c4F8D !important;
-    border: 1px solid #1c4F8D !important;
+    color: var(--color-primary) !important;
+    border: 1px solid var(--color-primary) !important;
     border-radius: 10px !important;
 }
     .elg-course-card-secondary:hover {
-        background-color: #1c4F8D !important;
-        color: #fff !important;
-        border: 1px solid #1c4F8D !important;
+        background-color: var(--color-primary) !important;
+        color: var(--color-white) !important;
+        border: 1px solid var(--color-primary) !important;
         opacity: 1 !important;
     }
 
@@ -182,8 +182,13 @@ p {
 }
 
 h1 {
+    font-family: "Avenir LT Std", "Avenir Next", "Nunito Sans", sans-serif;
     font-weight: 400;
     font-size: 36px;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: "Avenir LT Std", "Avenir Next", "Nunito Sans", sans-serif;
 }
 
 .card-content h2 {
@@ -648,14 +653,14 @@ padding: 0 !important;
 
 .learner-menu a {
     text-decoration: none;
-    color: #7f8c8d;
+    color: var(--color-light);
     padding: 10px;
     display: block;
     transition: background-color 0.3s;
 }
 
 .parent-menu-a, .profile-details {
-    color: #7f8c8d !important;
+    color: var(--color-light) !important;
 }
 
 .learner-menu .parent-menu a:hover, .learner-menu a:hover, .learner-menu a.active {
