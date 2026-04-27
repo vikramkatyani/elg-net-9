@@ -1,0 +1,406 @@
+@{
+    ViewBag.Title = "Course Progress";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+
+<div class="lp-modern-page">
+    <header class="lp-hero">
+        <div>
+            <nav class="lp-breadcrumb" aria-label="breadcrumb">
+                <a href="@Url.Action("InsightsReports", "Report")">Reports &amp; Analytics</a>
+                <span>/</span>
+                <span>Course Progress</span>
+            </nav>
+            <h1 class="lp-title">Course Progress</h1>
+            <p class="lp-subtitle">Analyze learner outcomes, completion trends, and assessment performance.</p>
+        </div>
+        <a href="@Url.Action("InsightsReports", "Report")" class="lp-back-btn">
+            <i class="fa fa-arrow-left"></i>
+            Back to Reports
+        </a>
+    </header>
+
+    <section class="lp-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label lp-label" for="txtLearner">User</label>
+                <div class="input-group lp-input-group">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" id="txtLearner" placeholder="Name or email">
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label lp-label" for="ddlUserStatus">User Status</label>
+                <select class="form-select" id="ddlUserStatus">
+                    <option value="0">Select All</option>
+                    <option value="1" selected>Active</option>
+                    <option value="2">In-active</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label lp-label" for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                <select class="form-select ddl-loc" id="ddlLocation">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label lp-label" for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                <select class="form-select ddl-dep" id="ddlDepartment">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label lp-label" for="ddlCourse">Course</label>
+                <select class="form-select ddl-course" id="ddlCourse">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label lp-label" for="ddlAccessStatus">Access Status</label>
+                <select class="form-select" id="ddlAccessStatus">
+                    <option value="0">Active</option>
+                    <option value="1">Suspended</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-3 align-items-end mt-1">
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <label class="form-label lp-label" for="ddlStatus">Course Status</label>
+                <select class="form-select" id="ddlStatus">
+                    <option value="not-started">Not started</option>
+                    <option value="incomplete">In-progress</option>
+                    <option value="passed">Passed</option>
+                    <option value="failed">Failed</option>
+                    <option disabled>----------</option>
+                    <option value="0" selected>Select All</option>
+                    <option value="not-passed">Not Passed</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <label class="form-label lp-label" for="txtRptFrom">Completed From</label>
+                <input type="text" class="form-control" id="txtRptFrom" placeholder="yyyy-mm-dd">
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <label class="form-label lp-label" for="txtRptTo">Completed To</label>
+                <input type="text" class="form-control" id="txtRptTo" placeholder="yyyy-mm-dd">
+            </div>
+
+            <div class="col-xl-5 col-md-12">
+                <div class="lp-actions-panel">
+                    <button id="searchLearnerProgress" class="btn lp-btn lp-btn-primary">
+                        <i class="fa fa-search me-1"></i>Search
+                    </button>
+                    <button id="downloadProgressReport" class="btn lp-btn lp-btn-soft"
+                            data-loading-text="Downloading..."
+                            data-original-text='<i class="fa fa-download"></i> Download'>
+                        <i class="fa fa-download me-1"></i>Download
+                    </button>
+                    <button id="clearSearchProgressReport" class="btn lp-btn lp-btn-soft">
+                        <i class="fa fa-refresh me-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="lp-table-card">
+        <div class="lp-table-head">
+            <h2>Test Results</h2>
+            <span class="lp-table-hint">Filter by learner, location, course, status, and completion dates to focus your report.</span>
+        </div>
+
+        <div id="message_test_report" class="mb-3"></div>
+
+        <div class="table-responsive" id="test-report-container">
+            <table class="table table-hover align-middle" id="learningProgressReport" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Course</th>
+                        <th>Assigned On</th>
+                        <th>Last Accessed On</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                        <th>Completion Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>
+
+@Html.Partial("_updateLearningRecord")
+
+<style>
+    .lp-modern-page {
+        --lp-surface: #ffffff;
+        --lp-line: #d9e5ea;
+        --lp-text: #12303a;
+        --lp-muted: #6a808c;
+        --lp-brand: var(--color-primary, #0b7d78);
+        --lp-brand-soft: #e9f6f4;
+        --lp-shadow: 0 8px 18px rgba(17, 39, 47, 0.06);
+        color: var(--lp-text);
+    }
+
+    .lp-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.2rem 0.2rem 0.65rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .lp-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 0.45rem;
+        color: var(--lp-muted);
+        font-size: 0.88rem;
+    }
+
+    .lp-breadcrumb a {
+        color: var(--lp-muted);
+        text-decoration: none;
+    }
+
+    .lp-breadcrumb a:hover {
+        color: var(--lp-text);
+        text-decoration: underline;
+    }
+
+    .lp-title {
+        margin: 0;
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        line-height: 1.15;
+    }
+
+    .lp-subtitle {
+        margin: 0.3rem 0 0;
+        color: #5d6f7a;
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .lp-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border: 1px solid var(--lp-brand);
+        color: var(--lp-brand);
+        background: #fff;
+        border-radius: 10px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .lp-back-btn:hover {
+        background: var(--lp-brand);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .lp-filter-card,
+    .lp-table-card {
+        background: var(--lp-surface);
+        border: 1px solid var(--lp-line);
+        border-radius: 14px;
+        box-shadow: var(--lp-shadow);
+    }
+
+    .lp-filter-card {
+        padding: 1rem 1rem 0.95rem;
+        margin-bottom: 0.95rem;
+    }
+
+    .lp-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #5f7884;
+        margin-bottom: 0.38rem;
+        line-height: 1.2;
+    }
+
+    .lp-input-group .input-group-text {
+        border-color: #d2e3e8;
+        background: #f4fbfa;
+        color: #446573;
+    }
+
+    .lp-modern-page .form-control,
+    .lp-modern-page .form-select {
+        border-radius: 10px;
+        border-color: #d2e3e8;
+        box-shadow: none;
+        min-height: 2.65rem;
+    }
+
+    .lp-modern-page .form-control:focus,
+    .lp-modern-page .form-select:focus {
+        border-color: #99c9c4;
+        box-shadow: 0 0 0 0.16rem rgba(11, 125, 120, 0.12);
+    }
+
+    .lp-actions-panel {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .lp-btn {
+        min-height: 2.65rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .lp-btn-primary {
+        background: var(--lp-brand);
+        border-color: var(--lp-brand);
+        color: #fff;
+    }
+
+    .lp-btn-primary:hover,
+    .lp-btn-primary:focus {
+        background: var(--lp-brand);
+        border-color: var(--lp-brand);
+        color: #fff;
+        filter: brightness(0.94);
+    }
+
+    .lp-btn-soft {
+        background: var(--lp-brand-soft);
+        border-color: #cde4e2;
+        color: #2a545f;
+    }
+
+    .lp-btn-soft:hover,
+    .lp-btn-soft:focus {
+        background: #dff2ef;
+        border-color: #bdddd9;
+        color: #1d4751;
+    }
+
+    .lp-table-card {
+        padding: 0.85rem 1rem 1rem;
+    }
+
+    .lp-table-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.7rem;
+        padding: 0.15rem 0.1rem 0.7rem;
+    }
+
+    .lp-table-head h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #163641;
+        line-height: 1.25;
+    }
+
+    .lp-table-hint {
+        color: #68808c;
+        font-size: 0.83rem;
+    }
+
+    #learningProgressReport thead th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #56717c;
+        background: #f7fbfc;
+        border-bottom: 1px solid #deebef;
+        white-space: nowrap;
+    }
+
+    #learningProgressReport tbody td {
+        font-size: 0.89rem;
+        color: #1f3d47;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    #learningProgressReport tbody tr:hover {
+        background: #fbfefe;
+    }
+
+    @@media (max-width: 1199px) {
+        .lp-actions-panel {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 991px) {
+        .lp-hero {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .lp-back-btn {
+            align-self: flex-start;
+        }
+
+        .lp-table-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .lp-title {
+            font-size: 1.6rem;
+        }
+
+        .lp-filter-card,
+        .lp-table-card {
+            border-radius: 12px;
+        }
+
+        .lp-actions-panel {
+            grid-template-columns: 1fr;
+        }
+
+        .lp-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/learningProgress.js?v=1.5"></script>
+}

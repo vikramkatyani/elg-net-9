@@ -14,6 +14,8 @@
         string host = HttpContextAccessor.HttpContext?.Request.Host.Value;
         var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
         var isModernViewMode = string.Equals(ELG.Web.Helper.SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase);
+        var currentPath = (Context?.Request?.Path.Value ?? string.Empty).ToLowerInvariant();
+        var isAdminSettingsPage = currentPath.StartsWith("/home/myprofile") || currentPath.StartsWith("/home/changepassword");
         if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
         {
             ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
@@ -188,6 +190,63 @@
             color: #352823;
         }
 
+        .admin-modern-view .profile.parent-menu {
+            position: relative;
+            padding-right: 42px;
+        }
+
+        .admin-modern-view .profile-menu-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8c7c72 !important;
+            text-decoration: none;
+            border: 0;
+            background: transparent;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .admin-modern-view .profile.parent-menu.open .profile-menu-toggle .fa {
+            transform: rotate(180deg);
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(100% + 10px);
+            margin: 0;
+            padding: 8px;
+            list-style: none;
+            background: #ffffff;
+            border: 1px solid #ded9d4;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(42, 28, 24, 0.12);
+            z-index: 5;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li {
+            margin: 0;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a {
+            display: block;
+            color: var(--menu-text-color) !important;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a:hover,
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a.active {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
         .admin-modern-view .admin-viewmode-item {
             margin-left: 0;
             margin-right: 0;
@@ -237,6 +296,11 @@
             dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
                 ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
                 : null;
+        }
+        @{
+            var isModernViewMode = string.Equals(ELG.Web.Helper.SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase);
+            var currentPath = (Context?.Request?.Path.Value ?? string.Empty).ToLowerInvariant();
+            var isAdminSettingsPage = currentPath.StartsWith("/home/myprofile") || currentPath.StartsWith("/home/changepassword");
         }
         <nav class="learner-menu-bar">
             <div class="logo">
@@ -358,7 +422,7 @@
                         {
                             <li class="nav-item" id="reportLink">
                                 <a id="menu-reports-hub" href="@Url.Action("InsightsReports", "Report")">
-                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports
+                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Reports & Analytics
                                 </a>
                             </li>
                         }
@@ -418,16 +482,19 @@
                             </li>
                         }*@
 
-                    <li class="nav-item parent-menu" id="settingsLink">
-                        <a class="parent-menu-a">
-                            @*<i class="fa fa-cog"></i>*@
-                            <img class="menu-icon" src="~/Content/images/icons/settings.png" alt="Settings" /> Settings <span class="fa fa-chevron-down"></span>
-                        </a>
-                        <ul class="nav child_menu">
-                            <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile" , "Home")"> Profile</a></li>
-                            <li><a id="menu-user-password" href="@Url.Action("ChangePassword" , "Home")"> Update password </a></li>
-                        </ul>
-                    </li>
+                    @if (!isModernViewMode)
+                    {
+                        <li class="nav-item parent-menu" id="settingsLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-cog"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/settings.png" alt="Settings" /> Settings <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile" , "Home")"> Profile</a></li>
+                                <li><a id="menu-user-password" href="@Url.Action("ChangePassword" , "Home")"> Update password </a></li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
             <div class="line-partition mx-4 mt-5"></div>
@@ -440,7 +507,7 @@
                 </li>
                 @Html.Partial("_AdminViewModeToggle")
             </ul>
-            <div class="profile">
+            <div class="profile @(isModernViewMode ? "parent-menu" : string.Empty)" id="userProfileMenu">
                 @{
                     if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
                     {
@@ -455,6 +522,16 @@
                     <span>Welcome,</span>
                     <h2>@ELG.Web.Helper.SessionHelper.UserDisplayName</h2>
                 </div>
+                @if (isModernViewMode)
+                {
+                    <a class="parent-menu-a profile-menu-toggle" href="#" aria-label="Open user settings">
+                        <span class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu profile-child-menu">
+                        <li><a class="user-profile-btn @(isAdminSettingsPage && currentPath.StartsWith("/home/myprofile") ? "active" : string.Empty)" id="profile-menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile" , "Home")">Profile</a></li>
+                        <li><a class="@(isAdminSettingsPage && currentPath.StartsWith("/home/changepassword") ? "active" : string.Empty)" id="profile-menu-user-password" href="@Url.Action("ChangePassword" , "Home")">Update password</a></li>
+                    </ul>
+                }
             </div>
         </nav>
 

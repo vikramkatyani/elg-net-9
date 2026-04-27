@@ -234,6 +234,63 @@
             color: #352823;
         }
 
+        .admin-modern-view .profile.parent-menu {
+            position: relative;
+            padding-right: 42px;
+        }
+
+        .admin-modern-view .profile-menu-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8c7c72 !important;
+            text-decoration: none;
+            border: 0;
+            background: transparent;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .admin-modern-view .profile.parent-menu.open .profile-menu-toggle .fa {
+            transform: rotate(180deg);
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(100% + 10px);
+            margin: 0;
+            padding: 8px;
+            list-style: none;
+            background: #ffffff;
+            border: 1px solid #ded9d4;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(42, 28, 24, 0.12);
+            z-index: 5;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li {
+            margin: 0;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a {
+            display: block;
+            color: var(--menu-text-color) !important;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a:hover,
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a.active {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
         .admin-modern-view .admin-viewmode-item {
             margin-left: 0;
             margin-right: 0;
@@ -294,6 +351,7 @@
                 : null;
 
             var currentPath = (Context?.Request?.Path.Value ?? string.Empty).ToLowerInvariant();
+            var isAdminSettingsPage = currentPath.StartsWith("/home/myprofile") || currentPath.StartsWith("/home/changepassword");
             var isLearnerDashboardPage = currentPath.Contains("/learner/home/dashboard");
             var isLearnerMyCoursesPage = currentPath.Contains("/learner/home/mycourses");
             var isLearnerRiskPage = currentPath.Contains("/learner/riskassessment/assessment");
@@ -449,7 +507,7 @@
                         {
                             <li class="nav-item" id="reportLink">
                                 <a id="menu-reports-hub" href="@Url.Action("InsightsReports", "Report", new { area = "" })">
-                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports
+                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Reports & Analytics
                                 </a>
                             </li>
                         }
@@ -520,7 +578,7 @@
 
 
 
-                    @if (!(isModernViewMode && ELG.Web.Helper.SessionHelper.HasLearnerRights))
+                    @if (!isModernViewMode)
                     {
                         <li class="nav-item parent-menu" id="settingsLink">
                             <a class="parent-menu-a">
@@ -563,13 +621,6 @@
                             </li>
                         }
 
-                        <li class="nav-item parent-menu @(isLearnerSettingsPage ? "active" : string.Empty)" id="learnerSettingsLink">
-                            <a class="parent-menu-a">Settings <span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu">
-                                <li><a class="user-profile-btn @(isLearnerSettingsPage && currentPath.Contains("/learner/home/myprofile") ? "active" : string.Empty)" id="menu-learner-profile" data-id="btnLearnerProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })">Profile</a></li>
-                                <li><a class="@(isLearnerSettingsPage && currentPath.Contains("/learner/home/changepassword") ? "active" : string.Empty)" id="menu-learner-password" href="@Url.Action("ChangePassword", "Home", new { area = "Learner" })">Update password</a></li>
-                            </ul>
-                        </li>
                     }
                 </ul>
             </div>
@@ -589,7 +640,7 @@
                 </li>
                 @Html.Partial("_AdminViewModeToggle")
             </ul>
-            <div class="profile">
+            <div class="profile @(isModernViewMode ? "parent-menu" : string.Empty)" id="userProfileMenu">
                 @{
                     if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
                     {
@@ -604,6 +655,16 @@
                     <span>Welcome,</span>
                     <h2>@ELG.Web.Helper.SessionHelper.UserDisplayName</h2>
                 </div>
+                @if (isModernViewMode)
+                {
+                    <a class="parent-menu-a profile-menu-toggle" href="#" aria-label="Open user settings">
+                        <span class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu profile-child-menu">
+                        <li><a class="user-profile-btn @(isAdminSettingsPage && currentPath.StartsWith("/home/myprofile") ? "active" : string.Empty)" id="profile-menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile", "Home", new { area = "" })">Profile</a></li>
+                        <li><a class="@(isAdminSettingsPage && currentPath.StartsWith("/home/changepassword") ? "active" : string.Empty)" id="profile-menu-user-password" href="@Url.Action("ChangePassword", "Home", new { area = "" })">Update password</a></li>
+                    </ul>
+                }
             </div>
         </nav>
 

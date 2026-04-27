@@ -617,7 +617,7 @@ form {
     transform: translateX(0);
     transition: transform 0.3s ease;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
     .learner-menu-bar.closed {
@@ -657,6 +657,104 @@ padding: 0 !important;
     padding: 10px;
     display: block;
     transition: background-color 0.3s;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a {
+    font-weight: 400 !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a {
+    font-weight: 300 !important;
+}
+
+body.admin-modern-view .learner-menu-bar {
+    height: 100dvh;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.admin-modern-view .learner-menu-bar .logo {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+body.admin-modern-view .learner-menu-bar .logo img {
+    margin: 10px auto 6px;
+    max-height: 56px;
+    width: auto;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 6px;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .menu-section-title {
+    font-size: 0.7rem !important;
+    padding: 8px 14px 4px !important;
+    margin: 6px 10px 0 !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a {
+    margin: 4px 12px !important;
+    padding: 8px 12px !important;
+    min-height: 40px !important;
+    font-size: 15px !important;
+    line-height: 1.1;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu {
+    margin: 0 12px 4px !important;
+    padding: 0 0 4px !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a {
+    margin: 2px 0 2px 8px !important;
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+}
+
+body.admin-modern-view .learner-menu-bar .line-partition {
+    margin: 8px 14px !important;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu {
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 2;
+    background: #efedeb;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu .nav-item {
+    margin: 4px 0;
+}
+
+body.admin-modern-view .learner-menu-bar .profile {
+    margin-top: auto;
+    padding: 8px 14px 12px;
+    min-height: 72px;
+}
+
+body.admin-modern-view .learner-menu-bar .profile img {
+    width: 44px;
+    height: 44px;
+}
+
+body.admin-modern-view .learner-menu-bar .profile .profile-details span,
+body.admin-modern-view .learner-menu-bar .profile .profile-details h2 {
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+#view-mode-toggle {
+    display: none !important;
 }
 
 .parent-menu-a, .profile-details {
@@ -730,7 +828,8 @@ padding: 0 !important;
 }
 
 .card-image img {
-    /* max-height: 300px; */
+    max-width: 100%;
+    height: auto;
 }
 
 /* Mobile Styles (Collapse Sidebar) */

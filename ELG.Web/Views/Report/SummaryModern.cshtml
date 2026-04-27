@@ -1,0 +1,335 @@
+@{
+    ViewBag.Title = "Learning Summary";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<style>
+    .report-modern-page {
+        --report-line: #d9e5ea;
+        --report-text: #12303a;
+        --report-muted: #637b86;
+    }
+
+    .report-modern-shell {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+    }
+
+    .report-modern-header {
+        margin-bottom: 0.45rem;
+    }
+
+    .report-modern-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.88rem;
+        color: var(--report-muted);
+        margin-bottom: 0.55rem;
+    }
+
+    .report-modern-breadcrumb a {
+        color: var(--report-muted);
+        text-decoration: none;
+    }
+
+    .report-modern-breadcrumb a:hover {
+        color: var(--report-text);
+        text-decoration: underline;
+    }
+
+    .report-modern-title {
+        margin: 0;
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: var(--report-text);
+        line-height: 1.15;
+    }
+
+    .report-modern-subtitle {
+        margin: 0.3rem 0 0;
+        color: var(--report-muted);
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .report-modern-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .report-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.75rem;
+        border-radius: 10px;
+        border: 1px solid var(--color-primary, #0b7d78);
+        background: #ffffff;
+        color: var(--color-primary, #0b7d78);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        line-height: 1.2;
+    }
+
+    .report-back-btn:hover {
+        color: #ffffff;
+        border-color: var(--color-primary, #0b7d78);
+        background: var(--color-primary, #0b7d78);
+        text-decoration: none;
+    }
+
+    #generateReportBtn {
+        border: 1px solid var(--color-primary, #0b7d78);
+        background: var(--color-primary, #0b7d78);
+        color: #fff;
+        border-radius: 10px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 1.2;
+        box-shadow: none;
+    }
+
+    #generateReportBtn:hover {
+        filter: brightness(0.94);
+        color: #fff;
+    }
+
+    .report-modern-page .card.shadow-sm.mt-4 {
+        margin-top: 0.65rem !important;
+        border: 1px solid var(--report-line);
+        border-radius: 12px;
+        box-shadow: 0 6px 14px rgba(18, 48, 58, 0.06);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .report-modern-page .card-header {
+        padding: 0.55rem 0.95rem;
+        border-bottom: 1px solid var(--report-line);
+        background: #ffffff;
+    }
+
+    .report-modern-page .card-header h5 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: var(--report-text);
+    }
+
+    .report-modern-page .card-body {
+        padding: 0.75rem 0.95rem;
+        background: #ffffff;
+    }
+
+    .report-modern-page .stats-container {
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        padding: 0;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+
+    .report-modern-page .chart-container {
+        width: 120px;
+        height: 120px;
+    }
+
+    .report-modern-page .stat-title {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: #5f7884;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+    }
+
+    .report-modern-page .stat-value {
+        font-size: 2.1rem;
+        font-weight: 700;
+        color: var(--report-text);
+        line-height: 1.05;
+    }
+
+    .report-modern-page .stat-item,
+    .report-modern-page .stat-item-first {
+        min-height: 0;
+    }
+
+    .report-modern-page .stat-item-first {
+        flex: 0 0 180px;
+        align-items: center;
+        justify-content: center;
+        padding-right: 1.05rem;
+    }
+
+    .report-modern-page .stat-item,
+    .report-modern-page .stat-item-last {
+        border-right: 0;
+        border-left: 1px solid #34434a;
+        flex: 1 1 0;
+        min-width: 170px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.25rem;
+        padding: 0 1.5rem;
+    }
+
+    .report-modern-page .stat-title {
+        margin-bottom: 0;
+    }
+
+    .report-modern-page .card-footer {
+        order: 4;
+        padding: 0.55rem 0.95rem;
+        background: #ffffff;
+        border-top: 1px solid var(--report-line);
+        gap: 0.45rem;
+        margin-top: auto;
+        justify-content: flex-end;
+    }
+
+    .report-modern-page .card-footer .btn {
+        padding: 0.3rem 0.68rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    .report-modern-page .card-footer .btn.btn-primary {
+        background: var(--color-primary, #0b7d78);
+        border-color: var(--color-primary, #0b7d78);
+        color: #ffffff;
+    }
+
+    .report-modern-page .card-footer .btn.btn-primary:hover,
+    .report-modern-page .card-footer .btn.btn-primary:focus {
+        background: var(--color-primary, #0b7d78);
+        border-color: var(--color-primary, #0b7d78);
+        color: #ffffff;
+        filter: brightness(0.93);
+    }
+
+    .report-modern-page .div-loc-chart {
+        order: 3;
+        padding: 0.75rem 0.95rem !important;
+        border-top: 1px solid var(--report-line);
+    }
+
+    @@media (max-width: 768px) {
+        .report-modern-shell {
+            padding: 0 0.65rem;
+        }
+
+        .report-modern-title {
+            font-size: 1.55rem;
+        }
+
+        .report-modern-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        #generateReportBtn,
+        .report-back-btn {
+            justify-content: center;
+        }
+
+        .report-modern-page .stats-container {
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 0.75rem;
+        }
+
+        .report-modern-page .stat-item,
+        .report-modern-page .stat-item-first,
+        .report-modern-page .stat-item-last {
+            border-right: 0;
+            border-left: 0;
+            align-items: flex-start;
+            min-width: 96px;
+            flex: 0 0 auto;
+        }
+
+        .report-modern-page .stat-item,
+        .report-modern-page .stat-item-last {
+            flex-direction: column;
+            padding: 0;
+            min-width: 0;
+        }
+
+        .report-modern-page .stat-item-first {
+            flex: 0 0 auto;
+            padding-right: 0;
+            justify-content: flex-start;
+        }
+    }
+</style>
+
+<div class="report-modern-shell">
+    <header class="report-modern-header">
+        <nav class="report-modern-breadcrumb" aria-label="breadcrumb">
+            <a href="@Url.Action("InsightsReports", "Report")">Reports &amp; Analytics</a>
+            <span>/</span>
+            <span>Learning Summary</span>
+        </nav>
+
+        <h1 class="report-modern-title">Learning Summary Report</h1>
+        <p class="report-modern-subtitle">Track completion, activity trends, and key adoption metrics.</p>
+    </header>
+
+    <div class="report-modern-toolbar">
+        <a href="@Url.Action("InsightsReports", "Report")" class="report-back-btn">
+            <i class="fa fa-arrow-left"></i>
+            Back to Reports
+        </a>
+
+        <a id="generateReportBtn" href="#" class="btn"
+           data-loading-text="Exporting..."
+           data-original-text="<i class='fa fa-download fa-sm'></i> Export Report">
+            <i class="fa fa-download fa-sm"></i> Export Report
+        </a>
+    </div>
+
+    <div id="div-card-container" class="report-modern-page"></div>
+</div>
+
+<div class="modal fade" id="departmentStatsModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Department Stats</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body" id="modalBody"></div>
+
+            <div class="modal-footer" id="modalFooter">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/summary.js"></script>
+}
