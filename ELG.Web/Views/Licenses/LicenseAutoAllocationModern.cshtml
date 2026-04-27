@@ -6,7 +6,7 @@
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
 
-<div id="licenseAutoAllocationPage" class="x_panel tile laa-shell">
+<div id="licenseAutoAllocationPage" class="laa-shell">
     <div class="laa-hero">
         <div>
             <h1 class="laa-title">Auto-Assign - Courses</h1>
@@ -188,11 +188,6 @@
     #licenseAutoAllocationPage {
         --laa-brand: var(--color-primary, #0b7d78);
         --laa-brand-alt: var(--color-secondary, #0f968f);
-        border: 1px solid #d7e7eb;
-        border-radius: 16px;
-        background: radial-gradient(circle at 100% 0, #f4fbff 0%, #ffffff 48%);
-        box-shadow: 0 14px 30px rgba(19, 48, 56, 0.08);
-        padding: 1rem;
     }
 
     #licenseAutoAllocationPage.laa-shell,
@@ -203,21 +198,28 @@
     }
 
     #licenseAutoAllocationPage .laa-hero {
-        margin-bottom: 0.95rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
     }
 
     #licenseAutoAllocationPage .laa-title {
         margin: 0;
-        font-size: clamp(1.25rem, 1.2rem + 0.35vw, 1.55rem);
-        line-height: 1.18;
+        font-size: 1.5rem;
         font-weight: 800;
-        color: #214c59;
+        letter-spacing: 0.2px;
+        color: #14323c;
     }
 
     #licenseAutoAllocationPage .laa-subtitle {
         margin: 0.28rem 0 0;
-        color: #59717b;
-        font-size: 0.93rem;
+        color: #637f8a;
     }
 
     #licenseAutoAllocationPage .laa-filter-card,

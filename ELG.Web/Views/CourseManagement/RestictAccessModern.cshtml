@@ -6,7 +6,7 @@
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
 
-<div id="cmRestrictAccessPage" class="x_panel tile cm-restrict-shell">
+<div id="cmRestrictAccessPage" class="cm-restrict-shell">
     <div class="cm-restrict-hero">
         <div>
             <h1 class="cm-restrict-title">Restrict Course Access</h1>
@@ -90,11 +90,6 @@
     #cmRestrictAccessPage {
         --cm-restrict-brand: var(--color-primary, #0b7d78);
         --cm-restrict-brand-alt: #12665f;
-        border: 1px solid #d7e7eb;
-        border-radius: 16px;
-        background: radial-gradient(circle at 100% 0, #f4fbff 0%, #ffffff 48%);
-        box-shadow: 0 14px 30px rgba(19, 48, 56, 0.08);
-        padding: 1rem;
     }
 
     #cmRestrictAccessPage.cm-restrict-shell,
@@ -105,21 +100,38 @@
     }
 
     #cmRestrictAccessPage .cm-restrict-hero {
-        margin-bottom: 0.95rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
     }
 
     #cmRestrictAccessPage .cm-restrict-title {
         margin: 0;
-        font-size: clamp(1.25rem, 1.2rem + 0.35vw, 1.55rem);
-        line-height: 1.18;
+        font-size: 1.5rem;
         font-weight: 800;
-        color: #214c59;
+        letter-spacing: 0.2px;
+        color: #14323c;
     }
 
     #cmRestrictAccessPage .cm-restrict-subtitle {
         margin: 0.28rem 0 0;
-        color: #59717b;
-        font-size: 0.93rem;
+        color: #637f8a;
+    }
+
+    #cmRestrictAccessPage #divMessage_RevokeModule.show {
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.85rem;
     }
 
     #cmRestrictAccessPage .cm-restrict-filter-card,

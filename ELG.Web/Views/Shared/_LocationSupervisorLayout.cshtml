@@ -143,6 +143,13 @@
         .admin-modern-view #helpLink > a::before { content: "\f059"; }
         .admin-modern-view #toggleLearnerLink > a::before { content: "\f19d"; }
         .admin-modern-view #logout > a::before { content: "\f08b"; }
+        .admin-modern-view #logout > a {
+            font-size: 15px !important;
+            font-weight: 400 !important;
+            margin: 4px 12px !important;
+            padding: 8px 12px !important;
+            min-height: 40px !important;
+        }
 
         .admin-modern-view .learner-menu .child_menu {
             background: transparent;
@@ -172,9 +179,11 @@
 
         .admin-modern-view .learner-menu .child_menu li a.active,
         .admin-modern-view .learner-menu .child_menu li a.active:hover {
-            background: var(--tenant-primary);
-            border-color: var(--tenant-primary);
-            color: #ffffff;
+            background: transparent;
+            border-color: transparent;
+            color: var(--menu-text-color) !important;
+            font-weight: 800;
+            box-shadow: none;
         }
 
         .admin-modern-view .line-partition {
@@ -500,7 +509,7 @@
             <div class="line-partition mx-4 mt-5"></div>
             <ul class="learner-menu">
                 <li class="nav-item" id="logout">
-                    <a id="menu-logout" href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    <a id="menu-logout" class="parent-menu-a" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         @*<i class="fa fa-power-off me-1"></i>*@
                         <img class="menu-icon" src="~/Content/images/icons/logout.png" alt="Logout" /> Log Out
                     </a>

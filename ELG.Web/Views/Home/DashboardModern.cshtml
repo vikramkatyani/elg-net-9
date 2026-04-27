@@ -9,12 +9,12 @@
 <div class="md-dash">
     <div class="md-dash-bg"></div>
 
-    <div class="md-dash-head">
+    <section class="md-dash-head">
         <div>
-            <h1 class="md-dash-title">Operations Dashboard</h1>
+            <h1 class="md-dash-title">Dashboard</h1>
             <p class="md-dash-subtitle">Interactive control center for users, course delivery, and compliance trends.</p>
         </div>
-    </div>
+    </section>
 
     <div class="md-quick-links">
         <a href="@Url.Action("Accounts", "UserManagement")" class="md-chip"><i class="fa fa-users"></i> Users</a>
@@ -130,8 +130,8 @@
         --ink: #132f3a;
         --muted: #5f7380;
         --line: #d7e3de;
-        --brand: #0b6b69;
-        --accent: #de6f4d;
+        --brand: var(--color-primary, #0b6b69);
+        --accent: var(--color-secondary, #de6f4d);
         --good: #2f9f63;
         --warn: #c58612;
         --bad: #cd4b4b;
@@ -146,10 +146,10 @@
         inset: 0;
         z-index: -1;
         border-radius: 1rem;
-        background:
+        @* background:
             radial-gradient(circle at 10% 0%, rgba(11, 107, 105, 0.18), transparent 36%),
             radial-gradient(circle at 90% 30%, rgba(222, 111, 77, 0.17), transparent 30%),
-            linear-gradient(150deg, var(--bg-1), var(--bg-2));
+            linear-gradient(150deg, var(--bg-1), var(--bg-2)); *@
     }
 
     .md-dash-head {
@@ -157,19 +157,24 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: 1rem;
-        margin-bottom: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 0.9rem;
     }
 
     .md-dash-title {
-        font-size: 1.75rem;
-        letter-spacing: 0.3px;
         margin: 0;
-        font-weight: 700;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #14323c;
     }
 
     .md-dash-subtitle {
-        margin: 0.25rem 0 0;
-        color: var(--muted);
+        margin: 0.28rem 0 0;
+        color: #637f8a;
         max-width: 680px;
     }
 
@@ -178,6 +183,7 @@
         flex-wrap: wrap;
         gap: 0.65rem;
         margin-bottom: 1rem;
+        margin-left: 0.2rem;
     }
 
     .md-chip {

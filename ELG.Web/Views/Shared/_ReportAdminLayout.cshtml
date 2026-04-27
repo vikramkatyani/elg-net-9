@@ -1,6 +1,30 @@
 
 <!DOCTYPE html>
 <html lang="en">
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string host = HttpContextAccessor.HttpContext?.Request.Host.Value;
+    var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
+    if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
+    {
+        try
+        {
+            ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
+            var organization = rep.GetOrganizationFromHost(host);
+
+            ELG.Web.Helper.SessionHelper.OrgDomainDetails = organization;
+            sessionDomainDetails = organization;
+        }
+        catch (Exception)
+        {
+            sessionDomainDetails = null;
+        }
+    }
+
+    var tenantTitle = sessionDomainDetails?.TitleText ?? "LMS";
+    var tenantFavicon = sessionDomainDetails?.Favicon ?? "Content/images/kc-logo.png";
+    var tenantCss = sessionDomainDetails?.CSS;
+}
 
 <head>
 
@@ -10,8 +34,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>LMS - @ViewBag.Title</title>
-    <link rel="icon" href="~/Content/images/kc-logo.png" sizes="16x16">
+    <title>@tenantTitle - @ViewBag.Title</title>
+    <link rel="icon" href="~/@tenantFavicon" sizes="16x16">
 
     <!-- Bootstrap -->
     <link href="~/content/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -22,7 +46,14 @@
     <!-- iCheck -->
     <link href="~/content/vendor/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
-    <link href="~/content/css/custom.css" rel="stylesheet">
+    @if (!string.IsNullOrEmpty(tenantCss))
+    {
+        <link rel="stylesheet" href="~/@tenantCss">
+    }
+    else
+    {
+        <link href="~/content/css/custom.css" rel="stylesheet">
+    }
     <link href="~/content/css/profilePic.css" rel="stylesheet">
     <link href="~/content/vendor/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet">
     <link href="~/content/vendor/treeComponent/css/d3-mitch-tree.min.css" rel="stylesheet">

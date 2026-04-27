@@ -1,0 +1,318 @@
+@{
+    ViewBag.Title = "Documents";
+    Layout = ELG.Web.Helper.SessionHelper.IsLearnerUser
+        ? "~/Areas/Learner/Views/Shared/_Layout.cshtml"
+        : "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="ld-modern-page" id="learnerDocumentPage">
+    <section class="ld-hero">
+        <div>
+            <h1 class="ld-title">Documents</h1>
+            <p class="ld-subtitle">Search and preview your assigned documents quickly with a cleaner learner experience.</p>
+        </div>
+    </section>
+
+    <section class="ld-filter-card">
+        <div class="ld-filter-head">
+            <h2>Filters</h2>
+            <p>Refine the list by document name, category, and status.</p>
+        </div>
+
+        <div class="row g-3 align-items-end">
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label ld-label" for="txtDoc">Document Name</label>
+                <div class="ld-control">
+                    <span class="ld-control-icon"><i class="fa fa-file-text-o"></i></span>
+                    <input type="text" class="form-control" id="txtDoc" placeholder="Search document name">
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label ld-label" for="ddlCategory">Category</label>
+                <div class="ld-control ld-control-select">
+                    <span class="ld-control-icon"><i class="fa fa-folder-open-o"></i></span>
+                    <select id="ddlCategory" class="form-select ddlCat">
+                        <option value="0">Select</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label ld-label" for="ddlDocStatus">Status</label>
+                <div class="ld-control ld-control-select">
+                    <span class="ld-control-icon"><i class="fa fa-toggle-on"></i></span>
+                    <select id="ddlDocStatus" class="form-select">
+                        <option value="1" selected>Active</option>
+                        <option value="0">Archived</option>
+                        <option value="2">All</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="ld-actions">
+                    <button id="searchDoc" class="btn ld-btn ld-btn-primary">
+                        <i class="fa fa-search"></i>Search
+                    </button>
+                    <button id="clearSearchDoc" class="btn ld-btn ld-btn-soft">
+                        <i class="fa fa-times"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ld-table-card">
+        <div class="ld-table-head">
+            <h2>Assigned Documents</h2>
+            <span class="ld-table-hint">Preview a document to mark it as viewed.</span>
+        </div>
+
+        <div id="messageDocument" class="mb-3"></div>
+
+        <div class="table-responsive" id="document-report-container">
+            <table class="table table-hover align-middle" id="orgDocumentList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<style>
+    .ld-modern-page {
+        --ld-surface: #ffffff;
+        --ld-line: #d9e6ea;
+        --ld-text: #14323c;
+        --ld-muted: #627f8a;
+        --ld-brand: var(--color-primary, #0b7d78);
+        --ld-brand-soft: #e8f5f3;
+        --ld-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--ld-text);
+    }
+
+    .ld-modern-page *,
+    .ld-modern-page *::before,
+    .ld-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .ld-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 13px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .ld-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .ld-subtitle {
+        margin: 0.28rem 0 0;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--ld-muted);
+    }
+
+    .ld-filter-card,
+    .ld-table-card {
+        background: var(--ld-surface);
+        border: 1px solid var(--ld-line);
+        border-radius: 14px;
+        box-shadow: var(--ld-shadow);
+    }
+
+    .ld-filter-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .ld-filter-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .ld-filter-head h2 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+    }
+
+    .ld-filter-head p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--ld-muted);
+    }
+
+    .ld-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    .ld-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .ld-control:hover {
+        border-color: #bad6dc;
+    }
+
+    .ld-control:focus-within {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .ld-control-icon {
+        width: 46px;
+        min-width: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--ld-brand-soft);
+        color: var(--ld-brand);
+        border-right: 1px solid #cde2de;
+    }
+
+    .ld-control .form-control,
+    .ld-control .form-select {
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        box-shadow: none;
+    }
+
+    .ld-control.ld-control-select .form-select {
+        background-position: right 0.9rem center;
+    }
+
+    .ld-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .ld-btn {
+        min-width: 114px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.84rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .ld-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .ld-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .ld-btn-primary {
+        color: #fff;
+        background: var(--ld-brand);
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .ld-btn-primary:hover,
+    .ld-btn-primary:focus {
+        color: #fff;
+    }
+
+    .ld-btn-soft {
+        color: #2e515d;
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+    }
+
+    .ld-table-card {
+        padding: 1rem;
+    }
+
+    .ld-table-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .ld-table-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .ld-table-hint {
+        color: var(--ld-muted);
+        font-size: 0.8rem;
+    }
+
+    .ld-modern-page table.dataTable thead th {
+        background: #f4faf9;
+        border-bottom: 1px solid #dce9eb;
+        color: #32515c;
+        font-size: 0.82rem;
+        vertical-align: middle;
+    }
+
+    .ld-modern-page .table-hover tbody tr:hover {
+        background: #f5fbff;
+    }
+
+    .ld-modern-page table.dataTable tbody td {
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+        border-color: #e1ecef;
+        vertical-align: middle;
+    }
+</style>
+
+@section Scripts{
+    <script>
+        // Update hdnBaseUrl for Document controller endpoints
+        var hdnBaseUrl = '@Url.Content("~/Learner/Document/")';
+    </script>
+    <script type="text/javascript" src="~/js/Document/document.js?v=1.0.2"></script>
+}

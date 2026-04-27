@@ -20,7 +20,15 @@
     }
 
     .report-modern-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
         margin-bottom: 0.45rem;
+    }
+
+    .report-modern-header-copy {
+        min-width: 0;
     }
 
     .report-modern-breadcrumb {
@@ -60,7 +68,7 @@
 
     .report-modern-toolbar {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         gap: 0.6rem;
         margin-bottom: 0.85rem;
@@ -89,6 +97,10 @@
     }
 
     #generateReportBtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
         border: 1px solid var(--color-primary, #0b7d78);
         background: var(--color-primary, #0b7d78);
         color: #fff;
@@ -237,6 +249,11 @@
             padding: 0 0.65rem;
         }
 
+        .report-modern-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
         .report-modern-title {
             font-size: 1.55rem;
         }
@@ -286,22 +303,24 @@
 
 <div class="report-modern-shell">
     <header class="report-modern-header">
-        <nav class="report-modern-breadcrumb" aria-label="breadcrumb">
-            <a href="@Url.Action("InsightsReports", "Report")">Reports &amp; Analytics</a>
-            <span>/</span>
-            <span>Learning Summary</span>
-        </nav>
+        <div class="report-modern-header-copy">
+            <nav class="report-modern-breadcrumb" aria-label="breadcrumb">
+                <a href="@Url.Action("InsightsReports", "Report")">Reports &amp; Analytics</a>
+                <span>/</span>
+                <span>Learning Summary</span>
+            </nav>
 
-        <h1 class="report-modern-title">Learning Summary Report</h1>
-        <p class="report-modern-subtitle">Track completion, activity trends, and key adoption metrics.</p>
-    </header>
+            <h1 class="report-modern-title">Learning Summary Report</h1>
+            <p class="report-modern-subtitle">Track completion, activity trends, and key adoption metrics.</p>
+        </div>
 
-    <div class="report-modern-toolbar">
         <a href="@Url.Action("InsightsReports", "Report")" class="report-back-btn">
             <i class="fa fa-arrow-left"></i>
             Back to Reports
         </a>
+    </header>
 
+    <div class="report-modern-toolbar">
         <a id="generateReportBtn" href="#" class="btn"
            data-loading-text="Exporting..."
            data-original-text="<i class='fa fa-download fa-sm'></i> Export Report">

@@ -668,6 +668,12 @@ body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_me
     font-weight: 300 !important;
 }
 
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.open,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active.open {
+    font-weight: 800 !important;
+}
+
 body.admin-modern-view .learner-menu-bar {
     height: 100dvh;
     min-height: 100vh;

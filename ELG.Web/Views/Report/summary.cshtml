@@ -117,9 +117,14 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Training Progress</h1>
-    <a id="generateReportBtn" href="#" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                            data-loading-text="Exporting..."
-                            data-original-text="<i class='fa fa-download fa-sm'></i> Export Report"><i class="fa fa-download fa-sm"></i> Export Report</a>
+    <div class="d-flex align-items-center gap-2">
+        <a href="@Url.Action("InsightsReports", "Report")" class="d-sm-inline-block btn btn-sm btn-outline-secondary shadow-sm">
+            <i class="fa fa-arrow-left fa-sm"></i> Back to Reports
+        </a>
+        <a id="generateReportBtn" href="#" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                                data-loading-text="Exporting..."
+                                data-original-text="<i class='fa fa-download fa-sm'></i> Export Report"><i class="fa fa-download fa-sm"></i> Export Report</a>
+    </div>
 </div>
 
 <div id="div-card-container" class="container mb-4">

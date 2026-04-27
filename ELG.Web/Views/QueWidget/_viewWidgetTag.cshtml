@@ -1,5 +1,39 @@
 ﻿
-<div class="modal fade" id="viewWidgetTagModal" tabindex="-1" aria-labelledby="viewWidgetTagTitle" aria-hidden="true">
+<style>
+    .qw-tag-modal .modal-content {
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .qw-tag-modal .modal-header {
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border-bottom: 1px solid #d8e9ec;
+    }
+
+    .qw-tag-modal .modal-title {
+        color: #14323c !important;
+    }
+
+    .qw-tag-modal .modal-footer {
+        border-top: 1px solid #e3eef1;
+    }
+
+    .qw-tag-modal .script-holder {
+        border: 1px solid #e1ecef;
+        border-radius: 10px;
+        background: #fbfefe;
+        padding: 0.85rem;
+    }
+
+    .qw-tag-modal textarea {
+        background: #f7fafb;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="modal fade qw-tag-modal" id="viewWidgetTagModal" tabindex="-1" aria-labelledby="viewWidgetTagTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <!-- Header -->

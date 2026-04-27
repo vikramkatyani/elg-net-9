@@ -26,7 +26,40 @@ namespace ELG.Web.Areas.Learner.Controllers
         public ActionResult List()
         {
             ViewBag.Title = "Documents";
+            var learnerMenuJson = SessionHelper.OrgLearnerAvailableMenu as string;
+            var adminMenuJson = SessionHelper.OrgAdminAvailableMenu as string;
+            var learnerModernSetting = GetModernViewEnabledSetting(learnerMenuJson);
+            var isModern = learnerModernSetting ?? (GetModernViewEnabledSetting(adminMenuJson) ?? false);
+            SessionHelper.LearnerViewMode = isModern ? "modern" : "classic";
+
+            if (string.Equals(SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase))
+                return View("ListModern");
+
             return View();
+        }
+
+        private static bool? GetModernViewEnabledSetting(string menuJson)
+        {
+            if (string.IsNullOrWhiteSpace(menuJson))
+            {
+                return null;
+            }
+
+            try
+            {
+                var menuObj = Newtonsoft.Json.Linq.JObject.Parse(menuJson);
+                if (menuObj.TryGetValue("modernViewEnabled", StringComparison.OrdinalIgnoreCase, out var toggleToken)
+                    && toggleToken.Type == Newtonsoft.Json.Linq.JTokenType.Boolean)
+                {
+                    return (bool)toggleToken;
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         // GET: Learner/Document/Preview

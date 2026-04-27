@@ -6,43 +6,130 @@
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
 
-<div class="x_panel tile">
-    <div class="x_title">
-        <!-- Page Heading -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h3 text-primary fw-bold mb-0">
-                <strong id="coursename-header"></strong> - Course Widgets
-            </h1>
-            <div class="d-flex gap-2">
-                <button id="bckToCourseBtn" class="btn btn-secondary" type="button">
-                    <i class="fa fa-arrow-circle-left me-1"></i> Back
-                </button>
-                <button id="btnAddCourseWidgetPopUp" class="btn btn-primary" type="button">
-                    <i class="fa fa-plus-circle me-1"></i> Add Widget
-                </button>
+<div id="qwCourseWidgetsPage" class="qw-cw-shell">
+    <section class="qw-cw-hero">
+        <div>
+            <h1 class="qw-cw-title"><strong id="coursename-header"></strong> - Course Widgets</h1>
+            <p class="qw-cw-subtitle">Create, tag, and manage widgets linked to this course.</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <button id="bckToCourseBtn" class="btn btn-outline-secondary" type="button">
+                <i class="fa fa-arrow-circle-left me-1"></i> Back
+            </button>
+            <button id="btnAddCourseWidgetPopUp" class="btn btn-primary qw-cw-btn-primary" type="button">
+                <i class="fa fa-plus-circle me-1"></i> Add Widget
+            </button>
+        </div>
+    </section>
+
+    <section class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div id="divMessage_coursewidget" class="mb-3"></div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover align-middle mb-0" id="courseWidgetList" width="100%" cellspacing="0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Type</th>
+                            <th>Que</th>
+                            <th>Reference</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
-    </div>
-
-    <div class="x_content">
-        <div id="divMessage_coursewidget" class="mb-3"></div>
-        <div class="table-responsive p-3">
-            <table class="table table-bordered table-striped table-hover align-middle" id="courseWidgetList" width="100%" cellspacing="0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Type</th>
-                        <th>Que</th>
-                        <th>Reference</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
+    </section>
 </div>
 
-    @Html.Partial("_addCourseWidget")
-    @Html.Partial("_viewWidgetTag")
+<style>
+    #qwCourseWidgetsPage {
+        --qw-cw-brand: var(--color-primary, #0b7d78);
+        --qw-cw-brand-alt: var(--color-secondary, #0f968f);
+        --qw-cw-border: #d8e9ec;
+    }
+
+    #qwCourseWidgetsPage.qw-cw-shell,
+    #qwCourseWidgetsPage .x_content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    #qwCourseWidgetsPage .qw-cw-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid var(--qw-cw-border);
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    #qwCourseWidgetsPage .qw-cw-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #14323c;
+    }
+
+    #qwCourseWidgetsPage .qw-cw-subtitle {
+        margin: 0.28rem 0 0;
+        color: #637f8a;
+    }
+
+    #qwCourseWidgetsPage .card {
+        border: 1px solid #deeaee !important;
+        border-radius: 12px;
+    }
+
+    #qwCourseWidgetsPage .card-body {
+        padding: 0.9rem;
+    }
+
+    #qwCourseWidgetsPage .qw-cw-btn-primary {
+        background: var(--qw-cw-brand);
+        border-color: var(--qw-cw-brand);
+        color: #fff;
+    }
+
+    #qwCourseWidgetsPage .qw-cw-btn-primary:hover,
+    #qwCourseWidgetsPage .qw-cw-btn-primary:focus {
+        background: var(--qw-cw-brand-alt);
+        border-color: var(--qw-cw-brand-alt);
+        color: #fff;
+    }
+
+    #qwCourseWidgetsPage #divMessage_coursewidget.show {
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    #qwCourseWidgetsPage #courseWidgetList thead th {
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 767px) {
+        #qwCourseWidgetsPage .qw-cw-hero {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        #qwCourseWidgetsPage .qw-cw-hero .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@Html.Partial("_addCourseWidget")
+@Html.Partial("_viewWidgetTag")
     
 
 @section Scripts{

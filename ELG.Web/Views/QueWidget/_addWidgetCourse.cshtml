@@ -1,5 +1,50 @@
 ﻿
-<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+<style>
+    .qw-modal {
+        --qw-brand: var(--color-primary, #0b7d78);
+        --qw-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+    .qw-modal .modal-content {
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .qw-modal .modal-header {
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border-bottom: 1px solid #d8e9ec;
+    }
+
+    .qw-modal .modal-title {
+        color: #14323c !important;
+    }
+
+    .qw-modal .modal-footer {
+        border-top: 1px solid #e3eef1;
+    }
+
+    .qw-modal .form-control:focus,
+    .qw-modal .form-select:focus {
+        border-color: #78b7bf;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.16);
+    }
+
+    .qw-modal .btn-primary {
+        background: var(--qw-brand);
+        border-color: var(--qw-brand);
+        color: #fff;
+    }
+
+    .qw-modal .btn-primary:hover,
+    .qw-modal .btn-primary:focus {
+        background: var(--qw-brand-alt);
+        border-color: var(--qw-brand-alt);
+        color: #fff;
+    }
+</style>
+
+<div class="modal fade qw-modal" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Header -->
@@ -40,7 +85,7 @@
 
 <!--update Modal-->
 
-<div class="modal fade" id="updateCourseModal" tabindex="-1" aria-labelledby="updateCourseModalLabel" aria-hidden="true">
+<div class="modal fade qw-modal" id="updateCourseModal" tabindex="-1" aria-labelledby="updateCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Header -->
@@ -79,7 +124,7 @@
 </div>
 
 
-<div class="modal fade" id="viewGlobalLinkModal" tabindex="-1" aria-labelledby="viewGlobalLinkTitle" aria-hidden="true">
+<div class="modal fade qw-modal" id="viewGlobalLinkModal" tabindex="-1" aria-labelledby="viewGlobalLinkTitle" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Modal Header -->

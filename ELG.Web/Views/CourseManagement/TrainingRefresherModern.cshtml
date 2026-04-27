@@ -6,7 +6,7 @@
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
 
-<div id="cmTrainingRefresherPage" class="x_panel tile cm-tr-shell">
+<div id="cmTrainingRefresherPage" class="cm-tr-shell">
     <div class="cm-tr-hero">
         <div>
             <h1 class="cm-tr-title">Refresher Training</h1>
@@ -93,11 +93,6 @@
     #cmTrainingRefresherPage {
         --cm-tr-brand: var(--color-primary, #0b7d78);
         --cm-tr-brand-alt: var(--color-secondary, #0f968f);
-        border: 1px solid #d7e7eb;
-        border-radius: 16px;
-        background: radial-gradient(circle at 100% 0, #f4fbff 0%, #ffffff 48%);
-        box-shadow: 0 14px 30px rgba(19, 48, 56, 0.08);
-        padding: 1rem;
     }
 
     #cmTrainingRefresherPage.cm-tr-shell,
@@ -108,21 +103,38 @@
     }
 
     #cmTrainingRefresherPage .cm-tr-hero {
-        margin-bottom: 0.95rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
     }
 
     #cmTrainingRefresherPage .cm-tr-title {
         margin: 0;
-        font-size: clamp(1.25rem, 1.2rem + 0.35vw, 1.55rem);
-        line-height: 1.18;
+        font-size: 1.5rem;
         font-weight: 800;
-        color: #214c59;
+        letter-spacing: 0.2px;
+        color: #14323c;
     }
 
     #cmTrainingRefresherPage .cm-tr-subtitle {
         margin: 0.28rem 0 0;
-        color: #59717b;
-        font-size: 0.93rem;
+        color: #637f8a;
+    }
+
+    #cmTrainingRefresherPage #divMessage_LearnerAssignedModule.show {
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.85rem;
     }
 
     #cmTrainingRefresherPage .cm-tr-filter-card,

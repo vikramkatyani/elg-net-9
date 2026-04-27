@@ -145,6 +145,26 @@ var myCoursesModernHandler = (function () {
         modalTitle.textContent = course.CourseName;
 
         var html = '<div class="lm-modal-submodules">';
+        var courseStatusText = normalizeStatus(course.ProgressStatus).label.toUpperCase();
+        var courseLaunchData = 'data-course-id="' + course.CourseId + '" ' +
+            'data-url="' + escapeAttr(course.CoursePath || '') + '" ' +
+            'data-status="' + escapeAttr(course.ProgressStatus || '') + '" ' +
+            'data-reset-on="' + escapeAttr(course.CourseResetOn || '') + '"';
+
+        html += '<div class="lm-modal-submodule-item is-main-package">' +
+            '<div class="lm-modal-submodule-info">' +
+            '<div class="lm-modal-submodule-name">' +
+            escapeHtml(course.CourseName || 'Course Package') +
+            '</div>' +
+            '<div class="lm-modal-submodule-status">' + escapeHtml(courseStatusText) + '</div>' +
+            '</div>' +
+            '<div class="lm-modal-submodule-action">' +
+            '<button class="btn lm-modal-launch-btn lm-launch-course" ' + courseLaunchData + '>' +
+            '<i class="fa fa-play"></i> Launch' +
+            '</button>' +
+            '</div>' +
+            '</div>';
+
         course.SubModuleList.forEach(function (sm) {
             var statusText = (sm.SubModuleStatus || 'Not accessed').toUpperCase();
             var actionLabel = (sm.RAID && sm.RAID > 0) ? 'View' : 'Launch';

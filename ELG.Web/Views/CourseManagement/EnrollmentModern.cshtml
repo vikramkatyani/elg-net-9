@@ -6,7 +6,7 @@
     Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
 }
 
-<div id="cmEnrollmentPage" class="x_panel tile cm-enroll-shell">
+<div id="cmEnrollmentPage" class="cm-enroll-shell">
     <div class="cm-enroll-hero">
         <div>
             <h1 class="cm-enroll-title">Hand-Picked Enrollment - Courses</h1>
@@ -57,11 +57,6 @@
         <div id="divMessage_AllocateModule"></div>
 
         <div id="div-report-container" class="cm-enroll-table-card">
-            <div id="divLicAllocateInfoMessage" class="cm-enroll-info">
-                <i class="fa fa-info-circle"></i>
-                <span>The results only display users who do not currently hold a license for the selected course.</span>
-            </div>
-
             <div class="cm-enroll-table-actions">
                 <button type="button" class="btn cm-enroll-btn cm-enroll-btn-dark disabled" id="btnAllocateToSelected"
                         data-bs-toggle="tooltip" data-toggle="tooltip" title="Select some learners"
@@ -95,11 +90,6 @@
     #cmEnrollmentPage {
         --cm-enroll-brand: var(--color-primary, #0b7d78);
         --cm-enroll-brand-alt: var(--color-secondary, #0f968f);
-        border: 1px solid #d7e7eb;
-        border-radius: 16px;
-        background: radial-gradient(circle at 100% 0, #f4fbff 0%, #ffffff 48%);
-        box-shadow: 0 14px 30px rgba(19, 48, 56, 0.08);
-        padding: 1rem;
     }
 
     #cmEnrollmentPage.cm-enroll-shell,
@@ -113,22 +103,25 @@
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 0.8rem;
-        margin-bottom: 0.95rem;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
     }
 
     #cmEnrollmentPage .cm-enroll-title {
         margin: 0;
-        font-size: clamp(1.25rem, 1.2rem + 0.35vw, 1.55rem);
-        line-height: 1.18;
+        font-size: 1.5rem;
         font-weight: 800;
-        color: #214c59;
+        letter-spacing: 0.2px;
+        color: #14323c;
     }
 
     #cmEnrollmentPage .cm-enroll-subtitle {
         margin: 0.28rem 0 0;
-        color: #59717b;
-        font-size: 0.93rem;
+        color: #637f8a;
     }
 
     #cmEnrollmentPage .cm-enroll-filter-card,
@@ -229,6 +222,16 @@
         padding: 0.9rem;
     }
 
+    #cmEnrollmentPage #divMessage_AllocateModule.show {
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.85rem;
+    }
+
     #cmEnrollmentPage .cm-enroll-info {
         display: flex;
         gap: 0.5rem;
@@ -237,8 +240,8 @@
         border-radius: 10px;
         background: #f5fbff;
         color: #3e5d69;
-        padding: 0.62rem 0.7rem;
-        margin-bottom: 0.7rem;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
         font-size: 0.85rem;
     }
 

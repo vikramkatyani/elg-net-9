@@ -1,5 +1,57 @@
 ﻿
-<div class="modal fade" id="addCourseWidgetModal" tabindex="-1" aria-labelledby="addCourseWidgetModalLabel" aria-hidden="true">
+<style>
+    .qw-widget-modal {
+        --qw-brand: var(--color-primary, #0b7d78);
+        --qw-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+    .qw-widget-modal .modal-content {
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .qw-widget-modal .modal-header {
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border-bottom: 1px solid #d8e9ec;
+    }
+
+    .qw-widget-modal .modal-title {
+        color: #14323c !important;
+    }
+
+    .qw-widget-modal .modal-footer {
+        border-top: 1px solid #e3eef1;
+    }
+
+    .qw-widget-modal .wdgt-field-container {
+        border: 1px solid #e1ecef;
+        border-radius: 10px;
+        background: #fbfefe;
+        padding: 0.9rem;
+    }
+
+    .qw-widget-modal .form-control:focus,
+    .qw-widget-modal .form-select:focus {
+        border-color: #78b7bf;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.16);
+    }
+
+    .qw-widget-modal .btn-primary {
+        background: var(--qw-brand);
+        border-color: var(--qw-brand);
+        color: #fff;
+    }
+
+    .qw-widget-modal .btn-primary:hover,
+    .qw-widget-modal .btn-primary:focus {
+        background: var(--qw-brand-alt);
+        border-color: var(--qw-brand-alt);
+        color: #fff;
+    }
+</style>
+
+<div class="modal fade qw-widget-modal" id="addCourseWidgetModal" tabindex="-1" aria-labelledby="addCourseWidgetModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
