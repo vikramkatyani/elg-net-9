@@ -9,6 +9,7 @@ using ELG.DAL.OrgAdminDAL;
 using ELG.DAL.LearnerDAL;
 using ELG.DAL.Utilities;
 using System.Globalization;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Hosting;
@@ -731,13 +732,36 @@ namespace ELG.Web.Controllers
         #endregion
         
         #region Forget Pwd
-        public ActionResult ForgetPassword(ForgetPasswordViewModel frgtPwd)
+        [HttpGet]
+        public ActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgetPassword([FromBody] ForgetPasswordViewModel frgtPwd)
         {
             ELG.Model.OrgAdmin.ControllerResponse response = new ELG.Model.OrgAdmin.ControllerResponse();
             try
             {
+                // Accept both JSON and form payloads to avoid brittle binding failures.
+                var email = frgtPwd?.Email;
+                if (string.IsNullOrWhiteSpace(email) && Request.HasFormContentType)
+                {
+                    email = Request.Form["Email"].FirstOrDefault();
+                }
 
-                if (ModelState.IsValid)
+                email = email?.Trim();
+
+                if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
+                {
+                    response.Err = 1;
+                    response.Url = "";
+                    response.Message = "Please enter valid email.";
+                    return Json(response);
+                }
+
+                if (ModelState.IsValid || !string.IsNullOrWhiteSpace(email))
                 {
                     var acc = new OrgAdminAccountRep();
 
@@ -753,7 +777,7 @@ namespace ELG.Web.Controllers
                         return Json(response);
                     }
 
-                    List<OrgAdminInfo> learner = acc.GetAdmin(orgDomainDetails.CompanyId, frgtPwd.Email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
+                    List<OrgAdminInfo> learner = acc.GetAdmin(orgDomainDetails.CompanyId, email, "", CommonHelper.GetAppSettingValue("LMS_PasswordEncryptionKey"), isMasterPwd);
                     if (learner != null && learner.Count > 1)
                     {
                         // TODO ASP.NET membership should be replaced with ASP.NET Core identity. For more details see https://docs.microsoft.com/aspnet/core/migration/proper-to-2x/membership-to-core-identity.
@@ -800,7 +824,10 @@ namespace ELG.Web.Controllers
                 }
                 else
                 {
-                    return View();
+                    response.Err = 1;
+                    response.Url = "";
+                    response.Message = "Please enter valid email.";
+                    return Json(response);
                 }
 
             }

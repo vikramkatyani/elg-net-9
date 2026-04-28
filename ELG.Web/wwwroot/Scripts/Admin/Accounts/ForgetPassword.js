@@ -1,5 +1,9 @@
 ﻿var loading = false;
 
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 //const username = document.querySelector('#learnerForgetpwd #Email');
 //username.addEventListener('keydown', function (event) {
 //    if (event.ctrlKey && (event.key === 'c' || event.key === 'v' || event.key === 'x')) {
@@ -16,26 +20,38 @@ var forgetPwdHandler = (function () {
     //login button click
     $submitButton.click(function (e) {
         e.preventDefault();
-        var btn = $(this)
+        var btn = $(this);
+        var email = ($userName.val() || "").trim();
+
+        if (!email) {
+            showError("Please enter your valid email address.");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showError("Please enter a valid email address.");
+            return;
+        }
+
         if (!loading) {
             UTILS.disableButton(btn);
             if ($form.valid()) {
                 var url = hdnBaseUrl + "Account/ForgetPassword";
-                var data = $form.serialize();
+                var data = { Email: email };
                 UTILS.makeAjaxCall(url, data, function (response) {
-                    if (response.Err == 0 && response.Url !="")
+                    if (response.Err == 0 && response.Url != "")
                         window.location.href = response.Url;
-                    else if (response.Err == 0 && response.Url != "")
+                    else if (response.Err == 0 && response.Url == "")
                         showMessage(response.Message);
                     else
                         showError(response.Message);
                     UTILS.resetButton(btn);
                 }, function (er) {
                     UTILS.resetButton(btn);
-                    showError(er);
+                    showError("Something went wrong. Please try again.");
                 });
             } else {
-                showError("Please enter valid email.");
+                showError("Please enter a valid email address.");
                 UTILS.resetButton(btn);
             }
         }
@@ -112,16 +128,17 @@ var validateForgotCompanyHandler = (function () {
 
 })();
 
-function showError(message) {
-    $alertBox = $('#divErrorMessage');
-    $alertBox.removeAttr("class").attr("class", "alert alert-danger collapse");
-    $alertBox.html(message);
-    $alertBox.show()
-}
-
 function showMessage(message) {
     $alertBox = $('#divErrorMessage');
-    $alertBox.removeAttr("class").attr("class", "alert alert-success collapse");
+    $alertBox.removeAttr("class").attr("class", "alert alert-success");
     $alertBox.html(message);
-    $alertBox.show()
+    $alertBox.show();
 }
+
+function showError(message) {
+    $alertBox = $('#divErrorMessage');
+    $alertBox.removeAttr("class").attr("class", "alert alert-danger");
+    $alertBox.html(message);
+    $alertBox.show();
+}
+
