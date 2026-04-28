@@ -334,9 +334,15 @@ var rightsAllocationHandler = (function () {
         const message = getConfirmationText(roleData.title, roleData.description);
 
         if (confirm(message)) {
+            var learner = parseInt($('#hdnSelectedLearnerId').val(), 10) || 0;
+            if (!learner || learner <= 0) {
+                UTILS.Alert.show($alert, "error", "Invalid learner selected. Please reload the page and try again.");
+                return;
+            }
 
             var url = hdnBaseUrl + "RoleManagement/AssignAdminRights";
             var data = {
+                learner: learner,
                 adminRight : 1
             }
             UTILS.makeAjaxCall(url, data, function (res) {

@@ -218,12 +218,30 @@ namespace ELG.Web.Controllers
             _env = env;
         }
 
+        public sealed class AssignGlobalAdminRightsRequest
+        {
+            public long learner { get; set; }
+            public int adminRight { get; set; }
+        }
+
         [HttpPost]
-        public ActionResult AssignAdminRights(Int32 adminRight)
+        public ActionResult AssignAdminRights([FromBody] AssignGlobalAdminRightsRequest request)
         {
             try
             {
-                Int64 learnerId = SessionHelper.CurrentUserId;
+                if (request == null)
+                {
+                    return Content(System.Text.Json.JsonSerializer.Serialize(new { success = 0, message = "Invalid request payload." }), "application/json");
+                }
+
+                Int64 learnerId = request.learner > 0 ? request.learner : SessionHelper.CurrentUserId;
+                int adminRight = request.adminRight;
+
+                if (learnerId <= 0 || adminRight <= 0)
+                {
+                    return Content(System.Text.Json.JsonSerializer.Serialize(new { success = 0, message = "Invalid learner or admin role." }), "application/json");
+                }
+
                 AdminRep adminRep = new AdminRep();
                 int result = adminRep.AssignGlobalAdminRights(learnerId, adminRight);
 
