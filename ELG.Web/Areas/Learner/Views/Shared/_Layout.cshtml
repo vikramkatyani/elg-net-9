@@ -114,7 +114,6 @@
         .learner-modern-view #myCourseLink > a::before   { content: "\f02d"; }
         .learner-modern-view #raLink > a::before          { content: "\f132"; }
         .learner-modern-view #docLink > a::before         { content: "\f15b"; }
-        .learner-modern-view #settingsLink > a::before    { content: "\f013"; }
         .learner-modern-view #logoutLink > a::before      { content: "\f08b"; }
 
         .learner-modern-view .learner-menu .child_menu {
@@ -163,6 +162,63 @@
             color: #352823;
         }
 
+        .learner-modern-view .profile.parent-menu {
+            position: relative;
+            padding-right: 42px;
+        }
+
+        .learner-modern-view .profile-menu-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8c7c72 !important;
+            text-decoration: none;
+            border: 0;
+            background: transparent;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .learner-modern-view .profile.parent-menu.open .profile-menu-toggle .fa {
+            transform: rotate(180deg);
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(100% + 10px);
+            margin: 0;
+            padding: 8px;
+            list-style: none;
+            background: #ffffff;
+            border: 1px solid #ded9d4;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(42, 28, 24, 0.12);
+            z-index: 5;
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu li {
+            margin: 0;
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu li a {
+            display: block;
+            color: var(--menu-text-color) !important;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu li a:hover,
+        .learner-modern-view .profile.parent-menu .profile-child-menu li a.active {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
         .learner-modern-view .learner-viewmode-item {
             margin-left: 0;
             margin-right: 0;
@@ -205,6 +261,10 @@
             dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
                 ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
                 : null;
+
+            var isModernViewMode = string.Equals(ELG.Web.Helper.SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase);
+            var currentPath = (Context?.Request?.Path.Value ?? string.Empty).ToLowerInvariant();
+            var isLearnerSettingsPage = currentPath.Contains("/learner/home/myprofile") || currentPath.Contains("/learner/home/changepassword");
         }
         <nav class="learner-menu-bar">
             <div class="logo">
@@ -244,15 +304,18 @@
                     </li>
                 }
 
-                <li class="nav-item parent-menu" id="settingsLink">
-                    <a class="parent-menu-a">
-                        <i class="fa fa-cog"></i> Settings <i class="fa fa-chevron-down"></i>
-                    </a>
-                    <ul class="nav child_menu">
-                        <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ViewBag.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })"> Profile</a></li>
-                        <li><a id="menu-user-password" href="@Url.Action("ChangePassword", "Home")"> Update password </a></li>
-                    </ul>
-                </li>
+                @if (!isModernViewMode)
+                {
+                    <li class="nav-item parent-menu" id="settingsLink">
+                        <a class="parent-menu-a">
+                            <i class="fa fa-cog"></i> Settings <i class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul class="nav child_menu">
+                            <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ViewBag.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })"> Profile</a></li>
+                            <li><a id="menu-user-password" href="@Url.Action("ChangePassword", "Home")"> Update password </a></li>
+                        </ul>
+                    </li>
+                }
             </ul>
 
             <div class="line-partition mx-4 mt-5"></div>
@@ -265,7 +328,6 @@
                         </a>
                     </li>
                 }
-                @Html.Partial("_LearnerViewModeToggle")
                 <li class="nav-item" id="logoutLink">
                     <a id="menu-logout" href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class="fa fa-power-off"></i> Log Out
@@ -274,7 +336,7 @@
             </ul>
 
             <!-- Profile Section -->
-            <div class="profile">
+            <div class="profile @(isModernViewMode ? "parent-menu" : string.Empty)" id="userProfileMenu">
                 @{
                     if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
                     {
@@ -289,6 +351,16 @@
                     <span>Welcome,</span>
                     <h2>@(ELG.Web.Helper.SessionHelper.UserDisplayName ?? "User")</h2>
                 </div>
+                @if (isModernViewMode)
+                {
+                    <a class="parent-menu-a profile-menu-toggle" href="#" aria-label="Open user settings">
+                        <span class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu profile-child-menu">
+                        <li><a class="user-profile-btn @(isLearnerSettingsPage && currentPath.Contains("/learner/home/myprofile") ? "active" : string.Empty)" id="profile-menu-user-profile" data-id="btnUserProfile-@ViewBag.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })">Profile</a></li>
+                        <li><a class="@(isLearnerSettingsPage && currentPath.Contains("/learner/home/changepassword") ? "active" : string.Empty)" id="profile-menu-user-password" href="@Url.Action("ChangePassword", "Home")">Update password</a></li>
+                    </ul>
+                }
             </div>
         </nav>
 
