@@ -330,6 +330,8 @@ namespace ELG.DAL.LearnerDAL
                                 que.Order = Convert.ToInt32(item.intOrder);
                                 que.QuestionId = Convert.ToInt64(item.intQuestionID);
                                 que.QuestionText = item.strQuestion;    
+                                que.Instructions = item.strText;
+                                que.StrAdditionalText = item.strText;
                                 que.AnswerID = Convert.ToInt64(item.intanswerid);                            
                                 
                             }
@@ -341,6 +343,8 @@ namespace ELG.DAL.LearnerDAL
                                 que.Order = Convert.ToInt32(item.intOrder);
                                 que.QuestionId = Convert.ToInt64(item.intQuestionID);
                                 que.QuestionText = item.strQuestion;
+                                que.Instructions = item.strText;
+                                que.StrAdditionalText = item.strText;
                                 que.AnswerID = Convert.ToInt64(item.intanswerid);
                             }
 
@@ -400,6 +404,8 @@ namespace ELG.DAL.LearnerDAL
                                 que.Order = Convert.ToInt32(item.intOrder);
                                 que.QuestionId = Convert.ToInt64(item.intQuestionID);
                                 que.QuestionText = item.strQuestion;
+                                que.Instructions = item.strText;
+                                que.StrAdditionalText = item.strText;
                                 que.AnswerID = Convert.ToInt64(item.intanswerid);
 
                             }
@@ -411,6 +417,8 @@ namespace ELG.DAL.LearnerDAL
                                 que.Order = Convert.ToInt32(item.intOrder);
                                 que.QuestionId = Convert.ToInt64(item.intQuestionID);
                                 que.QuestionText = item.strQuestion;
+                                que.Instructions = item.strText;
+                                que.StrAdditionalText = item.strText;
                                 que.AnswerID = Convert.ToInt64(item.intanswerid);
                             }
 

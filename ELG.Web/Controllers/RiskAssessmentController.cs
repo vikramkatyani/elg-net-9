@@ -302,6 +302,12 @@ namespace ELG.Web.Controllers
                         if (questionId <= 0) continue;
                         savedQuestions++;
 
+                        int instructionUpdateResult = moduleRep.UpdateRAQuestionAdditionalText(questionId, ques.Instructions);
+                        if (instructionUpdateResult <= 0)
+                        {
+                            Logger.Error($"Failed to persist strAdditionalText for questionId={questionId}, courseId={raCourseId}");
+                        }
+
                         foreach (var opt in ques.Options)
                         {
                             var o = new ELG.Model.OrgAdmin.RiskAssessmentQuestionOption

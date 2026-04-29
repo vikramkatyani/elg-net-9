@@ -1267,6 +1267,36 @@ namespace ELG.DAL.OrgAdminDAL
         }
 
         /// <summary>
+        /// Persist additional instruction text for a risk assessment question.
+        /// </summary>
+        public int UpdateRAQuestionAdditionalText(Int64 questionId, string additionalText)
+        {
+            try
+            {
+                if (questionId <= 0)
+                {
+                    return 0;
+                }
+
+                using (var context = new lmsdbEntities())
+                {
+                    var affected = context.Database.ExecuteSqlCommand(
+                                                @"UPDATE tbQuestion
+                                                    SET strAdditionalText = @p0
+                                                    WHERE intQuestionID = @p1",
+                        additionalText ?? string.Empty,
+                        questionId);
+
+                    return affected;
+                }
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
         /// Create new Risk assessment question option
         /// </summary>
         /// <param name="option"></param>
