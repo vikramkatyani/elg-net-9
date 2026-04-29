@@ -124,7 +124,7 @@ var documentReportHandler = (function () {
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionDropdown-${id}">
                         ${assignBtn}
-                        <li><a class="dropdown-item" href="${data.DocumentPath}" target="_blank" id="preview-doc-${id}">
+                        <li><a class="dropdown-item" href="#" id="preview-doc-${id}" onclick="documentReportHandler.previewDocument(this)">
                             <i class="fa fa-eye me-2"></i>Preview</a></li>
                     </ul>
                 </div>`;
@@ -288,11 +288,35 @@ var documentReportHandler = (function () {
     }
 
 
+    function previewDocument(btn) {
+        let documentTable = $('#orgDocumentList').DataTable();
+        var obj = {
+            docPath: documentTable.row(btn.closest('tr')).data()["DocumentPath"]
+        };
+
+        $.ajax({
+            type: "POST",
+            url: hdnBaseUrl + 'Document/GetDocumentSasUrl',
+            data: JSON.stringify(obj),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response) {
+                    window.open(response, '_blank');
+                }
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    }
+
     return {
         init: init,
         renderCategoryDropDown: renderCategoryDropDown,
         assignDocumentToGroup: assignDocumentToGroup,
-        removeDocumentFromGroup: removeDocumentFromGroup
+        removeDocumentFromGroup: removeDocumentFromGroup,
+        previewDocument: previewDocument
     }
 })();
 

@@ -212,6 +212,52 @@ namespace ELG.Web.Areas.Learner.Controllers
             }
         }
 
+        // GET: Download document through server proxy (works for private Azure Blob containers)
+        [HttpGet]
+        public async Task<IActionResult> DownloadDocument(int id)
+        {
+            try
+            {
+                var docRep = new DocumentRep();
+                Document doc = docRep.GetDocumentDetails(id, SessionHelper.UserId);
+                if (doc == null || string.IsNullOrEmpty(doc.DocumentPath))
+                    return NotFound();
+
+                if (!doc.DocumentPath.Contains(".blob.core.windows.net"))
+                    return BadRequest("Document is not stored in Azure Blob Storage.");
+
+                var connectionString = CommonHelper.GetAppSettingValue("AZStorageConnectionString");
+                var blobServiceClient = new BlobServiceClient(connectionString);
+
+                Uri uri = new Uri(doc.DocumentPath);
+                string containerName = uri.Segments[1].TrimEnd('/');
+                string blobPath = string.Join("", uri.Segments.Skip(2));
+                string fileName = Path.GetFileName(blobPath);
+
+                var blobClient = blobServiceClient.GetBlobContainerClient(containerName).GetBlobClient(blobPath);
+                var blobStream = await blobClient.OpenReadAsync();
+
+                string contentType = "application/octet-stream";
+                string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                if (ext == ".pdf") contentType = "application/pdf";
+                else if (ext == ".docx") contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                else if (ext == ".doc") contentType = "application/msword";
+                else if (ext == ".xlsx") contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                else if (ext == ".pptx") contentType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+
+                string downloadName = !string.IsNullOrEmpty(doc.DocumentName)
+                    ? doc.DocumentName + ext
+                    : fileName;
+
+                return File(blobStream, contentType, downloadName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return StatusCode(500);
+            }
+        }
+
         /// <summary>
         /// Generates a SAS URL for Azure Blob Storage with read permissions valid for 1 hour
         /// </summary>

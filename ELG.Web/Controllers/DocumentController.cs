@@ -20,6 +20,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ELG.Web.Controllers
 {
+    public class DocumentSasRequest
+    {
+        public string DocPath { get; set; }
+    }
+
     public class DocumentController : Controller
     {
         #region Category
@@ -554,6 +559,57 @@ namespace ELG.Web.Controllers
                 Logger.Error(ex.Message, ex);
                 return View();
             }
+        }
+
+        // Generate a SAS URL for a blob document so it can be previewed in the browser
+        [HttpPost]
+        public ActionResult GetDocumentSasUrl([FromBody] DocumentSasRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request?.DocPath))
+                    return Json(null);
+
+                string sasUrl = GenerateBlobSasUrl(request.DocPath);
+                return Json(sasUrl);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return Json(request?.DocPath);
+            }
+        }
+
+        private string GenerateBlobSasUrl(string blobUrl)
+        {
+            if (string.IsNullOrEmpty(blobUrl) || !blobUrl.Contains(".blob.core.windows.net"))
+                return blobUrl;
+
+            var connectionString = ELG.Web.Helper.CommonHelper.GetAppSettingValue("AZStorageConnectionString");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            Uri uri = new Uri(blobUrl);
+            string containerName = uri.Segments[1].TrimEnd('/');
+            string blobPath = string.Join("", uri.Segments.Skip(2));
+
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            BlobClient blobClient = containerClient.GetBlobClient(blobPath);
+
+            if (blobClient.CanGenerateSasUri)
+            {
+                BlobSasBuilder sasBuilder = new BlobSasBuilder()
+                {
+                    BlobContainerName = containerName,
+                    BlobName = blobPath,
+                    Resource = "b",
+                    StartsOn = DateTimeOffset.UtcNow.AddMinutes(-5),
+                    ExpiresOn = DateTimeOffset.UtcNow.AddHours(1)
+                };
+                sasBuilder.SetPermissions(BlobSasPermissions.Read);
+                return blobClient.GenerateSasUri(sasBuilder).ToString();
+            }
+
+            return blobUrl;
         }
 
         ////get url with token

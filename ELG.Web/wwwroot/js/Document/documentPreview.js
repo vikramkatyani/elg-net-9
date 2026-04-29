@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Download button: triggers browser download via hidden form
+    // Download button: routes through server-side DownloadDocument proxy so private Azure Blob containers work
     const downloadButton = document.querySelector('#download-button');
     if (downloadButton) {
         downloadButton.addEventListener('click', function () {
-            const documentUrl = document.querySelector("#hdnFileDwnldPath").value;
-            if (documentUrl !== "" && documentUrl !== null) {
-                const form = document.createElement('form');
-                form.action = documentUrl;
-                form.method = 'GET';
-                form.style.display = 'none';
-                document.body.appendChild(form);
-                form.submit();
-                form.remove();
+            if (typeof documentDownloadUrl !== 'undefined' && documentDownloadUrl) {
+                // Use server-side download proxy — works regardless of blob container access level
+                window.location.href = documentDownloadUrl;
             } else {
-                alert('No document found.');
+                // Fallback: open the stored URL directly (works for public containers)
+                const documentUrl = document.querySelector('#hdnFileDwnldPath')?.value;
+                if (documentUrl) {
+                    window.location.href = documentUrl;
+                } else {
+                    alert('No document found.');
+                }
             }
         });
     }

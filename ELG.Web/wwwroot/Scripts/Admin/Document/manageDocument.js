@@ -268,7 +268,7 @@ var documentReportHandler = (function () {
                     <ul class="dropdown-menu dropdown-menu-end dm-row-actions-menu" aria-labelledby="actionDropdown-${id}">
                         <li><a class="dropdown-item dm-row-actions-item" href="#" id="edit-doc-${id}" onclick="documentReportHandler.showUpdateDocumentPopUP(this)">
                             <i class="fa fa-edit dm-row-actions-item-icon"></i>Edit</a></li>
-                        <li><a class="dropdown-item dm-row-actions-item" href="${data.DocumentPath}" target="_blank" id="preview-doc-${id}">
+                        <li><a class="dropdown-item dm-row-actions-item" href="#" id="preview-doc-${id}" onclick="documentReportHandler.previewDocument(this)">
                             <i class="fa fa-eye dm-row-actions-item-icon"></i>Preview</a></li>
                         <li><a class="dropdown-item dm-row-actions-item btn-del-doc" href="#" id="delete-doc-${id}" onclick="documentReportHandler.deleteDocument(this)">
                             <i class="fa fa-trash dm-row-actions-item-icon"></i>Delete</a></li>
@@ -518,7 +518,7 @@ var documentReportHandler = (function () {
         
         $.ajax({
             type: "POST",
-            url: hdnBaseUrl + 'Document/GetCloudDocumentURLString',
+            url: hdnBaseUrl + 'Document/GetDocumentSasUrl',
             data: JSON.stringify(obj),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
