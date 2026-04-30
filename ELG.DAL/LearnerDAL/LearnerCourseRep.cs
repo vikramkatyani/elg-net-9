@@ -4,11 +4,20 @@ using System.Linq;
 using ELG.Model.Learner;
 using ELG.DAL.DbEntityLearner;
 using System.Data.Entity.Core.Objects;
+using System.Data.SqlClient;
 
 namespace ELG.DAL.LearnerDAL
 {
     public class LearnerCourseRep
     {
+        private sealed class RAResponseRow
+        {
+            public string strQuestion { get; set; }
+            public string strQuestionOption { get; set; }
+            public bool blnIssue { get; set; }
+            public string strText { get; set; }
+        }
+
         /// <summary>
         /// Get list of all modules assigned to a learner
         /// </summary>
@@ -458,7 +467,34 @@ namespace ELG.DAL.LearnerDAL
 
                 using (learnerDBEntities context = new learnerDBEntities())
                 {
-                    var learnerResponseList = context.lms_learner_getRAResponses(learnerRA.Learner, learnerRA.RACourseID).ToList();
+                    const string sql = @"
+SELECT
+    q.strQuestion,
+    COALESCE(
+        NULLIF(LTRIM(RTRIM(qo.strValue)), ''),
+        NULLIF(LTRIM(RTRIM(qo.strQuestionOption)), ''),
+        CASE
+            WHEN ISNULL(a.blnYes, 0) = 1 THEN 'Yes'
+            WHEN ISNULL(a.blnNo, 0) = 1 THEN 'No'
+            ELSE 'N/A'
+        END
+    ) AS strQuestionOption,
+    CAST(ISNULL(a.blnIssue, 0) AS bit) AS blnIssue,
+    ISNULL(a.strText, '') AS strText
+FROM tbAnswer a
+INNER JOIN tbQuestion q ON q.intQuestionID = a.intQuestionID
+LEFT JOIN tbQuestionOption qo ON qo.intQuestionOptionID = a.intNumeric
+INNER JOIN tbContactCourse cc ON cc.intRiskAssessmentResultID = a.intRiskAssessmentResultID
+WHERE cc.intContactID = @learner
+  AND cc.intCourseID = @course
+ORDER BY q.intOrder, q.intQuestionID;";
+
+                    var learnerResponseList = context.Database.SqlQuery<RAResponseRow>(
+                        sql,
+                        new SqlParameter("@learner", learnerRA.Learner),
+                        new SqlParameter("@course", learnerRA.RACourseID)
+                    ).ToList();
+
                     if (learnerResponseList != null && learnerResponseList.Count > 0)
                     {
                         foreach (var item in learnerResponseList)
@@ -488,7 +524,33 @@ namespace ELG.DAL.LearnerDAL
 
                 using (learnerDBEntities context = new learnerDBEntities())
                 {
-                    var learnerResponseList = context.lms_learner_get_SubModuleRAResponses(learnerRA.Learner, learnerRA.RAResultID).ToList();
+                    const string sql = @"
+SELECT
+    q.strQuestion,
+    COALESCE(
+        NULLIF(LTRIM(RTRIM(qo.strValue)), ''),
+        NULLIF(LTRIM(RTRIM(qo.strQuestionOption)), ''),
+        CASE
+            WHEN ISNULL(a.blnYes, 0) = 1 THEN 'Yes'
+            WHEN ISNULL(a.blnNo, 0) = 1 THEN 'No'
+            ELSE 'N/A'
+        END
+    ) AS strQuestionOption,
+    CAST(ISNULL(a.blnIssue, 0) AS bit) AS blnIssue,
+    ISNULL(a.strText, '') AS strText
+FROM tbAnswer a
+INNER JOIN tbQuestion q ON q.intQuestionID = a.intQuestionID
+LEFT JOIN tbQuestionOption qo ON qo.intQuestionOptionID = a.intNumeric
+WHERE a.intContactID = @learner
+  AND a.intRiskAssessmentResultID = @raResultId
+ORDER BY q.intOrder, q.intQuestionID;";
+
+                    var learnerResponseList = context.Database.SqlQuery<RAResponseRow>(
+                        sql,
+                        new SqlParameter("@learner", learnerRA.Learner),
+                        new SqlParameter("@raResultId", learnerRA.RAResultID)
+                    ).ToList();
+
                     if (learnerResponseList != null && learnerResponseList.Count > 0)
                     {
                         foreach (var item in learnerResponseList)
@@ -613,6 +675,34 @@ namespace ELG.DAL.LearnerDAL
                 using (var context = new learnerDBEntities())
                 {
                     var result = context.lms_learner_createRAResponse(response.AnswerId, response.OptionId, response.IssueText);
+
+                    // Enforce deterministic persistence of selected option and boolean flags.
+                    // This avoids ambiguous mappings where N/A can be persisted/reviewed as Yes.
+                    const string sql = @"
+UPDATE a
+SET
+    a.intNumeric = @optionId,
+    a.strText = ISNULL(@issueText, ''),
+    a.blnIssue = ISNULL(qo.blnIssue, 0),
+    a.blnYes = CASE
+        WHEN UPPER(LTRIM(RTRIM(ISNULL(qo.strQuestionOption, qo.strValue)))) IN ('YES', 'Y', 'TRUE')
+             OR UPPER(LTRIM(RTRIM(ISNULL(qo.strQuestionOption, qo.strValue)))) LIKE 'YES %'
+        THEN 1 ELSE 0 END,
+    a.blnNo = CASE
+        WHEN UPPER(LTRIM(RTRIM(ISNULL(qo.strQuestionOption, qo.strValue)))) IN ('NO', 'N', 'FALSE')
+             OR UPPER(LTRIM(RTRIM(ISNULL(qo.strQuestionOption, qo.strValue)))) LIKE 'NO %'
+        THEN 1 ELSE 0 END
+FROM tbAnswer a
+LEFT JOIN tbQuestionOption qo ON qo.intQuestionOptionID = @optionId
+WHERE a.intAnswerID = @answerId;";
+
+                    context.Database.ExecuteSqlCommand(
+                        sql,
+                        new SqlParameter("@optionId", response.OptionId),
+                        new SqlParameter("@issueText", (object)response.IssueText ?? string.Empty),
+                        new SqlParameter("@answerId", response.AnswerId)
+                    );
+
                     success = 1;
                 }
             }
