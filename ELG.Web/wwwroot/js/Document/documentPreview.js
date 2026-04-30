@@ -1,19 +1,22 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Download button: routes through server-side DownloadDocument proxy so private Azure Blob containers work
     const downloadButton = document.querySelector('#download-button');
+    const hiddenDownloadUrl = (document.querySelector('#hdnFileDwnldPath') || {}).value;
+    const hiddenDocId = (document.querySelector('#hdnDocId') || {}).value;
+    const dataDownloadUrl = (downloadButton && downloadButton.getAttribute('data-download-url')) || '';
+    const resolvedDownloadUrl =
+        (typeof documentDownloadUrl !== 'undefined' && documentDownloadUrl) ||
+        dataDownloadUrl ||
+        hiddenDownloadUrl ||
+        (hiddenDocId ? ('/Learner/Document/DownloadDocument?id=' + encodeURIComponent(hiddenDocId)) : '');
+
     if (downloadButton) {
         downloadButton.addEventListener('click', function () {
-            if (typeof documentDownloadUrl !== 'undefined' && documentDownloadUrl) {
+            if (resolvedDownloadUrl) {
                 // Use server-side download proxy — works regardless of blob container access level
-                window.location.href = documentDownloadUrl;
+                window.location.href = resolvedDownloadUrl;
             } else {
-                // Fallback: open the stored URL directly (works for public containers)
-                const documentUrl = document.querySelector('#hdnFileDwnldPath')?.value;
-                if (documentUrl) {
-                    window.location.href = documentUrl;
-                } else {
-                    alert('No document found.');
-                }
+                alert('Document download endpoint is unavailable. Please refresh the page and try again.');
             }
         });
     }
@@ -112,9 +115,10 @@ function setDocStatus(btn) {
     const docId = btn.id.split('-').pop();
     const checkedRadio = document.querySelector('input[name="learnerDocStatus"]:checked');
     const status = checkedRadio ? checkedRadio.value : null;
+    const baseUrl = (typeof hdnBaseUrl !== 'undefined' && hdnBaseUrl) ? hdnBaseUrl : '/Learner/Document/';
     
     if (confirm('Are you sure you want to update the status?')) {
-        const url = hdnBaseUrl + "SetDocumentStatus";
+        const url = baseUrl + "SetDocumentStatus";
         const data = {
             DocumentId: docId,
             Status: status

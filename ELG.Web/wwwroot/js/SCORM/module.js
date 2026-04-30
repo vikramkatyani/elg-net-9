@@ -351,8 +351,7 @@ function launchModulePopUp(courseid, url) {
         UTILS.makeAsyncAjaxCall(ensureUrl, { url: courseUrl }, function () {
             // Open via LMS proxy so relative resource requests (e.g., scorm_api.js) don't need SAS tokens
             try {
-                // hdnBaseUrl typically ends with "/Learner/Home/"; trim "Home/" to get area base
-                const learnerBase = hdnBaseUrl.replace(/Home\/?$/i, "");
+                const learnerBase = getLearnerProxyBase();
                 const proxyBase = learnerBase + "CourseProxy/" + API.module + "/index.html?baseUrl=" + encodeURIComponent(courseUrl);
                 if (moduleWin && !moduleWin.closed) {
                     moduleWin.location.href = proxyBase;
@@ -370,7 +369,7 @@ function launchModulePopUp(courseid, url) {
         }, function () {
             // Even if shim ensure fails, attempt to open via proxy
             try {
-                const learnerBase = hdnBaseUrl.replace(/Home\/?$/i, "");
+                const learnerBase = getLearnerProxyBase();
                 const proxyBase = learnerBase + "CourseProxy/" + API.module + "/index.html?baseUrl=" + encodeURIComponent(courseUrl);
                 if (moduleWin && !moduleWin.closed) {
                     moduleWin.location.href = proxyBase;
@@ -398,6 +397,21 @@ function launchModulePopUp(courseid, url) {
             window.location.href = courseUrl;
         }
     });
+}
+
+function getLearnerProxyBase() {
+    const rawBase = (typeof hdnBaseUrl === 'string' && hdnBaseUrl) ? hdnBaseUrl : '';
+    const normalizedBase = rawBase.replace(/\/+$|\s+$/g, '');
+
+    if (/\/Learner\/Home$/i.test(normalizedBase)) {
+        return normalizedBase.replace(/Home$/i, '');
+    }
+
+    if (/\/Learner$/i.test(normalizedBase)) {
+        return normalizedBase + '/';
+    }
+
+    return '/Learner/';
 }
 
 

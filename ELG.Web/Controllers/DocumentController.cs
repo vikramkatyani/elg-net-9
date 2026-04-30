@@ -580,6 +580,52 @@ namespace ELG.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> OpenDocumentByPath(string docPath, string docName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(docPath))
+                    return BadRequest("Document path is required.");
+
+                string normalizedUrl = docPath.Trim().TrimEnd('?');
+                if (!normalizedUrl.Contains(".blob.core.windows.net"))
+                    return BadRequest("Document is not stored in Azure Blob Storage.");
+
+                var connectionString = ELG.Web.Helper.CommonHelper.GetAppSettingValue("AZStorageConnectionString");
+                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+                Uri uri = new Uri(normalizedUrl);
+                string containerName = uri.Segments[1].TrimEnd('/');
+                string blobPath = string.Join("", uri.Segments.Skip(2));
+
+                BlobClient blobClient = blobServiceClient.GetBlobContainerClient(containerName).GetBlobClient(blobPath);
+                if (!await blobClient.ExistsAsync())
+                    return NotFound("Document not found in storage.");
+
+                var blobStream = await blobClient.OpenReadAsync();
+                string extension = Path.GetExtension(blobPath).ToLowerInvariant();
+                string contentType = "application/octet-stream";
+                if (extension == ".pdf") contentType = "application/pdf";
+                else if (extension == ".docx") contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                else if (extension == ".doc") contentType = "application/msword";
+                else if (extension == ".xlsx") contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                else if (extension == ".pptx") contentType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+
+                string safeName = string.IsNullOrWhiteSpace(docName)
+                    ? Path.GetFileName(blobPath)
+                    : (docName + extension);
+
+                Response.Headers["Content-Disposition"] = $"inline; filename=\"{safeName}\"";
+                return File(blobStream, contentType);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                return StatusCode(500);
+            }
+        }
+
         private string GenerateBlobSasUrl(string blobUrl)
         {
             if (string.IsNullOrEmpty(blobUrl) || !blobUrl.Contains(".blob.core.windows.net"))

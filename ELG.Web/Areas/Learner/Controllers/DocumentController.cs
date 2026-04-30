@@ -69,17 +69,15 @@ namespace ELG.Web.Areas.Learner.Controllers
             {
                 var docRep = new DocumentRep();
                 Document doc = docRep.GetDocumentDetails(id, SessionHelper.UserId);
-                string ext = Path.GetExtension(doc.DocumentPath);
+                string normalizedPath = NormalizeBlobUrl(doc?.DocumentPath);
+                string ext = Path.GetExtension(normalizedPath);
                 bool previewAvailable = false;
                 if (ext == ".pdf")
                     previewAvailable = true;
 
-                // Generate SAS token for Azure Blob access
-                string documentPathWithSas = GenerateBlobSasUrl(doc.DocumentPath);
-
                 ViewBag.DocID = doc.DocumentID;
                 ViewBag.DocName = doc.DocumentName;
-                ViewBag.DocumentPath = documentPathWithSas;
+                ViewBag.DocumentPath = normalizedPath;
                 ViewBag.PreviewAvailable = previewAvailable;
                 ViewBag.DocStatus = doc.DocumentStatus;
                 return View("Preview");
@@ -181,20 +179,21 @@ namespace ELG.Web.Areas.Learner.Controllers
             {
                 var docRep = new DocumentRep();
                 Document doc = docRep.GetDocumentDetails(id, SessionHelper.UserId);
-                if (doc == null || string.IsNullOrEmpty(doc.DocumentPath))
+                string normalizedPath = NormalizeBlobUrl(doc?.DocumentPath);
+                if (doc == null || string.IsNullOrEmpty(normalizedPath))
                     return NotFound();
 
-                string ext = Path.GetExtension(doc.DocumentPath).ToLowerInvariant();
+                string ext = Path.GetExtension(normalizedPath).ToLowerInvariant();
                 if (ext != ".pdf")
                     return BadRequest("Only PDF documents can be previewed via this endpoint.");
 
-                if (!doc.DocumentPath.Contains(".blob.core.windows.net"))
+                if (!normalizedPath.Contains(".blob.core.windows.net"))
                     return BadRequest("Document is not stored in Azure Blob Storage.");
 
                 var connectionString = CommonHelper.GetAppSettingValue("AZStorageConnectionString");
                 var blobServiceClient = new BlobServiceClient(connectionString);
 
-                Uri uri = new Uri(doc.DocumentPath);
+                Uri uri = new Uri(normalizedPath);
                 string containerName = uri.Segments[1].TrimEnd('/');
                 string blobPath = string.Join("", uri.Segments.Skip(2));
 
@@ -220,16 +219,17 @@ namespace ELG.Web.Areas.Learner.Controllers
             {
                 var docRep = new DocumentRep();
                 Document doc = docRep.GetDocumentDetails(id, SessionHelper.UserId);
-                if (doc == null || string.IsNullOrEmpty(doc.DocumentPath))
+                string normalizedPath = NormalizeBlobUrl(doc?.DocumentPath);
+                if (doc == null || string.IsNullOrEmpty(normalizedPath))
                     return NotFound();
 
-                if (!doc.DocumentPath.Contains(".blob.core.windows.net"))
+                if (!normalizedPath.Contains(".blob.core.windows.net"))
                     return BadRequest("Document is not stored in Azure Blob Storage.");
 
                 var connectionString = CommonHelper.GetAppSettingValue("AZStorageConnectionString");
                 var blobServiceClient = new BlobServiceClient(connectionString);
 
-                Uri uri = new Uri(doc.DocumentPath);
+                Uri uri = new Uri(normalizedPath);
                 string containerName = uri.Segments[1].TrimEnd('/');
                 string blobPath = string.Join("", uri.Segments.Skip(2));
                 string fileName = Path.GetFileName(blobPath);
@@ -311,6 +311,14 @@ namespace ELG.Web.Areas.Learner.Controllers
                 Logger.Error($"Error generating SAS token: {ex.Message}", ex);
                 return blobUrl;
             }
+        }
+
+        private string NormalizeBlobUrl(string blobUrl)
+        {
+            if (string.IsNullOrWhiteSpace(blobUrl))
+                return blobUrl;
+
+            return blobUrl.Trim().TrimEnd('?');
         }
     }
 }

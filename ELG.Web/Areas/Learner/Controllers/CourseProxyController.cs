@@ -12,6 +12,7 @@ namespace ELG.Web.Areas.Learner.Controllers
 {
     [Area("Learner")]
     [Route("Learner/CourseProxy/{courseId}/{*path}")]
+    [Route("CourseProxy/{courseId}/{*path}")]
     public class CourseProxyController : Controller
     {
         private readonly AzureStorageUtility _storage;

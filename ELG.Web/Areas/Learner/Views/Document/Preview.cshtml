@@ -61,9 +61,9 @@
         @if (!String.IsNullOrEmpty(ViewBag.DocumentPath))
         {
             <div class="mt-3">
-                <input type="hidden" id="hdnFileDwnldPath" value="@ViewBag.DocumentPath" />
+                <input type="hidden" id="hdnFileDwnldPath" value="@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })" />
                 <input type="hidden" id="hdnDocId" value="@ViewBag.DocID" />
-                <button id="download-button" type="button" class="btn btn-primary">Download Document</button>
+                <button id="download-button" type="button" class="btn btn-primary" data-download-url="@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })">Download Document</button>
             </div>
         }
         @{
@@ -143,10 +143,7 @@
         {
             <text>var documentStreamUrl = '@Url.Action("StreamDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
         }
-        @if (!string.IsNullOrEmpty(ViewBag.DocumentPath?.ToString()))
-        {
-            <text>var documentDownloadUrl = '@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
-        }
+        <text>var documentDownloadUrl = '@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
     </script>
-    <script type="text/javascript" src="~/js/Document/documentPreview.js"></script>
+    <script type="text/javascript" src="~/js/Document/documentPreview.js?v=1.0.2"></script>
 }

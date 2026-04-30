@@ -512,25 +512,12 @@ var documentReportHandler = (function () {
     function previewDocument(btn) {
 
         let documentTable = $('#orgDocumentList').DataTable();
-        var obj = {
-            docPath: documentTable.row(btn.closest('tr')).data()["DocumentPath"]
-        }
-        
-        $.ajax({
-            type: "POST",
-            url: hdnBaseUrl + 'Document/GetDocumentSasUrl',
-            data: JSON.stringify(obj),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                if (response) {
-                    window.open(response, '_blank');
-                }
-            },
-            error: function (response) {
-                alert(response.responseText);
-            }
-        });
+        var rowData = documentTable.row(btn.closest('tr')).data();
+        var docPath = encodeURIComponent(rowData["DocumentPath"] || '');
+        var docName = encodeURIComponent(rowData["DocumentName"] || 'document');
+
+        var proxyUrl = hdnBaseUrl + 'Document/OpenDocumentByPath?docPath=' + docPath + '&docName=' + docName;
+        window.open(proxyUrl, '_blank');
     }
 
     function editDocumentVisibility(btn) {
