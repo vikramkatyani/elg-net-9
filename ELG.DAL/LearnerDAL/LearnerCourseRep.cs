@@ -672,8 +672,33 @@ ORDER BY q.intOrder, q.intQuestionID;";
             int success = 0;
             try
             {
+                if (response == null || response.AnswerId <= 0 || response.OptionId <= 0)
+                {
+                    return 0;
+                }
+
                 using (var context = new learnerDBEntities())
                 {
+                    // Validate option belongs to the same question as the answer to prevent cross-question mismatches.
+                    const string validateSql = @"
+SELECT COUNT(1)
+FROM tbAnswer a
+INNER JOIN tbQuestionOption qo
+    ON qo.intQuestionOptionID = @optionId
+   AND qo.intQuestionID = a.intQuestionID
+WHERE a.intAnswerID = @answerId;";
+
+                    var isValidMapping = context.Database.SqlQuery<int>(
+                        validateSql,
+                        new SqlParameter("@optionId", response.OptionId),
+                        new SqlParameter("@answerId", response.AnswerId)
+                    ).FirstOrDefault() > 0;
+
+                    if (!isValidMapping)
+                    {
+                        return 0;
+                    }
+
                     var result = context.lms_learner_createRAResponse(response.AnswerId, response.OptionId, response.IssueText);
 
                     // Enforce deterministic persistence of selected option and boolean flags.
@@ -693,17 +718,19 @@ SET
              OR UPPER(LTRIM(RTRIM(ISNULL(qo.strQuestionOption, qo.strValue)))) LIKE 'NO %'
         THEN 1 ELSE 0 END
 FROM tbAnswer a
-LEFT JOIN tbQuestionOption qo ON qo.intQuestionOptionID = @optionId
+INNER JOIN tbQuestionOption qo
+    ON qo.intQuestionOptionID = @optionId
+   AND qo.intQuestionID = a.intQuestionID
 WHERE a.intAnswerID = @answerId;";
 
-                    context.Database.ExecuteSqlCommand(
+                    var updated = context.Database.ExecuteSqlCommand(
                         sql,
                         new SqlParameter("@optionId", response.OptionId),
                         new SqlParameter("@issueText", (object)response.IssueText ?? string.Empty),
                         new SqlParameter("@answerId", response.AnswerId)
                     );
 
-                    success = 1;
+                    success = updated > 0 ? 1 : 0;
                 }
             }
             catch (Exception)

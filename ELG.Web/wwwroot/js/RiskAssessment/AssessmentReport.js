@@ -497,6 +497,11 @@ var raReportHandler = (function () {
                 if (!checked) {
                     unanswered.push(row);
                 } else {
+                    if (!ansId || ansId <= 0) {
+                        unanswered.push(row);
+                        return;
+                    }
+
                     const payload = {
                         AnswerId: ansId,
                         OptionId: parseInt(checked.value),
@@ -521,7 +526,17 @@ var raReportHandler = (function () {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(s)
-        }).then(r => r.json()));
+        }).then(r => {
+            if (!r.ok) {
+                throw new Error('Save request failed with status ' + r.status);
+            }
+            return r.json();
+        }).then(res => {
+            if (!res || res.success !== 1) {
+                throw new Error('Save response indicated failure.');
+            }
+            return res;
+        }));
 
         Promise.all(savePromises)
             .then(() => fetch(completeUrl, {
