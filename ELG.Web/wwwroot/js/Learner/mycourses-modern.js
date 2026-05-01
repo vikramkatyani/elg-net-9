@@ -464,25 +464,7 @@ var myCoursesModernHandler = (function () {
         launchState.courseId = courseId;
         launchState.url = url;
 
-        var message;
-        if (!resetOn) {
-            message = '<div class="completed-course-guidance">' +
-                '<p class="intro">You can launch this course again anytime to revisit key topics.</p>' +
-                '<h6>For refresher training</h6>' +
-                '<ul>' +
-                '<li>Use the <strong>Reset</strong> button to restart from the beginning, if available.</li>' +
-                '<li>If Reset is not shown, resets are managed manually by your <strong>Admin</strong>.</li>' +
-                '</ul>' +
-                '<p class="contact-note">Please contact your <strong>Line Manager</strong> to request a reset.</p>' +
-                '</div>';
-        } else {
-            message = '<div class="completed-course-guidance">' +
-                '<p class="intro">This course has already been completed for the current training period.</p>' +
-                '<p class="next-due">Next completion window: <strong>' + escapeHtml(resetOn) + '</strong></p>' +
-                '<p>Your status will automatically return to <strong>Not Started</strong> after this date.</p>' +
-                '<p class="contact-note">You can still select <strong>Launch</strong> now if you only want to review the content.</p>' +
-                '</div>';
-        }
+        var message = '<p>Course already completed. You can relaunch to review content at any time. To track new progress, click <strong>Reset</strong> (if available) or contact your <strong>Line Manager</strong>.</p>';
 
         $('#div-confrm-msg').html(message);
         new bootstrap.Modal(document.getElementById('courseLaunchConfirmationModal')).show();
