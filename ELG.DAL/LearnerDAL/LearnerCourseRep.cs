@@ -58,9 +58,13 @@ namespace ELG.DAL.LearnerDAL
 
                                 // Determine RA submodules that have actually been accessed by this learner.
                                 // This compensates for stale status values coming from legacy submodule status SPs.
-                                var accessedRASubModuleIds = new HashSet<long>(
-                                    context.Database.SqlQuery<long>(
-                                        @"
+                                // Wrapped in try/catch: intSubModuleId column may not exist in older tenant DBs.
+                                HashSet<long> accessedRASubModuleIds;
+                                try
+                                {
+                                    accessedRASubModuleIds = new HashSet<long>(
+                                        context.Database.SqlQuery<long>(
+                                            @"
 SELECT DISTINCT r.intSubModuleId
 FROM tbRiskAssessmentResult r
 INNER JOIN tb_course_subModules sm ON sm.intSubModuleID = r.intSubModuleId
@@ -83,10 +87,16 @@ WHERE sm.intCourseID = @courseId
                   )
         )
       );",
-                                        new SqlParameter("@courseId", item.intcourseid),
-                                        new SqlParameter("@learner", learner)
-                                    ).ToList()
-                                );
+                                            new SqlParameter("@courseId", item.intcourseid),
+                                            new SqlParameter("@learner", learner)
+                                        ).ToList()
+                                    );
+                                }
+                                catch
+                                {
+                                    // Column intSubModuleId may not exist in this tenant's schema — skip the override
+                                    accessedRASubModuleIds = new HashSet<long>();
+                                }
 
                                 if (subModuleList != null && subModuleList.Count > 0)
                                 {
