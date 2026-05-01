@@ -109,6 +109,7 @@
                                 <button id="btn-update-status-@ViewBag.DocID"
                                         type="button"
                                         class="btn btn-primary mt-3"
+                                        data-setstatus-url="@Url.Action("SetDocumentStatus", "Document", new { area = "Learner" })"
                                         onclick="setDocStatus(this)">
                                     Update Status
                                 </button>
@@ -118,6 +119,7 @@
                                 <button id="btn-update-status-@ViewBag.DocID"
                                         type="button"
                                         class="btn btn-primary mt-3"
+                                        data-setstatus-url="@Url.Action("SetDocumentStatus", "Document", new { area = "Learner" })"
                                         style="cursor: not-allowed;"
                                         disabled>
                                     Update Status
@@ -146,5 +148,5 @@
         <text>var documentDownloadUrl = '@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
         <text>var documentSetStatusUrl = '@Url.Action("SetDocumentStatus", "Document", new { area = "Learner" })';</text>
     </script>
-    <script type="text/javascript" src="~/js/Document/documentPreview.js?v=1.0.3"></script>
+    <script type="text/javascript" src="~/js/Document/documentPreview.js?v=1.0.4"></script>
 }

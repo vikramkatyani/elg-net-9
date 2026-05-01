@@ -115,11 +115,12 @@ function setDocStatus(btn) {
     const docId = btn.id.split('-').pop();
     const checkedRadio = document.querySelector('input[name="learnerDocStatus"]:checked');
     const status = checkedRadio ? checkedRadio.value : null;
-    const baseUrl = (typeof hdnBaseUrl !== 'undefined' && hdnBaseUrl) ? hdnBaseUrl : '/Learner/Document/';
+    const explicitSetStatusUrl = btn.getAttribute('data-setstatus-url') || '';
     const setStatusUrl =
-        (typeof documentSetStatusUrl !== 'undefined' && documentSetStatusUrl)
+        explicitSetStatusUrl ||
+        ((typeof documentSetStatusUrl !== 'undefined' && documentSetStatusUrl)
             ? documentSetStatusUrl
-            : (baseUrl + "SetDocumentStatus");
+            : '/Learner/Document/SetDocumentStatus');
     
     if (confirm('Are you sure you want to update the status?')) {
         const data = {
