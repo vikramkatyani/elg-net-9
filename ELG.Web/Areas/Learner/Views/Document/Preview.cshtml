@@ -45,9 +45,20 @@
         <div id="message_doc_preview"></div>
         @if (ViewBag.PreviewAvailable)
         {
-            <div id="pdf-viewer-wrapper" style="width:100%;height:80vh;overflow-y:auto;overflow-x:hidden;background:#525659;text-align:center;border-radius:4px;">
-                <div id="pdf-loading" style="color:#fff;padding:30px;font-size:16px;">Loading document...</div>
-                <div id="pdf-pages-container"></div>
+            <div id="pdf-viewer-wrapper" style="width:100%;height:80vh;overflow:hidden;background:#525659;text-align:center;border-radius:4px;">
+                <iframe
+                    id="pdf-inline-frame"
+                    src="@Url.Action("StreamDocument", "Document", new { area = "Learner", id = ViewBag.DocID })"
+                    title="Document Preview"
+                    style="width:100%;height:100%;border:0;background:#fff;"
+                    loading="eager">
+                </iframe>
+            </div>
+
+            <div id="mobile-pdf-fallback" class="alert alert-info mt-3" style="display:none;">
+                <div class="mb-2">Your device browser may not support inline PDF preview.</div>
+                <button id="open-pdf-button" type="button" class="btn btn-outline-primary btn-sm me-2">Open PDF</button>
+                <button id="download-button-mobile" type="button" class="btn btn-primary btn-sm" data-download-url="@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })">Download PDF</button>
             </div>
         }
         else if (String.IsNullOrEmpty(ViewBag.DocumentPath))
@@ -135,18 +146,11 @@
 </div>
 
 @section Scripts{
-    @if (ViewBag.PreviewAvailable)
-    {
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    }
     <script>
         var hdnBaseUrl = '@Url.Content("~/Learner/Document/")';
-        @if (ViewBag.PreviewAvailable)
-        {
-            <text>var documentStreamUrl = '@Url.Action("StreamDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
-        }
+        <text>var documentStreamUrl = '@Url.Action("StreamDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
         <text>var documentDownloadUrl = '@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
         <text>var documentSetStatusUrl = '@Url.Action("SetDocumentStatus", "Document", new { area = "Learner" })';</text>
     </script>
-    <script type="text/javascript" src="~/js/Document/documentPreview.js?v=1.0.4"></script>
+    <script type="text/javascript" src="~/js/Document/documentPreview.js?v=1.0.5"></script>
 }
