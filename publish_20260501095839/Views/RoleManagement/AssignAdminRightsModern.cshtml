@@ -1,0 +1,338 @@
+@{
+    ViewBag.Title = "Assign Admin Rights";
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="ar-modern-page">
+    <section class="ar-hero">
+        <div>
+            <h1 class="ar-title">Assign Rights: @ViewBag.LearnerName</h1>
+            <p class="ar-subtitle">Choose one or more role scopes and apply them to this user.</p>
+        </div>
+        <div class="ar-hero-actions">
+            <span class="ar-badge"><i class="fa fa-user-shield"></i> Rights Allocation</span>
+            <a href="@Url.Action("Accounts", "RoleManagement")" class="btn ar-btn ar-btn-soft">
+                <i class="fa fa-backward"></i>Back
+            </a>
+        </div>
+    </section>
+
+    <section class="ar-card">
+        <input type="hidden" id="hdnSelectedLearnerId" value="@ViewBag.LearnerId" />
+
+        <div id="divAdminRightErrorMessage" class="mb-3"></div>
+
+        <div class="table-responsive" id="tbAdminRoles">
+            <table class="table table-hover align-middle ar-roles-table">
+                <thead>
+                    <tr>
+                        <th style="width: 62%;">Admin Role</th>
+                        <th style="width: 38%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Account Owner</strong><br>
+                            Full access across the platform
+                        </td>
+                        <td>
+                            <button type="button" id="btnAssignAdminGod" class="btn ar-btn ar-btn-primary">
+                                <i class="fa fa-plus-circle"></i>Assign
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Manager</strong><br>
+                            Manages full @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription and its @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription
+                        </td>
+                        <td>
+                            <button type="button" id="btnShowLocations" class="btn ar-btn ar-btn-soft">
+                                <i class="fa fa-folder-open"></i>Select
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Manager</strong><br>
+                            Manages specific @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription
+                        </td>
+                        <td>
+                            <button type="button" id="btnShowDepartments" class="btn ar-btn ar-btn-soft">
+                                <i class="fa fa-folder-open"></i>Select
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Coordinator</strong><br>
+                            Supports @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription without delete rights
+                        </td>
+                        <td>
+                            <button type="button" id="btnShowLocations_spv" class="btn ar-btn ar-btn-soft">
+                                <i class="fa fa-folder-open"></i>Select
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Coordinator</strong><br>
+                            Supports @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription without delete rights
+                        </td>
+                        <td>
+                            <button type="button" id="btnShowDepartments_spv" class="btn ar-btn ar-btn-soft">
+                                <i class="fa fa-folder-open"></i>Select
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@Html.Partial("_LocationListforAdminRights")
+@Html.Partial("_DepartmentListforAdminRights")
+@Html.Partial("_LocationListforSupervisorRights")
+@Html.Partial("_DepartmentListforSupervisorRights")
+
+<style>
+    .ar-modern-page {
+        --ar-surface: #ffffff;
+        --ar-line: #d9e6ea;
+        --ar-text: #14323c;
+        --ar-muted: #607e89;
+        --ar-brand: var(--color-primary, #0b7d78);
+        --ar-brand-alt: var(--color-secondary, #0f968f);
+        --ar-brand-soft: #e8f5f3;
+        --ar-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--ar-text);
+    }
+
+    .ar-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .ar-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .ar-subtitle {
+        margin: 0.28rem 0 0;
+        color: var(--ar-muted);
+    }
+
+    .ar-hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .ar-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid #cce2df;
+        background: #fff;
+        color: #2f5662;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 0.31rem 0.64rem;
+        white-space: nowrap;
+    }
+
+    .ar-card {
+        background: var(--ar-surface);
+        border: 1px solid var(--ar-line);
+        border-radius: 14px;
+        box-shadow: var(--ar-shadow);
+        padding: 1.05rem;
+    }
+
+    .ar-roles-table thead th {
+        background: #f4faf9;
+        border-bottom: 1px solid #dce9eb;
+        color: #33525d;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .ar-roles-table tbody td {
+        vertical-align: middle;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .ar-roles-table tbody tr:hover {
+        background: #f5fbff;
+    }
+
+    .ar-btn {
+        min-width: 112px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-weight: 700;
+        font-size: 0.84rem;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .ar-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .ar-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .ar-btn-primary {
+        background: var(--ar-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .ar-btn-primary:hover,
+    .ar-btn-primary:focus {
+        color: #fff;
+    }
+
+    .ar-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    #locationListForAdminRightsModal .modal-content,
+    #departmentListForAdminRightsModal .modal-content,
+    #locationListForSupervisorRightsModal .modal-content,
+    #departmentListForSupervisorRightsModal .modal-content {
+        border: 1px solid #d8e6ea;
+        border-radius: 14px;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+        overflow: hidden;
+    }
+
+    #locationListForAdminRightsModal .modal-header,
+    #departmentListForAdminRightsModal .modal-header,
+    #locationListForSupervisorRightsModal .modal-header,
+    #departmentListForSupervisorRightsModal .modal-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #locationListForAdminRightsModal .modal-title,
+    #departmentListForAdminRightsModal .modal-title,
+    #locationListForSupervisorRightsModal .modal-title,
+    #departmentListForSupervisorRightsModal .modal-title {
+        font-weight: 700;
+        color: #1f4652;
+    }
+
+    #departmentListForAdminRightsModal .ar-modal-control,
+    #departmentListForSupervisorRightsModal .ar-modal-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    #departmentListForAdminRightsModal .ar-modal-icon,
+    #departmentListForSupervisorRightsModal .ar-modal-icon {
+        width: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5f3;
+        color: #0b7d78;
+        border-right: 1px solid #cde2de;
+    }
+
+    #departmentListForAdminRightsModal .ar-modal-control .form-select,
+    #departmentListForSupervisorRightsModal .ar-modal-control .form-select {
+        border: 0;
+        border-radius: 0;
+        height: 42px;
+        box-shadow: none;
+    }
+
+    #departmentListForAdminRightsModal .ar-modal-control:focus-within,
+    #departmentListForSupervisorRightsModal .ar-modal-control:focus-within {
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #locationListForAdminRightsModal table thead th,
+    #departmentListForAdminRightsModal table thead th,
+    #locationListForSupervisorRightsModal table thead th,
+    #departmentListForSupervisorRightsModal table thead th {
+        background: #f4faf9;
+        border-bottom: 1px solid #dce9eb;
+        color: #32515c;
+        font-size: 0.82rem;
+    }
+
+    #locationListForAdminRightsModal .btn,
+    #departmentListForAdminRightsModal .btn,
+    #locationListForSupervisorRightsModal .btn,
+    #departmentListForSupervisorRightsModal .btn {
+        border-radius: 9px;
+        font-weight: 700;
+    }
+
+    #locationListForAdminRightsModal .modal-footer,
+    #departmentListForAdminRightsModal .modal-footer,
+    #locationListForSupervisorRightsModal .modal-footer,
+    #departmentListForSupervisorRightsModal .modal-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    #locationListForAdminRightsModal .btn-outline-secondary,
+    #departmentListForAdminRightsModal .btn-outline-secondary,
+    #locationListForSupervisorRightsModal .btn-outline-secondary,
+    #departmentListForSupervisorRightsModal .btn-outline-secondary {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    @@media (max-width: 991px) {
+        .ar-hero {
+            flex-direction: column;
+        }
+
+        .ar-btn {
+            min-width: 0;
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/RoleManagement/assignRights.js?v=1.1"></script>
+}

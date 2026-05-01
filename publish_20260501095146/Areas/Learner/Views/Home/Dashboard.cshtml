@@ -1,0 +1,85 @@
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="learner-main-content">
+    <h1 class="page-heading">Dashboard</h1>
+
+    <!-- Quick Links Section -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+            <div class="card shadow mb-4">
+                <div class="card-body text-center">
+                    <i class="fa fa-book fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">My Courses</h5>
+                    <p class="card-text text-muted">Access your assigned courses and track your progress.</p>
+                    <a href="@Url.Action("MyCourses", "Home", new { area = "Learner" })" class="btn btn-primary btn-sm">
+                        View Courses
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+            <div class="card shadow mb-4">
+                <div class="card-body text-center">
+                    <i class="fa fa-user fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">My Profile</h5>
+                    <p class="card-text text-muted">View and update your profile information.</p>
+                    <a href="@Url.Action("MyProfile", "Home", new { area = "Learner" })" class="btn btn-success btn-sm">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+            <div class="card shadow mb-4">
+                <div class="card-body text-center">
+                    <i class="fa fa-certificate fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Certificates</h5>
+                    <p class="card-text text-muted">View and download your earned certificates.</p>
+                    <a href="#" class="btn btn-warning btn-sm">
+                        View Certificates
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+            <div class="card shadow mb-4">
+                <div class="card-body text-center">
+                    <i class="fa fa-history fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Progress</h5>
+                    <p class="card-text text-muted">Track your overall learning progress.</p>
+                    <a href="#" class="btn btn-info btn-sm">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Your recent learning activities will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Load dashboard data
+            console.log('Learner dashboard loaded');
+        });
+    </script>
+}

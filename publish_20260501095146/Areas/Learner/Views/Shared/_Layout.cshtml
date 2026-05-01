@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    @{
+        var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
+        var titleText = sessionDomainDetails?.TitleText ?? "LMS";
+        var favicon = sessionDomainDetails?.Favicon ?? "favicon.ico";
+        var cssFile = sessionDomainDetails?.CSS ?? "content/css/custom.css";
+    }
+
+    <title>@titleText - @ViewBag.Title</title>
+    <link rel="icon" href="~/@favicon" sizes="16x16">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="~/content/vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- iCheck -->
+    <link href="~/content/vendor/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="~/@cssFile">
+    <link href="~/content/css/egate.css" rel="stylesheet">
+    <link href="~/content/css/courseCard.css" rel="stylesheet">
+    @* <link href="~/content/css/learner.css" rel="stylesheet"> *@
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <style>
+        /* ── Learner Modern View – Sidebar ─────────────────────────────────────── */
+        .learner-modern-view .learner-menu-bar {
+            --tenant-primary: var(--color-primary, var(--bs-primary, #ff8a46));
+            --menu-text-color: #3f2f2b;
+            background: #efedeb;
+            border-right: 1px solid #ded9d4;
+            box-shadow: 8px 0 30px rgba(42, 28, 24, 0.08);
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .learner-modern-view .learner-menu-bar .menu-container {
+            flex: 1 1 auto;
+            overflow-y: auto;
+        }
+
+        .learner-modern-view .learner-menu-bar .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .learner-modern-view .learner-menu-bar .logo {
+            background: transparent;
+            border-bottom: 0;
+            padding: 10px 16px 14px;
+        }
+
+        .learner-modern-view .learner-menu .menu-section-title {
+            color: #7d6f67;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 14px 16px 6px;
+            margin: 10px 10px 2px;
+            list-style: none;
+        }
+
+        /* Hide inline <i> nav icons; replace with ::before pseudo-elements */
+        .learner-modern-view .learner-menu .nav-item > a i.fa:first-child,
+        .learner-modern-view .learner-menu .parent-menu-a i.fa:first-child {
+            display: none;
+        }
+
+        .learner-modern-view .learner-menu .nav-item > a,
+        .learner-modern-view .learner-menu .parent-menu-a {
+            position: relative;
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 18px;
+            margin: 6px 16px;
+            padding: 12px 16px;
+            min-height: 46px;
+            font-weight: 400;
+            font-size: 15px;
+            letter-spacing: 0.1px;
+            transition: all 0.22s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .learner-modern-view .learner-menu .nav-item:not(.active) > a:hover,
+        .learner-modern-view .learner-menu .parent-menu-a:hover {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+            border-color: var(--tenant-primary);
+            transform: none;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .learner-modern-view .learner-menu .nav-item.active > a,
+        .learner-modern-view .learner-menu .nav-item > a.active {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .learner-modern-view .learner-menu .nav-item.active > a:hover,
+        .learner-modern-view .learner-menu .nav-item > a.active:hover {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
+        .learner-modern-view .learner-menu .nav-item > a::before,
+        .learner-modern-view .learner-menu .parent-menu-a::before {
+            font-family: FontAwesome;
+            font-size: 16px;
+            width: 18px;
+            text-align: center;
+            opacity: 0.85;
+            font-weight: 400;
+            flex: 0 0 18px;
+        }
+
+        /* Learner menu icon mappings */
+        .learner-modern-view #dashboardLink > a::before  { content: "\f00a"; }
+        .learner-modern-view #myCourseLink > a::before   { content: "\f19d"; }
+        .learner-modern-view #raLink > a::before         { content: "\f132"; }
+        .learner-modern-view #docLink > a::before        { content: "\f0f6"; }
+        .learner-modern-view #logoutLink > a::before      { content: "\f08b"; }
+
+        .learner-modern-view .learner-menu .child_menu {
+            background: transparent;
+            border-radius: 12px;
+            margin: 0 16px 8px;
+            padding: 2px 0 8px;
+            border-left: 2px solid var(--tenant-primary);
+        }
+
+        .learner-modern-view .learner-menu .child_menu li a {
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 15px;
+            margin: 2px 0 2px 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .learner-modern-view .learner-menu .child_menu li a:hover {
+            color: #ffffff;
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+        }
+
+        .learner-modern-view .learner-menu .child_menu li a.active,
+        .learner-modern-view .learner-menu .child_menu li a.active:hover {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff;
+        }
+
+        .learner-modern-view .line-partition {
+            border-color: #ded3cb !important;
+            margin-top: 18px !important;
+        }
+
+        .learner-modern-view .sidebar-bottom .line-partition {
+            margin-top: 8px !important;
+            margin-bottom: 2px !important;
+        }
+
+        .learner-modern-view .sidebar-bottom .learner-menu {
+            margin-bottom: 0;
+        }
+
+        .learner-modern-view .sidebar-bottom #logoutLink > a {
+            margin-bottom: 0 !important;
+        }
+
+        .learner-modern-view .sidebar-bottom .profile {
+            margin-top: 2px;
+        }
+
+        .learner-modern-view .profile-details span {
+            color: #8c7c72;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .learner-modern-view .profile-details h2 {
+            color: #352823;
+            font-size: 13px;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .learner-modern-view #logoutLink > a {
+            font-size: 15px !important;
+            font-weight: 400 !important;
+            min-height: 40px !important;
+            margin: 4px 12px !important;
+            padding: 8px 12px !important;
+        }
+
+        .learner-modern-view .profile.parent-menu {
+            position: relative;
+            padding-right: 42px;
+        }
+
+        .learner-modern-view .profile-menu-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8c7c72 !important;
+            text-decoration: none;
+            border: 0;
+            background: transparent;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .learner-modern-view .profile.parent-menu.open .profile-menu-toggle .fa {
+            transform: rotate(180deg);
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(100% + 10px);
+            margin: 0;
+            padding: 8px;
+            list-style: none;
+            background: #ffffff;
+            border: 1px solid #ded9d4;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(42, 28, 24, 0.12);
+            z-index: 5;
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu li {
+            margin: 0;
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu li a {
+            display: block;
+            color: var(--menu-text-color) !important;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .learner-modern-view .profile.parent-menu .profile-child-menu li a:hover,
+        .learner-modern-view .profile.parent-menu .profile-child-menu li a.active {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
+        .learner-modern-view .learner-viewmode-item {
+            margin-left: 0;
+            margin-right: 0;
+            padding: 6px 0 4px;
+        }
+
+        .learner-modern-view .learner-viewmode-label {
+            color: #4f3e38;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.78rem;
+        }
+
+        .learner-modern-view .learner-viewmode-item .learner-viewmode-row {
+            margin-left: 12px;
+            margin-right: 8px;
+        }
+
+        .learner-modern-view .learner-main-content {
+            background: radial-gradient(circle at 0% 0%, #fff8f3 0%, #f8fbfd 36%, #ffffff 100%);
+        }
+    </style>
+</head>
+
+<body class="@(string.Equals(ELG.Web.Helper.SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase) ? "learner-modern-view" : "learner-classic-view")">
+    <div class="learner-content-container">
+
+        <!-- Hamburger Menu Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Left Navigation Menu -->
+        @{
+            // Deserialize learner menu settings from session
+            var learnerMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgAdminAvailableMenu as string;
+            dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
+                ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
+                : null;
+
+            var isModernViewMode = string.Equals(ELG.Web.Helper.SessionHelper.LearnerViewMode, "modern", StringComparison.OrdinalIgnoreCase);
+            var currentPath = (Context?.Request?.Path.Value ?? string.Empty).ToLowerInvariant();
+            var isLearnerSettingsPage = currentPath.Contains("/learner/home/myprofile") || currentPath.Contains("/learner/home/changepassword");
+        }
+        <nav class="learner-menu-bar">
+            <div class="logo">
+                <img src="" alt="Logo">
+            </div>
+            <div class="menu-container">
+                <ul class="learner-menu">
+                    @if (isModernViewMode)
+                    {
+                        <li class="menu-section-title">Learner</li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.dashboard == true)
+                    {
+                        <li class="nav-item" id="dashboardLink">
+                            <a id="menu-dashboard" href="@Url.Action("Dashboard", "Home", new { area = "Learner" })">
+                                <i class="fa fa-pie-chart"></i> Dashboard
+                            </a>
+                        </li>
+                    }
+
+                    <li class="nav-item" id="myCourseLink">
+                        <a id="menu-my-courses" href="@Url.Action("MyCourses", "Home", new { area = "Learner" })">
+                            <i class="fa fa-leanpub"></i> My Courses
+                        </a>
+                    </li>
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.ra == true)
+                    {
+                        <li class="nav-item" id="raLink">
+                            <a id="menu-manage-ra" href="@Url.Action("Assessment", "RiskAssessment", new { area = "Learner" })">
+                                <i class="fa fa-tasks"></i> Risk Assessments
+                            </a>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.doc == true)
+                    {
+                        <li class="nav-item" id="docLink">
+                            <a id="menu-document-report" href="@Url.Action("List", "Document", new { area = "Learner" })">
+                                <i class="fa fa-cloud-download"></i> Documents
+                            </a>
+                        </li>
+                    }
+
+                    @if (!isModernViewMode)
+                    {
+                        <li class="nav-item parent-menu" id="settingsLink">
+                            <a class="parent-menu-a">
+                                <i class="fa fa-cog"></i> Settings <i class="fa fa-chevron-down"></i>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ViewBag.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })"> Profile</a></li>
+                                <li><a id="menu-user-password" href="@Url.Action("ChangePassword", "Home")"> Update password </a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="sidebar-bottom">
+                <div class="line-partition mx-4 mt-5"></div>
+                <ul class="learner-menu">
+                    @if (ELG.Web.Helper.SessionHelper.HasAdminRights)
+                    {
+                        <li class="nav-item" id="docLink">
+                            <a href="#" onclick="switchToAdminView(); return false;" id="menu-switch-admin">
+                                <i class="fa fa-exchange"></i>Admin View
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item" id="logoutLink">
+                        <a id="menu-logout" href="#" class="parent-menu-a" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fa fa-power-off"></i> Log Out
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Profile Section -->
+                <div class="profile @(isModernViewMode ? "parent-menu" : string.Empty)" id="userProfileMenu">
+                    @{
+                        if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
+                        {
+                            <img id="imgLearnerProfile" class="img-circle profile_img" src="@ELG.Web.Helper.SessionHelper.ProfilePic" alt="Profile">
+                        }
+                        else
+                        {
+                            <img id="imgLearnerProfile" class="img-circle profile_img" src="~/Content/images/no-pic.png" alt="No Profile">
+                        }
+                    }
+                    <div class="profile-details">
+                        <span>Welcome,</span>
+                        <h2>@(ELG.Web.Helper.SessionHelper.UserDisplayName ?? "User")</h2>
+                    </div>
+                    @if (isModernViewMode)
+                    {
+                        <a class="parent-menu-a profile-menu-toggle" href="#" aria-label="Open user settings">
+                            <span class="fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu profile-child-menu">
+                            <li><a class="user-profile-btn @(isLearnerSettingsPage && currentPath.Contains("/learner/home/myprofile") ? "active" : string.Empty)" id="profile-menu-user-profile" data-id="btnUserProfile-@ViewBag.UserId" href="@Url.Action("MyProfile", "Home", new { area = "Learner" })">Profile</a></li>
+                            <li><a class="@(isLearnerSettingsPage && currentPath.Contains("/learner/home/changepassword") ? "active" : string.Empty)" id="profile-menu-user-password" href="@Url.Action("ChangePassword", "Home")">Update password</a></li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="learner-main-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logOutModalLabel">
+                        <i class="fa fa-sign-out-alt me-2 text-primary"></i> Ready to Leave?
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    Select <strong>Logout</strong> below if you are ready to end your current session.
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-1"></i> Cancel
+                    </button>
+                    <a class="btn btn-primary" href="@Url.Action("LogOut", "Account", new { area = "" })">
+                        <i class="fa fa-power-off me-1"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Verification Modal for Admin Switch -->
+    <div class="modal fade" id="adminSwitchModal" tabindex="-1" aria-labelledby="adminSwitchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminSwitchModalLabel">Verify Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please enter your password to switch to Admin view:</p>
+                    <div class="mb-3">
+                        <label for="adminSwitchPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="adminSwitchPassword" placeholder="Enter password">
+                        <div id="passwordError" class="text-danger mt-2" style="display: none;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmAdminSwitch()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        // Base URL for Learner area Home controller
+        var hdnBaseUrl = '@Url.Content("~/Learner/Home/")';
+    </script>
+
+    <script src="~/Scripts/Admin/Common/utils.js"></script>
+    <script src="~/Scripts/Admin/Learner/learner-layout.js"></script>
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

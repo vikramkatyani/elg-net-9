@@ -1,0 +1,751 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@{
+    // OrgDomainMiddleware has already populated SessionHelper.OrgDomainDetails
+    var sessionDomainDetails = ELG.Web.Helper.SessionHelper.OrgDomainDetails;
+    var isModernViewMode = string.Equals(ELG.Web.Helper.SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase);
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+    string host = HttpContextAccessor.HttpContext?.Request.Host.Value;
+    string titleText;
+    string favicon;
+    string cssPath;
+    @if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
+    {
+        if (sessionDomainDetails == null || host != sessionDomainDetails.Domain)
+        {
+            try
+            {
+                ELG.DAL.OrgAdminDAL.CompanyRep rep = new ELG.DAL.OrgAdminDAL.CompanyRep();
+                var organization = rep.GetOrganizationFromHost(host);
+
+                // Store the organization in the SessionHelper
+                ELG.Web.Helper.SessionHelper.OrgDomainDetails = organization;
+                sessionDomainDetails = organization;
+            }
+            catch (Exception dbEx)
+            {
+                // Database error - log it but don't throw, use defaults
+                System.Diagnostics.Debug.WriteLine($"[MasterLayout] Database error getting organization: {dbEx.Message}");
+                sessionDomainDetails = null; // Will use defaults below
+            }
+        }
+
+        // Fall back to defaults to avoid null reference and compilation failures when branding is missing
+         titleText = sessionDomainDetails?.TitleText ?? "ELG";
+         favicon = sessionDomainDetails?.Favicon ?? "Content/images/favicon.ico";
+         cssPath = sessionDomainDetails?.CSS ?? "Content/css/custom.css";
+    }
+    else
+    {
+        titleText = sessionDomainDetails?.TitleText ?? "LMS";
+        favicon = sessionDomainDetails?.Favicon ?? "favicon.ico";
+        cssPath = sessionDomainDetails?.CSS ?? "Content/css/custom.css";
+    }
+}
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>@titleText - @ViewBag.Title</title>
+    <link rel="icon" href="~/@favicon" sizes="16x16">
+
+    <!-- Bootstrap -->
+    @*<link href="~/content/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">*@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="~/content/vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- NProgress -->
+    @*<link href="~/content/vendor/nprogress/nprogress.css" rel="stylesheet" type="text/css">*@
+    <!-- iCheck -->
+    <link href="~/content/vendor/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    @*<link href="~/content/css/custom.css" rel="stylesheet">
+        <link href="~/content/css/profilePic.css" rel="stylesheet">*@
+    @if (!string.IsNullOrEmpty(sessionDomainDetails?.CSS))
+    {
+        <link rel="stylesheet" href="~/@sessionDomainDetails.CSS">
+    }
+    else
+    {
+        <link rel="stylesheet" href="~/content/css/custom.css">
+    }
+    <link href="~/content/css/egate.css" rel="stylesheet">
+    @*<link href="~/content/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">*@
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <style>
+        .admin-modern-view .learner-menu-bar {
+            --tenant-primary: var(--color-primary, var(--bs-primary, #ff8a46));
+            --menu-text-color: #3f2f2b;
+            background: #efedeb;
+            border-right: 1px solid #ded9d4;
+            box-shadow: 8px 0 30px rgba(42, 28, 24, 0.08);
+            padding-top: 12px;
+        }
+
+        .admin-modern-view .learner-menu-bar .logo {
+            background: transparent;
+            border-bottom: 0;
+            padding: 10px 16px 14px;
+        }
+
+        .admin-modern-view .learner-menu .menu-icon {
+            display: none;
+        }
+
+        .admin-modern-view .learner-menu .menu-section-title {
+            color: #7d6f67;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 14px 16px 6px;
+            margin: 10px 10px 2px;
+            list-style: none;
+        }
+
+        .admin-modern-view .learner-menu .nav-item > a,
+        .admin-modern-view .learner-menu .parent-menu-a {
+            position: relative;
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 18px;
+            margin: 6px 16px;
+            padding: 12px 16px;
+            min-height: 46px;
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: 0.1px;
+            transition: all 0.22s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .admin-modern-view .learner-menu .nav-item:not(.active) > a:hover,
+        .admin-modern-view .learner-menu .parent-menu-a:hover {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+            border-color: var(--tenant-primary);
+            transform: none;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .admin-modern-view .learner-menu .nav-item.active > a,
+        .admin-modern-view .learner-menu .nav-item > a.active {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+            box-shadow: 0 8px 16px rgba(25, 35, 52, 0.2);
+        }
+
+        .admin-modern-view .learner-menu .nav-item.active > a:hover,
+        .admin-modern-view .learner-menu .nav-item > a.active:hover {
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
+        .admin-modern-view .learner-menu .nav-item.active > a span,
+        .admin-modern-view .learner-menu .nav-item > a.active span {
+            color: #ffffff;
+        }
+
+        .admin-modern-view .learner-menu .nav-item > a::before,
+        .admin-modern-view .learner-menu .parent-menu-a::before {
+            font-family: FontAwesome;
+            font-size: 16px;
+            width: 18px;
+            text-align: center;
+            opacity: 0.85;
+            font-weight: 400;
+            flex: 0 0 18px;
+        }
+
+        .admin-modern-view #dashboardLink > a::before { content: "\f00a"; }
+        .admin-modern-view #userLink > a::before { content: "\f0c0"; }
+        .admin-modern-view #moduleLink > a::before { content: "\f02d"; }
+        .admin-modern-view #manageRALink > a::before { content: "\f132"; }
+        .admin-modern-view #docLink > a::before { content: "\f15b"; }
+        .admin-modern-view #reportLink > a::before { content: "\f1fe"; }
+        .admin-modern-view #settingsLink > a::before,
+        .admin-modern-view #settingLink > a::before { content: "\f013"; }
+        .admin-modern-view #resourcesLink > a::before { content: "\f0b1"; }
+        .admin-modern-view #helpLink > a::before { content: "\f059"; }
+        .admin-modern-view #learnerDashboardLink > a::before { content: "\f00a"; }
+        .admin-modern-view #learnerCoursesLink > a::before { content: "\f19d"; }
+        .admin-modern-view #learnerRiskLink > a::before { content: "\f132"; }
+        .admin-modern-view #learnerDocsLink > a::before { content: "\f0f6"; }
+        .admin-modern-view #learnerSettingsLink > a::before { content: "\f013"; }
+        .admin-modern-view #toggleLearnerLink > a::before { content: "\f19d"; }
+        .admin-modern-view #logout > a::before { content: "\f08b"; }
+        .admin-modern-view #logout > a {
+            font-size: 15px !important;
+            font-weight: 400 !important;
+            margin: 4px 12px !important;
+            padding: 8px 12px !important;
+            min-height: 40px !important;
+        }
+
+        .admin-modern-view .learner-menu .child_menu {
+            background: transparent;
+            border-radius: 12px;
+            margin: 0 16px 8px;
+            padding: 2px 0 8px;
+            border-left: 2px solid var(--tenant-primary);
+        }
+
+        .admin-modern-view .learner-menu .child_menu li a {
+            color: var(--menu-text-color) !important;
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 15px;
+            margin: 2px 0 2px 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .admin-modern-view .learner-menu .child_menu li a:hover {
+            color: #ffffff;
+            background: var(--tenant-primary);
+            border-color: var(--tenant-primary);
+        }
+
+        .admin-modern-view .learner-menu .child_menu li a.active,
+        .admin-modern-view .learner-menu .child_menu li a.active:hover {
+            background: transparent;
+            border-color: transparent;
+            color: var(--menu-text-color) !important;
+            font-weight: 800;
+            box-shadow: none;
+        }
+
+        .admin-modern-view .line-partition {
+            border-color: #ded3cb !important;
+            margin-top: 18px !important;
+        }
+
+        .admin-modern-view .profile-details span {
+            color: #8c7c72;
+        }
+
+        .admin-modern-view .profile-details h2 {
+            color: #352823;
+        }
+
+        .admin-modern-view .profile.parent-menu {
+            position: relative;
+            padding-right: 42px;
+        }
+
+        .admin-modern-view .profile-menu-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8c7c72 !important;
+            text-decoration: none;
+            border: 0;
+            background: transparent;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .admin-modern-view .profile.parent-menu.open .profile-menu-toggle .fa {
+            transform: rotate(180deg);
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(100% + 10px);
+            margin: 0;
+            padding: 8px;
+            list-style: none;
+            background: #ffffff;
+            border: 1px solid #ded9d4;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(42, 28, 24, 0.12);
+            z-index: 5;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li {
+            margin: 0;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a {
+            display: block;
+            color: var(--menu-text-color) !important;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a:hover,
+        .admin-modern-view .profile.parent-menu .profile-child-menu li a.active {
+            background: var(--tenant-primary);
+            color: #ffffff !important;
+        }
+
+        .admin-modern-view .admin-viewmode-item {
+            margin-left: 0;
+            margin-right: 0;
+            padding: 6px 0 4px;
+        }
+
+        .admin-modern-view .admin-viewmode-label {
+            color: #4f3e38;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.78rem;
+        }
+
+        .admin-modern-view .admin-viewmode-caption {
+            color: #89786f;
+            font-size: 0.72rem;
+        }
+
+        .admin-modern-view .admin-viewmode-item .admin-viewmode-row,
+        .admin-modern-view .admin-viewmode-item .admin-viewmode-caption {
+            margin-left: 12px;
+            margin-right: 8px;
+        }
+
+        .admin-modern-view .learner-main-content {
+            background: radial-gradient(circle at 0% 0%, #fff8f3 0%, #f8fbfd 36%, #ffffff 100%);
+        }
+    </style>
+</head>
+
+<body class="@(isModernViewMode ? "admin-modern-view" : "admin-classic-view")">
+    <div class="learner-content-container">
+
+        <!-- Hamburger Menu Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Left Navigation Menu -->
+
+        @{
+            // Deserialize learnerMenuSettings if it's not null
+            var learnerMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgAdminAvailableMenu as string;
+            dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
+                ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
+                : null;
+
+            var learnerSectionMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgLearnerAvailableMenu as string;
+            if (string.IsNullOrEmpty(learnerSectionMenuSettingsJson))
+            {
+                learnerSectionMenuSettingsJson = learnerMenuSettingsJson;
+            }
+            dynamic learnerSectionMenuSettings = !string.IsNullOrEmpty(learnerSectionMenuSettingsJson)
+                ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerSectionMenuSettingsJson)
+                : null;
+
+            var currentPath = (Context?.Request?.Path.Value ?? string.Empty).ToLowerInvariant();
+            var isAdminSettingsPage = currentPath.StartsWith("/home/myprofile") || currentPath.StartsWith("/home/changepassword");
+            var isLearnerDashboardPage = currentPath.Contains("/learner/home/dashboard");
+            var isLearnerMyCoursesPage = currentPath.Contains("/learner/home/mycourses");
+            var isLearnerRiskPage = currentPath.Contains("/learner/riskassessment/assessment");
+            var isLearnerDocumentsPage = currentPath.Contains("/learner/document/list");
+            var isLearnerSettingsPage = currentPath.Contains("/learner/home/myprofile") || currentPath.Contains("/learner/home/changepassword");
+        }
+        <nav class="learner-menu-bar">
+            <div class="logo">
+                <img src="" alt="Logo">
+            </div>
+            <div class="menu-container">
+                <ul class="learner-menu">
+                    @if (isModernViewMode)
+                    {
+                        <li class="menu-section-title">Admin</li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.dashboard == true)
+                    {
+                        <li class="nav-item" id="dashboardLink">
+                            <a id="menu-dashboard" href="@Url.Action("Dashboard", "Home", new { area = "" })">
+                                @*<i class="fa fa-pie-chart"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/dasboard.png" alt="Dasboard" /> Dashboard
+                            </a>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageUsers == true)
+                    {
+                        <li class="nav-item parent-menu" id="userLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-user"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/user.png" alt="Users" /> User Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                @if (learnerMenuSettings == null || learnerMenuSettings.userListing == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-view-user" href="@Url.Action("Accounts", "UserManagement", new { area = "" })">User Directory</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.adddUser == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-add-user" href="@Url.Action("CreateAccount", "UserManagement", new { area = "" })">Create Account</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.userBulkUpload == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-upload-user" href="@Url.Action("ImportAccounts", "UserManagement", new { area = "" })">Import Accounts</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.userSelfRegister == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-self-register" href="@Url.Action("OpenEnrollment", "UserManagement", new { area = "" })">Open Enrollment</a></li>
+                                }
+                                @if (learnerMenuSettings == null || learnerMenuSettings.manageAdmin == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-view-admin" href="@Url.Action("Accounts", "RoleManagement", new { area = "" })">Manage Roles</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @*<li class="nav-item" id="profileLink">
+                            <a>
+                                <i class="fa fa-graduation-cap"></i> Profile Management <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="collapse-item" id="menu-manage-profile" href="@Url.Action("ManageProfile", "Profile", new { area = "" })">Manage Profile</a></li>
+                                <li><a class="collapse-item" id="menu-allocate-profile" href="@Url.Action("AssignProfile", "Profile", new { area = "" })">Assign Profile - Manual</a></li>
+                                <li><a class="collapse-item" id="menu-allocate-profile" href="@Url.Action("ProfileAutoAssign", "Profile", new { area = "" })">Assign Profile - Auto</a></li>
+                                <li><a class="collapse-item" id="menu-renew-profile" href="@Url.Action("RenewProfile", "Profile", new { area = "" })">Refresh Profile</a></li>
+                            </ul>
+                        </li>*@
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageCourse == true)
+                    {
+                        <li class="nav-item parent-menu" id="moduleLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-book"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/course.png" alt="Course" /> Course Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                @if (learnerMenuSettings != null && learnerMenuSettings.addNewModules == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-upload-scorm" href="@Url.Action("UploadScormPackage", "CourseManagement", new { area = "" })">Add Course</a></li>
+                                }
+                                @if (learnerMenuSettings != null && learnerMenuSettings.manageSubModules == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-manage-module" href="@Url.Action("Courses", "CourseManagement", new { area = "" })">Manage Course</a></li>
+                                }
+                                <li><a class="collapse-item" id="menu-allocate-module" href="@Url.Action("Enrollment", "CourseManagement", new { area = "" })">Hand-Picked Enrollment</a></li>
+                                <li><a class="collapse-item" id="menu-auto-license-allocation" href="@Url.Action("LicenseAutoAllocation", "Licenses", new { area = "" })">Auto-Assign Courses</a></li>
+                                <li><a class="collapse-item" id="menu-revoke-module" href="@Url.Action("RestictAccess", "CourseManagement", new { area = "" })">Restrict Course Access</a></li>
+                                @if (learnerMenuSettings == null || learnerMenuSettings.trainingRenewal == true)
+                                {
+                                    if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 1)
+                                    {
+                                        <li><a class="collapse-item" id="menu-configure-module" href="@Url.Action("Setup", "CourseManagement", new { area = "" })">Refresher Training</a></li>
+                                    }
+                                    else if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 2)
+                                    {
+                                        <li><a class="collapse-item" id="menu-configure-module" href="@Url.Action("ResetDateSetup", "CourseManagement", new { area = "" })">Refresher Training</a></li>
+                                    }
+                                    else if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 3)
+                                    {
+                                        <li><a class="collapse-item" id="menu-configure-module" href="@Url.Action("TrainingRefresher", "CourseManagement", new { area = "" })">Refresher Training</a></li>
+                                    }
+                                }
+                                @*<li><a class="collapse-item" id="menu-module-catalogue" target="_blank" href="#">Course Catalogue</a></li>*@
+                                @if (learnerMenuSettings != null && learnerMenuSettings.enableWidget == true)
+                                {
+                                    <li><a class="collapse-item" id="menu-que-widget" href="@Url.Action("Course", "QueWidget", new { area = "" })">Widgets</a></li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageRiskAssessment == true)
+                    {
+                        <li class="nav-item parent-menu" id="manageRALink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-exclamation-triangle"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/riskmngmnt.png" alt="Risk Management" /> Risk Assessment Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="collapse-item" id="menu-allocate-ra" href="@Url.Action("AllocateRiskAssessment", "RiskAssessment", new { area = "" })">Hand-Picked Allocation</a></li>
+                                <li><a class="collapse-item" id="menu-auto-ra-allocation" href="@Url.Action("RiskAssessmentAutoAllocation", "RiskAssessment", new { area = "" })">Auto-Assign Assessments</a></li>
+                                <li><a class="collapse-item" id="menu-revoke-ra" href="@Url.Action("RevokeRiskAssessment", "RiskAssessment", new { area = "" })">Revoke & Reset</a></li>
+                                <li><a class="collapse-item" id="menu-configure-ra" href="@Url.Action("ConfigureRiskAssessment", "RiskAssessment", new { area = "" })">Assessment Setup</a></li>
+                                @*<li><a class="collapse-item" id="menu-edit-ra" href="@Url.Action("ManageRiskAssessment", "RiskAssessment", new { area = "" })">Assessment Editor</a></li>*@
+                            </ul>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.manageDocs == true)
+                    {
+                        <li class="nav-item parent-menu" id="docLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-folder"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/document.png" alt="Documents" /> Document Hub <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="collapse-item" id="menu-category-report" href="@Url.Action("DocumentCategory", "Document", new { area = "" })">Manage Categories</a></li>
+                                <li><a class="collapse-item" id="menu-document-report" href="@Url.Action("Documents", "Document", new { area = "" })">Manage Document</a></li>
+                                <li><a class="collapse-item" id="menu-docgroup-report" href="@Url.Action("DocumentBundel", "Document", new { area = "" })">Manage Document Group</a></li>
+                                <li><a class="collapse-item" id="menu-document-accesss" href="@Url.Action("ManageAccess", "Document", new { area = "" })">Access Control</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (learnerMenuSettings == null || learnerMenuSettings.viewReports == true)
+                    {
+                        @if (isModernViewMode)
+                        {
+                            <li class="nav-item" id="reportLink">
+                                <a id="menu-reports-hub" href="@Url.Action("InsightsReports", "Report", new { area = "" })">
+                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Reports & Analytics
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item parent-menu" id="reportLink">
+                                <a class="parent-menu-a">
+                                    @*<i class="fa fa-file"></i>*@
+                                    <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports <span class="fa fa-chevron-down"></span>
+                                </a>
+                                <ul class="nav child_menu">
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-summary-report" href="@Url.Action("Summary", "Report", new { area = "" })">Overview</a></li>
+                                    }
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.learningReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-learning-report" href="@Url.Action("LearningProgress", "Report", new { area = "" })">Course Progress</a></li>
+                                        <li><a class="collapse-item" id="menu-sm-report" href="@Url.Action("SubModuleProgress", "Report", new { area = "" })">Sub-module Progress</a></li>
+                                        <li><a class="collapse-item" id="menu-historic-report" href="@Url.Action("HistoricRecords", "Report", new { area = "" })">Historic Records</a></li>
+                                    }
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.raReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("RiskAssessmentReport", "Report", new { area = "" })">Risk Assessment</a></li>
+                                    }
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.documentReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("DocumentReport", "Report", new { area = "" })">Document Report</a></li>
+                                    }
+                                    @*@if (learnerMenuSettings == null || learnerMenuSettings.announcmentReport == true)
+            {
+                <li><a class="collapse-item" id="menu-announcement-report" href="@Url.Action("AnnouncementReport", "Report", new { area = "" })">Announcement Engagement</a></li>
+            }*@
+                                    @if (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-trainingcard-report" href="@Url.Action("TrainingCard", "Report", new { area = "" })">Learner Account Snapshot</a></li>
+                                    }
+                                    @if (learnerMenuSettings != null && learnerMenuSettings.enableWidget == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-widget-report" href="@Url.Action("WidgetProgress", "Report", new { area = "" })">Widgets</a></li>
+                                    }
+                                    @if (learnerMenuSettings != null && learnerMenuSettings.archiveReport == true)
+                                    {
+                                        <li><a class="collapse-item" id="menu-widget-report" href="@Url.Action("ArchiveReport", "Report", new { area = "" })">Archive Report</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                    @*<li class="nav-item" id="certificateLink">
+                            <a id="menu-certificate" href="@Url.Action("External", "Certificate", new { area = "" })"><i class="fa fa-certificate"></i> External Certificate </a>
+                        </li>*@
+
+                    @*@if (learnerMenuSettings == null || learnerMenuSettings.manageCommunications == true)
+                        {
+                            <li class="nav-item parent-menu" id="settingLink">
+                                <a class="parent-menu-a">
+                                    <i class="fa fa-comments"></i> Communication <span class="fa fa-chevron-down"></span>
+                                </a>
+                                <ul class="nav child_menu">
+                                    <li><a class="collapse-item" href="@Url.Action("LearningProgressNotification", "Report", new { area = "" })" id="menu-manual-notification">Reminders</a></li>
+                                    <li><a class="collapse-item" href="@Url.Action("ModuleReminder", "Home", new { area = "" })" id="menu-set-reminder">Refreshers</a></li>
+                                    <li><a class="collapse-item" href="@Url.Action("Announcements", "Announcement", new { area = "" })" id="menu-announcement">Announcements</a></li>
+                                    <li><a class="collapse-item" id="menu-set-notification" href="@Url.Action("ModuleNotification", "Home", new { area = "" })">Notifications</a></li>
+                                </ul>
+                            </li>
+                        }*@
+
+
+
+                    @if (!isModernViewMode)
+                    {
+                        <li class="nav-item parent-menu" id="settingsLink">
+                            <a class="parent-menu-a">
+                                @*<i class="fa fa-cog"></i>*@
+                                <img class="menu-icon" src="~/Content/images/icons/settings.png" alt="Settings" /> Settings <span class="fa fa-chevron-down"></span>
+                            </a>
+                            <ul class="nav child_menu">
+                                <li><a class="user-profile-btn" id="menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile", "Home", new { area = "" })"> Profile</a></li>
+                                <li><a id="menu-user-password" href="@Url.Action("ChangePassword", "Home", new { area = "" })"> Update password </a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (isModernViewMode && ELG.Web.Helper.SessionHelper.HasLearnerRights)
+                    {
+                        <li class="menu-section-title">Learner</li>
+
+                        @if (learnerSectionMenuSettings == null || learnerSectionMenuSettings.dashboard == true)
+                        {
+                            <li class="nav-item @(isLearnerDashboardPage ? "active" : string.Empty)" id="learnerDashboardLink">
+                                <a id="menu-learner-dashboard" href="@Url.Action("Dashboard", "Home", new { area = "Learner" })">Dashboard</a>
+                            </li>
+                        }
+
+                        <li class="nav-item @(isLearnerMyCoursesPage ? "active" : string.Empty)" id="learnerCoursesLink">
+                            <a id="menu-learner-courses" href="@Url.Action("MyCourses", "Home", new { area = "Learner" })">My Courses</a>
+                        </li>
+
+                        @if (learnerSectionMenuSettings == null || learnerSectionMenuSettings.ra == true)
+                        {
+                            <li class="nav-item @(isLearnerRiskPage ? "active" : string.Empty)" id="learnerRiskLink">
+                                <a id="menu-learner-ra" href="@Url.Action("Assessment", "RiskAssessment", new { area = "Learner" })">Risk Assessments</a>
+                            </li>
+                        }
+
+                        @if (learnerSectionMenuSettings == null || learnerSectionMenuSettings.doc == true)
+                        {
+                            <li class="nav-item @(isLearnerDocumentsPage ? "active" : string.Empty)" id="learnerDocsLink">
+                                <a id="menu-learner-docs" href="@Url.Action("List", "Document", new { area = "Learner" })">Documents</a>
+                            </li>
+                        }
+
+                    }
+                </ul>
+            </div>
+            <div class="line-partition mx-4 mt-5"></div>
+            <ul class="learner-menu">
+                @if (!isModernViewMode)
+                {
+                    <li class="nav-item" id="toggleLearnerLink">
+                        <a id="menu-switch-view" href="#" onclick="switchToLearnerView(); return false;">Learner View</a>
+                    </li>
+                }
+                <li class="nav-item" id="logout">
+                    <a id="menu-logout" class="parent-menu-a" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        @*<i class="fa fa-power-off me-1"></i>*@
+                        <img class="menu-icon" src="~/Content/images/icons/logout.png" alt="Logout" /> Log Out
+                    </a>
+                </li>
+            </ul>
+            <div class="profile @(isModernViewMode ? "parent-menu" : string.Empty)" id="userProfileMenu">
+                @{
+                    if (!String.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic))
+                    {
+                        <img id="imgLearnerProfile" class="img-circle profile_img" src="@ELG.Web.Helper.SessionHelper.ProfilePic">
+                    }
+                    else
+                    {
+                        <img id="imgLearnerProfile" class="img-circle profile_img" src="~/Content/images/no-pic.png">
+                    }
+                }
+                <div class="profile-details">
+                    <span>Welcome,</span>
+                    <h2>@ELG.Web.Helper.SessionHelper.UserDisplayName</h2>
+                </div>
+                @if (isModernViewMode)
+                {
+                    <a class="parent-menu-a profile-menu-toggle" href="#" aria-label="Open user settings">
+                        <span class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu profile-child-menu">
+                        <li><a class="user-profile-btn @(isAdminSettingsPage && currentPath.StartsWith("/home/myprofile") ? "active" : string.Empty)" id="profile-menu-user-profile" data-id="btnUserProfile-@ELG.Web.Helper.SessionHelper.UserId" href="@Url.Action("MyProfile", "Home", new { area = "" })">Profile</a></li>
+                        <li><a class="@(isAdminSettingsPage && currentPath.StartsWith("/home/changepassword") ? "active" : string.Empty)" id="profile-menu-user-password" href="@Url.Action("ChangePassword", "Home", new { area = "" })">Update password</a></li>
+                    </ul>
+                }
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="learner-main-content">
+
+            @RenderBody()
+            <partial name="_EditLearnerInfo" />
+        </main>
+    </div>
+
+
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logOutModalLabel">
+                        <i class="fa fa-sign-out-alt me-2 text-primary"></i> Ready to Leave?
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    Select <strong>Logout</strong> below if you are ready to end your current session.
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-1"></i> Close
+                    </button>
+                    <a id="menu-logout" href="@Url.Action("Logout", "Account", new { area = "" })" class="btn btn-primary">
+                        <i class="fa fa-power-off me-1"></i> Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    @*<script src="~/content/vendor/jquery/dist/jquery.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js" integrity="sha256-Fb0zP4jE3JHqu+IBB9YktLcSjI1Zc6J2b6gTjB0LpoM=" crossorigin="anonymous"></script>
+    <link href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+    @* <script src="~/content/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/content/vendor/nprogress/nprogress.js"></script>
+    <script src="~/content/vendor/iCheck/icheck.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/content/js/custom.min.js"></script>
+
+    @*<script src="~/Content/vendor/datatables/jquery.dataTables.min.js"></script>*@
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="~/Content/vendor/treeComponent/js/d3-mitch-tree.min.js"></script>
+    <script src="~/Scripts/Admin/Common/utils.js"></script>
+    <script src="~/Scripts/Admin/Common/UserInfo.js?v=1.1"></script>
+    
+    <script>
+        // Set base URL from server
+        hdnBaseUrl = '@Context.Request.Scheme://@Context.Request.Host@Context.Request.PathBase/';
+    </script>
+    <script src="~/Scripts/Admin/Common/layout.js"></script>
+    
+            @RenderSection("Scripts", required: false)
+</body>
+</html>
+

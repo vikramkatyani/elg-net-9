@@ -1,0 +1,311 @@
+<div class="modal fade" id="createRAPopup" tabindex="-1" aria-labelledby="createRAPopupLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content cm-cra-content">
+      <div class="modal-header cm-cra-header">
+        <h5 class="modal-title cm-cra-title">
+          <i class="fa fa-shield"></i>
+          Add Risk Assessment: <span id="createRAPopupTitle"></span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body cm-cra-body">
+        <div class="alert alert-danger collapse" id="createRAPopupMessage"></div>
+        <div class="alert alert-success collapse" id="createRAPopupSuccess"></div>
+
+        <div id="uploadSection" class="cm-cra-section">
+          <div class="cm-cra-subhead">Upload Content</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label cm-cra-label" for="txtCreateRATitle">Title</label>
+              <div class="cm-cra-control">
+                  <span class="cm-cra-icon"><i class="fa fa-tag"></i></span>
+                  <input type="text" class="form-control" id="txtCreateRATitle" placeholder="Title">
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label cm-cra-label" for="txtCreateRADesc">Description</label>
+              <div class="cm-cra-control">
+                  <span class="cm-cra-icon"><i class="fa fa-align-left"></i></span>
+                  <input type="text" class="form-control" id="txtCreateRADesc" placeholder="Description">
+              </div>
+            </div>
+          </div>
+
+          <div class="cm-cra-subhead">Upload File</div>
+          <div class="row">
+            <div class="col-md-12 mb-2">
+              <input class="form-control custom-file-input cm-cra-file" type="file" id="fileCreateRAExcel" accept=".xlsx,.xls,.csv">
+            </div>
+            <div class="col-md-12">
+              <small class="text-muted">File size should not exceed 5 MB</small>
+              <br />
+              <small><a href="~/templates/RiskAssessment_Template.csv" download class="text-decoration-none"><i class="fa fa-download me-1"></i>Download template</a></small>
+            </div>
+          </div>
+        </div>
+
+        <div id="previewSection" class="collapse cm-cra-section">
+          <div class="cm-cra-subhead">Preview Risk Assessment</div>
+          <div id="previewContent" class="cm-cra-preview">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer cm-cra-footer">
+        <div id="uploadFooter">
+          <button type="button" class="btn cm-cra-btn cm-cra-btn-soft" data-bs-dismiss="modal">
+            <i class="fa fa-times"></i>Close
+          </button>
+          <button type="button" class="btn cm-cra-btn cm-cra-btn-primary" id="btnUploadRA">
+            <i class="fa fa-upload"></i>Upload
+          </button>
+        </div>
+
+        <div id="previewFooter" class="collapse">
+          <button type="button" class="btn cm-cra-btn cm-cra-btn-soft" id="btnDiscardRA">
+            <i class="fa fa-trash"></i>Discard
+          </button>
+          <button type="button" class="btn cm-cra-btn cm-cra-btn-primary" id="btnPublishRA">
+            <i class="fa fa-check"></i>Publish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+    #createRAPopup {
+        --cm-brand: var(--color-primary, #0b7d78);
+        --cm-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+  #createRAPopup .modal-dialog {
+    max-width: 1120px;
+  }
+
+    #createRAPopup .cm-cra-content {
+        border: 1px solid #d8e6ea;
+        border-radius: 14px;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+        overflow: hidden;
+      animation: cmCraPopupIn 0.2s ease-out;
+    }
+
+    #createRAPopup .cm-cra-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #createRAPopup .cm-cra-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: #1f4652;
+        font-weight: 700;
+    }
+
+    #createRAPopup .cm-cra-body {
+        background: #fcfefe;
+      padding: 1rem;
+    }
+
+    #createRAPopup .cm-cra-section {
+        background: #fff;
+        border: 1px solid #deeaed;
+        border-radius: 12px;
+        padding: 0.9rem;
+        margin-bottom: 0.7rem;
+    }
+
+    #createRAPopup .cm-cra-subhead {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #31545f;
+        padding-bottom: 0.32rem;
+        border-bottom: 1px solid #e2ecef;
+        margin-bottom: 0.7rem;
+    }
+
+    #createRAPopup .cm-cra-label {
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    #createRAPopup .cm-cra-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    #createRAPopup .cm-cra-icon {
+        width: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5f3;
+        color: #0b7d78;
+        border-right: 1px solid #cde2de;
+    }
+
+    #createRAPopup .cm-cra-control .form-control {
+        border: 0;
+        border-radius: 0;
+        height: 42px;
+        box-shadow: none;
+    }
+
+    #createRAPopup .cm-cra-control:focus-within {
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #createRAPopup .cm-cra-file {
+        border-radius: 10px;
+        border-color: #cfe0e4;
+    }
+
+    #createRAPopup .cm-cra-preview {
+        border: 1px solid #d7e6ea;
+        border-radius: 10px;
+        padding: 0.75rem;
+        max-height: 400px;
+        overflow-y: auto;
+        background: #fff;
+    }
+
+    #createRAPopup .cm-cra-preview h5 {
+      font-size: 0.94rem;
+      margin-bottom: 0.55rem;
+    }
+
+    #createRAPopup .cm-cra-preview .table thead th {
+      background: #f4faf9;
+      border-bottom: 1px solid #dce9eb;
+      color: #32515c;
+      font-size: 0.79rem;
+      line-height: 1.2;
+    }
+
+    #createRAPopup .cm-cra-preview .table tbody td {
+      font-size: 0.82rem;
+      vertical-align: top;
+      line-height: 1.35;
+      padding-top: 0.52rem;
+      padding-bottom: 0.52rem;
+    }
+
+    #createRAPopup .cm-cra-preview .badge {
+      font-size: 0.68rem;
+      padding: 0.18rem 0.38rem;
+      border-radius: 999px;
+    }
+
+    #createRAPopup .cm-cra-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    #createRAPopup .cm-cra-btn {
+        min-width: 110px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      #createRAPopup .cm-cra-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      #createRAPopup .cm-cra-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #createRAPopup .cm-cra-btn-primary {
+        background: var(--cm-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #createRAPopup .cm-cra-btn-primary:hover,
+    #createRAPopup .cm-cra-btn-primary:focus {
+        color: #fff;
+    }
+
+    #createRAPopup .cm-cra-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    @@keyframes cmCraPopupIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.995);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+      #createRAPopup .cm-cra-content {
+        animation: none;
+      }
+
+      #createRAPopup .cm-cra-btn {
+        transition: none;
+      }
+    }
+
+    @@media (max-width: 767px) {
+      #createRAPopup .modal-dialog {
+        margin: 0.55rem;
+      }
+
+      #createRAPopup .cm-cra-body {
+        padding: 0.85rem;
+      }
+
+      #createRAPopup .cm-cra-footer {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      #createRAPopup #uploadFooter,
+      #createRAPopup #previewFooter {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      #createRAPopup .cm-cra-btn {
+        width: 100%;
+      }
+
+      #createRAPopup .cm-cra-preview .table thead th,
+      #createRAPopup .cm-cra-preview .table tbody td {
+        white-space: nowrap;
+      }
+    }
+</style>

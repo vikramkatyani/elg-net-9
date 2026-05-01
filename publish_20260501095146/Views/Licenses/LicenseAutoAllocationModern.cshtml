@@ -1,0 +1,439 @@
+
+@{
+    ViewBag.Title = "Course Auto Allocation";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div id="licenseAutoAllocationPage" class="laa-shell">
+    <div class="laa-hero">
+        <div>
+            <h1 class="laa-title">Auto-Assign - Courses</h1>
+            <p class="laa-subtitle">Set up automatic course allocation by location, department, or entire company in a few steps.</p>
+        </div>
+    </div>
+
+    <div class="laa-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6 col-lg-4">
+                <label for="ddlCourse" class="laa-label">Select Course</label>
+                <select id="ddlCourse" class="form-select ddl-course laa-input">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <label for="ddlMethod" class="laa-label">Assign By</label>
+                <select id="ddlMethod" class="form-select laa-input">
+                    <option value="0">Select</option>
+                    <option value="2">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</option>
+                    <option value="3">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</option>
+                    <option value="4">Entire Company</option>
+                    <option value="1">Advanced</option>
+                </select>
+            </div>
+
+            <div class="col-lg-4 laa-continue-col">
+                <button id="applyAssignmentMethod" class="btn laa-btn laa-btn-primary w-100">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row assign-sel-row laa-assign-row" id="filter-assignby-location">
+        <div class="col-12">
+            <div class="laa-inline-card">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6 col-lg-5">
+                        <label for="ddlLocation" class="laa-label">Assign to @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        <select id="ddlLocation" class="form-select ddl-loc laa-input">
+                            <option value="0">Select All</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-7 laa-inline-actions">
+                        <button id="searchDepartmentModule" class="btn laa-btn laa-btn-primary">
+                            <i class="fa fa-search me-1"></i>Search
+                        </button>
+                        <button id="clearSearchDepartmentModule" class="btn laa-btn laa-btn-soft">
+                            <i class="fa fa-times me-1"></i>Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row assign-sel-row laa-assign-row" id="filter-assignby-department">
+        <div class="col-12">
+            <div class="laa-inline-card">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-7 col-lg-7">
+                        <label for="ddlDepartment" class="laa-label">Assign to @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        <select id="ddlDepartment" class="form-select ddl-dept laa-input">
+                            <option value="0">Select @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5 col-lg-5 laa-inline-actions">
+                        <button type="button" class="btn laa-btn laa-btn-dark w-100" id="btnAssignToEntireDepartment"
+                                data-bs-toggle="tooltip" data-toggle="tooltip"
+                                title="Assign licence auto allocation to selected @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription"
+                                data-loading-text="Please wait..." data-original-text="Entire Department">
+                            Entire Department
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row assign-sel-row laa-assign-row" id="filter-assignby-org">
+        <div class="col-12">
+            <div class="laa-inline-card laa-inline-card-org">
+                <button type="button" class="btn laa-btn laa-btn-primary" id="btnAssignToEntireOrg"
+                        data-bs-toggle="tooltip" data-toggle="tooltip" title="Assign licence auto allocation to all"
+                        data-loading-text="Please wait..." data-original-text="Entire Company">
+                    Entire Company
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="x_content laa-content">
+        <div id="divMessage_AutoAllocateModule"></div>
+
+        <div id="divLicAutoAllocateInfoMessage" class="laa-info">
+            <div>
+                <b>How to use this page:</b>
+                <ul>
+                    <li>Begin by selecting a <b>Course</b> from the dropdown menu.</li>
+                    <li>Choose how the course should be assigned by <b>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</b>, <b>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</b>, or to the <b>Entire Organisation</b>.</li>
+                    <li>Use <b>Auto Allocation</b> to automatically assign the course to users added in the future.</li>
+                    <li>To assign the course to existing users, switch to the <b>Hand-Picked Enrollment</b> tab.</li>
+                    <li>Apply filters as needed to refine your selection.</li>
+                    <li>Click <i class="fa fa-search me-1"></i> <b>Search</b> to view eligible users.</li>
+                    <li>Select users using the checkboxes and click <b>Allocate to Selected</b> to complete the assignment.</li>
+                    <li>Use <i class="fa fa-times me-1"></i> <b>Clear</b> to reset all selections and filters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="type-table-container laa-table-card mb-4" id="autoassigndepartments_tbl_container">
+            <div class="laa-table-actions">
+                <button type="button" class="btn laa-btn laa-btn-dark disabled" id="btnAllocateToSelected"
+                        data-bs-toggle="tooltip" data-toggle="tooltip" title="Select some departments"
+                        data-loading-text="Please wait..." data-original-text="Set Auto for Selected">
+                    Set Auto for Selected
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="autoAllocateModuleDepartmentList" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="chk_slc_all_departments"><span class="ms-1">Select All</span></th>
+                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="type-table-container laa-table-card mb-4" id="autoAssignAllLocations_tbl_container">
+            <div class="laa-table-actions">
+                <button type="button" class="btn laa-btn laa-btn-dark disabled" id="btnAllocateToSelectedLocations"
+                        data-bs-toggle="tooltip" data-toggle="tooltip" title="Select some @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription"
+                        data-loading-text="Please wait..." data-original-text="Set Auto for Selected">
+                    Set Auto for Selected
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="autoAllocateModuleAllLocationList" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="chk_slc_all_locations"><span class="ms-1">Select All</span></th>
+                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="type-table-container laa-table-card" id="autoAssignAllDepartments_tbl_container">
+            <div class="laa-table-actions">
+                <button type="button" class="btn laa-btn laa-btn-dark disabled" id="btnAllocateToSelectedDepartments"
+                        data-bs-toggle="tooltip" data-toggle="tooltip" title="Select some @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription"
+                        data-loading-text="Please wait..." data-original-text="Set Auto for Selected">
+                    Set Auto for Selected
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="autoAllocateModuleAllDepartmentList" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="chk_slc_all_company_departments"><span class="ms-1">Select All</span></th>
+                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #licenseAutoAllocationPage {
+        --laa-brand: var(--color-primary, #0b7d78);
+        --laa-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+    #licenseAutoAllocationPage.laa-shell,
+    #licenseAutoAllocationPage .x_content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    #licenseAutoAllocationPage .laa-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    #licenseAutoAllocationPage .laa-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #14323c;
+    }
+
+    #licenseAutoAllocationPage .laa-subtitle {
+        margin: 0.28rem 0 0;
+        color: #637f8a;
+    }
+
+    #licenseAutoAllocationPage .laa-filter-card,
+    #licenseAutoAllocationPage .laa-inline-card,
+    #licenseAutoAllocationPage .laa-table-card {
+        border: 1px solid #dce9ee;
+        border-radius: 13px;
+        background: #ffffff;
+    }
+
+    #licenseAutoAllocationPage .laa-filter-card {
+        padding: 0.95rem;
+        margin-bottom: 0.8rem;
+    }
+
+    #licenseAutoAllocationPage .laa-assign-row {
+        margin-bottom: 0.8rem;
+    }
+
+    #licenseAutoAllocationPage .laa-inline-card {
+        padding: 0.82rem;
+    }
+
+    #licenseAutoAllocationPage .laa-inline-card-org {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    #licenseAutoAllocationPage .laa-label {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #526a74;
+        font-weight: 700;
+    }
+
+    #licenseAutoAllocationPage .laa-input {
+        min-height: 42px;
+        border-color: #cfe1e6;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    #licenseAutoAllocationPage .laa-input:focus {
+        border-color: #8cc9c5;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #licenseAutoAllocationPage .laa-continue-col {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    #licenseAutoAllocationPage .laa-inline-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    #licenseAutoAllocationPage .laa-btn {
+        min-width: 114px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.32rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #licenseAutoAllocationPage .laa-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    #licenseAutoAllocationPage .laa-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #licenseAutoAllocationPage .laa-btn-primary {
+        color: #fff;
+        background: var(--laa-brand);
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #licenseAutoAllocationPage .laa-btn-primary:hover,
+    #licenseAutoAllocationPage .laa-btn-primary:focus {
+        color: #fff;
+    }
+
+    #licenseAutoAllocationPage .laa-btn-soft {
+        background: #f7fbfd;
+        color: #2e515d;
+        border-color: #d2e2e8;
+    }
+
+    #licenseAutoAllocationPage .laa-btn-dark {
+        color: #fff;
+        background: #233d4a;
+        box-shadow: 0 8px 16px rgba(23, 40, 50, 0.2);
+    }
+
+    #licenseAutoAllocationPage .laa-btn-dark.disabled,
+    #licenseAutoAllocationPage .laa-btn-dark:disabled {
+        opacity: 0.55;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    #licenseAutoAllocationPage .laa-info {
+        display: flex;
+        gap: 0.5rem;
+        align-items: flex-start;
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    #licenseAutoAllocationPage .laa-content .alert ul {
+        margin-bottom: 0;
+        padding-left: 1.1rem;
+    }
+
+    #licenseAutoAllocationPage .laa-table-card {
+        padding: 0.9rem;
+    }
+
+    #licenseAutoAllocationPage .laa-table-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 0.55rem;
+    }
+
+    #licenseAutoAllocationPage table {
+        margin-bottom: 0;
+    }
+
+    #licenseAutoAllocationPage table thead th {
+        background: #f2f8fb;
+        color: #35525d;
+        border-bottom: 1px solid #d7e6ec;
+        border-top: 1px solid #d7e6ec;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 700;
+        vertical-align: middle;
+    }
+
+    #licenseAutoAllocationPage table tbody td {
+        border-color: #e1ecef;
+        vertical-align: middle;
+    }
+
+    #licenseAutoAllocationPage table tbody tr:hover {
+        background: #f7fcfd;
+    }
+
+    #licenseAutoAllocationPage table .btn,
+    #licenseAutoAllocationPage table button[id^='assign-'],
+    #licenseAutoAllocationPage table button[id^='remove-'] {
+        border-radius: 999px;
+    }
+
+    @@media (max-width: 991px) {
+        #licenseAutoAllocationPage .laa-inline-actions {
+            justify-content: stretch;
+        }
+
+        #licenseAutoAllocationPage .laa-inline-actions .laa-btn {
+            flex: 1;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        #licenseAutoAllocationPage {
+            padding: 0.72rem;
+        }
+
+        #licenseAutoAllocationPage .laa-filter-card,
+        #licenseAutoAllocationPage .laa-inline-card,
+        #licenseAutoAllocationPage .laa-table-card {
+            padding: 0.72rem;
+            border-radius: 12px;
+        }
+
+        #licenseAutoAllocationPage .laa-inline-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.45rem;
+        }
+
+        #licenseAutoAllocationPage .laa-btn,
+        #licenseAutoAllocationPage #btnAssignToEntireOrg {
+            width: 100%;
+        }
+
+        #licenseAutoAllocationPage .laa-inline-card-org {
+            justify-content: stretch;
+        }
+    }
+</style>
+
+        @section Scripts{
+            <script>const currentpageId = "lic_auto_allocate";</script>
+            <script type="text/javascript" src="~/Scripts/Admin/License/AutoAllocateLicense.js?v=1.4"></script>
+        }
+

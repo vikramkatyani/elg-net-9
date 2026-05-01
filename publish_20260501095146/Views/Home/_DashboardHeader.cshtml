@@ -1,0 +1,119 @@
+@*@{
+        /**/
+
+        string moduleURL = "#";
+        string userListURL = Url.Action("Learner", "ManageLearner"); ;
+        string hseReportURL = Url.Action("RiskAssessmentReport", "Report", new { filter = "hsissue" });
+        string incidentReportURL = Url.Action("AccidentIncident", "Report", new { filter = "new" });
+        string documentURL = "#";
+
+        if (ELG.Web.Helper.SessionHelper.UserRole == 1)
+        {
+            moduleURL = Url.Action("ConfigureModule", "Module");
+            documentURL = Url.Action("Documents", "Document");
+        }
+        <div class="tile_count row">
+            <div class="tile_stats_count">
+                <span class="count_top"><i class="fa fa-calendar"></i> Renewal Due</span>
+                <div class="count" id="renewalDueData"></div>
+            </div>
+            <div class="tile_stats_count">
+                <a href="@userListURL">
+                    <span class="count_top"><i class="fa fa-users"></i> Total Usage</span>
+                    <div class="count" id="usageData"></div>
+                </a>
+            </div>
+            <div class="tile_stats_count">
+                <span class="count_top"><i class="fa fa-book"></i> Total Courses</span>
+                <div class="count" id="totalModulesData"></div>
+            </div>
+            @if (ELG.Web.Helper.SessionHelper.AccidentIncidentFeature > 0)
+            {
+                <div class="col-md-2 col-sm-4  tile_stats_count">
+                    <a href="@incidentReportURL">
+                        <span class="count_top"><i class="fa fa-book"></i> Accident/Incident</span>
+                        <div class="count" id="totalAcciInciData"></div>
+                    </a>
+                </div>
+            }
+        </div>
+    }*@
+@{
+    var moduleURL = "#";
+    var userListURL = Url.Action("Accounts", "UserManagement");
+    var hseReportURL = Url.Action("RiskAssessmentReport", "Report", new { filter = "hsissue" });
+    var incidentReportURL = Url.Action("AccidentIncident", "Report", new { filter = "new" });
+    var documentURL = "#";
+
+    if (ELG.Web.Helper.SessionHelper.UserRole == 1)
+    {
+        moduleURL = Url.Action("ConfigureModule", "Module");
+        documentURL = Url.Action("Documents", "Document");
+    }
+}
+
+
+@{
+    if (ELG.Web.Helper.SessionHelper.UserRole == 1)
+    {
+        <div class="row text-center gy-4 mb-4">
+            <!-- Renewal Due -->
+            <div class="col-6 col-md-3 border pt-2">
+                <i class="fa fa-calendar fa-2x text-primary mb-2"></i>
+                <div class="text-uppercase text-muted small">Renewal Due</div>
+                <div id="renewalDueData" class="h2 fw-bold">0</div>
+            </div>
+
+            <!-- Total Usage -->
+            <div class="col-6 col-md-3 border pt-2">
+                <a href="@userListURL" class="text-decoration-none text-body d-block">
+                    <i class="fa fa-users fa-2x text-success mb-2"></i>
+                    <div class="text-uppercase text-muted small">Total Users</div>
+                    <div id="usageData" class="h2 fw-bold">0</div>
+                </a>
+            </div>
+
+            <!-- Total Courses -->
+            <div class="col-6 col-md-3 border pt-2">
+                <i class="fa fa-book fa-2x text-warning mb-2"></i>
+                <div class="text-uppercase text-muted small">Total Courses</div>
+                <div id="totalModulesData" class="h2 fw-bold">0</div>
+            </div>
+
+            <!-- Total Locations -->
+            <div class="col-6 col-md-3 border pt-2">
+                <i class="fa fa-map-marker fa-2x text-danger mb-2"></i>
+                <div class="text-uppercase text-muted small">Total @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</div>
+                <div id="totalLocationsData" class="h2 fw-bold">0</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row text-center gy-4 mb-4">
+            <!-- Renewal Due -->
+            <div class="col-6 col-md-4 border pt-2">
+                <i class="fa fa-calendar fa-2x text-primary mb-2"></i>
+                <div class="text-uppercase text-muted small">Renewal Due</div>
+                <div id="renewalDueData" class="h2 fw-bold">0</div>
+            </div>
+
+            <!-- Total Usage -->
+            <div class="col-6 col-md-4 border pt-2">
+                <a href="@userListURL" class="text-decoration-none text-body d-block">
+                    <i class="fa fa-users fa-2x text-success mb-2"></i>
+                    <div class="text-uppercase text-muted small">Total Users</div>
+                    <div id="registeredUserData" class="h2 fw-bold">0</div>
+                </a>
+            </div>
+
+            <!-- Total Courses -->
+            <div class="col-6 col-md-4 border pt-2">
+                <i class="fa fa-book fa-2x text-warning mb-2"></i>
+                <div class="text-uppercase text-muted small">Total Courses</div>
+                <div id="assignedModulesData" class="h2 fw-bold">0</div>
+            </div>
+        </div>
+        
+    }
+}

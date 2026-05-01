@@ -1,0 +1,155 @@
+<div class="modal fade" id="addDocumentGroupModal" tabindex="-1" aria-labelledby="addDocumentGroupModalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm doc-modal-content">
+            <div class="modal-header doc-modal-header">
+                <h5 class="modal-title fw-bold doc-modal-title" id="addCategoryModalLabel">Add Document Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body doc-modal-body">
+                <!-- Alert Message -->
+                <div id="addDocGroupMessage"></div>
+
+                <!-- Form -->
+                <form id="addDocGroupForm" class="needs-validation" novalidate>
+
+
+                    <div class="form-floating mb-3 w-100">
+                        <select class="form-select" id="ddlGroupLocation" required>
+                        </select>
+                        <label for="ddlGroupLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <textarea class="form-control" placeholder="Enter group name" id="txtDocGroupName" style="height: 80px" required></textarea>
+                        <label for="txtDocGroupName">Group Name</label>
+                    </div>
+
+
+                    <div class="form-floating mb-3 w-100">
+                        <textarea class="form-control" placeholder="Enter description" id="txtDocGroupDesc" style="height: 100px"></textarea>
+                        <label for="txtDocGroupDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer doc-modal-footer">
+                <button type="button" class="btn doc-modal-btn doc-modal-btn-soft" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn doc-modal-btn doc-modal-btn-primary" id="btnAddDocGroup" data-loading-text="Creating..." data-original-text="Add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--update Modal-->
+
+<div class="modal fade" id="updateDocGroupModal" tabindex="-1" aria-labelledby="updateDocGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-sm doc-modal-content">
+            <div class="modal-header doc-modal-header">
+                <h5 class="modal-title fw-bold doc-modal-title" id="updateDocGroupModalLabel">Update Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body doc-modal-body">
+                <!-- Alert Message -->
+                <div id="updateDocGroupMessage"></div>
+
+                <!-- Form -->
+                <form id="updateDocGroupForm" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtUpdateDocGroupName" class="form-control" placeholder="Group name" required />
+                        <label for="txtUpdateDocGroupName">Group Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id="txtUpdateDocGroupDesc" class="form-control" placeholder="Description" />
+                        <label for="txtUpdateDocGroupDesc">Description</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer doc-modal-footer">
+                <button type="button" class="btn doc-modal-btn doc-modal-btn-soft" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn doc-modal-btn doc-modal-btn-primary" id="btnUpdateDocGroup" data-loading-text="Updating..." data-original-text="Update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #addDocumentGroupModal .doc-modal-content,
+    #updateDocGroupModal .doc-modal-content {
+        border: 1px solid #d8e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+    }
+
+    #addDocumentGroupModal .doc-modal-header,
+    #updateDocGroupModal .doc-modal-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #addDocumentGroupModal .doc-modal-title,
+    #updateDocGroupModal .doc-modal-title {
+        color: #1f4652;
+    }
+
+    #addDocumentGroupModal .doc-modal-body,
+    #updateDocGroupModal .doc-modal-body {
+        background: #fcfefe;
+    }
+
+    #addDocumentGroupModal .form-floating .form-control,
+    #addDocumentGroupModal .form-floating .form-select,
+    #updateDocGroupModal .form-floating .form-control,
+    #updateDocGroupModal .form-floating .form-select {
+        border-color: #cfe1e6;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    #addDocumentGroupModal .form-floating .form-control:focus,
+    #addDocumentGroupModal .form-floating .form-select:focus,
+    #updateDocGroupModal .form-floating .form-control:focus,
+    #updateDocGroupModal .form-floating .form-select:focus {
+        border-color: #8cc9c5;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #addDocumentGroupModal .doc-modal-footer,
+    #updateDocGroupModal .doc-modal-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    #addDocumentGroupModal .doc-modal-btn,
+    #updateDocGroupModal .doc-modal-btn {
+        min-width: 104px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+    }
+
+    #addDocumentGroupModal .doc-modal-btn-primary,
+    #updateDocGroupModal .doc-modal-btn-primary {
+        color: #fff;
+        background: #0b7d78;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #addDocumentGroupModal .doc-modal-btn-soft,
+    #updateDocGroupModal .doc-modal-btn-soft {
+        color: #2e515d;
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+    }
+</style>

@@ -1,0 +1,126 @@
+@{
+    ViewBag.Title = "Category Location Map";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+
+<!-- Page Heading -->
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Map: <strong><span id="spnUpdateCategoryName"></span></strong></h1>
+        <a href="@Url.Action("DocumentCategory" , "Document")" id="btnBackToCategoryList" class="btn btn-sm btn-secondary"><i class="fa fa-backward"></i> Back</a>
+    </div>
+    @{ if (adminRole == 1 || adminRole == 6)
+        {
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-inline">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="ddlMethod">Allocate By</label>
+                                    </div>
+                                    <select id="ddlMethod" class="custom-select">
+                                        <option value="0">Select</option>
+                                        <option value="2">Location</option>
+                                        <option value="4">Entire Company</option>
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <button id="applyAssignmentMethod" class="btn btn-primary" type="button">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divCatAllocateInfoMessage" class="alert alert-info">
+                        Simply select your Document Category, then decide if you wish to assign the category to a specific location or your entire workforce.
+                    </div>
+                    <div class="row assign-sel-row" id="filter-assignby-location">
+                        <div class="col-sm-12">
+                            <div class="form-inline">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Assign to @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                                    </div>
+                                    <select id="ddlLocation" class="custom-select ddl-loc">
+                                        <option value="0">Select All</option>
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <button id="searchCategoryLocation" class="btn btn-primary" type="button">
+                                        <i class="fa fa-search fa-sm"></i> Search
+                                    </button>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <button id="clearSearchCategoryLocation" class="btn btn-secondary" type="button">
+                                        <i class="fa fa-times fa-sm"></i> Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row assign-sel-row" id="filter-assignby-org">
+                        <div class="col-sm-12">
+                            <div class="form-inline">
+                                <div class="input-group mb-3">
+                                    <button type="button" class="btn btn-primary" id="btnAssignToEntireOrg" data-toggle="tooltip" title="Assign Category to all @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription" data-loading-text="Please wait..." data-original-text="Entire Company">Entire Company</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div id="divMessage_allocateCat"></div>
+                    <div class="table-responsive type-table-container" id="allocateDocAllLocations_tbl_container">
+                        <button type="button" class="btn btn-dark float-right disabled" id="btnAllocateToSelectedLocations" data-toggle="tooltip" title="Select some @ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription" data-loading-text="Please wait..." data-original-text="Allocate to Selected">Allocate to Selected</button>
+                        <table class="table" id="allocateCatAllLocationList" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="chk_slc_all_locations" value="1" id="chk_slc_all_locations"><span>Select All</span></th>
+                                    <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="divCatAllocateInfoMessage" class="alert alert-info">
+                                You don't have access to this feature.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+     }
+</div>
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Document/AllocateCategoryLocation.js"></script>
+}
+
+
+

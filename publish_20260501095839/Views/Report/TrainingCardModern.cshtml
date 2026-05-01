@@ -1,0 +1,364 @@
+@{
+    ViewBag.Title = "Training Card";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="tc-modern-page">
+    <header class="tc-hero">
+        <div>
+            <nav class="tc-breadcrumb" aria-label="breadcrumb">
+                <a href="@Url.Action("InsightsReports", "Report")">Reports &amp; Analytics</a>
+                <span>/</span>
+                <span>Learner Account Snapshot</span>
+            </nav>
+            <h1 class="tc-title">Learner Account Snapshot</h1>
+            <p class="tc-subtitle">View consolidated learner profile, test outcomes, risk assessments, and document activity.</p>
+        </div>
+        <a href="@Url.Action("InsightsReports", "Report")" class="tc-back-btn">
+            <i class="fa fa-arrow-left"></i>
+            Back to Reports
+        </a>
+    </header>
+
+    <section class="tc-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-6 col-md-8">
+                <label class="form-label tc-label" for="txtLearner">User</label>
+                <div class="input-group tc-input-group">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" id="txtLearner" placeholder="User email">
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-4">
+                <div class="tc-actions-panel">
+                    <button id="searchLearnerTraining" class="btn tc-btn tc-btn-primary">
+                        <i class="fa fa-search me-1"></i>Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="message_trainingCard_report" class="mb-3"></div>
+
+    <div id="trainingCardHolder">
+        <section class="tc-profile-card">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-3 text-center">
+                    <img src="~/Content/img/no-pic.png" id="img-trainee-pic" class="tc-avatar" alt="Trainee Pic" />
+                    <p class="tc-avatar-hint">Learner profile snapshot</p>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label tc-label" for="spn-trainee-name">Name</label>
+                            <input type="text" id="spn-trainee-name" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label tc-label" for="spn-trainee-email">Email</label>
+                            <input type="email" id="spn-trainee-email" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label tc-label" for="spn-trainee-location">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                            <input type="text" id="spn-trainee-location" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label tc-label" for="spn-trainee-department">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                            <input type="text" id="spn-trainee-department" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tc-block-card">
+            <div class="tc-block-head">
+                <h2>Test Results</h2>
+            </div>
+            <div id="div-training-testResult"></div>
+        </section>
+
+        <section class="tc-block-card">
+            <div class="tc-block-head">
+                <h2>Risk Assessments</h2>
+            </div>
+            <div id="div-training-raResult"></div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="tableRACourseList" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Completion Date</th>
+                            <th>Issue</th>
+                            <th>Sign Off</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="tc-block-card">
+            <div class="tc-block-head">
+                <h2>Documents</h2>
+            </div>
+            <div id="div-training-docResult" class="alert alert-success mb-0"></div>
+        </section>
+
+        <div class="tc-print-wrap">
+            <button id="btnPrintTrainingCard" type="button" class="btn tc-btn tc-btn-primary tc-print-btn">
+                <i class="fa fa-print me-1"></i>Print
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tc-modern-page {
+        --tc-surface: #ffffff;
+        --tc-line: #d9e5ea;
+        --tc-text: #12303a;
+        --tc-muted: #6a808c;
+        --tc-brand: var(--color-primary, #0b7d78);
+        --tc-brand-soft: #e9f6f4;
+        --tc-shadow: 0 8px 18px rgba(17, 39, 47, 0.06);
+        color: var(--tc-text);
+    }
+
+    .tc-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.2rem 0.2rem 0.65rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .tc-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 0.45rem;
+        color: var(--tc-muted);
+        font-size: 0.88rem;
+    }
+
+    .tc-breadcrumb a {
+        color: var(--tc-muted);
+        text-decoration: none;
+    }
+
+    .tc-breadcrumb a:hover {
+        color: var(--tc-text);
+        text-decoration: underline;
+    }
+
+    .tc-title {
+        margin: 0;
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        line-height: 1.15;
+    }
+
+    .tc-subtitle {
+        margin: 0.3rem 0 0;
+        color: #5d6f7a;
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .tc-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border: 1px solid var(--tc-brand);
+        color: var(--tc-brand);
+        background: #fff;
+        border-radius: 10px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .tc-back-btn:hover {
+        background: var(--tc-brand);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .tc-filter-card,
+    .tc-profile-card,
+    .tc-block-card {
+        background: var(--tc-surface);
+        border: 1px solid var(--tc-line);
+        border-radius: 14px;
+        box-shadow: var(--tc-shadow);
+    }
+
+    .tc-filter-card {
+        padding: 1rem;
+        margin-bottom: 0.95rem;
+    }
+
+    .tc-profile-card,
+    .tc-block-card {
+        padding: 1rem;
+        margin-bottom: 0.95rem;
+    }
+
+    .tc-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #5f7884;
+        margin-bottom: 0.38rem;
+        line-height: 1.2;
+    }
+
+    .tc-input-group .input-group-text {
+        border-color: #d2e3e8;
+        background: #f4fbfa;
+        color: #446573;
+    }
+
+    .tc-modern-page .form-control,
+    .tc-modern-page .form-select {
+        border-radius: 10px;
+        border-color: #d2e3e8;
+        box-shadow: none;
+        min-height: 2.65rem;
+    }
+
+    .tc-modern-page .form-control:focus,
+    .tc-modern-page .form-select:focus {
+        border-color: #99c9c4;
+        box-shadow: 0 0 0 0.16rem rgba(11, 125, 120, 0.12);
+    }
+
+    .tc-actions-panel {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .tc-btn {
+        min-height: 2.65rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .tc-btn-primary {
+        background: var(--tc-brand);
+        border-color: var(--tc-brand);
+        color: #fff;
+    }
+
+    .tc-btn-primary:hover,
+    .tc-btn-primary:focus {
+        background: var(--tc-brand);
+        border-color: var(--tc-brand);
+        color: #fff;
+        filter: brightness(0.94);
+    }
+
+    .tc-avatar {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #e4edf0;
+        box-shadow: 0 6px 14px rgba(16, 37, 45, 0.12);
+    }
+
+    .tc-avatar-hint {
+        margin-top: 0.6rem;
+        font-size: 0.82rem;
+        color: #708793;
+    }
+
+    .tc-block-head {
+        margin-bottom: 0.7rem;
+    }
+
+    .tc-block-head h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #163641;
+        line-height: 1.25;
+    }
+
+    #tableRACourseList thead th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #56717c;
+        background: #f7fbfc;
+        border-bottom: 1px solid #deebef;
+        white-space: nowrap;
+    }
+
+    #tableRACourseList tbody td {
+        font-size: 0.89rem;
+        color: #1f3d47;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    #tableRACourseList tbody tr:hover {
+        background: #fbfefe;
+    }
+
+    .tc-print-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 0.25rem;
+    }
+
+    .tc-print-btn {
+        min-width: 170px;
+    }
+
+    @@media (max-width: 991px) {
+        .tc-hero {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .tc-back-btn {
+            align-self: flex-start;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .tc-title {
+            font-size: 1.6rem;
+        }
+
+        .tc-filter-card,
+        .tc-profile-card,
+        .tc-block-card {
+            border-radius: 12px;
+        }
+
+        .tc-avatar {
+            width: 120px;
+            height: 120px;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/trainingCardReport.js?v=1.2"></script>
+}

@@ -1,0 +1,42 @@
+﻿
+<div class="modal fade" id="addRAGroupModal" tabindex="-1" role="dialog" aria-labelledby="addRAGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRAGroupTitle">Add Group</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!--Alert message-->
+                        <div id="addRAGroupMessage"> </div>
+
+                        <form class="user">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblRAGroup">Group</span>
+                                </div>
+                                <input type="text" id="txtGroupName" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+                            </div>
+
+                            @*<div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblRAGroupDesc">Description</span>
+                                </div>
+                                <textarea id="txtRAGroupDesc" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"></textarea>
+                            </div>*@
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="btnAddNewRAGroup" data-loading-text="Creating..." data-original-text="Add" href="">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+

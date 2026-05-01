@@ -1,0 +1,146 @@
+
+@{
+    ViewBag.Title = "Training Card";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+<div class="x_panel tile">
+    <!-- Page Heading -->
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Learner Account Snapshot</h1>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+
+                    <!-- User Search -->
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <input type="text"
+                                   class="form-control"
+                                   id="txtLearner"
+                                   placeholder="User Email">
+                            <label for="txtLearner">User</label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="col-md-3 d-flex gap-2">
+                        <button id="searchLearnerTraining" class="btn btn-primary w-100">
+                            <i class="fa fa-search me-1"></i>
+                        </button>
+                        @*<button id="clearSearchLearnerTraining"
+                                class="btn btn-secondary w-100">
+                            <i class="fa fa-times me-1"></i>
+                        </button>*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="x_content">
+        <div id="message_trainingCard_report"></div>
+
+        <!-- Profile Section -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- Profile Image -->
+                    <div class="col-lg-4 text-center">
+                        <label for="wizard-picture" class="d-block mb-3">
+                            <img src="~/Content/img/no-pic.png" id="img-trainee-pic" class="rounded-circle border shadow-sm"
+                                 style="width:150px; height:150px; object-fit:cover;" alt="Trainee Pic" />
+                        </label>
+                        <p class="text-muted small">Learner profile snapshot</p>
+                    </div>
+
+                    <!-- Profile Info -->
+                    <div class="col-lg-8">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" id="spn-trainee-name" class="form-control" placeholder="Name" readonly />
+                                    <label for="spn-trainee-name">Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" id="spn-trainee-email" class="form-control" placeholder="Email" readonly />
+                                    <label for="spn-trainee-email">Email</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" id="spn-trainee-location" class="form-control" placeholder="Location" readonly />
+                                    <label for="spn-trainee-location">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" id="spn-trainee-department" class="form-control" placeholder="Department" readonly />
+                                    <label for="spn-trainee-department">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Results Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h5 class="fw-semibold">Test Results</h5>
+                <div id="div-training-testResult"></div>
+            </div>
+        </div>
+
+        <!-- Risk Assessments Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h5 class="fw-semibold">Risk Assessments</h5>
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle" id="tableRACourseList" width="100%">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Course</th>
+                                        <th>Completion Date</th>
+                                        <th>Issue</th>
+                                        <th>Sign Off</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populate dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h5 class="fw-semibold">Documents</h5>
+                <div id="div-training-docResult" class="alert alert-success"></div>
+            </div>
+        </div>
+
+        <!-- Print Button -->
+        <div class="text-center">
+            <button id="btnPrintTrainingCard" type="button" class="btn btn-primary px-4">
+                <i class="fa fa-print me-1"></i> Print
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/trainingCardReport.js?v=1.2"></script>
+}

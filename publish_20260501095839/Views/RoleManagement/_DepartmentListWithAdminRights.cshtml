@@ -1,0 +1,42 @@
+<div class="modal fade" id="listUserDepartmentAdminRightsModal" tabindex="-1" aria-labelledby="listUserDepartmentAdminRightsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="listUserDepartmentAdminRightsLabel">
+                    @ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Alert Message -->
+                <div id="errorDepAdminRights" role="alert"></div>
+
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered align-middle" id="listUserDepartmentAdminRights" width="100%">
+                        <thead class="table-light">
+                            <tr>
+                                <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                                <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                                <th class="text-center" style="width: 20%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

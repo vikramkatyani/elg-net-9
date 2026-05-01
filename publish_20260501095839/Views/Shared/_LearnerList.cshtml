@@ -1,0 +1,304 @@
+<div class="modal fade" id="learnerListModal" tabindex="-1" aria-labelledby="learnerListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content al-modal-content">
+            <div class="modal-header al-modal-header">
+                <h5 class="modal-title fw-semibold" id="learnerListModalLabel">
+                    <i class="fa fa-users-cog me-2"></i>Assign Admin Rights
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body al-modal-body">
+                <div class="al-filter-card mb-3">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label al-label" for="txtAdminLearner">Search</label>
+                            <div class="al-control">
+                                <span class="al-control-icon"><i class="fa fa-search"></i></span>
+                                <input type="text" id="txtAdminLearner" class="form-control" placeholder="Name or email">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label al-label" for="ddlAdminLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                            <div class="al-control">
+                                <span class="al-control-icon"><i class="fa fa-map-marker"></i></span>
+                                <select id="ddlAdminLocation" class="form-select ddl-loc">
+                                    <option value="0">Select All</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label al-label" for="ddlAdminDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                            <div class="al-control">
+                                <span class="al-control-icon"><i class="fa fa-sitemap"></i></span>
+                                <select id="ddlAdminDepartment" class="form-select ddl-dep">
+                                    <option value="0">Select All</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="al-actions">
+                                <button id="searchAdminLearner" class="btn al-btn al-btn-primary">
+                                    <i class="fa fa-search"></i>Search
+                                </button>
+                                <button id="clearSearchAdminLearner" class="btn al-btn al-btn-soft">
+                                    <i class="fa fa-times"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="al-table-card">
+                    <div id="admin-learner-message" class="mb-3"></div>
+                    <div class="table-responsive" id="learnerListForAdmins">
+                        <table class="table table-hover align-middle" id="learnerListForAdminRights" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                                    <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer al-modal-footer">
+                <button type="button" class="btn al-btn al-btn-soft" data-bs-dismiss="modal">
+                    <i class="fa fa-times"></i>Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #learnerListModal {
+        --al-brand: var(--color-primary, #0b7d78);
+        --al-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+    #learnerListModal .al-modal-content {
+        border: 1px solid #d8e6ea;
+        border-radius: 14px;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+        overflow: hidden;
+    }
+
+    #learnerListModal .al-modal-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #learnerListModal .modal-title {
+        color: #1f4652;
+    }
+
+    #learnerListModal .al-modal-body {
+        background: #fcfefe;
+    }
+
+    #learnerListModal .al-filter-card,
+    #learnerListModal .al-table-card {
+        background: #fff;
+        border: 1px solid #dce8eb;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(16, 40, 46, 0.07);
+        padding: 1rem;
+    }
+
+    #learnerListModal .al-label {
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.32rem;
+    }
+
+    #learnerListModal .al-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    #learnerListModal .al-control-icon {
+        width: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5f3;
+        color: #0b7d78;
+        border-right: 1px solid #cde2de;
+    }
+
+    #learnerListModal .al-control .form-control,
+    #learnerListModal .al-control .form-select {
+        border: 0;
+        border-radius: 0;
+        height: 42px;
+        box-shadow: none;
+    }
+
+    #learnerListModal .al-control:focus-within {
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #learnerListModal .al-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    #learnerListModal .al-btn {
+        min-width: 112px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.84rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+    }
+
+    #learnerListModal .al-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #learnerListModal .al-btn-primary {
+        background: linear-gradient(130deg, var(--al-brand), var(--al-brand-alt));
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #learnerListModal .al-btn-primary:hover,
+    #learnerListModal .al-btn-primary:focus {
+        color: #fff;
+    }
+
+    #learnerListModal .al-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    #learnerListModal table thead th {
+        background: #f4faf9;
+        border-bottom: 1px solid #dce9eb;
+        color: #32515c;
+        font-size: 0.82rem;
+    }
+
+    #learnerListModal table tbody td {
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+    }
+
+    #learnerListModal .table-hover tbody tr:hover {
+        background: #f5fbff;
+    }
+
+    #learnerListModal .al-row-actions-trigger {
+        width: 2.45rem;
+        height: 2.45rem;
+        border: 1px solid #d2e2e8;
+        background: #f7fbfd;
+        color: #2f5662;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    #learnerListModal .al-row-actions-trigger:hover {
+        transform: translateY(-1px);
+        background: #eef7fb;
+        color: #204652;
+    }
+
+    #learnerListModal .al-row-actions.show .al-row-actions-trigger,
+    #learnerListModal .al-row-actions-trigger:focus-visible {
+        outline: none;
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+        color: var(--al-brand);
+    }
+
+    #learnerListModal .al-row-actions-menu {
+        min-width: 180px;
+        border: 1px solid #d7e6ea;
+        border-radius: 12px;
+        box-shadow: 0 14px 28px rgba(16, 40, 46, 0.14);
+        padding: 0.35rem;
+    }
+
+    #learnerListModal .al-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    #learnerListModal .al-row-actions-item-icon {
+        width: 18px;
+        text-align: center;
+        color: #2e6f7c;
+        opacity: 0.95;
+    }
+
+    #learnerListModal .al-row-actions-item:hover,
+    #learnerListModal .al-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+
+    #learnerListModal .al-row-actions-item:hover .al-row-actions-item-icon,
+    #learnerListModal .al-row-actions-item:focus .al-row-actions-item-icon {
+        color: var(--al-brand);
+    }
+
+    #learnerListModal .al-modal-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    @@media (max-width: 991px) {
+        #learnerListModal .al-actions {
+            justify-content: flex-start;
+        }
+
+        #learnerListModal .al-btn {
+            min-width: 0;
+            flex: 1 1 40%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        #learnerListModal .al-filter-card,
+        #learnerListModal .al-table-card {
+            padding: 0.85rem;
+        }
+
+        #learnerListModal .al-btn {
+            flex: 1 1 100%;
+        }
+    }
+</style>

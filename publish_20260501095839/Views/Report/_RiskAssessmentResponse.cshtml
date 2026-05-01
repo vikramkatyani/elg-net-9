@@ -1,0 +1,72 @@
+﻿<!-- Update score modal-->
+<div class="modal fade" id="riskAssessmentResponseModal" tabindex="-1" aria-labelledby="riskAssessmentResponseLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="riskAssessmentResponseLabel">Risk Assessment Responses</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="raIndividualReportBody">
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <span><b>User: </b><span id="spnRAUserName"></span></span>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <span><b>Risk Assessment: </b><span id="spnRACourseName"></span></span>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <span><b>Site/Location: </b><span id="spnRALocation"></span></span>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <span><b>Completed On: </b><span id="spnRACompletionDate"></span></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <div id="divRAResponseHolder">
+                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="form-group col-lg-8">
+                        <label for="txtadminNotes">Admin Notes:</label>
+                        <textarea class="form-control" rows="5" id="txtadminNotes"></textarea>
+                        <div class="d-none" id="div_txtadminNotes"></div>
+                        @*<div id="ra-admin-note-picture"></div>*@
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-8 mb-3">
+                        <span id="spnSignOffDate" class="text-gray-900"></span><br />
+                        <span id="spnSignOffBy" class="text-gray-900"></span>
+                        <!-- Sign-off checkbox (optional) -->
+                        <!--
+            <div class="form-check" id="divChkSignOff">
+              <input class="form-check-input" type="checkbox" id="chkSignedOff">
+              <label class="form-check-label" for="chkSignedOff">Sign-off</label>
+            </div>
+            -->
+                    </div>
+                </div>
+            </div>
+            <div id="divMessageRAResp"></div>
+            <div class="modal-footer">
+                <button type="button" id="btnUpdateAssessmentAdminNotes" class="btn btn-primary" data-loading-text="Updating..." data-original-text="Update">Update</button>
+                <button type="button" id="btnPrintRiskAssessmentResponse" class="btn btn-primary">Print</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btnUpdateRiskAssessmentResponse" class="btn btn-success" data-loading-text="Processing..." data-original-text="Sign-off">Sign-off</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

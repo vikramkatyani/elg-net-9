@@ -1,0 +1,404 @@
+@{
+    ViewBag.Title = "Widget Progress";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+
+<div class="wp-modern-page">
+    <header class="wp-hero">
+        <div>
+            <nav class="wp-breadcrumb" aria-label="breadcrumb">
+                <a href="@Url.Action("InsightsReports", "Report")">Reports &amp; Analytics</a>
+                <span>/</span>
+                <span>Widget Progress</span>
+            </nav>
+            <h1 class="wp-title">Widget Progress</h1>
+            <p class="wp-subtitle">Review learner responses and engagement across all widget-based course activities.</p>
+        </div>
+        <a href="@Url.Action("InsightsReports", "Report")" class="wp-back-btn">
+            <i class="fa fa-arrow-left"></i>
+            Back to Reports
+        </a>
+    </header>
+
+    <section class="wp-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label wp-label" for="txtLearner">User</label>
+                <div class="input-group wp-input-group">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" id="txtLearner" placeholder="Name or email">
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label wp-label" for="ddlUserStatus">User Status</label>
+                <select class="form-select" id="ddlUserStatus">
+                    <option value="0">Select All</option>
+                    <option value="1" selected>Active</option>
+                    <option value="2">In-active</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label wp-label" for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                <select class="form-select ddl-loc" id="ddlLocation">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label wp-label" for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                <select class="form-select ddl-dep" id="ddlDepartment">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-6">
+                <label class="form-label wp-label" for="ddlCourse">Course</label>
+                <select class="form-select ddl-course" id="ddlCourse">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-xl-2 col-lg-3 col-md-12">
+                <div class="wp-actions-panel">
+                    <button id="searchLearnerProgress" class="btn wp-btn wp-btn-primary" title="Search">
+                        <i class="fa fa-search me-1"></i>Search
+                    </button>
+                    <button id="downloadProgressReport" class="btn wp-btn wp-btn-soft"
+                            title="Download"
+                            data-loading-text="Downloading..."
+                            data-original-text='<i class="fa fa-download"></i> Download'>
+                        <i class="fa fa-download me-1"></i>Download
+                    </button>
+                    <button id="clearSearchProgressReport" class="btn wp-btn wp-btn-soft" title="Clear">
+                        <i class="fa fa-refresh me-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wp-table-card">
+        <div class="wp-table-head">
+            <h2>Widget Response Records</h2>
+            <span class="wp-table-hint">Use filters to narrow down widget answers by learner, location, department, and course.</span>
+        </div>
+
+        <div id="message_test_report" class="mb-3"></div>
+
+        <div class="table-responsive" id="test-report-container">
+            <table class="table table-hover align-middle" id="widgetProgressReport" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Course</th>
+                        <th>Widget</th>
+                        <th>Question</th>
+                        <th>Response</th>
+                        <th>First Response</th>
+                        <th>Second Response</th>
+                        <th>Third Response</th>
+                        <th>Follow-up Que</th>
+                        <th>Follow-up Response</th>
+                        <th>Feedback</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>
+
+<style>
+    .wp-modern-page {
+        --wp-surface: #ffffff;
+        --wp-line: #d9e5ea;
+        --wp-text: #12303a;
+        --wp-muted: #6a808c;
+        --wp-brand: var(--color-primary, #0b7d78);
+        --wp-brand-soft: #e9f6f4;
+        --wp-shadow: 0 8px 18px rgba(17, 39, 47, 0.06);
+        color: var(--wp-text);
+    }
+
+    .wp-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.2rem 0.2rem 0.65rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .wp-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 0.45rem;
+        color: var(--wp-muted);
+        font-size: 0.88rem;
+    }
+
+    .wp-breadcrumb a {
+        color: var(--wp-muted);
+        text-decoration: none;
+    }
+
+    .wp-breadcrumb a:hover {
+        color: var(--wp-text);
+        text-decoration: underline;
+    }
+
+    .wp-title {
+        margin: 0;
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        line-height: 1.15;
+    }
+
+    .wp-subtitle {
+        margin: 0.3rem 0 0;
+        color: #5d6f7a;
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .wp-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border: 1px solid var(--wp-brand);
+        color: var(--wp-brand);
+        background: #fff;
+        border-radius: 10px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .wp-back-btn:hover {
+        background: var(--wp-brand);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .wp-filter-card,
+    .wp-table-card {
+        background: var(--wp-surface);
+        border: 1px solid var(--wp-line);
+        border-radius: 14px;
+        box-shadow: var(--wp-shadow);
+    }
+
+    .wp-filter-card {
+        padding: 1rem 1rem 0.95rem;
+        margin-bottom: 0.95rem;
+    }
+
+    .wp-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #5f7884;
+        margin-bottom: 0.38rem;
+        line-height: 1.2;
+    }
+
+    .wp-input-group .input-group-text {
+        border-color: #d2e3e8;
+        background: #f4fbfa;
+        color: #446573;
+    }
+
+    .wp-modern-page .form-control,
+    .wp-modern-page .form-select {
+        border-radius: 10px;
+        border-color: #d2e3e8;
+        box-shadow: none;
+        min-height: 2.65rem;
+    }
+
+    .wp-modern-page .form-control:focus,
+    .wp-modern-page .form-select:focus {
+        border-color: #99c9c4;
+        box-shadow: 0 0 0 0.16rem rgba(11, 125, 120, 0.12);
+    }
+
+    .wp-actions-panel {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .wp-btn {
+        min-height: 2.65rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .wp-btn-primary {
+        background: var(--wp-brand);
+        border-color: var(--wp-brand);
+        color: #fff;
+    }
+
+    .wp-btn-primary:hover,
+    .wp-btn-primary:focus {
+        background: var(--wp-brand);
+        border-color: var(--wp-brand);
+        color: #fff;
+        filter: brightness(0.94);
+    }
+
+    .wp-btn-soft {
+        background: var(--wp-brand-soft);
+        border-color: #cde4e2;
+        color: #2a545f;
+    }
+
+    .wp-btn-soft:hover,
+    .wp-btn-soft:focus {
+        background: #dff2ef;
+        border-color: #bdddd9;
+        color: #1d4751;
+    }
+
+    .wp-table-card {
+        padding: 0.85rem 1rem 1rem;
+    }
+
+    .wp-table-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.7rem;
+        padding: 0.15rem 0.1rem 0.7rem;
+    }
+
+    .wp-table-head h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #163641;
+        line-height: 1.25;
+    }
+
+    .wp-table-hint {
+        color: #68808c;
+        font-size: 0.83rem;
+    }
+
+    #widgetProgressReport thead th {
+        position: relative;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #56717c;
+        background: #f7fbfc;
+        border-bottom: 1px solid #deebef;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #widgetProgressReport tbody td {
+        font-size: 0.89rem;
+        color: #1f3d47;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    #widgetProgressReport tbody tr:hover {
+        background: #fbfefe;
+    }
+
+    table.dataTable {
+        table-layout: auto;
+    }
+
+    .resize-handle {
+        position: absolute;
+        right: -4px;
+        top: 0;
+        bottom: 0;
+        width: 8px;
+        cursor: col-resize;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        background: transparent;
+    }
+
+    .resize-handle:hover::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #4caf50;
+    }
+
+    table.dataTable thead th.resizing {
+        pointer-events: none;
+    }
+
+    @@media (max-width: 991px) {
+        .wp-hero {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .wp-back-btn {
+            align-self: flex-start;
+        }
+
+        .wp-table-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .wp-title {
+            font-size: 1.6rem;
+        }
+
+        .wp-filter-card,
+        .wp-table-card {
+            border-radius: 12px;
+        }
+
+        .wp-actions-panel {
+            grid-template-columns: 1fr;
+        }
+
+        .wp-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/widgetProgress.js?v=1.5"></script>
+}

@@ -1,0 +1,423 @@
+@{
+    ViewBag.Title = "Manage Roles";
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="rm-modern-page">
+    <section class="rm-hero">
+        <div>
+            <h1 class="rm-title">Manage Roles</h1>
+            <p class="rm-subtitle">Search existing administrators, review their rights, and assign new role permissions.</p>
+        </div>
+        <div class="rm-hero-actions">
+            <span class="rm-badge"><i class="fa fa-shield"></i> Role Governance</span>
+            <button id="btnShowUserPopUp" class="btn rm-btn rm-btn-primary">
+                <i class="fa fa-plus-circle"></i>Add Admin
+            </button>
+        </div>
+    </section>
+
+    <section class="rm-filter-card">
+        <div class="rm-filter-head">
+            <h2>Filters</h2>
+            <p>Narrow down admins by name/email and rights level.</p>
+        </div>
+
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label rm-label" for="txtAdmin">Admin</label>
+                <div class="rm-control">
+                    <span class="rm-control-icon"><i class="fa fa-user"></i></span>
+                    <input type="text" id="txtAdmin" class="form-control" placeholder="Name or email">
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label rm-label" for="ddlAdminRights">Admin Rights</label>
+                <div class="rm-control">
+                    <span class="rm-control-icon"><i class="fa fa-lock"></i></span>
+                    <select id="ddlAdminRights" class="form-select">
+                        <option value="0" selected>Select All</option>
+                        <option value="1">Account Owner</option>
+                        <option value="2">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Manager</option>
+                        <option value="3">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Manager</option>
+                        <option value="8">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription Coordinator</option>
+                        <option value="9">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription Coordinator</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <div class="rm-actions">
+                    <button id="searchAdmin" class="btn rm-btn rm-btn-primary" title="Search">
+                        <i class="fa fa-search"></i>Search
+                    </button>
+                    <button id="downloadAdmin" class="btn rm-btn rm-btn-soft"
+                            data-loading-text="Downloading..."
+                            data-original-text='<i class="fa fa-download"></i> '>
+                        <i class="fa fa-download"></i>Download
+                    </button>
+                    <button id="clearSearchAdmin" class="btn rm-btn rm-btn-soft" title="Clear">
+                        <i class="fa fa-times"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="rm-table-card">
+        <div class="rm-table-head">
+            <h2>Admin Directory</h2>
+            <span class="rm-table-hint">Use the action menu to show or remove role rights.</span>
+        </div>
+
+        <div id="errorRemoveRightMessage" role="alert" class="mb-3"></div>
+
+        <div class="table-responsive" id="adminReportContainer">
+            <table class="table table-hover align-middle" id="registeredAdminLearnerList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Admin</th>
+                        <th>Email</th>
+                        <th>Admin Rights</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>
+
+@Html.Partial("_LearnerList")
+@Html.Partial("_LocationListWithAdminRights")
+@Html.Partial("_DepartmentListWithAdminRights")
+@Html.Partial("_LocationListWithSupervisorRights")
+@Html.Partial("_DepartmentListWithSupervisorRights")
+
+<style>
+    .rm-modern-page {
+        --rm-surface: #ffffff;
+        --rm-line: #d9e6ea;
+        --rm-text: #14323c;
+        --rm-muted: #627f8a;
+        --rm-brand: var(--color-primary, #0b7d78);
+        --rm-brand-alt: var(--color-secondary, #0f968f);
+        --rm-brand-soft: #e8f5f3;
+        --rm-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--rm-text);
+        direction: ltr;
+    }
+
+    .rm-modern-page *,
+    .rm-modern-page *::before,
+    .rm-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .rm-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .rm-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .rm-subtitle {
+        margin: 0.28rem 0 0;
+        color: var(--rm-muted);
+    }
+
+    .rm-hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .rm-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid #cce2df;
+        background: #fff;
+        color: #2f5763;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 0.31rem 0.64rem;
+        white-space: nowrap;
+    }
+
+    .rm-filter-card,
+    .rm-table-card {
+        background: var(--rm-surface);
+        border: 1px solid var(--rm-line);
+        border-radius: 14px;
+        box-shadow: var(--rm-shadow);
+    }
+
+    .rm-filter-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .rm-filter-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .rm-filter-head h2 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+    }
+
+    .rm-filter-head p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--rm-muted);
+    }
+
+    .rm-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    .rm-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .rm-control-icon {
+        width: 48px;
+        min-width: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rm-brand-soft);
+        color: var(--rm-brand);
+        border-right: 1px solid #cde2de;
+    }
+
+    .rm-control .form-control,
+    .rm-control .form-select {
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        box-shadow: none;
+    }
+
+    .rm-control:focus-within {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .rm-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .rm-btn {
+        min-width: 112px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-weight: 700;
+        font-size: 0.84rem;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .rm-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .rm-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .rm-btn-primary {
+        background: var(--rm-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .rm-btn-primary:hover,
+    .rm-btn-primary:focus {
+        color: #fff;
+    }
+
+    .rm-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    .rm-table-card {
+        padding: 1rem;
+    }
+
+    .rm-table-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .rm-table-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .rm-table-hint {
+        color: var(--rm-muted);
+        font-size: 0.8rem;
+    }
+
+    .rm-modern-page table.dataTable thead th {
+        background: #f4faf9;
+        border-bottom: 1px solid #dce9eb;
+        color: #32515c;
+        font-size: 0.82rem;
+    }
+
+    .rm-modern-page .table-hover tbody tr:hover {
+        background: #f5fbff;
+    }
+
+    .rm-modern-page table.dataTable tbody td {
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+    }
+
+    .rm-modern-page .rm-row-actions-trigger {
+        width: 2.45rem;
+        height: 2.45rem;
+        border: 1px solid #d2e2e8;
+        background: #f7fbfd;
+        color: #2f5662;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .rm-modern-page .rm-row-actions-trigger:hover {
+        transform: translateY(-1px);
+        background: #eef7fb;
+        color: #204652;
+    }
+
+    .rm-modern-page .rm-row-actions.show .rm-row-actions-trigger,
+    .rm-modern-page .rm-row-actions-trigger:focus-visible {
+        outline: none;
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+        color: var(--rm-brand);
+    }
+
+    .rm-modern-page .rm-row-actions-menu {
+        min-width: 220px;
+        border: 1px solid #d7e6ea;
+        border-radius: 12px;
+        box-shadow: 0 14px 28px rgba(16, 40, 46, 0.14);
+        padding: 0.35rem;
+    }
+
+    .rm-modern-page .rm-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    .rm-modern-page .rm-row-actions-item-icon {
+        width: 18px;
+        text-align: center;
+        color: #2e6f7c;
+        opacity: 0.95;
+    }
+
+    .rm-modern-page .rm-row-actions-item:hover,
+    .rm-modern-page .rm-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+
+    .rm-modern-page .rm-row-actions-item:hover .rm-row-actions-item-icon,
+    .rm-modern-page .rm-row-actions-item:focus .rm-row-actions-item-icon {
+        color: var(--rm-brand);
+    }
+
+    @@media (max-width: 991px) {
+        .rm-hero {
+            flex-direction: column;
+        }
+
+        .rm-filter-head,
+        .rm-table-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .rm-actions {
+            justify-content: flex-start;
+        }
+
+        .rm-btn {
+            min-width: 0;
+            flex: 1 1 30%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .rm-filter-card,
+        .rm-table-card {
+            padding: 0.85rem;
+            border-radius: 12px;
+        }
+
+        .rm-btn {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/RoleManagement/manageAdmins.js?v=1.0.3"></script>
+}

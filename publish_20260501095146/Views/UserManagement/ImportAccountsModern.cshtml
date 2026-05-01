@@ -1,0 +1,444 @@
+@{
+    ViewBag.Title = "Import Accounts";
+
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="ia-modern-page">
+    <section class="ia-hero">
+        <div>
+            <h1 class="ia-title">Import User Accounts</h1>
+            <p class="ia-subtitle">Upload users in bulk from a validated template and trigger activation emails automatically.</p>
+        </div>
+        <div class="ia-hero-badges">
+            <span class="ia-badge"><i class="fa fa-file-excel-o"></i> Template Driven</span>
+            <span class="ia-badge"><i class="fa fa-envelope"></i> Auto Invite Emails</span>
+        </div>
+    </section>
+
+    <section class="ia-grid">
+        <article class="ia-card ia-instructions">
+            <div class="ia-card-head">
+                <h2>Import Workflow</h2>
+                <p>Follow each step for a successful bulk upload.</p>
+            </div>
+
+            <ol class="ia-steps">
+                <li>
+                    <span class="ia-step-index">1</span>
+                    <div>
+                        <div class="ia-step-title">Download Excel Template</div>
+                        <p>Use the official import template to avoid mapping issues.</p>
+                        <a href="~/UserManagement/DownloadUserExcelTemplate" class="ia-link">Download Template</a>
+                    </div>
+                </li>
+                <li>
+                    <span class="ia-step-index">2</span>
+                    <div>
+                        <div class="ia-step-title">Check Org Structure</div>
+                        <p>Location and department values must match your org setup.</p>
+                        <a href="#" onclick="companyStructureHandler.downloadStructure(this); return false;" class="ia-link">Download Org Structure</a>
+                    </div>
+                </li>
+                <li>
+                    <span class="ia-step-index">3</span>
+                    <div>
+                        <div class="ia-step-title">Upload Completed File</div>
+                        <p>Select your filled template and start upload.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="ia-step-index">4</span>
+                    <div>
+                        <div class="ia-step-title">Users Receive Activation Email</div>
+                        <p>Each successfully uploaded user is invited automatically.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <div class="ia-note">
+                <i class="fa fa-info-circle"></i>
+                <span>This flow is for bulk creation. Use Create Account for single-user setup.</span>
+            </div>
+        </article>
+
+        <article class="ia-card ia-upload">
+            <div class="ia-card-head">
+                <h2>Upload File</h2>
+                <p>Accepted formats: .csv, .xls, .xlsx</p>
+            </div>
+
+            @using (Html.BeginForm("UploadUserTemplate", "UserManagement", FormMethod.Post, new { enctype = "multipart/form-data", id = "uploadUsersForm", @class = "ia-upload-form" }))
+            {
+                <input accept=".csv,.xls,.xlsx" id="flmyPostedFile" name="myPostedFile" type="file" class="d-none">
+                <input type="hidden" id="hdnUploadStatus" value="@ViewBag.UploadStatus" />
+
+                <button type="button" class="ia-dropzone" onclick="document.getElementById('flmyPostedFile').click();">
+                    <span class="ia-dropzone-icon"><i class="fa fa-cloud-upload"></i></span>
+                    <span class="ia-dropzone-text">Click to select your import file</span>
+                    <span class="ia-dropzone-hint">or drag and drop (optional)</span>
+                </button>
+
+                <div class="ia-file-row" id="selectedFileRow">
+                    <div class="ia-file-pill">
+                        <i class="fa fa-file-text-o"></i>
+                        <span id="spnFileName">No file selected</span>
+                        <input type="text" id="txtSelectedFile" value="" readonly aria-label="Selected file" />
+                    </div>
+                </div>
+
+                <div class="ia-actions">
+                    <button type="button" class="btn ia-btn ia-btn-soft" onclick="document.getElementById('flmyPostedFile').click();">
+                        <i class="fa fa-folder-open"></i>Choose File
+                    </button>
+                    <button type="submit" class="btn ia-btn ia-btn-primary" id="btnUploadUsersFile" disabled
+                            data-loading-text="Uploading Users..." data-original-text="Upload">
+                        <i class="fa fa-upload"></i>Upload
+                    </button>
+                </div>
+            }
+        </article>
+    </section>
+
+    <div class="modal fade" id="userUploadResultModal" tabindex="-1" aria-labelledby="userUploadResultLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userUploadResultLabel">Upload User Result</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="divUploadStatusMessage"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ia-modern-page {
+        --ia-surface: #ffffff;
+        --ia-line: #d8e6ea;
+        --ia-text: #14313b;
+        --ia-muted: #62808b;
+        --ia-brand: var(--color-primary, #0b7d78);
+        --ia-brand-alt: var(--color-secondary, #0f968f);
+        --ia-brand-soft: #e7f4f3;
+        --ia-shadow: 0 14px 32px rgba(16, 46, 54, 0.08);
+        color: var(--ia-text);
+    }
+
+    .ia-modern-page *,
+    .ia-modern-page *::before,
+    .ia-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .ia-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf5fb);
+        border: 1px solid #d8eaec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .ia-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .ia-subtitle {
+        margin: 0.28rem 0 0;
+        color: var(--ia-muted);
+    }
+
+    .ia-hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+    }
+
+    .ia-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid #c9e2df;
+        background: #fff;
+        color: #2f5662;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 0.31rem 0.64rem;
+        white-space: nowrap;
+    }
+
+    .ia-grid {
+        display: grid;
+        grid-template-columns: minmax(320px, 1.15fr) minmax(300px, 0.85fr);
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .ia-card {
+        background: var(--ia-surface);
+        border: 1px solid var(--ia-line);
+        border-radius: 14px;
+        box-shadow: var(--ia-shadow);
+        padding: 1.05rem;
+        min-width: 0;
+    }
+
+    .ia-card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .ia-card-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .ia-card-head p {
+        margin: 0;
+        color: var(--ia-muted);
+        font-size: 0.82rem;
+    }
+
+    .ia-steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.72rem;
+    }
+
+    .ia-steps li {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 0.7rem;
+        align-items: start;
+        padding: 0.55rem 0.62rem;
+        border: 1px solid #e2ecee;
+        border-radius: 10px;
+        background: #fbfefe;
+    }
+
+    .ia-step-index {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        background: var(--ia-brand-soft);
+        color: var(--ia-brand);
+    }
+
+    .ia-step-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        margin-bottom: 0.18rem;
+    }
+
+    .ia-steps p {
+        margin: 0;
+        color: #5d7680;
+        font-size: 0.83rem;
+    }
+
+    .ia-link {
+        margin-top: 0.3rem;
+        display: inline-block;
+        color: #0f6f91;
+        text-decoration: none;
+        font-size: 0.83rem;
+        font-weight: 700;
+    }
+
+    .ia-link:hover {
+        text-decoration: underline;
+    }
+
+    .ia-note {
+        margin-top: 0.8rem;
+        display: flex;
+        gap: 0.45rem;
+        align-items: center;
+        padding: 0.55rem 0.68rem;
+        border-radius: 10px;
+        border: 1px solid #cfe2f6;
+        background: #f3f9ff;
+        color: #32597a;
+        font-size: 0.82rem;
+    }
+
+    .ia-upload-form {
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .ia-dropzone {
+        border: 1px dashed #9bc8c5;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #f7fcfc, #f2faf9);
+        min-height: 148px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        color: #43616c;
+    }
+
+    .ia-dropzone:hover {
+        border-color: #78bcb7;
+        background: linear-gradient(145deg, #f5fbfb, #eef8f7);
+    }
+
+    .ia-dropzone:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.22);
+    }
+
+    .ia-dropzone-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #dff2f1;
+        color: #0f8a82;
+        font-size: 1.2rem;
+    }
+
+    .ia-dropzone-text {
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .ia-dropzone-hint {
+        font-size: 0.78rem;
+        color: #6b838d;
+    }
+
+    .ia-file-row {
+        min-height: 26px;
+    }
+
+    .ia-file-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        border: 1px solid #d6e3e8;
+        border-radius: 999px;
+        padding: 0.33rem 0.72rem;
+        background: #fff;
+        color: #33535f;
+        max-width: 100%;
+    }
+
+    #spnFileName {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    #txtSelectedFile {
+        display: none;
+    }
+
+    .ia-actions {
+        display: flex;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+    }
+
+    .ia-btn {
+        min-width: 132px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .ia-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .ia-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .ia-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2d4f5b;
+    }
+
+    .ia-btn-primary {
+        background: var(--ia-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .ia-btn-primary:hover,
+    .ia-btn-primary:focus {
+        color: #fff;
+    }
+
+    @@media (max-width: 1100px) {
+        .ia-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 991px) {
+        .ia-hero {
+            flex-direction: column;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ia-card {
+            padding: 0.85rem;
+            border-radius: 12px;
+        }
+
+        .ia-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .ia-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script type="text/javascript" src="~/Scripts/Admin/ManageLearner/UploadUsers.js?v=1.1"></script>
+    <script src="~/Scripts/Admin/Common/companyStructure.js?v=1.1"></script>
+}

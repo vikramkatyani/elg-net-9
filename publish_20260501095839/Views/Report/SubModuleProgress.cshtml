@@ -1,0 +1,179 @@
+
+@{
+    ViewBag.Title = "Sub-module Progress";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<div class="x_panel tile">
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Sub-module Progress</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <!-- Row 1: Main Filters -->
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtLearner" placeholder="Name/Email">
+                            <label for="txtLearner">User</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select" id="ddlUserStatus">
+                                <option value="0">Select All</option>
+                                <option value="1" selected>Active</option>
+                                <option value="2">In-active</option>
+                            </select>
+                            <label for="ddlUserStatus">User Status</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select ddl-loc" id="ddlLocation">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select ddl-dep" id="ddlDepartment">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-end mt-3">
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select ddl-course" id="ddlCourse">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlCourse">Course</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select ddl-course" id="ddlSubModule">
+                                <option value="0">Select All</option>
+                            </select>
+                            <label for="ddlSubModule">Sub-module</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select" id="ddlAccessStatus">
+                                <option value="0">Active</option>
+                                <option value="1">Suspended</option>
+                            </select>
+                            <label for="ddlAccessStatus">Access Status</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Progress Filters -->
+                <div class="row g-3 align-items-end mt-3">
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select" id="ddlStatus">
+                                <option value="not-started">Not started</option>
+                                <option value="incomplete">In-progress</option>
+                                <option value="passed">Passed</option>
+                                <option value="failed">Failed</option>
+                                <option disabled>----------</option>
+                                <option value="0" selected>Select All</option>
+                                <option value="not-passed">Not Passed</option>
+                            </select>
+                            <label for="ddlStatus">Progress Status</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <input type="date" class="form-control" id="txtRptFrom" placeholder="From">
+                            <label for="txtRptFrom">Completed From</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-floating">
+                            <input type="date" class="form-control" id="txtRptTo" placeholder="To">
+                            <label for="txtRptTo">Completed To</label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 d-lg-block">
+                        <div class="col-12 d-flex justify-content-end gap-2">
+                            <button id="searchLearnerProgress" class="btn btn-primary w-100">
+                                <i class="fa fa-search me-1"></i>
+                            </button>
+                            <button id="downloadProgressReport" class="btn btn-secondary w-100"
+                                    data-loading-text="Downloading..."
+                                    data-original-text='<i class="fa fa-download"></i> '>
+                                <i class="fa fa-download me-1"></i>
+                            </button>
+                            <button id="clearSearchProgressReport" class="btn btn-secondary w-100">
+                                <i class="fa fa-times me-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Action Buttons -->
+                @*<div class="row mt-4">
+            <div class="col-12 d-flex justify-content-end gap-2">
+                <button id="searchLearnerProgress" class="btn btn-primary w-100">
+                    <i class="fa fa-search me-1"></i>
+                </button>
+                <button id="downloadProgressReport" class="btn btn-secondary w-100"
+                        data-loading-text="Downloading..."
+                        data-original-text='<i class="fa fa-download"></i> '>
+                    <i class="fa fa-download me-1"></i>
+                </button>
+                <button id="clearSearchProgressReport" class="btn btn-secondary w-100">
+                    <i class="fa fa-times me-1"></i>
+                </button>
+            </div>
+        </div>*@
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="x_content">
+        <div id="message_test_report"></div>
+        <div class="table-responsive" id="test-report-container">
+            <table class="table table-striped table-hover table-bordered align-middle" id="learningProgressReport" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Course</th>
+                        <th>Sub-module</th>
+                        <th>Assigned On</th>
+                        <th>Status</th>
+                        <th>Last Accessed On</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/subModuleProgress.js?v=1.5"></script>
+}

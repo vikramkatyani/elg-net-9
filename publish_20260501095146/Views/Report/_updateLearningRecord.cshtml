@@ -1,0 +1,59 @@
+﻿<!-- Update score modal-->
+<div class="modal fade" id="updateLearningRecordModal" tabindex="-1" aria-labelledby="updateLearningRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateLearningRecordModalLabel">Update Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div id="updateLearningRecordMessage" role="alert"></div>
+
+                <form id="updateLearningRecordForm" class="row g-3">
+
+                    <!-- Status -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <select id="ddlLearningRecordStatus" class="form-select">
+                                <option value="passed" selected>Passed</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                            <label for="ddlLearningRecordStatus">Status</label>
+                        </div>
+                    </div>
+
+                    <!-- Score -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <input type="number" id="txtUpdateRecordScore" class="form-control" placeholder="Score">
+                            <label for="txtUpdateRecordScore">Score</label>
+                        </div>
+                    </div>
+
+                    <!-- Completion Date -->
+                    <div class="col-md-6 w-100">
+                        <div class="form-floating">
+                            <input type="text" id="txtUpdateRecordCompletionDate" class="form-control popup-calendar" placeholder="YYYY-MM-DD">
+                            <label for="txtUpdateRecordCompletionDate">Completion Date</label>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateLearningRecord"
+                        data-loading-text="Updating..." data-original-text="Update">
+                    Update
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

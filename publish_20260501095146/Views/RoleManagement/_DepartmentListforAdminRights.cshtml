@@ -1,0 +1,46 @@
+<div class="modal fade" id="departmentListForAdminRightsModal" tabindex="-1" aria-labelledby="departmentListForAdminRightsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="departmentListForAdminRightsLabel">
+                    <i class="fa fa-sitemap me-2"></i>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="divDepartmentAdminRightErrorMessage" role="alert"></div>
+
+                <div class="row mb-3">
+                    <div class="col-md-8 col-lg-6">
+                        <label class="form-label" for="ddlAssignAdminLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        <div class="ar-modal-control">
+                            <span class="ar-modal-icon"><i class="fa fa-map-marker"></i></span>
+                            <select id="ddlAssignAdminLocation" class="form-select ddl-loc">
+                                <option value="0">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="assignAdminToDepartmentList" width="100%">
+                        <thead>
+                            <tr>
+                                <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                                <th class="text-center" style="width: 20%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

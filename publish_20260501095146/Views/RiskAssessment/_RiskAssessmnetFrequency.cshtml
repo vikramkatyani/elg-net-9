@@ -1,0 +1,45 @@
+﻿<!-- Update score modal-->
+<div class="modal fade" id="updateRiskAssessmentFrequencyModal" tabindex="-1" role="dialog" aria-labelledby="updateRiskAssessmentFrequencyModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateRAModalLabel">Update - </h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="updateRAMessage"></div>
+                        <form class="user">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="spnUpdateRA">Risk Assessment status should reset after </span>
+                                </div>
+                                <input type="number" id="txtUpdateRAFrequency" class="form-control" aria-label="Default" aria-describedby="spnUpdateRA" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="spnRAFreqDays"> day(s)</span>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Risk Assessment must be completed within </span>
+                                </div>
+                                <input type="number" id="txtUpdateRACompletionDays" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="inputGroup-sizing-default"> day(s) from assignment</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <div id="btnUpdateRAFrequency" class="btn btn-primary" href="#">Update</div>
+            </div>
+        </div>
+    </div>
+</div>
+

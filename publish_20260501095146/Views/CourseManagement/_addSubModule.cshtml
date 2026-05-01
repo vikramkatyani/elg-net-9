@@ -1,0 +1,311 @@
+<div class="modal fade" id="addSubModuleModal" tabindex="-1" aria-labelledby="addSubModuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content cm-popup-content">
+            <div class="modal-header cm-popup-header">
+                <h5 class="modal-title cm-popup-title">
+                    <i class="fa fa-folder-open-o"></i>
+                    Add Sub-module: <span id="addSubModuleTitle"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body cm-popup-body">
+                <div class="alert alert-danger collapse" id="addSubModuleMessage"></div>
+
+                <form id="formUploadSubModule" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="cm-popup-subhead">Upload Content</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="txtDocName" class="form-label cm-popup-label">Title</label>
+                            <div class="cm-popup-control">
+                                <span class="cm-popup-icon"><i class="fa fa-tag"></i></span>
+                                <input type="text" class="form-control" id="txtDocName" name="SubModuleName" placeholder="Title" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="txtDocDesc" class="form-label cm-popup-label">Description</label>
+                            <div class="cm-popup-control">
+                                <span class="cm-popup-icon"><i class="fa fa-align-left"></i></span>
+                                <input type="text" class="form-control" id="txtDocDesc" name="SubModuleDesc" placeholder="Description" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="newDocFile" class="form-label cm-popup-label">Upload File</label>
+                            <input class="form-control cm-popup-file custom-file-input" type="file" id="newDocFile" name="newDocFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.mp4,.zip" required>
+                            <div class="custom-file-label d-none">Choose file</div>
+                            <div class="form-text">File size should not exceed 5 MB</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer cm-popup-footer">
+                <button type="button" class="btn cm-popup-btn cm-popup-btn-soft" data-bs-dismiss="modal">
+                    <i class="fa fa-times"></i>Close
+                </button>
+                <button type="button" form="formUploadSubModule" class="btn cm-popup-btn cm-popup-btn-primary" id="btnAddNewSubModule" data-loading-text="Creating..." data-original-text="Add">
+                    <i class="fa fa-plus"></i>Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateSubModuleModal" tabindex="-1" aria-labelledby="updateSubModuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content cm-popup-content">
+            <div class="modal-header cm-popup-header">
+                <h5 class="modal-title cm-popup-title" id="updateSubModuleTitle">
+                    <i class="fa fa-pencil-square-o"></i>
+                    Update Sub-module
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body cm-popup-body">
+                <div class="alert alert-danger collapse" id="updateSubModuleMessage"></div>
+
+                <form id="formUpdateSubModule" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="txtUpdateDocName" class="form-label cm-popup-label">Title</label>
+                            <div class="cm-popup-control">
+                                <span class="cm-popup-icon"><i class="fa fa-tag"></i></span>
+                                <input type="text" class="form-control" id="txtUpdateDocName" name="UpdateSubModuleName" placeholder="Title" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="txtUpdateDocDesc" class="form-label cm-popup-label">Description</label>
+                            <div class="cm-popup-control">
+                                <span class="cm-popup-icon"><i class="fa fa-align-left"></i></span>
+                                <input type="text" class="form-control" id="txtUpdateDocDesc" name="UpdateSubModuleDesc" placeholder="Description" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer cm-popup-footer">
+                <button type="button" class="btn cm-popup-btn cm-popup-btn-soft" data-bs-dismiss="modal">
+                    <i class="fa fa-times"></i>Close
+                </button>
+                <button type="submit" form="formUpdateSubModule" class="btn cm-popup-btn cm-popup-btn-primary" id="btnUpdateDoc" data-loading-text="Updating..." data-original-text="Update">
+                    <i class="fa fa-save"></i>Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #addSubModuleModal,
+    #updateSubModuleModal {
+        --cm-brand: var(--color-primary, #0b7d78);
+        --cm-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+    #addSubModuleModal .modal-dialog,
+    #updateSubModuleModal .modal-dialog {
+        max-width: 760px;
+    }
+
+    #addSubModuleModal .cm-popup-content,
+    #updateSubModuleModal .cm-popup-content {
+        border: 1px solid #d8e6ea;
+        border-radius: 14px;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+        overflow: hidden;
+        animation: cmPopupIn 0.2s ease-out;
+    }
+
+    #addSubModuleModal .cm-popup-header,
+    #updateSubModuleModal .cm-popup-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #addSubModuleModal .cm-popup-title,
+    #updateSubModuleModal .cm-popup-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: #1f4652;
+        font-weight: 700;
+    }
+
+    #addSubModuleModal .cm-popup-body,
+    #updateSubModuleModal .cm-popup-body {
+        background: #fcfefe;
+        padding: 1rem;
+    }
+
+    #addSubModuleModal .cm-popup-subhead,
+    #updateSubModuleModal .cm-popup-subhead {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #31545f;
+        padding-bottom: 0.3rem;
+        border-bottom: 1px solid #e2ecef;
+        margin-bottom: 0.15rem;
+    }
+
+    #addSubModuleModal .cm-popup-label,
+    #updateSubModuleModal .cm-popup-label {
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    #addSubModuleModal .cm-popup-control,
+    #updateSubModuleModal .cm-popup-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    #addSubModuleModal .cm-popup-icon,
+    #updateSubModuleModal .cm-popup-icon {
+        width: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5f3;
+        color: #0b7d78;
+        border-right: 1px solid #cde2de;
+    }
+
+    #addSubModuleModal .cm-popup-control .form-control,
+    #updateSubModuleModal .cm-popup-control .form-control {
+        border: 0;
+        border-radius: 0;
+        height: 42px;
+        box-shadow: none;
+    }
+
+    #addSubModuleModal .cm-popup-control:focus-within,
+    #updateSubModuleModal .cm-popup-control:focus-within {
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #addSubModuleModal .cm-popup-file,
+    #updateSubModuleModal .cm-popup-file {
+        border-radius: 10px;
+        border-color: #cfe0e4;
+    }
+
+    #addSubModuleModal .cm-popup-footer,
+    #updateSubModuleModal .cm-popup-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    #addSubModuleModal .cm-popup-btn,
+    #updateSubModuleModal .cm-popup-btn {
+        min-width: 110px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #addSubModuleModal .cm-popup-btn:hover,
+    #updateSubModuleModal .cm-popup-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    #addSubModuleModal .cm-popup-btn:focus-visible,
+    #updateSubModuleModal .cm-popup-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #addSubModuleModal .cm-popup-btn-primary,
+    #updateSubModuleModal .cm-popup-btn-primary {
+        background: var(--cm-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #addSubModuleModal .cm-popup-btn-primary:hover,
+    #updateSubModuleModal .cm-popup-btn-primary:hover,
+    #addSubModuleModal .cm-popup-btn-primary:focus,
+    #updateSubModuleModal .cm-popup-btn-primary:focus {
+        color: #fff;
+    }
+
+    #addSubModuleModal .cm-popup-btn-soft,
+    #updateSubModuleModal .cm-popup-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    @@keyframes cmPopupIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px) scale(0.995);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        #addSubModuleModal .cm-popup-content,
+        #updateSubModuleModal .cm-popup-content {
+            animation: none;
+        }
+
+        #addSubModuleModal .cm-popup-btn,
+        #updateSubModuleModal .cm-popup-btn {
+            transition: none;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        #addSubModuleModal .modal-dialog,
+        #updateSubModuleModal .modal-dialog {
+            margin: 0.55rem;
+        }
+
+        #addSubModuleModal .cm-popup-body,
+        #updateSubModuleModal .cm-popup-body {
+            padding: 0.85rem;
+        }
+
+        #addSubModuleModal .cm-popup-footer,
+        #updateSubModuleModal .cm-popup-footer {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        #addSubModuleModal .cm-popup-btn,
+        #updateSubModuleModal .cm-popup-btn {
+            width: 100%;
+        }
+    }
+</style>
+

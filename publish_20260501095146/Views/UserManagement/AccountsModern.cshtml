@@ -1,0 +1,540 @@
+@{
+    ViewBag.Title = "Users";
+
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+@model List<ELG.Model.OrgAdmin.LearnerInfo>
+
+<div class="um-modern-page">
+    <section class="um-hero">
+        <div>
+            <h1 class="um-title">Users</h1>
+            <p class="um-subtitle">Invite, organize, and track learning progress.</p>
+        </div>
+        <div class="um-hero-badges">
+            <span class="um-badge"><i class="fa fa-filter"></i> Filtered Search</span>
+            <span class="um-badge"><i class="fa fa-download"></i> Export Ready</span>
+        </div>
+    </section>
+
+    <section class="um-stats-grid" aria-label="User summary stats">
+        <article class="um-stat-pill is-selected" data-status="0" role="button" tabindex="0" aria-label="Show all users">
+            <div class="um-stat-icon"><i class="fa fa-users"></i></div>
+            <div>
+                <div class="um-stat-label">All</div>
+                <div class="um-stat-value" id="pillTotalUsers">-</div>
+            </div>
+        </article>
+        <article class="um-stat-pill" data-status="1" role="button" tabindex="0" aria-label="Show active users only">
+            <div class="um-stat-icon is-active"><i class="fa fa-check-circle"></i></div>
+            <div>
+                <div class="um-stat-label">Active</div>
+                <div class="um-stat-value" id="pillActiveUsers">-</div>
+            </div>
+        </article>
+        <article class="um-stat-pill" data-status="2" role="button" tabindex="0" aria-label="Show suspended users only">
+            <div class="um-stat-icon is-inactive"><i class="fa fa-pause-circle"></i></div>
+            <div>
+                <div class="um-stat-label">Suspended</div>
+                <div class="um-stat-value" id="pillInactiveUsers">-</div>
+            </div>
+        </article>
+    </section>
+
+    <section class="um-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label um-label" for="txtLearner">User</label>
+                <div class="input-group um-input-group">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" id="txtLearner" placeholder="Name or email">
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6 d-none" id="advancedLocationFilter">
+                <label class="form-label um-label" for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                <select id="ddlLocation" class="form-select ddl-loc" aria-label="Location">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-6 d-none" id="advancedDepartmentFilter">
+                <label class="form-label um-label" for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                <select id="ddlDepartment" class="form-select ddl-dep" aria-label="Department">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <div class="um-actions-panel">
+                    <div class="um-actions-top">
+                        <button id="toggleAdvancedFilters" class="btn um-btn um-btn-filter" title="Show/Hide Location and Department filters">
+                            <i id="advancedFilterIcon" class="fa fa-sliders me-1"></i>Filters
+                        </button>
+                    </div>
+                    <div class="um-actions-bottom">
+                        <button id="searchLearner" class="btn um-btn um-btn-primary">
+                            <i class="fa fa-search me-1"></i>Search
+                        </button>
+                        <button id="downloadLearnerList" class="btn um-btn um-btn-soft">
+                            <i class="fa fa-download me-1"></i>Download
+                        </button>
+                        <button id="clearSearchLearner" class="btn um-btn um-btn-soft">
+                            <i class="fa fa-refresh me-1"></i>Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="um-table-card">
+        <div class="um-table-head">
+            <h2>Accounts</h2>
+            <span class="um-table-hint">Use the action menu to edit, activate/deactivate, delete, or send account email actions.</span>
+        </div>
+
+        <div id="message_learner_list" class="mb-3"></div>
+
+        <div class="table-responsive" id="learner-table-container">
+            <table class="table table-hover align-middle" id="registeredLearnerList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>
+
+@Html.Partial("_EditLearnerInfo")
+
+<style>
+    .um-modern-page {
+        --um-surface: #ffffff;
+        --um-line: #d9e5ea;
+        --um-text: #12303a;
+        --um-muted: #6a808c;
+        --um-brand: var(--color-primary, #0b7d78);
+        --um-brand-alt: var(--color-secondary, #0f968f);
+        --um-brand-soft: #e9f6f4;
+        --um-shadow: 0 8px 18px rgba(17, 39, 47, 0.06);
+        color: var(--um-text);
+    }
+
+    .um-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .um-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #14323c;
+    }
+
+    .um-subtitle {
+        margin: 0.28rem 0 0;
+        color: #637f8a;
+    }
+
+    .um-hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        align-items: flex-start;
+    }
+
+    .um-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid #cce1df;
+        background: #fff;
+        color: #2d5461;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 0.32rem 0.62rem;
+        white-space: nowrap;
+    }
+
+    .um-filter-card,
+    .um-table-card {
+        background: var(--um-surface);
+        border: 1px solid var(--um-line);
+        border-radius: 14px;
+        box-shadow: var(--um-shadow);
+    }
+
+    .um-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.7rem;
+        margin-bottom: 1rem;
+    }
+
+    .um-stat-pill {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        background: #ffffff;
+        border: 1px solid #d9e7ea;
+        border-radius: 12px;
+        padding: 0.55rem 0.9rem;
+        box-shadow: 0 6px 14px rgba(17, 39, 47, 0.06);
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .um-stat-pill:hover {
+        transform: translateY(-1px);
+        border-color: #c7d9de;
+        box-shadow: 0 9px 18px rgba(17, 39, 47, 0.09);
+    }
+
+    .um-stat-pill.is-selected {
+        border-color: var(--um-brand);
+        box-shadow: 0 0 0 2px rgba(11, 125, 120, 0.12);
+    }
+
+    .um-stat-pill:focus {
+        outline: none;
+        border-color: var(--um-brand);
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.2);
+    }
+
+    .um-stat-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f3f3;
+        color: #2f6f7c;
+        font-size: 1rem;
+    }
+
+    .um-stat-icon.is-active {
+        background: #e8f8ef;
+        color: #1e8f54;
+    }
+
+    .um-stat-icon.is-inactive {
+        background: #f9efef;
+        color: #b84545;
+    }
+
+    .um-stat-label {
+        font-size: 0.76rem;
+        text-transform: none;
+        letter-spacing: 0;
+        color: #5f7783;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .um-stat-value {
+        display: block;
+        font-size: 1.15rem;
+        font-weight: 800;
+        line-height: 1.1;
+        color: #1f3f48;
+        margin-top: 0.18rem;
+    }
+
+    .um-filter-card {
+        padding: 0.85rem;
+        margin-bottom: 1rem;
+        border-radius: 16px;
+    }
+
+    .um-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #58717d;
+        margin-bottom: 0.28rem;
+    }
+
+    .um-input-group .input-group-text {
+        background: var(--um-brand-soft);
+        border-color: #cde2de;
+        color: var(--um-brand);
+    }
+
+    .um-actions-panel {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 0.6rem;
+    }
+
+    .um-actions-top,
+    .um-actions-bottom {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        align-items: flex-end;
+        width: 100%;
+    }
+
+    .um-actions-bottom {
+        flex-wrap: nowrap;
+    }
+
+    .um-btn {
+        min-width: 112px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        font-weight: 700;
+        font-size: 0.84rem;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .um-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .um-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .um-btn-primary {
+        background: var(--um-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .um-btn-primary:hover,
+    .um-btn-primary:focus {
+        color: #fff;
+    }
+
+    .um-btn-soft {
+        background: #f7fbfc;
+        border-color: #d1e1e6;
+        color: #2a4d59;
+    }
+
+    .um-btn-filter {
+        background: #edf5ff;
+        border-color: #c9dcfb;
+        color: #2c5d96;
+    }
+
+    .um-table-card {
+        padding: 0.35rem;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .um-table-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .um-table-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .um-table-hint {
+        color: var(--um-muted);
+        font-size: 0.8rem;
+    }
+
+    .um-modern-page table.dataTable thead th {
+        background: #eef3f5;
+        border-bottom: 1px solid #dde5ea;
+        color: #2b4a58;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .um-modern-page .table-hover tbody tr:hover {
+        background: #f8fbfd;
+    }
+
+    .um-modern-page table.dataTable tbody td {
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+    }
+
+    .um-modern-page .um-status-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 106px;
+        padding: 0.28rem 0.72rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        border: 1px solid transparent;
+        line-height: 1.1;
+    }
+
+    .um-modern-page .um-status-active {
+        background: #dff5ea;
+        color: #1f9b5f;
+        border-color: #a9dfc2;
+    }
+
+    .um-modern-page .um-status-suspended {
+        background: #ffe8e8;
+        color: #de4545;
+        border-color: #f5b7b7;
+    }
+
+    .um-modern-page .um-row-actions-trigger {
+        width: 1.9rem;
+        height: 1.9rem;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: #2b5a67;
+        font-size: 1.08rem;
+        line-height: 1;
+        box-shadow: none;
+        transition: color 0.15s ease, background 0.15s ease;
+    }
+
+    .um-modern-page .um-row-actions-trigger:hover {
+        transform: none;
+        background: #e9f1f5;
+        border-color: transparent;
+        color: #1f4f5e;
+        box-shadow: none;
+    }
+
+    .um-modern-page .um-row-actions.show .um-row-actions-trigger,
+    .um-modern-page .um-row-actions-trigger:focus-visible {
+        outline: none;
+        border-color: transparent;
+        background: #e9f1f5;
+        box-shadow: 0 0 0 0.15rem rgba(34, 95, 121, 0.15);
+        color: #1f4f5e;
+    }
+
+    .um-modern-page .um-row-actions-menu {
+        min-width: 240px;
+        border: 1px solid #d7e6ea;
+        border-radius: 12px;
+        box-shadow: 0 14px 28px rgba(16, 40, 46, 0.14);
+        padding: 0.35rem;
+    }
+
+    .um-modern-page .um-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    .um-modern-page .um-row-actions-item-icon {
+        width: 18px;
+        text-align: center;
+        color: #2e6f7c;
+        opacity: 0.95;
+    }
+
+    .um-modern-page .um-row-actions-item:hover,
+    .um-modern-page .um-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+
+    .um-modern-page .um-row-actions-item:hover .um-row-actions-item-icon,
+    .um-modern-page .um-row-actions-item:focus .um-row-actions-item-icon {
+        color: var(--um-brand);
+    }
+
+    @@media (max-width: 991px) {
+        .um-hero {
+            flex-direction: column;
+        }
+
+        .um-stats-grid {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .um-actions-panel {
+            align-items: stretch;
+        }
+
+        .um-actions-top,
+        .um-actions-bottom {
+            justify-content: flex-start;
+        }
+
+        .um-btn {
+            min-width: 0;
+            flex: 1 1 30%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .um-filter-card,
+        .um-table-card {
+            padding: 0.85rem;
+            border-radius: 12px;
+        }
+
+        .um-actions-panel {
+            width: 100%;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
+
+        .um-actions-top,
+        .um-actions-bottom {
+            width: 100%;
+            justify-content: stretch;
+        }
+
+        .um-actions-bottom {
+            flex-wrap: wrap;
+        }
+
+        .um-btn {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script src="~/Scripts/Admin/ManageLearner/manageLearners.js?v=1.9"></script>
+}

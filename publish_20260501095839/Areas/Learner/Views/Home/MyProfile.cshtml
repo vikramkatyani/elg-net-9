@@ -1,0 +1,357 @@
+@{
+    ViewBag.Title = "My Profile";
+    Layout = ELG.Web.Helper.SessionHelper.IsLearnerUser
+        ? "~/Areas/Learner/Views/Shared/_Layout.cshtml"
+        : "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mp-modern-page" id="myProfilePage">
+    <section class="mp-hero">
+        <div>
+            <h1 class="mp-title">My Profile</h1>
+            <p class="mp-subtitle">Keep your profile details and picture up to date for a better learner experience.</p>
+        </div>
+    </section>
+
+    <section class="mp-content-card">
+        <div class="row g-4">
+            <div class="col-xl-4 col-lg-5">
+                <div class="mp-photo-card">
+                    @{
+                        var profilesrc = string.IsNullOrEmpty(ELG.Web.Helper.SessionHelper.ProfilePic as string)
+                            ? "~/Content/img/no-pic.png"
+                            : ELG.Web.Helper.SessionHelper.ProfilePic as string;
+                    }
+
+                    <label for="wizard-picture" class="mp-photo-label">
+                        <img src="@profilesrc" id="wizardPicturePreview" class="mp-photo" title="Click to change photo">
+                    </label>
+
+                    <input type="file" accept="image/*" id="wizard-picture" class="d-none">
+
+                    <a href="#" id="btn-remove-pic" class="mp-remove-link" onclick="updateSessionLearnerHandler.removeProfilePic()">
+                        &times; Remove
+                    </a>
+
+                    <div id="msg-profile-pic" class="mp-photo-message"></div>
+
+                    <p class="mp-photo-note">
+                        Kindly upload a clear image of yourself.<br />
+                        Accepted formats: <strong>.jpg, .jpeg, .png, .gif</strong><br />
+                        Maximum file size: <strong>1MB</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-xl-8 col-lg-7">
+                <div id="editSessionLearnerError" class="mb-2"></div>
+
+                <form id="updateSessionForm" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label mp-label" for="txtUpdateSessionFirstName">@ELG.Web.Helper.SessionHelper.CompanySettings.strFirstNameDescription</label>
+                        <div class="mp-control">
+                            <span class="mp-control-icon"><i class="fa fa-user"></i></span>
+                            <input type="text" id="txtUpdateSessionFirstName" class="form-control" placeholder="Enter first name">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label mp-label" for="txtUpdateSessionLastName">@ELG.Web.Helper.SessionHelper.CompanySettings.strSurnameDescription</label>
+                        <div class="mp-control">
+                            <span class="mp-control-icon"><i class="fa fa-user-o"></i></span>
+                            <input type="text" id="txtUpdateSessionLastName" class="form-control" placeholder="Enter last name">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label mp-label" for="txtUpdateSessionEmail">Email</label>
+                        <div class="mp-control mp-control-disabled">
+                            <span class="mp-control-icon"><i class="fa fa-envelope-o"></i></span>
+                            <input type="email" id="txtUpdateSessionEmail" class="form-control" placeholder="Email" disabled>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label mp-label" for="updateSessionLocationDDL">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                        <div class="mp-control mp-control-select mp-control-disabled">
+                            <span class="mp-control-icon"><i class="fa fa-map-marker"></i></span>
+                            <select class="form-select ddl-loc" id="updateSessionLocationDDL" disabled>
+                                <option value="0" selected>Select...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label mp-label" for="updateSessionDepartmentDDL">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                        <div class="mp-control mp-control-select mp-control-disabled">
+                            <span class="mp-control-icon"><i class="fa fa-sitemap"></i></span>
+                            <select class="form-select ddl-dep" id="updateSessionDepartmentDDL" disabled>
+                                <option selected>Select...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 d-none">
+                        <label class="form-label mp-label" for="updateSessionEmpNo">@ELG.Web.Helper.SessionHelper.CompanySettings.strEmployeeNumberDescription</label>
+                        <div class="mp-control">
+                            <span class="mp-control-icon"><i class="fa fa-id-badge"></i></span>
+                            <input type="text" id="updateSessionEmpNo" class="form-control" placeholder="Employee number">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <button type="button" class="btn mp-btn mp-btn-primary w-100" id="btnUpdateSessionLearnerInfo"
+                                data-loading-text="Updating..." data-original-text="Update">
+                            <i class="fa fa-check-circle"></i>Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .mp-modern-page {
+        --mp-surface: #ffffff;
+        --mp-line: #d9e6ea;
+        --mp-text: #14323c;
+        --mp-muted: #627f8a;
+        --mp-brand: var(--color-primary, #0b7d78);
+        --mp-brand-soft: #e8f5f3;
+        --mp-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--mp-text);
+    }
+
+    .mp-modern-page *,
+    .mp-modern-page *::before,
+    .mp-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .mp-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 13px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .mp-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .mp-subtitle {
+        margin: 0.28rem 0 0;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--mp-muted);
+    }
+
+    .mp-content-card {
+        background: var(--mp-surface);
+        border: 1px solid var(--mp-line);
+        border-radius: 14px;
+        box-shadow: var(--mp-shadow);
+        padding: 1rem;
+    }
+
+    #myProfilePage #updateSessionForm,
+    #myProfilePage #updateSessionForm.row {
+        display: flex !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    #myProfilePage #updateSessionForm > [class*="col-"] {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 auto;
+    }
+
+    @@media (min-width: 768px) {
+        #myProfilePage #updateSessionForm > .col-md-6 {
+            width: 50%;
+            max-width: 50%;
+            flex: 0 0 50%;
+        }
+    }
+
+    .mp-photo-card {
+        border: 1px solid #d8e8ec;
+        background: #f9fcfd;
+        border-radius: 12px;
+        padding: 1.2rem 1rem;
+        text-align: center;
+        position: sticky;
+        top: 1rem;
+    }
+
+    .mp-photo-label {
+        display: inline-block;
+        cursor: pointer;
+        margin-bottom: 0.7rem;
+    }
+
+    .mp-photo {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 999px;
+        border: 3px solid #d8e9ec;
+        box-shadow: 0 10px 20px rgba(18, 43, 50, 0.12);
+    }
+
+    .mp-remove-link {
+        display: block;
+        margin-top: 0.2rem;
+        color: #c03d3d;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .mp-remove-link:hover {
+        color: #9e2828;
+    }
+
+    .mp-photo-message {
+        margin-top: 0.65rem;
+        min-height: 18px;
+        font-size: 0.8rem;
+        color: var(--mp-muted);
+    }
+
+    .mp-photo-note {
+        margin: 0.55rem 0 0;
+        color: #617f89;
+        font-size: 0.78rem;
+        line-height: 1.45;
+    }
+
+    .mp-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    .mp-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .mp-control:hover {
+        border-color: #bad6dc;
+    }
+
+    .mp-control:focus-within {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .mp-control-icon {
+        width: 46px;
+        min-width: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--mp-brand-soft);
+        color: var(--mp-brand);
+        border-right: 1px solid #cde2de;
+    }
+
+    .mp-control .form-control,
+    .mp-control .form-select {
+        border: 0;
+        border-radius: 0;
+        width: 100% !important;
+        min-width: 0;
+        max-width: none;
+        height: 44px;
+        box-shadow: none;
+    }
+
+    .mp-control-select .form-select {
+        background-position: right 0.9rem center;
+    }
+
+    .mp-control-disabled {
+        background: #f6fafb;
+        border-color: #d9e5ea;
+    }
+
+    .mp-btn {
+        min-width: 114px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.84rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .mp-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .mp-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .mp-btn-primary {
+        color: #fff;
+        background: var(--mp-brand);
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .mp-btn-primary:hover,
+    .mp-btn-primary:focus {
+        color: #fff;
+    }
+
+    @@media (max-width: 991px) {
+        .mp-photo-card {
+            position: static;
+        }
+    }
+</style>
+
+@section Scripts{
+    @if (ELG.Web.Helper.SessionHelper.IsLearnerUser)
+    {
+        <script type="text/javascript">
+            window.learnerHomeBaseUrl = '@Url.Content("~/Learner/Home/")';
+        </script>
+        <script type="text/javascript" src="~/js/Common/UserInfo.js?v=1.0.1"></script>
+    }
+    <script type="text/javascript">
+        $(function () {
+            if ($('#menu-learner-profile').length) {
+                $('#learnerSettingsLink').addClass('active open');
+                $('#menu-learner-profile').addClass('active');
+            }
+        });
+    </script>
+}
+

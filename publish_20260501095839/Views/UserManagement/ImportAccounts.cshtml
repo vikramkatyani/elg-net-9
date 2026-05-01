@@ -1,0 +1,127 @@
+@{
+    ViewBag.Title = "Upload Users";
+
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+<style>
+    .input-group .form-control,
+    .input-group .btn {
+        height: 38px; /* Match the standard Bootstrap input height */
+        line-height: 1.5;
+        padding-top: 0.375rem;
+        padding-bottom: 0.375rem;
+    }
+
+    /* Optional: Adjust font size for visual consistency */
+    .input-group .form-control,
+    .input-group .btn {
+        font-size: 1rem;
+    }
+    .input-group .form-control {
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+</style>
+
+<div class="x_panel tile">
+    <!-- Page Heading -->
+    <div class="x_title">
+        <h1 class="h3 mb-3 text-primary fw-bold">Import Accounts</h1>
+    </div>
+
+    <div class="x_content">
+
+        <!-- Upload Instructions -->
+        <div>
+            <b>How to use this page:</b>
+            <ol>
+                <li><strong><a href="~/UserManagement/DownloadUserExcelTemplate" class="text-decoration-none">Download the Excel Template</a></strong> Fill in the required details for new users.</li>
+                <li><strong><a href="#" onclick="companyStructureHandler.downloadStructure(this)" class="text-decoration-none">Download the Org Structure</a></strong> Confirm that location and department values in your upload template match the structure.</li>
+                <li><strong>Upload the Completed Template</strong> Use the <b>Select File</b> button to choose your filled-in spreadsheet and click <b>Upload</b>.</li>
+                <li><strong>Registration Notification</strong> Once successfully uploaded, each user listed will automatically receive an email prompting them to complete their registration.</li>
+            </ol>
+        </div>
+        <div>
+            <strong>Note:</strong> This feature is designed for bulk user uploads. For smaller groups, please use the <b>Create Account</b> option.
+        </div>
+
+
+
+        <!-- File Upload Form -->
+        <div class="card border-0 my-4">
+            <div class="card-header">
+                <h5 class="mb-0 fw-semibold">Upload Excel File</h5>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("UploadUserTemplate", "ManageLearner", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="d-flex flex-column gap-3">
+                        <input accept=".csv,.xls,.xlsx" id="flmyPostedFile" name="myPostedFile" type="file" class="d-none" onchange="updateFileName(this)">
+
+                        <div class="input-group w-100 w-md-75">
+                            <input type="text" id="txtSelectedFile" class="form-control" placeholder="No file selected" readonly onclick="document.getElementById('flmyPostedFile').click();" />
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('flmyPostedFile').click();">
+                                <i class="fa fa-folder-open me-1"></i> Select file
+                            </button>
+                        </div>
+
+                        <input type="hidden" id="hdnUploadStatus" value="@ViewBag.UploadStatus" />
+
+                        <button type="submit" class="btn btn-secondary" id="btnUploadUsersFile" disabled
+                                data-loading-text="Uploading Users..." data-original-text="Upload">
+                            <i class="fa fa-upload me-1"></i> Upload
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <script>
+            function updateFileName(input) {
+                const fileName = input.files[0]?.name || 'No file selected';
+                document.getElementById('txtSelectedFile').value = fileName;
+                document.getElementById('btnUploadUsersFile').disabled = !input.files.length;
+            }
+        </script>
+
+    </div>
+    <!--Result modal to show after upload action-->
+    <div class="modal fade" id="userUploadResultModal" tabindex="-1" aria-labelledby="userUploadResultLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userUploadResultLabel">Upload User Result</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div id="divUploadStatusMessage"></div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/ManageLearner/UploadUsers.js"></script>
+    <script src="~/Scripts/Admin/Common/companyStructure.js?v=1.1"></script>
+}

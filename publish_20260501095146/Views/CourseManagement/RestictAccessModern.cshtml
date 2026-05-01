@@ -1,0 +1,327 @@
+
+@{
+    ViewBag.Title = "Suspend Course Access";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div id="cmRestrictAccessPage" class="cm-restrict-shell">
+    <div class="cm-restrict-hero">
+        <div>
+            <h1 class="cm-restrict-title">Restrict Course Access</h1>
+            <p class="cm-restrict-subtitle">Find licensed users quickly and suspend course access in bulk or one-by-one.</p>
+        </div>
+    </div>
+
+    <div class="cm-restrict-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6 col-lg-3">
+                <label for="ddlCourse" class="cm-restrict-label">Courses</label>
+                <select id="ddlCourse" class="form-select ddl-course cm-restrict-input">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <label for="txtLearner" class="cm-restrict-label">User</label>
+                <input type="text" id="txtLearner" class="form-control cm-restrict-input" placeholder="Name or email">
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <label for="ddlLocation" class="cm-restrict-label">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                <select id="ddlLocation" class="form-select ddl-loc cm-restrict-input">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <label for="ddlDepartment" class="cm-restrict-label">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                <select id="ddlDepartment" class="form-select ddl-dep cm-restrict-input">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-12 cm-restrict-filter-actions">
+                <button id="searchRevokeModule" class="btn cm-restrict-btn cm-restrict-btn-primary">
+                    <i class="fa fa-search me-1"></i>Search
+                </button>
+                <button id="clearSearchRevokeModule" class="btn cm-restrict-btn cm-restrict-btn-soft">
+                    <i class="fa fa-times me-1"></i>Clear
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="x_content cm-restrict-content">
+        <div id="divMessage_RevokeModule"></div>
+
+        <div id="div-report-container" class="cm-restrict-table-card">
+            <div class="cm-restrict-table-actions">
+                <button type="button" class="btn cm-restrict-btn cm-restrict-btn-dark disabled" id="btnRevokeFromSelected"
+                        data-bs-toggle="tooltip" data-toggle="tooltip" title="Select some users"
+                        data-loading-text="Please wait..." data-original-text="Suspend from Selected">
+                    <i class="fa fa-ban me-1"></i>Suspend from Selected
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="revokeModuleLearnerList" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" name="chk_slc_all_user_ra" id="chk_slc_all_user_ra" value="1">
+                                <span class="ms-1">Select All</span>
+                            </th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                            <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #cmRestrictAccessPage {
+        --cm-restrict-brand: var(--color-primary, #0b7d78);
+        --cm-restrict-brand-alt: #12665f;
+    }
+
+    #cmRestrictAccessPage.cm-restrict-shell,
+    #cmRestrictAccessPage .x_content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #14323c;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-subtitle {
+        margin: 0.28rem 0 0;
+        color: #637f8a;
+    }
+
+    #cmRestrictAccessPage #divMessage_RevokeModule.show {
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-filter-card,
+    #cmRestrictAccessPage .cm-restrict-table-card {
+        border: 1px solid #dce9ee;
+        border-radius: 13px;
+        background: #ffffff;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-filter-card {
+        padding: 0.95rem;
+        margin-bottom: 0.9rem;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-label {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #526a74;
+        font-weight: 700;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-input {
+        min-height: 42px;
+        border-color: #cfe1e6;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-input:focus {
+        border-color: #8cc9c5;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #cmRestrictAccessPage .cm-restrict-filter-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn {
+        min-width: 132px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.32rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn-primary {
+        color: #fff;
+        background: var(--cm-restrict-brand);
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn-primary:hover,
+    #cmRestrictAccessPage .cm-restrict-btn-primary:focus {
+        color: #fff;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn-soft {
+        background: #f7fbfd;
+        color: #2e515d;
+        border-color: #d2e2e8;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn-dark {
+        color: #fff;
+        background: #415665;
+        box-shadow: 0 8px 16px rgba(23, 40, 50, 0.2);
+    }
+
+    #cmRestrictAccessPage .cm-restrict-btn-dark.disabled,
+    #cmRestrictAccessPage .cm-restrict-btn-dark:disabled {
+        opacity: 0.55;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-table-card {
+        padding: 0.9rem;
+    }
+
+    #cmRestrictAccessPage .cm-restrict-table-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 0.55rem;
+    }
+
+    #cmRestrictAccessPage #revokeModuleLearnerList {
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100% !important;
+    }
+
+    #cmRestrictAccessPage #revokeModuleLearnerList thead th {
+        background: #f2f8fb;
+        color: #35525d;
+        border-bottom: 1px solid #d7e6ec;
+        border-top: 1px solid #d7e6ec;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 700;
+        vertical-align: middle;
+    }
+
+    #cmRestrictAccessPage #revokeModuleLearnerList tbody td {
+        border-color: #e1ecef;
+        vertical-align: middle;
+    }
+
+    #cmRestrictAccessPage #revokeModuleLearnerList tbody tr:hover {
+        background: #f7fcfd;
+    }
+
+    #cmRestrictAccessPage #revokeModuleLearnerList button.btn-sm.rounded-circle {
+        width: 2.2rem;
+        height: 2.2rem;
+        padding: 0;
+        border-radius: 999px;
+        border: 1px solid #cfe0e5;
+        background: #eff7fa;
+        color: #275361;
+        transition: all 0.15s ease;
+    }
+
+    #cmRestrictAccessPage #revokeModuleLearnerList button.btn-sm.rounded-circle:hover {
+        background: #e1f2f5;
+        border-color: #b9d6df;
+        color: #184756;
+    }
+
+    #cmRestrictAccessPage .dataTables_wrapper .dataTables_info,
+    #cmRestrictAccessPage .dataTables_wrapper .dataTables_paginate {
+        margin-top: 0.5rem;
+    }
+
+    @@media (max-width: 991px) {
+        #cmRestrictAccessPage .cm-restrict-filter-actions {
+            justify-content: stretch;
+        }
+
+        #cmRestrictAccessPage .cm-restrict-btn {
+            flex: 1;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        #cmRestrictAccessPage {
+            padding: 0.72rem;
+        }
+
+        #cmRestrictAccessPage .cm-restrict-filter-card,
+        #cmRestrictAccessPage .cm-restrict-table-card {
+            padding: 0.72rem;
+            border-radius: 12px;
+        }
+
+        #cmRestrictAccessPage .cm-restrict-filter-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.45rem;
+        }
+
+        #cmRestrictAccessPage .cm-restrict-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script>const currentpageId = "suspend_course_access";</script>
+    <script type="text/javascript" src="~/Scripts/Admin/CourseManagement/RevokeModule.js?v=2.0"></script>
+}

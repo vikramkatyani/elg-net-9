@@ -1,0 +1,461 @@
+@{
+    ViewBag.Title = "Document Category";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+@model List<ELG.Model.OrgAdmin.LearnerInfo>
+
+<div class="dc-modern-page" id="docCategoryPage">
+    <section class="dc-hero">
+        <div>
+            <h1 class="dc-title">Manage Document Categories</h1>
+            <p class="dc-subtitle">Create, maintain, and structure document categories and sub-categories in one view.</p>
+        </div>
+        @{ if (adminRole == 1)
+            {
+                <button id="btnShowCategoryPopUp" class="btn dc-btn dc-btn-success">
+                    <i class="fa fa-plus-circle"></i>Add Category
+                </button>
+            }
+        }
+    </section>
+
+    <section class="dc-filter-card">
+        <div class="dc-filter-head">
+            <h2>Filters</h2>
+            <p>Search by category name and refresh results instantly.</p>
+        </div>
+
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-8 col-md-7 col-sm-12">
+                <label class="form-label dc-label" for="txtDocCategory">Category Name</label>
+                <div class="dc-control">
+                    <span class="dc-control-icon"><i class="fa fa-search"></i></span>
+                    <input type="text" id="txtDocCategory" class="form-control" placeholder="Search category by name">
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-5 col-sm-12">
+                <div class="dc-actions">
+                    <button id="searchDocCategory" class="btn dc-btn dc-btn-primary">
+                        <i class="fa fa-search"></i>Search
+                    </button>
+                    <button id="clearSearchDocCategory" class="btn dc-btn dc-btn-soft">
+                        <i class="fa fa-times"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dc-table-card">
+        <div class="dc-table-head">
+            <h2>Categories</h2>
+            <span class="dc-table-hint">Use the action menu to edit, delete, add sub-category, and assign location mappings.</span>
+        </div>
+
+        <div id="messageCategory" class="mb-3"></div>
+
+        <div class="table-responsive" id="doc-category-container">
+            <table class="table table-hover align-middle" id="docCategoryList" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Created On</th>
+                        <th style="width: 5%;">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>
+
+@Html.Partial("_addCategory")
+@Html.Partial("_addSubCategory")
+
+<style>
+    .dc-modern-page {
+        --dc-surface: #ffffff;
+        --dc-line: #d9e6ea;
+        --dc-text: #14323c;
+        --dc-muted: #627f8a;
+        --dc-brand: var(--color-primary, #0b7d78);
+        --dc-brand-alt: var(--color-secondary, #0f968f);
+        --dc-brand-soft: #e8f5f3;
+        --dc-shadow: 0 14px 30px rgba(17, 42, 48, 0.08);
+        color: var(--dc-text);
+        direction: ltr;
+    }
+
+    .dc-modern-page *,
+    .dc-modern-page *::before,
+    .dc-modern-page *::after {
+        box-sizing: border-box;
+    }
+
+    .dc-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 13px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .dc-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .dc-subtitle {
+        margin: 0.28rem 0 0;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--dc-muted);
+    }
+
+    .dc-filter-card,
+    .dc-table-card {
+        background: var(--dc-surface);
+        border: 1px solid var(--dc-line);
+        border-radius: 14px;
+        box-shadow: var(--dc-shadow);
+    }
+
+    .dc-filter-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .dc-filter-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .dc-filter-head h2 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+    }
+
+    .dc-filter-head p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--dc-muted);
+    }
+
+    .dc-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    .dc-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .dc-control:hover {
+        border-color: #bad6dc;
+    }
+
+    .dc-control:focus-within {
+        border-color: #90c8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    .dc-control-icon {
+        width: 46px;
+        min-width: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dc-brand-soft);
+        color: var(--dc-brand);
+        border-right: 1px solid #cde2de;
+    }
+
+    .dc-control .form-control {
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        box-shadow: none;
+    }
+
+    .dc-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .dc-btn {
+        min-width: 114px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.84rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .dc-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .dc-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    .dc-btn-primary {
+        color: #fff;
+        background: var(--dc-brand);
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    .dc-btn-primary:hover,
+    .dc-btn-primary:focus {
+        color: #fff;
+    }
+
+    .dc-btn-soft {
+        color: #2e515d;
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+    }
+
+    .dc-btn-success {
+        color: #fff;
+        background: #1a8f58;
+        box-shadow: 0 8px 16px rgba(26, 143, 88, 0.2);
+    }
+
+    .dc-table-card {
+        padding: 1rem;
+    }
+
+    .dc-table-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .dc-table-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .dc-table-hint {
+        color: var(--dc-muted);
+        font-size: 0.8rem;
+    }
+
+    .dc-modern-page table.dataTable thead th {
+        background: #f4faf9;
+        border-bottom: 1px solid #dce9eb;
+        color: #32515c;
+        font-size: 0.82rem;
+        vertical-align: middle;
+    }
+
+    .dc-modern-page .table-hover tbody tr:hover {
+        background: #f5fbff;
+    }
+
+    .dc-modern-page table.dataTable tbody td {
+        padding-top: 0.72rem;
+        padding-bottom: 0.72rem;
+    }
+
+    .dc-modern-page .dc-row-actions-trigger {
+        width: 2.45rem;
+        height: 2.45rem;
+        border: 1px solid #d2e2e8;
+        background: #f7fbfd;
+        color: #2f5662;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .dc-modern-page .dc-row-actions-trigger:hover {
+        transform: translateY(-1px);
+        background: #eef7fb;
+        color: #204652;
+    }
+
+    .dc-modern-page .dc-row-actions-trigger:focus-visible,
+    .dc-modern-page .dc-row-actions.show .dc-row-actions-trigger {
+        outline: none;
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+        color: var(--dc-brand);
+    }
+
+    .dc-modern-page .dc-row-actions-menu {
+        min-width: 220px;
+        border: 1px solid #d7e6ea;
+        border-radius: 12px;
+        box-shadow: 0 14px 28px rgba(16, 40, 46, 0.14);
+        padding: 0.35rem;
+    }
+
+    .dc-modern-page .dc-row-actions-item {
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #2c4f5a;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    .dc-modern-page .dc-row-actions-item-icon {
+        width: 18px;
+        text-align: center;
+        color: #2e6f7c;
+        opacity: 0.95;
+    }
+
+    .dc-modern-page .dc-row-actions-item:hover,
+    .dc-modern-page .dc-row-actions-item:focus {
+        background: #eef7fb;
+        color: #1f4652;
+    }
+
+    .dc-modern-page .dc-sub-actions {
+        margin-top: 0.55rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .dc-modern-page .dc-sub-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        background: #f8fcfd;
+        border: 1px solid #dfecf0;
+        border-radius: 9px;
+        padding: 0.28rem 0.42rem;
+    }
+
+    .dc-modern-page .dc-sub-item-name {
+        font-size: 0.8rem;
+        color: #345965;
+        line-height: 1.2;
+    }
+
+    .dc-modern-page .dc-sub-item-actions {
+        display: inline-flex;
+        gap: 0.3rem;
+    }
+
+    .dc-modern-page .dc-sub-action-btn {
+        width: 1.95rem;
+        height: 1.95rem;
+        border: 1px solid #d2e2e8;
+        border-radius: 8px;
+        background: #f7fbfd;
+        color: #2f5662;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .dc-modern-page .dc-sub-action-btn:hover {
+        background: #eef7fb;
+        border-color: #bfd7dd;
+        color: #204652;
+    }
+
+    .dc-modern-page.dc-mobile .dc-filter-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dc-modern-page.dc-mobile .dc-actions {
+        justify-content: flex-start;
+    }
+
+    .dc-modern-page.dc-mobile .dc-hero {
+        flex-direction: column;
+    }
+
+    .dc-modern-page.dc-mobile .dc-filter-card,
+    .dc-modern-page.dc-mobile .dc-table-card,
+    .dc-modern-page.dc-mobile .dc-hero {
+        padding: 0.85rem;
+    }
+
+    .dc-modern-page.dc-mobile .dc-actions,
+    .dc-modern-page.dc-mobile .dc-btn {
+        width: 100%;
+    }
+
+    .dc-modern-page.dc-mobile .dc-table-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Document/manageCategory.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/Document/manageSubCategory.js"></script>
+    <script>
+        (function () {
+            function applyDocCategoryMobileClass() {
+                var root = document.getElementById('docCategoryPage');
+                if (!root) {
+                    return;
+                }
+                if (window.matchMedia('(max-width: 991px)').matches) {
+                    root.classList.add('dc-mobile');
+                } else {
+                    root.classList.remove('dc-mobile');
+                }
+            }
+
+            applyDocCategoryMobileClass();
+            window.addEventListener('resize', applyDocCategoryMobileClass);
+        })();
+    </script>
+}

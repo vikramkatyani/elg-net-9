@@ -1,0 +1,327 @@
+<div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content cm-edit-content">
+            <div class="modal-header cm-edit-header">
+                <h5 class="modal-title cm-edit-title">
+                    <i class="fa fa-pencil"></i>
+                    Edit Course
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body cm-edit-body">
+                <div class="alert alert-danger collapse" id="editCourseMessage"></div>
+
+                <form id="formEditCourse" enctype="multipart/form-data">
+                    <input type="hidden" id="editCourseId" name="CourseId" />
+                    <input type="hidden" id="editOldThumbnailPath" name="OldThumbnailPath" />
+                    <input type="hidden" id="editOldCoursePath" name="OldCoursePath" />
+                    
+                    <div class="row g-3 cm-edit-section">
+                        <div class="col-12">
+                            <div class="cm-edit-subhead">Course Information</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editCourseName" class="form-label cm-edit-label">Course Title</label>
+                            <div class="cm-edit-control">
+                                <span class="cm-edit-icon"><i class="fa fa-book"></i></span>
+                                <input type="text" class="form-control" id="editCourseName" name="CourseName" placeholder="Course Title" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="editCourseDesc" class="form-label cm-edit-label">Description</label>
+                            <textarea class="form-control cm-edit-textarea" id="editCourseDesc" name="CourseDesc" placeholder="Description" required></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editCourseThumbnail" class="form-label cm-edit-label">Course Thumbnail (Optional)</label>
+                            <div class="cm-edit-upload-card">
+                                <input class="form-control cm-edit-file" type="file" id="editCourseThumbnail" name="ThumbnailFile" accept="image/*">
+                                <div class="form-text">Leave empty to keep existing thumbnail</div>
+                                <div id="currentThumbnail" class="mt-2 cm-edit-current-thumb-wrap">
+                                    <small class="text-muted">Current thumbnail:</small>
+                                    <img id="currentThumbnailImg" src="" alt="Current Thumbnail" class="img-thumbnail mt-1" style="max-width: 120px; height: auto;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editCoursePackage" class="form-label cm-edit-label">SCORM Package (Optional)</label>
+                            <div class="cm-edit-upload-card">
+                                <input class="form-control cm-edit-file" type="file" id="editCoursePackage" name="CoursePackage" accept=".zip">
+                                <div class="form-text">Leave empty to keep existing package</div>
+                                <div id="currentPackage" class="mt-2">
+                                    <small class="text-muted">Current package exists</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer cm-edit-footer">
+                <button type="button" class="btn cm-edit-btn cm-edit-btn-soft" data-bs-dismiss="modal">
+                    <i class="fa fa-times"></i>Close
+                </button>
+                <button type="button" form="formEditCourse" class="btn cm-edit-btn cm-edit-btn-primary" id="btnUpdateCourse" data-loading-text="Updating..." data-original-text="Update">
+                    <i class="fa fa-save"></i>Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #editCourseModal {
+        --cm-brand: var(--color-primary, #0b7d78);
+        --cm-brand-alt: var(--color-secondary, #0f968f);
+    }
+
+    #editCourseModal .modal-dialog {
+        max-width: 960px;
+    }
+
+    #editCourseModal .cm-edit-content {
+        border: 1px solid #d8e6ea;
+        border-radius: 14px;
+        box-shadow: 0 18px 36px rgba(14, 40, 46, 0.16);
+        overflow: hidden;
+        animation: cmEditPopupIn 0.2s ease-out;
+    }
+
+    #editCourseModal .cm-edit-header {
+        background: linear-gradient(145deg, #f0faf8, #eef5fb);
+        border-bottom: 1px solid #dce9ec;
+    }
+
+    #editCourseModal .cm-edit-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: #1f4652;
+        font-weight: 700;
+    }
+
+    #editCourseModal .cm-edit-body {
+        background: #fcfefe;
+        padding: 1.1rem;
+    }
+
+    #editCourseModal .modal-body,
+    #editCourseModal .cm-edit-body,
+    #editCourseModal .cm-edit-body form,
+    #editCourseModal #formEditCourse {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0;
+        margin: 0 !important;
+        float: none !important;
+    }
+
+    #editCourseModal .cm-edit-body .row.cm-edit-section {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        --bs-gutter-x: 1rem;
+        --bs-gutter-y: 0.85rem;
+    }
+
+    #editCourseModal .cm-edit-body .row.cm-edit-section > [class*="col-"] {
+        max-width: 100%;
+    }
+
+    #editCourseModal .cm-edit-section {
+        background: #fff;
+        border: 1px solid #deeaed;
+        border-radius: 12px;
+        padding: 1rem 0.95rem;
+        margin: 0;
+    }
+
+    #editCourseModal .cm-edit-subhead {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #31545f;
+        padding-bottom: 0.32rem;
+        border-bottom: 1px solid #e2ecef;
+        margin-bottom: 0.2rem;
+    }
+
+    #editCourseModal .cm-edit-label {
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #56707b;
+        margin-bottom: 0.3rem;
+    }
+
+    #editCourseModal .cm-edit-control {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    #editCourseModal .cm-edit-icon {
+        width: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5f3;
+        color: #0b7d78;
+        border-right: 1px solid #cde2de;
+    }
+
+    #editCourseModal .cm-edit-control .form-control {
+        border: 0;
+        border-radius: 0;
+        height: 42px;
+        box-shadow: none;
+    }
+
+    #editCourseModal .cm-edit-control:focus-within {
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #editCourseModal .cm-edit-textarea {
+        border: 1px solid #cfe0e4;
+        border-radius: 10px;
+        min-height: 168px;
+        resize: vertical;
+        box-shadow: none;
+        line-height: 1.5;
+    }
+
+    #editCourseModal .cm-edit-textarea:focus {
+        border-color: #8fc8c4;
+        box-shadow: 0 0 0 0.2rem rgba(11, 125, 120, 0.14);
+    }
+
+    #editCourseModal .cm-edit-upload-card {
+        border: 1px solid #dce9ee;
+        border-radius: 11px;
+        background: linear-gradient(180deg, #fcffff, #f8fcfe);
+        padding: 0.65rem;
+        height: 100%;
+    }
+
+    #editCourseModal .cm-edit-current-thumb-wrap {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    #editCourseModal .cm-edit-file {
+        border-radius: 10px;
+        border-color: #cfe0e4;
+        width: 100%;
+    }
+
+    #editCourseModal .form-text {
+        display: block;
+        margin-top: 0.35rem;
+    }
+
+    #editCourseModal .cm-edit-footer {
+        background: #f9fcfd;
+        border-top: 1px solid #dce9ec;
+    }
+
+    #editCourseModal .cm-edit-btn {
+        min-width: 110px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #editCourseModal .cm-edit-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    #editCourseModal .cm-edit-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 125, 120, 0.24);
+    }
+
+    #editCourseModal .cm-edit-btn-primary {
+        background: var(--cm-brand);
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(11, 125, 120, 0.2);
+    }
+
+    #editCourseModal .cm-edit-btn-primary:hover,
+    #editCourseModal .cm-edit-btn-primary:focus {
+        color: #fff;
+    }
+
+    #editCourseModal .cm-edit-btn-soft {
+        background: #f7fbfd;
+        border-color: #d2e2e8;
+        color: #2e515d;
+    }
+
+    @@keyframes cmEditPopupIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px) scale(0.995);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        #editCourseModal .cm-edit-content {
+            animation: none;
+        }
+
+        #editCourseModal .cm-edit-btn {
+            transition: none;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        #editCourseModal .modal-dialog {
+            margin: 0.55rem;
+        }
+
+        #editCourseModal .cm-edit-body {
+            padding: 0.7rem;
+        }
+
+        #editCourseModal .cm-edit-section {
+            padding: 0.8rem 0.7rem;
+        }
+
+        #editCourseModal .cm-edit-textarea {
+            min-height: 136px;
+        }
+
+        #editCourseModal .cm-edit-footer {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        #editCourseModal .cm-edit-btn {
+            width: 100%;
+        }
+    }
+</style>

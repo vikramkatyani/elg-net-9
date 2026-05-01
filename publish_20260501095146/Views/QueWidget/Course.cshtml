@@ -1,0 +1,153 @@
+
+@{
+    ViewBag.Title = "Course Widgets";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div id="qwCoursePage" class="qw-course-shell">
+    <section class="qw-course-hero">
+        <div>
+            <h1 class="qw-course-title">Course Widgets</h1>
+            <p class="qw-course-subtitle">Manage course entries and jump into widget setup for each course.</p>
+        </div>
+        <button id="btnAddCoursePopUp" class="btn btn-primary qw-btn-primary" type="button">
+            <i class="fa fa-plus-circle me-1"></i> Add Course
+        </button>
+    </section>
+
+    <section class="qw-course-filter card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-6 col-md-8 col-sm-12">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="txtCourse" placeholder="Course Name">
+                        <label for="txtCourse">Course Name</label>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 d-flex justify-content-lg-end gap-2 flex-wrap">
+                    <button id="searchCourse" class="btn btn-primary qw-btn-primary" type="button">
+                        <i class="fa fa-search me-1"></i> Search
+                    </button>
+                    <button id="clearSearchCourse" class="btn btn-outline-secondary" type="button">
+                        <i class="fa fa-times me-1"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="qw-course-table card border-0 shadow-sm">
+        <div class="card-body">
+            <div id="divMessage_widgetcourse" class="mb-3"></div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered align-middle mb-0" id="widgetCourseList" width="100%" cellspacing="0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Course</th>
+                            <th>Widgets</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <!-- Table body gets dynamically rendered -->
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    #qwCoursePage {
+        --qw-brand: var(--color-primary, #0b7d78);
+        --qw-brand-alt: var(--color-secondary, #0f968f);
+        --qw-brand-soft: #effaf8;
+        --qw-border: #d8e9ec;
+    }
+
+    #qwCoursePage.qw-course-shell,
+    #qwCoursePage .x_content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    #qwCoursePage .qw-course-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid var(--qw-border);
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    #qwCoursePage .qw-course-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #14323c;
+    }
+
+    #qwCoursePage .qw-course-subtitle {
+        margin: 0.28rem 0 0;
+        color: #637f8a;
+    }
+
+    #qwCoursePage .card {
+        border: 1px solid #deeaee !important;
+        border-radius: 12px;
+    }
+
+    #qwCoursePage .card-body {
+        padding: 0.9rem;
+    }
+
+    #qwCoursePage .qw-btn-primary {
+        background: var(--qw-brand);
+        border-color: var(--qw-brand);
+        color: #fff;
+    }
+
+    #qwCoursePage .qw-btn-primary:hover,
+    #qwCoursePage .qw-btn-primary:focus {
+        background: var(--qw-brand-alt);
+        border-color: var(--qw-brand-alt);
+        color: #fff;
+    }
+
+    #qwCoursePage #divMessage_widgetcourse.show {
+        border: 1px solid #d9e8ee;
+        border-radius: 10px;
+        background: #f5fbff;
+        color: #3e5d69;
+        padding: 0.7rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    #qwCoursePage #widgetCourseList thead th {
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 767px) {
+        #qwCoursePage .qw-course-hero {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        #qwCoursePage .qw-btn-primary {
+            width: 100%;
+        }
+    }
+</style>
+
+@Html.Partial("_addWidgetCourse")
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Widgets/ManageWidgets.js"></script>
+}

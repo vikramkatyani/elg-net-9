@@ -1,0 +1,443 @@
+@{
+    ViewBag.Title = "Document Report";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    if (adminRole > 0)
+    {
+        Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+    }
+    else
+    {
+        <div class="alert alert-danger">Unauthorized access. Please <a href="@Url.Action("LogOut", "Account")">log out</a>.</div>
+    }
+}
+
+<div class="dr-modern-page">
+    <header class="dr-hero">
+        <div>
+            <nav class="dr-breadcrumb" aria-label="breadcrumb">
+                <a href="@Url.Action("InsightsReports", "Report")">Reports &amp; Analytics</a>
+                <span>/</span>
+                <span>Document Report</span>
+            </nav>
+            <h1 class="dr-title">Document Report</h1>
+            <p class="dr-subtitle">Track issued documents, acknowledgements, and status updates across your organization.</p>
+        </div>
+        <a href="@Url.Action("InsightsReports", "Report")" class="dr-back-btn">
+            <i class="fa fa-arrow-left"></i>
+            Back to Reports
+        </a>
+    </header>
+
+    <section class="dr-filter-card">
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="txtLearner">User</label>
+                <div class="input-group dr-input-group">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <input type="text" id="txtLearner" class="form-control" placeholder="Name or email">
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="ddlLocation">@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</label>
+                <select id="ddlLocation" class="form-select ddl-loc">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="ddlDepartment">@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</label>
+                <select id="ddlDepartment" class="form-select ddl-dep">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-3 align-items-end mt-1">
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="ddlCategory">Category</label>
+                <select id="ddlCategory" class="form-select ddl-category">
+                    <option value="0">Select All</option>
+                </select>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="ddlStatus">Status</label>
+                <select id="ddlStatus" class="form-select">
+                    <option value="0" selected>Select All</option>
+                    <option value="1">I confirm that I have read and understood</option>
+                    <option value="2">I have read but require clarification</option>
+                    <option value="3">N/A</option>
+                </select>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="ddlIssedStatus">Issued</label>
+                <select id="ddlIssedStatus" class="form-select">
+                    <option value="-1">All</option>
+                    <option value="1" selected>Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-3 align-items-end mt-1">
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="txtRptFrom">Viewed From</label>
+                <input type="text" id="txtRptFrom" class="form-control" placeholder="yyyy-mm-dd">
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <label class="form-label dr-label" for="txtRptTo">Viewed To</label>
+                <input type="text" id="txtRptTo" class="form-control" placeholder="yyyy-mm-dd">
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <div class="dr-actions-panel">
+                    <button id="searchDocumentReportBtn" class="btn dr-btn dr-btn-primary">
+                        <i class="fa fa-search me-1"></i>Search
+                    </button>
+                    <button id="downloadDocumentReport" class="btn dr-btn dr-btn-soft"
+                            data-loading-text="Downloading..."
+                            data-original-text='<i class="fa fa-download"></i> Download'>
+                        <i class="fa fa-download me-1"></i>Download
+                    </button>
+                    <button id="clearSearchDocumentReport" class="btn dr-btn dr-btn-soft">
+                        <i class="fa fa-refresh me-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dr-table-card">
+        <div class="dr-table-head">
+            <h2>Document Activity</h2>
+            <span class="dr-table-hint">Filter by user, location, category, and viewed dates to find relevant document records.</span>
+        </div>
+
+        <div id="message_document_report" class="mb-3"></div>
+        <div class="table-responsive" id="document-report-container">
+            <table class="table table-hover align-middle" id="orgDocumentReport" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription</th>
+                        <th>@ELG.Web.Helper.SessionHelper.CompanySettings.strDepartmentDescription</th>
+                        <th>Category</th>
+                        <th>Document</th>
+                        <th>Issued</th>
+                        <th>Viewed On</th>
+                        <th>Status</th>
+                        <th>Status On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@{
+    if (ELG.Web.Helper.SessionHelper.UserRole == 1)
+    {
+        <div class="modal fade" id="updateLearnerDocInfoModal" tabindex="-1" aria-labelledby="updateLearnerDocInfoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateLearnerDocInfoModalLabel">Update Document Info</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="editLearnerDocError" role="alert"></div>
+
+                        <form id="updateLearnerDocForm" class="row g-3">
+                            <div class="col-md-6 w-100">
+                                <div class="form-floating">
+                                    <select id="ddlDocStatus" class="form-select">
+                                        <option value="I confirm that I have read and understood">I confirm that I have read and understood</option>
+                                        <option value="I have read but require further clarification from my line manager and will contact them.">I have read but require further clarification from my line manager and will contact them.</option>
+                                        <option value="N/A">N/A</option>
+                                    </select>
+                                    <label for="ddlDocStatus">Status</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 w-100">
+                                <div class="form-floating">
+                                    <input type="text" id="txtViewedOn" class="form-control popup-calendar" placeholder="YYYY-MM-DD">
+                                    <label for="txtViewedOn">Viewed On</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 w-100">
+                                <div class="form-floating">
+                                    <input type="text" id="txtStatusUpdatedOn" class="form-control popup-calendar" placeholder="YYYY-MM-DD">
+                                    <label for="txtStatusUpdatedOn">Status Updated On</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btnUpdateLearnerDocInfo"
+                                data-loading-text="Updating..." data-original-text="Update">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    .dr-modern-page {
+        --dr-surface: #ffffff;
+        --dr-line: #d9e5ea;
+        --dr-text: #12303a;
+        --dr-muted: #6a808c;
+        --dr-brand: var(--color-primary, #0b7d78);
+        --dr-brand-soft: #e9f6f4;
+        --dr-shadow: 0 8px 18px rgba(17, 39, 47, 0.06);
+        color: var(--dr-text);
+    }
+
+    .dr-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.2rem 0.2rem 0.65rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .dr-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 0.45rem;
+        color: var(--dr-muted);
+        font-size: 0.88rem;
+    }
+
+    .dr-breadcrumb a {
+        color: var(--dr-muted);
+        text-decoration: none;
+    }
+
+    .dr-breadcrumb a:hover {
+        color: var(--dr-text);
+        text-decoration: underline;
+    }
+
+    .dr-title {
+        margin: 0;
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        line-height: 1.15;
+    }
+
+    .dr-subtitle {
+        margin: 0.3rem 0 0;
+        color: #5d6f7a;
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .dr-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border: 1px solid var(--dr-brand);
+        color: var(--dr-brand);
+        background: #fff;
+        border-radius: 10px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .dr-back-btn:hover {
+        background: var(--dr-brand);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .dr-filter-card,
+    .dr-table-card {
+        background: var(--dr-surface);
+        border: 1px solid var(--dr-line);
+        border-radius: 14px;
+        box-shadow: var(--dr-shadow);
+    }
+
+    .dr-filter-card {
+        padding: 1rem 1rem 0.95rem;
+        margin-bottom: 0.95rem;
+    }
+
+    .dr-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #5f7884;
+        margin-bottom: 0.38rem;
+        line-height: 1.2;
+    }
+
+    .dr-input-group .input-group-text {
+        border-color: #d2e3e8;
+        background: #f4fbfa;
+        color: #446573;
+    }
+
+    .dr-modern-page .form-control,
+    .dr-modern-page .form-select {
+        border-radius: 10px;
+        border-color: #d2e3e8;
+        box-shadow: none;
+        min-height: 2.65rem;
+    }
+
+    .dr-modern-page .form-control:focus,
+    .dr-modern-page .form-select:focus {
+        border-color: #99c9c4;
+        box-shadow: 0 0 0 0.16rem rgba(11, 125, 120, 0.12);
+    }
+
+    .dr-actions-panel {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .dr-btn {
+        min-height: 2.65rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .dr-btn-primary {
+        background: var(--dr-brand);
+        border-color: var(--dr-brand);
+        color: #fff;
+    }
+
+    .dr-btn-primary:hover,
+    .dr-btn-primary:focus {
+        background: var(--dr-brand);
+        border-color: var(--dr-brand);
+        color: #fff;
+        filter: brightness(0.94);
+    }
+
+    .dr-btn-soft {
+        background: var(--dr-brand-soft);
+        border-color: #cde4e2;
+        color: #2a545f;
+    }
+
+    .dr-btn-soft:hover,
+    .dr-btn-soft:focus {
+        background: #dff2ef;
+        border-color: #bdddd9;
+        color: #1d4751;
+    }
+
+    .dr-table-card {
+        padding: 0.85rem 1rem 1rem;
+    }
+
+    .dr-table-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.7rem;
+        padding: 0.15rem 0.1rem 0.7rem;
+    }
+
+    .dr-table-head h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #163641;
+        line-height: 1.25;
+    }
+
+    .dr-table-hint {
+        color: #68808c;
+        font-size: 0.83rem;
+    }
+
+    #orgDocumentReport thead th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #56717c;
+        background: #f7fbfc;
+        border-bottom: 1px solid #deebef;
+        white-space: nowrap;
+    }
+
+    #orgDocumentReport tbody td {
+        font-size: 0.89rem;
+        color: #1f3d47;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    #orgDocumentReport tbody tr:hover {
+        background: #fbfefe;
+    }
+
+    @@media (max-width: 991px) {
+        .dr-hero {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .dr-back-btn {
+            align-self: flex-start;
+        }
+
+        .dr-table-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .dr-title {
+            font-size: 1.6rem;
+        }
+
+        .dr-filter-card,
+        .dr-table-card {
+            border-radius: 12px;
+        }
+
+        .dr-actions-panel {
+            grid-template-columns: 1fr;
+        }
+
+        .dr-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/documentReport.js"></script>
+}

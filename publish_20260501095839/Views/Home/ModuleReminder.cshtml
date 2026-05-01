@@ -1,0 +1,52 @@
+
+@{
+    ViewBag.Title = "Schedule refresher training reminders";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Schedule refresher training reminders</h1>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div id="message_reminderSettings"></div>
+        @if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 2)
+        {
+        <div class="row col-md-12 mb-3">
+            ‘Complete by’ date: Course must be completed within &nbsp;
+            <input type="number" class="col-md-1 form-control form-control-sm" id="txtCompletionDateReminder" value="0" />
+            &nbsp; days.
+        </div>
+        }
+        
+        <div class="row col-md-12 mb-3">
+            Begin sending reminders &nbsp;
+            <input type="number" class="col-md-1 form-control form-control-sm" id="txtFirstReminder" value="0" />
+            &nbsp; before the ‘Complete by’ date.
+        </div>
+        <div class="row col-md-12 mb-3">
+            Send reminders every &nbsp;
+            <input type="number" class="col-md-1 form-control form-control-sm" id="txtReminderFrequency" value="0" />
+            &nbsp; days.
+        </div>
+        <div class="row col-md-12 mb-3">
+            Send no more than  &nbsp;
+            @*<input type="number" class="col-md-1 form-control form-control-sm" id="txtMaxReminder" value="0" />*@
+            <select id="ddlMaxReminder">
+                <option value="0" selected>0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            &nbsp; reminders. (Maximum 4)
+        </div>
+        <button type="button" id="btnUpdatReminderNotification" class="btn btn-primary">Update</button>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/CourseManagement/moduleReminderSettings.js"></script>
+}
+

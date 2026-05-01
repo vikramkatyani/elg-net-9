@@ -1,0 +1,5 @@
+@{
+    Layout = ELG.Web.Helper.SessionHelper.IsLearnerUser
+        ? "~/Areas/Learner/Views/Shared/_Layout.cshtml"
+        : "~/Views/Shared/_Layout.cshtml";
+}

@@ -1,0 +1,404 @@
+@{
+    ViewBag.Title = "Dashboard";
+
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    var locationLabel = ELG.Web.Helper.SessionHelper.CompanySettings.strLocationDescription;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<div class="md-dash">
+    <div class="md-dash-bg"></div>
+
+    <section class="md-dash-head">
+        <div>
+            <h1 class="md-dash-title">Dashboard</h1>
+            <p class="md-dash-subtitle">Interactive control center for users, course delivery, and compliance trends.</p>
+        </div>
+    </section>
+
+    <div class="md-quick-links">
+        <a href="@Url.Action("Accounts", "UserManagement")" class="md-chip"><i class="fa fa-users"></i> Users</a>
+        <a href="@Url.Action("InsightsReports", "Report")" class="md-chip"><i class="fa fa-line-chart"></i> Reports</a>
+        <a href="@Url.Action("Courses", "CourseManagement")" class="md-chip"><i class="fa fa-book"></i> Courses</a>
+        <a href="@Url.Action("RiskAssessmentReport", "Report")" class="md-chip"><i class="fa fa-shield"></i> Risk Assessments</a>
+    </div>
+
+    <section class="md-kpi-grid">
+        <article class="md-kpi-card">
+            <div class="md-kpi-label">Renewal Due</div>
+            <div class="md-kpi-value" id="md-renewalDue">-</div>
+            <div class="md-kpi-meta">Next plan renewal</div>
+        </article>
+        <article class="md-kpi-card">
+            <div class="md-kpi-label">User Utilization</div>
+            <div class="md-kpi-value" id="md-userUtilization">-</div>
+            <div class="md-kpi-meta" id="md-usersDetail">Users in use</div>
+        </article>
+        <article class="md-kpi-card">
+            <div class="md-kpi-label">Course Capacity</div>
+            <div class="md-kpi-value" id="md-courseUtilization">-</div>
+            <div class="md-kpi-meta" id="md-courseDetail">Assigned courses</div>
+        </article>
+        <article class="md-kpi-card">
+            <div class="md-kpi-label">@locationLabel Coverage</div>
+            <div class="md-kpi-value" id="md-locationUtilization">-</div>
+            <div class="md-kpi-meta" id="md-locationDetail">Active locations</div>
+        </article>
+    </section>
+
+    <section class="md-layout-grid">
+        <article class="md-panel md-span-8">
+            <div class="md-panel-head">
+                <h2>12-Month Activity Trend</h2>
+                <div class="md-stat-pill" id="md-trendSummary">Completions: -</div>
+            </div>
+            <div class="md-chart-wrap md-chart-lg">
+                <canvas id="md-yearlyTrendChart"></canvas>
+            </div>
+        </article>
+
+        <article class="md-panel md-span-4">
+            <div class="md-panel-head">
+                <h2>Completion Snapshot</h2>
+                <div class="md-stat-pill" id="md-completionPct">-</div>
+            </div>
+            <div class="md-chart-wrap md-chart-md">
+                <canvas id="md-completionDonutChart"></canvas>
+            </div>
+            <div class="md-split-metrics">
+                <div>
+                    <span>Completed</span>
+                    <strong id="md-completedCount">-</strong>
+                </div>
+                <div>
+                    <span>Pending</span>
+                    <strong id="md-incompleteCount">-</strong>
+                </div>
+                <div>
+                    <span>Total Assigned</span>
+                    <strong id="md-totalAssignedCount">-</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="md-panel md-span-6">
+            <div class="md-panel-head">
+                <h2>Top Course Assignment Load</h2>
+                <div class="md-stat-pill" id="md-courseCount">- courses</div>
+            </div>
+            <div id="md-courseLoadList" class="md-progress-list">
+                <div class="md-muted">Loading assignment data...</div>
+            </div>
+        </article>
+
+        <article class="md-panel md-span-6" id="md-quotaPanel" data-is-super-admin="@(adminRole == 1 ? "1" : "0")">
+            <div class="md-panel-head">
+                <h2>User Quota by @locationLabel</h2>
+                <div class="md-stat-pill" id="md-quotaSummary">-</div>
+            </div>
+            <div class="md-chart-wrap md-chart-md">
+                <canvas id="md-userQuotaChart"></canvas>
+            </div>
+        </article>
+    </section>
+
+    <section class="md-foot-metrics">
+        <div class="md-foot-card">
+            <div class="md-foot-label">Documents</div>
+            <div class="md-foot-value" id="md-documents">-</div>
+        </div>
+        <div class="md-foot-card">
+            <div class="md-foot-label">RA Issues</div>
+            <div class="md-foot-value" id="md-raIssues">-</div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .md-dash {
+        --bg-1: #f2f7f5;
+        --bg-2: #e1efe9;
+        --panel: #ffffff;
+        --ink: #132f3a;
+        --muted: #5f7380;
+        --line: #d7e3de;
+        --brand: var(--color-primary, #0b6b69);
+        --accent: var(--color-secondary, #de6f4d);
+        --good: #2f9f63;
+        --warn: #c58612;
+        --bad: #cd4b4b;
+        position: relative;
+        isolation: isolate;
+        padding: 1.25rem;
+        color: var(--ink);
+    }
+
+    .md-dash-bg {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 1rem;
+        @* background:
+            radial-gradient(circle at 10% 0%, rgba(11, 107, 105, 0.18), transparent 36%),
+            radial-gradient(circle at 90% 30%, rgba(222, 111, 77, 0.17), transparent 30%),
+            linear-gradient(150deg, var(--bg-1), var(--bg-2)); *@
+    }
+
+    .md-dash-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        background: linear-gradient(145deg, #effaf8, #edf6fb);
+        border: 1px solid #d8e9ec;
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .md-dash-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #14323c;
+    }
+
+    .md-dash-subtitle {
+        margin: 0.28rem 0 0;
+        color: #637f8a;
+        max-width: 680px;
+    }
+
+    .md-quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        margin-bottom: 1rem;
+        margin-left: 0.2rem;
+    }
+
+    .md-chip {
+        text-decoration: none;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.72);
+        padding: 0.45rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+    }
+
+    .md-chip:hover {
+        border-color: var(--brand);
+        color: var(--brand);
+        transform: translateY(-1px);
+    }
+
+    .md-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.8rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .md-kpi-card,
+    .md-panel,
+    .md-foot-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 0.85rem;
+        box-shadow: 0 8px 24px rgba(18, 40, 43, 0.07);
+    }
+
+    .md-kpi-card {
+        padding: 0.95rem 1rem;
+    }
+
+    .md-kpi-label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .md-kpi-value {
+        font-size: 1.5rem;
+        line-height: 1.1;
+        margin-top: 0.35rem;
+        font-weight: 700;
+        color: var(--brand);
+    }
+
+    .md-kpi-meta {
+        margin-top: 0.35rem;
+        color: var(--muted);
+        font-size: 0.82rem;
+    }
+
+    .md-layout-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .md-panel {
+        padding: 0.85rem;
+    }
+
+    .md-panel h2 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .md-panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        margin-bottom: 0.55rem;
+    }
+
+    .md-stat-pill {
+        font-size: 0.78rem;
+        color: var(--ink);
+        background: rgba(11, 107, 105, 0.11);
+        border: 1px solid rgba(11, 107, 105, 0.17);
+        border-radius: 999px;
+        padding: 0.25rem 0.6rem;
+        white-space: nowrap;
+    }
+
+    .md-span-8 { grid-column: span 8; }
+    .md-span-6 { grid-column: span 6; }
+    .md-span-4 { grid-column: span 4; }
+
+    .md-chart-wrap {
+        position: relative;
+        width: 100%;
+    }
+
+    .md-chart-lg { height: 300px; }
+    .md-chart-md { height: 250px; }
+
+    .md-split-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.45rem;
+        margin-top: 0.8rem;
+    }
+
+    .md-split-metrics div {
+        border: 1px dashed var(--line);
+        border-radius: 0.6rem;
+        padding: 0.45rem;
+        text-align: center;
+    }
+
+    .md-split-metrics span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.74rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .md-split-metrics strong {
+        font-size: 1.05rem;
+    }
+
+    .md-progress-list {
+        max-height: 300px;
+        overflow: auto;
+        padding-right: 0.2rem;
+    }
+
+    .md-progress-row {
+        margin-bottom: 0.75rem;
+    }
+
+    .md-progress-title {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.86rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .md-progress-track {
+        width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: #edf3f0;
+        overflow: hidden;
+    }
+
+    .md-progress-bar {
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.35s ease;
+        background: linear-gradient(90deg, #0b6b69, #2f9f63);
+    }
+
+    .md-muted {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .md-foot-metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.8rem;
+    }
+
+    .md-foot-card {
+        padding: 0.8rem;
+        text-align: center;
+    }
+
+    .md-foot-label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .md-foot-value {
+        margin-top: 0.25rem;
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    @@media (max-width: 1199px) {
+        .md-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .md-span-8, .md-span-6, .md-span-4 { grid-column: span 12; }
+    }
+
+    @@media (max-width: 767px) {
+        .md-dash {
+            padding: 0.85rem;
+        }
+
+        .md-dash-head {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .md-foot-metrics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .md-split-metrics {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .md-chart-lg { height: 240px; }
+        .md-chart-md { height: 220px; }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Admin/Reports/DashboardModern.js"></script>
+}

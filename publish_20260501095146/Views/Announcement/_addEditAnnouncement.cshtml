@@ -1,0 +1,102 @@
+﻿
+<div class="modal fade" id="addAnnouncementModal" tabindex="-1" role="dialog" aria-labelledby="addAnnouncementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAnnouncementTitle">Add Announcement</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!--Alert message-->
+                        <div id="addAnnouncementMessage"> </div>
+                        <div class="user">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblAnnouncementName">Title</span>
+                                </div>
+                                <input type="text" id="txtAnnouncementName" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+                            </div>
+
+                            <div class="input-group mb-3">                                
+                                <textarea id="txtAnnouncementSummary" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"></textarea>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblPublishDate">Publish Date</span>
+                                </div>
+                                <input type="text" id="txtPublishDate" class="form-control popup-calendar" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="YYYY-MM-DD">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblExpiryDate">Expiry Date</span>
+                                </div>
+                                <input type="text" id="txtExpiryDate" class="form-control popup-calendar" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="YYYY-MM-DD">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input id="hdntxtSummary" type="hidden">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="btnCreateAnnouncement" data-loading-text="Creating..." data-original-text="Add" href="">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateAnnouncementModal" tabindex="-1" role="dialog" aria-labelledby="updateAnnouncementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateAnnouncementTitle">Update Announcement</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!--Alert message-->
+                        <div id="updateAnnouncementMessage"> </div>
+                        <div class="user">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblUpdateAnnouncementName">Title</span>
+                                </div>
+                                <input type="text" id="txtUpdateAnnouncementName" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <textarea id="txtUpdateAnnouncementSummary" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"></textarea>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblUpdatePublishDate">Publish Date</span>
+                                </div>
+                                <input type="text" id="txtUpdatePublishDate" class="form-control popup-calendar" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="YYYY-MM-DD">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="lblUpdateExpiryDate">Expiry Date</span>
+                                </div>
+                                <input type="text" id="txtUpdateExpiryDate" class="form-control popup-calendar" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="YYYY-MM-DD">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input id="hdnUpdatetxtSummary" type="hidden">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="btnUpdateAnnouncement" data-loading-text="Updating..." data-original-text="Add" href="">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

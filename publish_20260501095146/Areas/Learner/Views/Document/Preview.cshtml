@@ -1,0 +1,152 @@
+
+@{
+    ViewBag.Title = "Document Preview";
+    Layout = ELG.Web.Helper.SessionHelper.IsLearnerUser
+        ? "~/Areas/Learner/Views/Shared/_Layout.cshtml"
+        : "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        padding: 50px;
+        display: block;
+    }
+
+    form {
+         align-items: flex-start; 
+    }
+    form input {
+         width: auto; 
+    }
+    
+    /* Hide left sidebar on preview page */
+    .learner-menu-bar,
+    .hamburger {
+        display: none !important;
+    }
+    
+    .learner-main-content {
+        width: 100% !important;
+        margin-left: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    .learner-content-container {
+        grid-template-columns: 1fr !important;
+    }
+</style>
+
+<div class="x_panel tile">
+    <div class="x_title">
+        <div class="row">
+            <h1 id="preview_docname" class="h3 mb-2 text-gray-800">@ViewBag.DocName</h1> 
+        </div>
+    </div>
+    <div class="x_content">
+        <div id="message_doc_preview"></div>
+        @if (ViewBag.PreviewAvailable)
+        {
+            <div id="pdf-viewer-wrapper" style="width:100%;height:80vh;overflow-y:auto;overflow-x:hidden;background:#525659;text-align:center;border-radius:4px;">
+                <div id="pdf-loading" style="color:#fff;padding:30px;font-size:16px;">Loading document...</div>
+                <div id="pdf-pages-container"></div>
+            </div>
+        }
+        else if (String.IsNullOrEmpty(ViewBag.DocumentPath))
+        {
+            <div class="alert alert-danger">No Document Availbale</div>
+        }
+        else
+        {
+            <div class="alert alert-warning">No Preview Availbale</div>
+        }
+        @if (!String.IsNullOrEmpty(ViewBag.DocumentPath))
+        {
+            <div class="mt-3">
+                <input type="hidden" id="hdnFileDwnldPath" value="@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })" />
+                <input type="hidden" id="hdnDocId" value="@ViewBag.DocID" />
+                <button id="download-button" type="button" class="btn btn-primary" data-download-url="@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })">Download Document</button>
+            </div>
+        }
+        @{
+            var docStatus = ViewBag.DocStatus as string;
+            bool isStatusSet = !string.IsNullOrEmpty(docStatus);
+        }
+
+        @if (!string.IsNullOrEmpty(ViewBag.DocumentPath))
+        {
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mt-4 p-4">
+                        <form>
+                            @{
+                                var options = new[]
+                                {
+                                    "I confirm that I have read and understood",
+                                    "I have read but require further clarification from my line manager and will contact them.",
+                                    "N/A"
+                                };
+                            }
+
+                            @foreach (var option in options)
+                            {
+                                var isChecked = isStatusSet && docStatus == option ? "checked" : "";
+                                var isDisabled = isStatusSet ? "disabled" : "";
+
+                                <div class="form-check mb-3">
+                                    <input type="radio"
+                                           class="form-check-input"
+                                           name="learnerDocStatus"
+                                           id="learnerDocStatus_@option.GetHashCode()"
+                                           value="@option"
+                                           @Html.Raw(isChecked)
+                                           @Html.Raw(isDisabled) />
+                                    <label class="form-check-label ms-2" for="learnerDocStatus_@option.GetHashCode()">@option</label>
+                                </div>
+                            }
+
+
+                            @if (!isStatusSet)
+                            {
+                                <button id="btn-update-status-@ViewBag.DocID"
+                                        type="button"
+                                        class="btn btn-primary mt-3"
+                                        data-setstatus-url="@Url.Action("SetDocumentStatus", "Document", new { area = "Learner" })"
+                                        onclick="setDocStatus(this)">
+                                    Update Status
+                                </button>
+                            }
+                            else
+                            {
+                                <button id="btn-update-status-@ViewBag.DocID"
+                                        type="button"
+                                        class="btn btn-primary mt-3"
+                                        data-setstatus-url="@Url.Action("SetDocumentStatus", "Document", new { area = "Learner" })"
+                                        style="cursor: not-allowed;"
+                                        disabled>
+                                    Update Status
+                                </button>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts{
+    @if (ViewBag.PreviewAvailable)
+    {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    }
+    <script>
+        var hdnBaseUrl = '@Url.Content("~/Learner/Document/")';
+        @if (ViewBag.PreviewAvailable)
+        {
+            <text>var documentStreamUrl = '@Url.Action("StreamDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
+        }
+        <text>var documentDownloadUrl = '@Url.Action("DownloadDocument", "Document", new { area = "Learner", id = ViewBag.DocID })';</text>
+        <text>var documentSetStatusUrl = '@Url.Action("SetDocumentStatus", "Document", new { area = "Learner" })';</text>
+    </script>
+    <script type="text/javascript" src="~/js/Document/documentPreview.js?v=1.0.4"></script>
+}

@@ -1,0 +1,78 @@
+
+@{
+    ViewBag.Title = "Resources";
+    //check admin privileges
+    var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+    Layout = ELG.Web.Helper.CommonHelper.GetAdminLayoutPage(adminRole);
+}
+
+<!-- Page Heading -->
+<div class="text-center mb-4">
+    <h1 class="h3 mb-0 text-gray-900">Resources</h1>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-12 mb-4">
+        <div class="card text-center shadow mb-4">
+            <div class="card-body">
+                <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-certificate"></i></h1>
+                <h5 class="card-title text-gray-900">Business Certificate</h5>
+                <p class="card-text">Download and display your accredited business certificate to show your commitment in providing compliant health and safety training to your entire workforce.</p>
+                <a href="#" id="btnDownloadBusinessCertificate" class="btn btn-warning">Download</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 mb-4">
+        <div class="card text-center shadow mb-4">
+            <div class="card-body">
+                <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-th-list"></i></h1>
+                <h5 class="card-title text-gray-900">Terms & Conditions</h5>
+                <p class="card-text">Please read our terms and conditions by clicking the button below.</p>
+                <a href="#" id="btnTNCLink" target="_blank" class="btn btn-warning">View T&C's</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 mb-4">
+        <div class="card text-center shadow mb-4">
+            <div class="card-body">
+                <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-cogs"></i></h1>
+                <h5 class="card-title text-gray-900">Product updates</h5>
+                <p class="card-text">Stay up to date with the latest tools, features and product releases.</p>
+                <a href="#" id="btnSysUpdatesLink" target="_blank" class="btn btn-warning">View updates</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 mb-4">
+        <div class="card text-center shadow mb-4">
+            <div class="card-body">
+                <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-envelope"></i></h1>
+                <h5 class="card-title text-gray-900">Email Templates</h5>
+                <p class="card-text">Useful email templates for your team communications.</p>
+                <a href="#" id="btnEmailTemplatesLink" target="_blank" class="btn btn-warning">View templates</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 mb-4">
+        <div class="card text-center shadow mb-4">
+            <div class="card-body">
+                <h1 class="card-title text-gray-900"><i class="fa fa-fw fa-star"></i></h1>
+                <h5 class="card-title text-gray-900">Feature Request</h5>
+                <p class="card-text">Tell us what you would like to see next in ClickHSE</p>
+                <a href="#" id="btnFeatureLink" target="_blank" class="btn btn-warning">Feature Request</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/Admin/Company/resources.js"></script>
+}
