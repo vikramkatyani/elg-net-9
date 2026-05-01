@@ -255,16 +255,22 @@ var myCoursesHandler = (function () {
 
         let msg = '';
         if (!od) {
-            msg = '<p>Feel free to launch it again if you\'d like to revisit any topic.</p>' +
-                '<h4>If you\'re returning for a <b>refresher</b>, we recommend resetting your course status to start fresh.</h4>' +
-                '<p>You can do this by clicking the <b>Reset</b> button (if available).</p>' +
-                '<p>If the Reset button is not visible, your <b>Admin has chosen to manage resets manually</b>.</p>'+
-            '<p>In that case, please contact your <b>Line Manager</b> to request a reset.</p>';
+            msg = '<div class="completed-course-guidance">' +
+                '<p class="intro">You can launch this course again anytime to revisit key topics.</p>' +
+                '<h6>For refresher training</h6>' +
+                '<ul>' +
+                '<li>Use the <strong>Reset</strong> button to restart from the beginning, if available.</li>' +
+                '<li>If Reset is not shown, resets are managed manually by your <strong>Admin</strong>.</li>' +
+                '</ul>' +
+                '<p class="contact-note">Please contact your <strong>Line Manager</strong> to request a reset.</p>' +
+                '</div>';
         } else {
-            msg = '<h4>You have already completed this course for the current training period.</h4><br />' +
-                '<p>This course will be next available for completion after <b><span>' + od + '</span></b>.</p>' +
-                '<p>If you are revisiting for refresher training, please wait until the due date when status of the course auto resets to "not started". <b>Please click "Close" to close this message</b>.</p>' +
-                '<p>If you wish to revisit this course to take some references, please click "Launch Course" to launch the course in a new pop-up window.</p>';
+            msg = '<div class="completed-course-guidance">' +
+                '<p class="intro">This course has already been completed for the current training period.</p>' +
+                '<p class="next-due">Next completion window: <strong><span>' + od + '</span></strong></p>' +
+                '<p>Your status will automatically return to <strong>Not Started</strong> after this date.</p>' +
+                '<p class="contact-note">You can still select <strong>Launch</strong> now if you only want to review the content.</p>' +
+                '</div>';
         }
 
         document.querySelector('#div-confrm-msg').innerHTML = msg;
