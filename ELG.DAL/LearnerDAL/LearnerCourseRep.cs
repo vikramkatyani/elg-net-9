@@ -18,6 +18,12 @@ namespace ELG.DAL.LearnerDAL
             public string strText { get; set; }
         }
 
+        private sealed class AnswerIdRow
+        {
+            public long QuestionId { get; set; }
+            public long AnswerId { get; set; }
+        }
+
         /// <summary>
         /// Get list of all modules assigned to a learner
         /// </summary>
@@ -498,6 +504,46 @@ WHERE sm.intCourseID = @courseId
                         questions.Add(que);
                     }
                 }
+
+                // Fallback: if all questions have AnswerID == 0 the SP's tbAnswer join failed.
+                // Ensure tbAnswer rows exist and map their IDs directly.
+                if (questions.Count > 0 && questions.All(q => q.AnswerID == 0))
+                {
+                    long actualRaid = questions.FirstOrDefault(q => q.RiskAssessmentResultID > 0)?.RiskAssessmentResultID ?? 0;
+                    if (actualRaid > 0)
+                    {
+                        using (learnerDBEntities ctx2 = new learnerDBEntities())
+                        {
+                            long raCourseId = ctx2.Database.SqlQuery<long>(
+                                "SELECT ISNULL(subModule_RAID, 0) FROM tb_course_subModules WHERE intSubModuleID = @p0",
+                                learnerRA.SubModuleId).FirstOrDefault();
+
+                            if (raCourseId > 0)
+                            {
+                                // Insert any missing answer rows (idempotent — skips rows that already exist)
+                                ctx2.Database.ExecuteSqlCommand(
+                                    @"INSERT INTO tbAnswer (intRiskAssessmentResultID, intQuestionID, strQuestion, intNumeric, intContactID, blnYes, blnNo, strText)
+                                    SELECT @p0, q.intQuestionID, q.strQuestion, 0, @p1, 0, 0, ''
+                                    FROM tbQuestion q
+                                    WHERE q.intCourseID = @p2
+                                    AND NOT EXISTS (SELECT 1 FROM tbAnswer a2 WHERE a2.intRiskAssessmentResultID = @p0 AND a2.intQuestionID = q.intQuestionID)",
+                                    actualRaid, learnerRA.LearnerID, raCourseId);
+
+                                var answerIds = ctx2.Database.SqlQuery<AnswerIdRow>(
+                                    "SELECT intQuestionID AS QuestionId, intanswerid AS AnswerId FROM tbAnswer WHERE intRiskAssessmentResultID = @p0",
+                                    actualRaid).ToList();
+
+                                foreach (var q in questions)
+                                {
+                                    var match = answerIds.FirstOrDefault(a => a.QuestionId == q.QuestionId);
+                                    if (match != null)
+                                        q.AnswerID = match.AnswerId;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 return questions;
             }
             catch (Exception)
