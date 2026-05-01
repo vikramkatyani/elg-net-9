@@ -116,14 +116,17 @@ function setDocStatus(btn) {
     const checkedRadio = document.querySelector('input[name="learnerDocStatus"]:checked');
     const status = checkedRadio ? checkedRadio.value : null;
     const baseUrl = (typeof hdnBaseUrl !== 'undefined' && hdnBaseUrl) ? hdnBaseUrl : '/Learner/Document/';
+    const setStatusUrl =
+        (typeof documentSetStatusUrl !== 'undefined' && documentSetStatusUrl)
+            ? documentSetStatusUrl
+            : (baseUrl + "SetDocumentStatus");
     
     if (confirm('Are you sure you want to update the status?')) {
-        const url = baseUrl + "SetDocumentStatus";
         const data = {
             DocumentId: docId,
             Status: status
         };
-        UTILS.makeAjaxCall(url, data, function (res) {
+        UTILS.makeAjaxCall(setStatusUrl, data, function (res) {
             if (res.success === 1) {
                 // Show success message
                 UTILS.Alert.show(alertElement, 'success', 'Document status updated successfully.');
