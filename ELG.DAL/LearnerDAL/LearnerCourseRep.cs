@@ -55,6 +55,39 @@ namespace ELG.DAL.LearnerDAL
                             {
                                 var subModuleList = context.lms_learner_get_course_submodules(item.intcourseid, learner).ToList();
                                 course.SubModuleList = new List<SubModule>();
+
+                                // Determine RA submodules that have actually been accessed by this learner.
+                                // This compensates for stale status values coming from legacy submodule status SPs.
+                                var accessedRASubModuleIds = new HashSet<long>(
+                                    context.Database.SqlQuery<long>(
+                                        @"
+SELECT DISTINCT r.intSubModuleId
+FROM tbRiskAssessmentResult r
+INNER JOIN tb_course_subModules sm ON sm.intSubModuleID = r.intSubModuleId
+WHERE sm.intCourseID = @courseId
+  AND r.intContactID = @learner
+  AND r.intSubModuleId IS NOT NULL
+  AND (
+        r.datBegun IS NOT NULL
+        OR r.datCompleted IS NOT NULL
+        OR ISNULL(r.intIssueCount, 0) > 0
+        OR EXISTS (
+            SELECT 1
+            FROM tbAnswer a
+            WHERE a.intRiskAssessmentResultID = r.intRiskAssessmentResultID
+              AND (
+                    ISNULL(a.intNumeric, 0) > 0
+                    OR ISNULL(a.blnYes, 0) = 1
+                    OR ISNULL(a.blnNo, 0) = 1
+                    OR LTRIM(RTRIM(ISNULL(a.strText, ''))) <> ''
+                  )
+        )
+      );",
+                                        new SqlParameter("@courseId", item.intcourseid),
+                                        new SqlParameter("@learner", learner)
+                                    ).ToList()
+                                );
+
                                 if (subModuleList != null && subModuleList.Count > 0)
                                 {
                                     foreach (var sub in subModuleList)
@@ -68,6 +101,16 @@ namespace ELG.DAL.LearnerDAL
                                         subModule.SubModulePath = sub.path;
                                         subModule.Sequence = Convert.ToInt32(sub.seq);
                                         subModule.SubModuleStatus = sub.strStatus;
+
+                                        if (subModule.RAID > 0
+                                            && accessedRASubModuleIds.Contains(subModule.SubModuleID)
+                                            && (string.IsNullOrWhiteSpace(subModule.SubModuleStatus)
+                                                || subModule.SubModuleStatus.Equals("Not Accessed", StringComparison.OrdinalIgnoreCase)
+                                                || subModule.SubModuleStatus.Equals("NotAccessed", StringComparison.OrdinalIgnoreCase)))
+                                        {
+                                            subModule.SubModuleStatus = "In Progress";
+                                        }
+
                                         subModule.SubModuleAccessDate = sub.lastAccessedOn == null ? "" : (Convert.ToDateTime(sub.lastAccessedOn)).ToString("dd-MMM-yyyy");
                                         course.SubModuleList.Add(subModule);
                                     }
