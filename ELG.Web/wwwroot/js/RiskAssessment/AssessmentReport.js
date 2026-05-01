@@ -479,7 +479,7 @@ var raReportHandler = (function () {
         // Ensure start call carries location
         startSubModuleRA(location);
 
-        const tables = document.querySelectorAll('.riskAssessmentTable');
+        const tables = divQueTab.querySelectorAll('.riskAssessmentTable');
         if (!tables || tables.length === 0) {
             UTILS.Alert.show(alertElement, 'error', 'Unable to submit. Table(s) not found.');
             return;
@@ -492,8 +492,14 @@ var raReportHandler = (function () {
             const rows = Array.from(table.querySelectorAll('tbody tr'));
             rows.forEach(row => {
                 const qid = row.getAttribute('data-question-id');
-                const ansId = parseInt(row.getAttribute('data-answer-id') || '0');
-                const checked = table.querySelector('input[name="radio-' + qid + '"]:checked');
+                const ansIdFromRow = parseInt(row.getAttribute('data-answer-id') || '0');
+                const answerInfo = Array.isArray(raQuestions)
+                    ? raQuestions.find(q => String(q.QuestionId) === String(qid))
+                    : null;
+                const ansId = ansIdFromRow > 0
+                    ? ansIdFromRow
+                    : parseInt((answerInfo && answerInfo.AnswerID) || '0');
+                const checked = row.querySelector('input[name="radio-' + qid + '"]:checked');
                 if (!checked) {
                     unanswered.push(row);
                 } else {
