@@ -402,9 +402,191 @@ h1 {
     transition: background-color 0.3s;
 }
 
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a {
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a {
+    font-weight: 300 !important;
+    color: rgba(255, 255, 255, 0.86) !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.open,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active.open {
+    color: var(--color-primary) !important;
+}
+
+body.admin-modern-view .learner-menu-bar {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white);
+    height: 100dvh;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.admin-modern-view .learner-menu-bar .logo {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+body.admin-modern-view .learner-menu-bar .logo img {
+    margin: 16px auto 10px;
+    max-height: 96px;
+    max-width: 190px;
+    width: 68%;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 6px;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .menu-section-title {
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 0.7rem !important;
+    padding: 8px 14px 4px !important;
+    margin: 6px 10px 0 !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a {
+    margin: 4px 12px !important;
+    padding: 8px 12px !important;
+    min-height: 40px !important;
+    font-size: 15px !important;
+    line-height: 1.1;
+    border-radius: 999px;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu {
+    margin: 0 12px 4px !important;
+    padding: 0 0 4px !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a {
+    margin: 2px 0 2px 8px !important;
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+}
+
+body.admin-modern-view .learner-menu-bar .line-partition {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    margin: 8px 14px !important;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu {
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 2;
+    background: var(--color-primary);
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu .nav-item {
+    margin: 4px 0;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a,
+body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a.parent-menu-a {
+    color: var(--color-white) !important;
+    font-weight: 500 !important;
+}
+
+html body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a:hover,
+html body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a.parent-menu-a:hover {
+    background-color: #4FE2BA !important;
+    border-color: #4FE2BA !important;
+    color: var(--color-primary) !important;
+}
+
+html body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a:hover .menu-icon {
+    filter: brightness(0) saturate(100%) !important;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a .menu-icon {
+    filter: brightness(0) saturate(0) invert(1);
+    opacity: 0.95;
+}
+
+body.admin-modern-view .learner-menu-bar .profile {
+    margin-top: auto;
+    padding: 8px 14px 12px;
+    min-height: 72px;
+    background-color: var(--color-primary);
+}
+
+body.admin-modern-view .learner-menu-bar .profile img {
+    width: 44px;
+    height: 44px;
+}
+
+body.admin-modern-view .learner-menu-bar .profile .profile-details span,
+body.admin-modern-view .learner-menu-bar .profile .profile-details h2,
+body.admin-modern-view .learner-menu-bar .profile .profile-details {
+    color: var(--color-white) !important;
+    font-size: 13px;
+    line-height: 1.2;
+}
+
 .learner-menu a:hover, .learner-menu a.active {
     background-color: var(--color-hightlight);
     color: var(--color-black)
+}
+
+body.admin-modern-view .learner-menu .parent-menu a:hover,
+body.admin-modern-view .learner-menu a:hover,
+body.admin-modern-view .learner-menu a.active {
+    background-color: #4FE2BA !important;
+    color: var(--color-primary) !important;
+    cursor: pointer;
+}
+
+/* hover — full path (0,6,2) beats the white-color rule (0,5,2) */
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item:not(.active) > a:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a:hover {
+    background-color: #4FE2BA !important;
+    border-color: #4FE2BA !important;
+    color: var(--color-primary) !important;
+    box-shadow: none !important;
+}
+
+/* active/selected — full path (0,6,3) beats everything */
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item.active > a,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a.active,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item.active > a:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a.active:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu.open > a {
+    background-color: #4FE2BA !important;
+    border-color: #4FE2BA !important;
+    color: var(--color-primary) !important;
+    box-shadow: none !important;
+}
+
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li.active > a,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active.open,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.open {
+    background-color: #4FE2BA !important;
+    border-color: #4FE2BA !important;
+    color: var(--color-primary) !important;
+}
+
+/* spans/pseudo-elements inside active/hover */
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item.active > a span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a.active span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu.open > a span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li.active > a span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a:hover span {
+    color: var(--color-primary) !important;
 }
 
 /* Hide the submenu by default */

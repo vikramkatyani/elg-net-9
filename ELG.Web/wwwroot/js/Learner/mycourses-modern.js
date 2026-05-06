@@ -464,7 +464,7 @@ var myCoursesModernHandler = (function () {
         launchState.courseId = courseId;
         launchState.url = url;
 
-        var message = '<p>Course already completed. You can relaunch to review content at any time. To track new progress, click <strong>Reset</strong> (if available) or contact your <strong>Line Manager</strong>.</p>';
+        var message = '<p>Course already completed. You can relaunch to review content at any time. To track new progress, click <strong>Reset</strong> (if available) or contact your Admin.</p>';
 
         $('#div-confrm-msg').html(message);
         new bootstrap.Modal(document.getElementById('courseLaunchConfirmationModal')).show();

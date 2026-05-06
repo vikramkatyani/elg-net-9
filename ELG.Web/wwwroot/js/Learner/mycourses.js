@@ -253,7 +253,7 @@ var myCoursesHandler = (function () {
         confirmedLaunchModule = courseid;
         confirmedLaunchURL = url;
 
-        const msg = '<p>Course already completed. You can relaunch to review content at any time. To track new progress, click <strong>Reset</strong> (if available) or contact your <strong>Line Manager</strong>.</p>';
+        const msg = '<p>Course already completed. You can relaunch to review content at any time. To track new progress, click <strong>Reset</strong> (if available) or contact your Admin.</p>';
 
         document.querySelector('#div-confrm-msg').innerHTML = msg;
 
