@@ -489,6 +489,7 @@ namespace ELG.Web.Controllers
             SessionHelper.OrgLearnerAvailableMenu = learnerMenuItems;
             SessionHelper.IsLearnerUser = false;
             SessionHelper.HasAdminRights = true;
+            SessionHelper.HasLearnerRights = !string.IsNullOrWhiteSpace(learnerMenuItems);
 
             // Reset both view modes on sign-in to avoid carrying stale values from previous session state.
             SessionHelper.AdminViewMode = "classic";

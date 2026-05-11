@@ -23,6 +23,22 @@ namespace ELG.Web.Controllers
     [SessionCheck]
     public class ReportController : Controller
     {
+        private bool IsAccountOwnerRole()
+        {
+            return SessionHelper.UserRole == 1;
+        }
+
+        private ActionResult OwnerOnlyForbidden()
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        private ActionResult OwnerOnlyRedirectToHub()
+        {
+            TempData["AccessDeniedMessage"] = "This report is only available to account owner admins.";
+            return RedirectToAction("InsightsReports", "Report");
+        }
+
         // GET: modern reports hub
         public ActionResult InsightsReports()
         {
@@ -1278,12 +1294,22 @@ namespace ELG.Web.Controllers
 
         public ActionResult TrainingCard()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyRedirectToHub();
+            }
+
             return View();
         }
 
         [HttpPost]
         public ActionResult LoadTrainingCard(ELG.Model.OrgAdmin.DataTableFilter searchCriteria)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             TrainingCard trainingCard = new TrainingCard();
             //trainingCard.Trainee = new TraineeInfo();
             //trainingCard.TestResult = new List<TraineeTestResult>();
@@ -1322,11 +1348,21 @@ namespace ELG.Web.Controllers
 
         public ActionResult Summary()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyRedirectToHub();
+            }
+
             return View();
         }
 
         public ActionResult LoadLearningStatistics()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             List<CourseLearningStatistics> stats = new List<CourseLearningStatistics>();
             try
             {
@@ -1344,6 +1380,11 @@ namespace ELG.Web.Controllers
         }
         public ActionResult LoadLearningStatisticsForLocations([FromBody] CourseRecordRequest request)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             List<CourseLearningStatistics_perLocation> stats = new List<CourseLearningStatistics_perLocation>();
             try
             {
@@ -1361,6 +1402,11 @@ namespace ELG.Web.Controllers
         }
         public ActionResult LoadLearningStatisticsForDepartments(int course, int location)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             List<CourseLearningStatistics_perDepartment> stats = new List<CourseLearningStatistics_perDepartment>();
             try
             {
@@ -1379,6 +1425,11 @@ namespace ELG.Web.Controllers
 
         public ActionResult DownloadSummaryReport()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             try
             {
                 var reportRep = new ReportRep();
@@ -1532,6 +1583,11 @@ namespace ELG.Web.Controllers
 
         public ActionResult WidgetProgress()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyRedirectToHub();
+            }
+
             return View();
         }
 
@@ -1539,6 +1595,11 @@ namespace ELG.Web.Controllers
         //fetch widget progress records
         public ActionResult LoadWidgetProgress(LearnerReportFilter searchCriteria)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             WidgeteProgressReport progressReport = new WidgeteProgressReport();
             progressReport.ProgressRecords = new List<WidgetProgressItem>();
             try
@@ -1586,6 +1647,11 @@ namespace ELG.Web.Controllers
         //download widget progress records
         public ActionResult DownloadWidgetProgress(LearnerReportFilter searchCriteria)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             List<WidgetProgressItem> progressReport = new List<WidgetProgressItem>();
             try
             {
@@ -1705,6 +1771,11 @@ namespace ELG.Web.Controllers
         // GET: Learning Progress Report
         public ActionResult ArchiveReport()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyRedirectToHub();
+            }
+
             var fileList = new List<string>();
 
             string connectionString = ELG.Web.Helper.CommonHelper.GetAppSettingValue("AZStorageConnectionString");
@@ -1769,6 +1840,12 @@ namespace ELG.Web.Controllers
         //}
         public JsonResult GetExcelData(string fileName)
         {
+            if (!IsAccountOwnerRole())
+            {
+                Response.StatusCode = StatusCodes.Status403Forbidden;
+                return Json(new { error = "Forbidden" });
+            }
+
             string connectionString = ELG.Web.Helper.CommonHelper.GetAppSettingValue("AZStorageConnectionString");
             string containerName = ELG.Web.Helper.CommonHelper.GetAppSettingValue("AZStorageDocumentContainer");
             //string folderName = "0DDB5ACD-5E46-421A-A464-682E13E300CD-archive-data-report/";
@@ -1824,6 +1901,11 @@ namespace ELG.Web.Controllers
 
         public ActionResult HistoricRecords()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyRedirectToHub();
+            }
+
             return View();
         }
 
@@ -1831,6 +1913,11 @@ namespace ELG.Web.Controllers
         //fetch learning progress records
         public ActionResult LoadHistoricLearningProgress(LearnerReportFilter searchCriteria)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             ELG.Model.OrgAdmin.CourseProgressReport progressReport = new ELG.Model.OrgAdmin.CourseProgressReport();
             progressReport.ProgressRecords = new List<ELG.Model.OrgAdmin.CourseProgressItem>();
             try
@@ -1878,6 +1965,11 @@ namespace ELG.Web.Controllers
         //download learning progress records
         public ActionResult DownloadHistoricRecords(LearnerReportFilter searchCriteria)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             List<DownloadCourseProgressReport_Historic> progressReport = new List<DownloadCourseProgressReport_Historic>();
             try
             {
@@ -1924,6 +2016,11 @@ namespace ELG.Web.Controllers
         // GET: Sub-module Learning Progress Report
         public ActionResult SubModuleProgress()
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyRedirectToHub();
+            }
+
             return View();
         }
 
@@ -1931,6 +2028,11 @@ namespace ELG.Web.Controllers
         //fetch learning progress records
         public ActionResult LoadSubModuleProgress(LearnerSubModuleReportFilter searchCriteria)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             CourseSubModuleProgressReport progressReport = new CourseSubModuleProgressReport();
             progressReport.ProgressRecords = new List<CourseSubModuleProgressItem>();
             try
@@ -1979,6 +2081,11 @@ namespace ELG.Web.Controllers
         //download learning progress records
         public ActionResult DownloadSubModuleLearningProgress(LearnerSubModuleReportFilter searchCriteria)
         {
+            if (!IsAccountOwnerRole())
+            {
+                return OwnerOnlyForbidden();
+            }
+
             List<ELG.Model.OrgAdmin.DownloadCourseProgressReport> progressReport = new List<ELG.Model.OrgAdmin.DownloadCourseProgressReport>();
             try
             {

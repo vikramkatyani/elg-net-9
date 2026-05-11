@@ -291,6 +291,13 @@ namespace ELG.Web.Helper
 
         public static string GetAdminLayoutPage(int adminRole)
         {
+            if (string.Equals(SessionHelper.AdminViewMode, "modern", StringComparison.OrdinalIgnoreCase))
+            {
+                // In modern mode use a single role-aware layout so all admin roles get
+                // consistent navigation behavior (including learner section visibility).
+                return "~/Views/Shared/_Layout.cshtml";
+            }
+
             string Layout = "~/Views/Shared/_Layout.cshtml";
             switch (adminRole)
             {
