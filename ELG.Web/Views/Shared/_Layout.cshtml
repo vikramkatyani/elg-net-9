@@ -363,8 +363,9 @@
             var canAccessReportsHubByAdminRole = adminRole == 1 || adminRole == 2 || adminRole == 3 || adminRole == 4 || adminRole == 6 || adminRole == 8 || adminRole == 9;
             var canSummaryReport = (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true) && isAccountOwnerRole;
             var canLearningReport = learnerMenuSettings == null || learnerMenuSettings.learningReport == true;
-            var canSubModuleReport = canLearningReport && isAccountOwnerRole;
-            var canHistoricReport = canLearningReport && isAccountOwnerRole;
+            var canAccessSubmoduleAndHistoricReportsByAdminRole = isAccountOwnerRole || adminRole == 2 || adminRole == 3 || adminRole == 4 || adminRole == 8 || adminRole == 9;
+            var canSubModuleReport = canLearningReport && canAccessSubmoduleAndHistoricReportsByAdminRole;
+            var canHistoricReport = canLearningReport && canAccessSubmoduleAndHistoricReportsByAdminRole;
             var canRAReport = learnerMenuSettings == null || learnerMenuSettings.raReport == true;
             var canDocumentReport = learnerMenuSettings == null || learnerMenuSettings.documentReport == true;
             var canTrainingCardReport = (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true) && isAccountOwnerRole;

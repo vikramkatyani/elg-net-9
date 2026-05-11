@@ -28,6 +28,16 @@ namespace ELG.Web.Controllers
             return SessionHelper.UserRole == 1;
         }
 
+        private bool CanAccessSubmoduleAndHistoricReports()
+        {
+            return SessionHelper.UserRole == 1
+                || SessionHelper.UserRole == 2
+                || SessionHelper.UserRole == 3
+                || SessionHelper.UserRole == 4
+                || SessionHelper.UserRole == 8
+                || SessionHelper.UserRole == 9;
+        }
+
         private ActionResult OwnerOnlyForbidden()
         {
             return StatusCode(StatusCodes.Status403Forbidden);
@@ -36,6 +46,17 @@ namespace ELG.Web.Controllers
         private ActionResult OwnerOnlyRedirectToHub()
         {
             TempData["AccessDeniedMessage"] = "This report is only available to account owner admins.";
+            return RedirectToAction("InsightsReports", "Report");
+        }
+
+        private ActionResult ScopedReportForbidden()
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        private ActionResult ScopedReportRedirectToHub()
+        {
+            TempData["AccessDeniedMessage"] = "You do not have permission to access this report.";
             return RedirectToAction("InsightsReports", "Report");
         }
 
@@ -1901,9 +1922,9 @@ namespace ELG.Web.Controllers
 
         public ActionResult HistoricRecords()
         {
-            if (!IsAccountOwnerRole())
+            if (!CanAccessSubmoduleAndHistoricReports())
             {
-                return OwnerOnlyRedirectToHub();
+                return ScopedReportRedirectToHub();
             }
 
             return View();
@@ -1913,9 +1934,9 @@ namespace ELG.Web.Controllers
         //fetch learning progress records
         public ActionResult LoadHistoricLearningProgress(LearnerReportFilter searchCriteria)
         {
-            if (!IsAccountOwnerRole())
+            if (!CanAccessSubmoduleAndHistoricReports())
             {
-                return OwnerOnlyForbidden();
+                return ScopedReportForbidden();
             }
 
             ELG.Model.OrgAdmin.CourseProgressReport progressReport = new ELG.Model.OrgAdmin.CourseProgressReport();
@@ -1965,9 +1986,9 @@ namespace ELG.Web.Controllers
         //download learning progress records
         public ActionResult DownloadHistoricRecords(LearnerReportFilter searchCriteria)
         {
-            if (!IsAccountOwnerRole())
+            if (!CanAccessSubmoduleAndHistoricReports())
             {
-                return OwnerOnlyForbidden();
+                return ScopedReportForbidden();
             }
 
             List<DownloadCourseProgressReport_Historic> progressReport = new List<DownloadCourseProgressReport_Historic>();
@@ -2016,9 +2037,9 @@ namespace ELG.Web.Controllers
         // GET: Sub-module Learning Progress Report
         public ActionResult SubModuleProgress()
         {
-            if (!IsAccountOwnerRole())
+            if (!CanAccessSubmoduleAndHistoricReports())
             {
-                return OwnerOnlyRedirectToHub();
+                return ScopedReportRedirectToHub();
             }
 
             return View();
@@ -2028,9 +2049,9 @@ namespace ELG.Web.Controllers
         //fetch learning progress records
         public ActionResult LoadSubModuleProgress(LearnerSubModuleReportFilter searchCriteria)
         {
-            if (!IsAccountOwnerRole())
+            if (!CanAccessSubmoduleAndHistoricReports())
             {
-                return OwnerOnlyForbidden();
+                return ScopedReportForbidden();
             }
 
             CourseSubModuleProgressReport progressReport = new CourseSubModuleProgressReport();
@@ -2081,9 +2102,9 @@ namespace ELG.Web.Controllers
         //download learning progress records
         public ActionResult DownloadSubModuleLearningProgress(LearnerSubModuleReportFilter searchCriteria)
         {
-            if (!IsAccountOwnerRole())
+            if (!CanAccessSubmoduleAndHistoricReports())
             {
-                return OwnerOnlyForbidden();
+                return ScopedReportForbidden();
             }
 
             List<ELG.Model.OrgAdmin.DownloadCourseProgressReport> progressReport = new List<ELG.Model.OrgAdmin.DownloadCourseProgressReport>();

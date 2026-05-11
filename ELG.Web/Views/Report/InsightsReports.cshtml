@@ -11,12 +11,13 @@
     var accessDeniedMessage = TempData["AccessDeniedMessage"] as string;
 
     bool isAccountOwnerRole = adminRole == 1;
+    bool canAccessSubmoduleAndHistoric = isAccountOwnerRole || adminRole == 2 || adminRole == 3 || adminRole == 4 || adminRole == 8 || adminRole == 9;
 
     // Keep menu-level toggles, then apply role-level visibility for account-owner-only reports.
     bool canSummary = (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true) && isAccountOwnerRole;
     bool canLearning = learnerMenuSettings == null || learnerMenuSettings.learningReport == true;
-    bool canSubModule = canLearning && isAccountOwnerRole;
-    bool canHistoric = canLearning && isAccountOwnerRole;
+    bool canSubModule = canLearning && canAccessSubmoduleAndHistoric;
+    bool canHistoric = canLearning && canAccessSubmoduleAndHistoric;
     bool canRA = learnerMenuSettings == null || learnerMenuSettings.raReport == true;
     bool canDocument = learnerMenuSettings == null || learnerMenuSettings.documentReport == true;
     bool canTrainingCard = (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true) && isAccountOwnerRole;
