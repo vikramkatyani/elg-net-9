@@ -349,6 +349,27 @@
             dynamic learnerMenuSettings = !string.IsNullOrEmpty(learnerMenuSettingsJson)
                 ? Newtonsoft.Json.JsonConvert.DeserializeObject(learnerMenuSettingsJson)
                 : null;
+            var adminRole = ELG.Web.Helper.SessionHelper.UserRole;
+            var canImportAccountsByAdminRole = adminRole == 1 || adminRole == 6;
+            var canManageRolesByAdminRole = adminRole == 1 || adminRole == 6;
+            var canAccessCourseHubByAdminRole = adminRole == 1 || adminRole == 2 || adminRole == 3 || adminRole == 6 || adminRole == 8 || adminRole == 9;
+            var canAddOrManageCourseByAdminRole = adminRole == 1;
+            var canAutoAssignCourseByAdminRole = adminRole == 1;
+            var canRefresherCourseByAdminRole = adminRole == 1 || adminRole == 8;
+            var canWidgetCourseByAdminRole = adminRole == 1;
+            var canAccessDocumentHubByAdminRole = adminRole == 1 || adminRole == 3 || adminRole == 6 || adminRole == 8;
+            var canManageDocumentGroupByAdminRole = adminRole == 1 || adminRole == 8;
+            var isAccountOwnerRole = adminRole == 1;
+            var canAccessReportsHubByAdminRole = adminRole == 1 || adminRole == 2 || adminRole == 3 || adminRole == 4 || adminRole == 6 || adminRole == 8 || adminRole == 9;
+            var canSummaryReport = (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true) && isAccountOwnerRole;
+            var canLearningReport = learnerMenuSettings == null || learnerMenuSettings.learningReport == true;
+            var canSubModuleReport = canLearningReport && isAccountOwnerRole;
+            var canHistoricReport = canLearningReport && isAccountOwnerRole;
+            var canRAReport = learnerMenuSettings == null || learnerMenuSettings.raReport == true;
+            var canDocumentReport = learnerMenuSettings == null || learnerMenuSettings.documentReport == true;
+            var canTrainingCardReport = (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true) && isAccountOwnerRole;
+            var canWidgetReport = (learnerMenuSettings != null && learnerMenuSettings.enableWidget == true) && isAccountOwnerRole;
+            var canArchiveReport = (learnerMenuSettings != null && learnerMenuSettings.archiveReport == true) && isAccountOwnerRole;
 
             var learnerSectionMenuSettingsJson = ELG.Web.Helper.SessionHelper.OrgLearnerAvailableMenu as string;
             if (string.IsNullOrEmpty(learnerSectionMenuSettingsJson))
@@ -404,7 +425,7 @@
                                 {
                                     <li><a class="collapse-item" id="menu-add-user" href="@Url.Action("CreateAccount", "UserManagement", new { area = "" })">Create Account</a></li>
                                 }
-                                @if (learnerMenuSettings == null || learnerMenuSettings.userBulkUpload == true)
+                                @if (canImportAccountsByAdminRole && (adminRole == 6 || learnerMenuSettings == null || learnerMenuSettings.userBulkUpload == true))
                                 {
                                     <li><a class="collapse-item" id="menu-upload-user" href="@Url.Action("ImportAccounts", "UserManagement", new { area = "" })">Import Accounts</a></li>
                                 }
@@ -412,7 +433,7 @@
                                 {
                                     <li><a class="collapse-item" id="menu-self-register" href="@Url.Action("OpenEnrollment", "UserManagement", new { area = "" })">Open Enrollment</a></li>
                                 }
-                                @if (learnerMenuSettings == null || learnerMenuSettings.manageAdmin == true)
+                                @if (canManageRolesByAdminRole && (adminRole == 6 || learnerMenuSettings == null || learnerMenuSettings.manageAdmin == true))
                                 {
                                     <li><a class="collapse-item" id="menu-view-admin" href="@Url.Action("Accounts", "RoleManagement", new { area = "" })">Manage Roles</a></li>
                                 }
@@ -433,7 +454,7 @@
                             </ul>
                         </li>*@
 
-                    @if (learnerMenuSettings == null || learnerMenuSettings.manageCourse == true)
+                    @if (canAccessCourseHubByAdminRole && (learnerMenuSettings == null || learnerMenuSettings.manageCourse == true))
                     {
                         <li class="nav-item parent-menu" id="moduleLink">
                             <a class="parent-menu-a">
@@ -441,18 +462,21 @@
                                 <img class="menu-icon" src="~/Content/images/icons/course.png" alt="Course" /> Course Hub <span class="fa fa-chevron-down"></span>
                             </a>
                             <ul class="nav child_menu">
-                                @if (learnerMenuSettings != null && learnerMenuSettings.addNewModules == true)
+                                @if (canAddOrManageCourseByAdminRole && learnerMenuSettings != null && learnerMenuSettings.addNewModules == true)
                                 {
                                     <li><a class="collapse-item" id="menu-upload-scorm" href="@Url.Action("UploadScormPackage", "CourseManagement", new { area = "" })">Add Course</a></li>
                                 }
-                                @if (learnerMenuSettings != null && learnerMenuSettings.manageSubModules == true)
+                                @if (canAddOrManageCourseByAdminRole && learnerMenuSettings != null && learnerMenuSettings.manageSubModules == true)
                                 {
                                     <li><a class="collapse-item" id="menu-manage-module" href="@Url.Action("Courses", "CourseManagement", new { area = "" })">Manage Course</a></li>
                                 }
                                 <li><a class="collapse-item" id="menu-allocate-module" href="@Url.Action("Enrollment", "CourseManagement", new { area = "" })">Hand-Picked Enrollment</a></li>
-                                <li><a class="collapse-item" id="menu-auto-license-allocation" href="@Url.Action("LicenseAutoAllocation", "Licenses", new { area = "" })">Auto-Assign Courses</a></li>
+                                @if (canAutoAssignCourseByAdminRole)
+                                {
+                                    <li><a class="collapse-item" id="menu-auto-license-allocation" href="@Url.Action("LicenseAutoAllocation", "Licenses", new { area = "" })">Auto-Assign Courses</a></li>
+                                }
                                 <li><a class="collapse-item" id="menu-revoke-module" href="@Url.Action("RestictAccess", "CourseManagement", new { area = "" })">Restrict Course Access</a></li>
-                                @if (learnerMenuSettings == null || learnerMenuSettings.trainingRenewal == true)
+                                @if (canRefresherCourseByAdminRole && (learnerMenuSettings == null || learnerMenuSettings.trainingRenewal == true))
                                 {
                                     if (ELG.Web.Helper.SessionHelper.TrainingRenewalMode == 1)
                                     {
@@ -468,7 +492,7 @@
                                     }
                                 }
                                 @*<li><a class="collapse-item" id="menu-module-catalogue" target="_blank" href="#">Course Catalogue</a></li>*@
-                                @if (learnerMenuSettings != null && learnerMenuSettings.enableWidget == true)
+                                @if (canWidgetCourseByAdminRole && learnerMenuSettings != null && learnerMenuSettings.enableWidget == true)
                                 {
                                     <li><a class="collapse-item" id="menu-que-widget" href="@Url.Action("Course", "QueWidget", new { area = "" })">Widgets</a></li>
                                 }
@@ -494,7 +518,7 @@
                         </li>
                     }
 
-                    @if (learnerMenuSettings == null || learnerMenuSettings.manageDocs == true)
+                    @if (canAccessDocumentHubByAdminRole && (learnerMenuSettings == null || learnerMenuSettings.manageDocs == true))
                     {
                         <li class="nav-item parent-menu" id="docLink">
                             <a class="parent-menu-a">
@@ -504,13 +528,16 @@
                             <ul class="nav child_menu">
                                 <li><a class="collapse-item" id="menu-category-report" href="@Url.Action("DocumentCategory", "Document", new { area = "" })">Manage Categories</a></li>
                                 <li><a class="collapse-item" id="menu-document-report" href="@Url.Action("Documents", "Document", new { area = "" })">Manage Document</a></li>
-                                <li><a class="collapse-item" id="menu-docgroup-report" href="@Url.Action("DocumentBundel", "Document", new { area = "" })">Manage Document Group</a></li>
+                                @if (canManageDocumentGroupByAdminRole)
+                                {
+                                    <li><a class="collapse-item" id="menu-docgroup-report" href="@Url.Action("DocumentBundel", "Document", new { area = "" })">Manage Document Group</a></li>
+                                }
                                 <li><a class="collapse-item" id="menu-document-accesss" href="@Url.Action("ManageAccess", "Document", new { area = "" })">Access Control</a></li>
                             </ul>
                         </li>
                     }
 
-                    @if (learnerMenuSettings == null || learnerMenuSettings.viewReports == true)
+                    @if (canAccessReportsHubByAdminRole && (learnerMenuSettings == null || learnerMenuSettings.viewReports == true))
                     {
                         @if (isModernViewMode)
                         {
@@ -528,21 +555,27 @@
                                     <img class="menu-icon" src="~/Content/images/icons/report.png" alt="Reports" /> Insights & Reports <span class="fa fa-chevron-down"></span>
                                 </a>
                                 <ul class="nav child_menu">
-                                    @if (learnerMenuSettings == null || learnerMenuSettings.summaryReport == true)
+                                    @if (canSummaryReport)
                                     {
                                         <li><a class="collapse-item" id="menu-summary-report" href="@Url.Action("Summary", "Report", new { area = "" })">Overview</a></li>
                                     }
-                                    @if (learnerMenuSettings == null || learnerMenuSettings.learningReport == true)
+                                    @if (canLearningReport)
                                     {
                                         <li><a class="collapse-item" id="menu-learning-report" href="@Url.Action("LearningProgress", "Report", new { area = "" })">Course Progress</a></li>
-                                        <li><a class="collapse-item" id="menu-sm-report" href="@Url.Action("SubModuleProgress", "Report", new { area = "" })">Sub-module Progress</a></li>
-                                        <li><a class="collapse-item" id="menu-historic-report" href="@Url.Action("HistoricRecords", "Report", new { area = "" })">Historic Records</a></li>
+                                        @if (canSubModuleReport)
+                                        {
+                                            <li><a class="collapse-item" id="menu-sm-report" href="@Url.Action("SubModuleProgress", "Report", new { area = "" })">Sub-module Progress</a></li>
+                                        }
+                                        @if (canHistoricReport)
+                                        {
+                                            <li><a class="collapse-item" id="menu-historic-report" href="@Url.Action("HistoricRecords", "Report", new { area = "" })">Historic Records</a></li>
+                                        }
                                     }
-                                    @if (learnerMenuSettings == null || learnerMenuSettings.raReport == true)
+                                    @if (canRAReport)
                                     {
                                         <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("RiskAssessmentReport", "Report", new { area = "" })">Risk Assessment</a></li>
                                     }
-                                    @if (learnerMenuSettings == null || learnerMenuSettings.documentReport == true)
+                                    @if (canDocumentReport)
                                     {
                                         <li><a class="collapse-item" id="menu-ra-report" href="@Url.Action("DocumentReport", "Report", new { area = "" })">Document Report</a></li>
                                     }
@@ -550,15 +583,15 @@
             {
                 <li><a class="collapse-item" id="menu-announcement-report" href="@Url.Action("AnnouncementReport", "Report", new { area = "" })">Announcement Engagement</a></li>
             }*@
-                                    @if (learnerMenuSettings == null || learnerMenuSettings.trainingCard == true)
+                                    @if (canTrainingCardReport)
                                     {
                                         <li><a class="collapse-item" id="menu-trainingcard-report" href="@Url.Action("TrainingCard", "Report", new { area = "" })">Learner Account Snapshot</a></li>
                                     }
-                                    @if (learnerMenuSettings != null && learnerMenuSettings.enableWidget == true)
+                                    @if (canWidgetReport)
                                     {
                                         <li><a class="collapse-item" id="menu-widget-report" href="@Url.Action("WidgetProgress", "Report", new { area = "" })">Widgets</a></li>
                                     }
-                                    @if (learnerMenuSettings != null && learnerMenuSettings.archiveReport == true)
+                                    @if (canArchiveReport)
                                     {
                                         <li><a class="collapse-item" id="menu-widget-report" href="@Url.Action("ArchiveReport", "Report", new { area = "" })">Archive Report</a></li>
                                     }
