@@ -29,7 +29,7 @@
             <input type="hidden" id="txtAddTitle" value="" />
 
             <div class="ca-form-grid">
-                <div class="ca-field">
+                <div class="ca-field ca-field-full">
                     <label class="form-label ca-label" for="txtAddEmail">@ELG.Web.Helper.SessionHelper.CompanySettings.emailIdDescription *</label>
                     <div class="ca-control">
                         <span class="ca-control-icon"><i class="fa fa-envelope"></i></span>
@@ -225,6 +225,10 @@
         left: auto !important;
         right: auto !important;
         transform: none !important;
+    }
+
+    .ca-field-full {
+        grid-column: 1 / -1;
     }
 
     .ca-label {

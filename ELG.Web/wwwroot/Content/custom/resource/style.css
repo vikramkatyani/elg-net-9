@@ -1,0 +1,916 @@
+﻿:root {
+    --color-primary: #172229;
+    --color-secondary: #4FE2BA;
+    --color-white: #FFF;
+    --color-dark: #236251;
+    --color-light: #3BA588;
+    --color-hightlight: #fae887;
+    --color-black: #000000;
+    --dash-complete: #0CC078;
+    --dash-progress: #FCFC99;
+    --dash-incomplete: #FB6962;
+    --dash-notstarted: #D3D3D3;
+    --dash-line-graph: #79DE79;
+    --lm-welcome-banner-gradient: linear-gradient(130deg, #D0E058, #A4CA64);
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('fonts/Poppins-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('fonts/Poppins-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('fonts/Poppins-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'space-grotesk-variable';
+    src: url('fonts/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+    font-weight: 300 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/** Font */
+body {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6,
+nav.site-nav,
+footer .col-contact,
+footer .col-nav,
+footer .col-logos,
+.btn,
+.read-more,
+a.tag,
+span.tag,
+div.tag {
+    font-family: 'space-grotesk-variable', sans-serif !important;
+}
+
+em {
+    font-family: 'miller-text', serif !important;
+}
+
+/** Background color */
+.bg-body {
+    background-color: var(--color-primary) !important;
+}
+.bg-primary {
+    background-color: var(--color-primary) !important;
+}
+.bg-secondary {
+    background-color: var(--color-secondary) !important;
+}
+
+.bg-white {
+    background-color: var(--color-white) !important;
+}
+
+.bg-highlight {
+    background-color: var(--color-hightlight) !important;
+}
+
+.bg-dark {
+    background-color: var(--color-dark) !important;
+}
+
+.bg-light {
+    background-color: var(--color-light) !important;
+}
+
+/** Text color */
+
+.txt-primary {
+    color: var(--color-primary) !important;
+}
+
+.txt-secondary {
+    color: var(--color-secondary) !important;
+}
+
+.txt-white {
+    color: var(--color-white) !important;
+}
+
+.txt-highlight {
+    color: var(--color-hightlight) !important;
+}
+
+.txt-dark {
+    color: var(--color-dark) !important;
+}
+
+.txt-light {
+    color: var(--color-light) !important;
+}
+.txt-status {
+    font-size:13px;
+}
+.txt-PASSED, .txt-COMPLETED {
+}
+.txt-FAILED {
+}
+.txt-NOT-STARTED {
+}
+.txt-IN-PROGRESS {
+}
+/**************************************************************     END COLORS     *******************************************************************/
+/** Buttons */
+.elg-lnk-btn {
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    height: 24px;
+    /*width: 100%;*/
+    border: none;
+    font-weight: 450;
+    line-height: 150%;
+    text-decoration: none;
+    color: var(--color-white) !important;
+}
+
+.elg-btn, .btn {
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 0 !important;
+    font-weight: 500;
+    line-height: 150%;
+}
+
+.elg-btn:hover, .btn:hover {
+    opacity: .75;
+}
+
+.elg-btn-primary, .btn-primary, .btn-dark {
+    background-color: #fae887 !important;
+    color: #1c141a !important;
+    border-color: #fae887 !important;
+}
+
+.elg-btn-secondary, .btn-secondary {
+    background-color: #fae887 !important;
+    color: #1c141a !important;
+    border-color: #fae887 !important;
+}
+
+.elg-btn-primary:hover,
+.elg-btn-primary:focus,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-dark:hover,
+.btn-dark:focus,
+.elg-btn-secondary:hover,
+.elg-btn-secondary:focus,
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background-color: #fae887 !important;
+    color: #1c141a !important;
+    border-color: #fae887 !important;
+    opacity: .85;
+    box-shadow: none !important;
+}
+
+.elg-btn-search:hover,
+.elg-btn-search:focus {
+    background-color: #fae887 !important;
+    color: #1c141a !important;
+    border-color: #fae887 !important;
+}
+
+.btn.um-btn.um-btn-primary:hover,
+.btn.um-btn.um-btn-primary:focus,
+.btn.um-btn.um-btn-primary:active {
+    background: var(--um-brand) !important;
+    border-color: var(--um-brand) !important;
+    color: #ffffff !important;
+}
+
+.btn.ca-btn.ca-btn-primary:hover,
+.btn.ca-btn.ca-btn-primary:focus,
+.btn.ca-btn.ca-btn-primary:active {
+    background: var(--ca-brand) !important;
+    border-color: var(--ca-brand) !important;
+    color: #ffffff !important;
+}
+
+.btn.rm-btn.rm-btn-primary:hover,
+.btn.rm-btn.rm-btn-primary:focus,
+.btn.rm-btn.rm-btn-primary:active {
+    background: var(--rm-brand) !important;
+    border-color: var(--rm-brand) !important;
+    color: #ffffff !important;
+}
+
+.btn.sp-btn.sp-btn-primary:hover,
+.btn.sp-btn.sp-btn-primary:focus,
+.btn.sp-btn.sp-btn-primary:active {
+    background: var(--sp-brand) !important;
+    border-color: var(--sp-brand) !important;
+    color: #ffffff !important;
+}
+
+.btn.cm-btn.cm-btn-primary:hover,
+.btn.cm-btn.cm-btn-primary:focus,
+.btn.cm-btn.cm-btn-primary:active {
+    background: var(--cm-brand) !important;
+    border-color: var(--cm-brand) !important;
+    color: #ffffff !important;
+}
+
+.elg-btn-transparent {
+    background-color: transparent !important;
+    color: #fae887 !important;
+    border: 1px solid #fae887 !important;
+}
+
+#btnLogin {
+    color: #1c141a !important;
+}
+
+.elg-btn-search {
+    background-color: transparent;
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+.elg-course-card-primary {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+}
+.elg-course-card-secondary {
+    background-color: transparent;
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+.card-button-container {
+    width: 100%;
+}
+
+.card-button-container button {
+    width: auto !important;
+    font-size: 15px !important;
+    padding: 0 15px;
+    margin-right:10px;
+}
+
+/**************************************************************     END BUTTONS     *******************************************************************/
+
+/** Text Element*/
+p {
+    font-size: 16px;
+    font-weight: 450;
+    line-height: 150%;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 36px;
+}
+
+.card-content h2 {
+    font-size: 48px;
+    color: #3CA587 !important;
+}
+
+/* Resource tenant override: keep Users page pagination labels visible and on-brand */
+.um-modern-page .dataTables_wrapper .dataTables_paginate {
+    margin-top: 0.55rem;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: #172229 !important;
+    border: 1px solid #4fe2ba !important;
+    background: #d7fff3 !important;
+    border-radius: 8px !important;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    color: #172229 !important;
+    border-color: #3ba588 !important;
+    background: #bff5e6 !important;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.um-modern-page .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    color: #ffffff !important;
+    border-color: #236251 !important;
+    background: #236251 !important;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.um-modern-page .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+    color: #6a7f78 !important;
+    border-color: #b3d9cd !important;
+    background: #ecf8f3 !important;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item .page-link {
+    color: #172229 !important;
+    background: #d7fff3 !important;
+    border: 1px solid #4fe2ba !important;
+    border-radius: 8px !important;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item .page-link:hover {
+    color: #172229 !important;
+    background: #bff5e6 !important;
+    border-color: #3ba588 !important;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item.active .page-link,
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item.active .page-link:hover,
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item.active .page-link:focus {
+    color: #ffffff !important;
+    background: #236251 !important;
+    border-color: #236251 !important;
+    box-shadow: none !important;
+}
+
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link,
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link:hover,
+.um-modern-page .dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link:focus {
+    color: #48645c !important;
+    background: #d7fff3 !important;
+    border-color: #9dcabb !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+}
+/**************************************************************     END TEXT ELEMENTS     *******************************************************************/
+/* Login Screen */
+/* Left Section */
+.left-section {
+    display: none;
+}
+
+    .left-section .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+    }
+
+    .left-section .content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding-right: 100px;
+    }
+
+    .branding img {
+        content: url("logo.svg");
+        max-width: 250px;
+        margin-bottom: 10px;
+    }
+
+.left-section .line-partition {
+    display: none;
+}
+
+.footer-branding{
+    display: none;
+}
+
+/* Right Section */
+    .right-section {
+        flex: 1;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        margin: 50px 0;
+    }
+
+    form input {
+        margin-bottom: 15px;
+        padding: 10px;
+        font-size: 18px;
+        border: none;
+        border-radius: 1px;
+    }
+
+.line-partition {
+    border-top: 1px solid #fff;
+}
+
+/* style for screen bigger than mobile */
+
+@media (min-width: 768px) {
+
+    .login-page-container {
+        display: flex;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .left-section {
+        display: flex;
+        flex: 0 0 50%;
+        width: 50%;
+        box-sizing: border-box;
+        position: relative;
+        background: url('landingBG.png') no-repeat center center;
+        background-size: cover;
+        color: var(--color-white);
+        padding-top: 80px;
+        padding-left: 75px;
+        text-align: left;
+        height: auto;
+    }
+
+    .branding {
+        margin-bottom: 100px;
+    }
+
+    h1 {
+        font-weight: 400;
+        font-size: 64px;
+    }
+
+    p {
+        font-size: 18px;
+    }
+
+    .right-section {
+        flex: 0 0 50%;
+        width: 50%;
+        box-sizing: border-box;
+        height: auto;
+        text-align: left;
+        padding: 100px 100px 0 150px;
+    }
+
+    .branding img {
+       max-width: 250px;
+    }
+
+    .branding h1 {
+        font-size: 24px;
+    }
+
+    .right-section h2 {
+        font-size: 22px;
+    }
+
+    form input {
+        padding: 12px;
+        font-size: 18px;
+    }
+
+    .elg-lnk-btn, .elg-btn {
+        width: 240px !important;
+    }
+    .elg-btn-sm {
+        width: 120px !important;
+    }
+}
+
+/**************************************************************     END LOGIN SCREEN     *******************************************************************/
+
+/* Learner page */
+.learner-content-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none; /* Hidden by default for larger screens */
+    cursor: pointer;
+    padding: 10px;
+    /*background-color: var(--color-primary);*/
+    color: white;
+}
+
+.hamburger span {
+    display: block;
+    height: 3px;
+    background-color: var(--color-primary);
+    margin: 5px 0;
+    width: 25px;
+}
+
+/* side menu */
+.learner-menu-bar {
+    background-color: var(--color-primary);
+    color: white;
+    width: 270px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    overflow-y: scroll;
+}
+
+.learner-menu-bar.closed {
+    transform: translateX(-100%);
+}
+
+.learner-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.learner-menu-bar .logo img {
+    content: url("logo.svg");
+    padding: 20px 30px 20px 20px;
+    max-width: 100%;
+    margin: 20px auto;
+    display: block;
+}
+
+.learner-menu li {
+    margin: 10px 0;
+}
+
+.learner-menu a i{
+    margin: 0 10px;
+}
+
+.learner-menu a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a {
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a {
+    font-weight: 300 !important;
+    color: rgba(255, 255, 255, 0.86) !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.open,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active.open {
+    color: var(--color-primary) !important;
+}
+
+body.admin-modern-view .learner-menu-bar {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white);
+    height: 100dvh;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.admin-modern-view .learner-menu-bar .logo {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+body.admin-modern-view .learner-menu-bar .logo img {
+    margin: 16px auto 10px;
+    max-height: 96px;
+    max-width: 250px;
+    /* width: 68%; */
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 6px;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .menu-section-title {
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 0.7rem !important;
+    padding: 8px 14px 4px !important;
+    margin: 6px 10px 0 !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a,
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a {
+    margin: 4px 12px !important;
+    padding: 8px 12px !important;
+    min-height: 40px !important;
+    font-size: 15px !important;
+    line-height: 1.1;
+    border-radius: 999px;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu {
+    margin: 0 12px 4px !important;
+    padding: 0 0 4px !important;
+}
+
+body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a {
+    margin: 2px 0 2px 8px !important;
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+}
+
+body.admin-modern-view .learner-menu-bar .line-partition {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    margin: 8px 14px !important;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu {
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 2;
+    background: var(--color-primary);
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu .nav-item {
+    margin: 4px 0;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a,
+body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a.parent-menu-a {
+    color: var(--color-white) !important;
+    font-weight: 500 !important;
+}
+
+html body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a:hover,
+html body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a.parent-menu-a:hover {
+    background-color: #fae887 !important;
+    border-color: #fae887 !important;
+    color: #1c141a !important;
+}
+
+html body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a:hover .menu-icon {
+    filter: brightness(0) saturate(100%) !important;
+}
+
+body.admin-modern-view .learner-menu-bar > .learner-menu #logout > a .menu-icon {
+    filter: brightness(0) saturate(0) invert(1);
+    opacity: 0.95;
+}
+
+body.admin-modern-view .learner-menu-bar .profile {
+    margin-top: auto;
+    padding: 8px 14px 12px;
+    min-height: 72px;
+    background-color: var(--color-primary);
+}
+
+body.admin-modern-view .learner-menu-bar .profile img {
+    width: 44px;
+    height: 44px;
+}
+
+body.admin-modern-view .learner-menu-bar .profile .profile-details span,
+body.admin-modern-view .learner-menu-bar .profile .profile-details h2,
+body.admin-modern-view .learner-menu-bar .profile .profile-details {
+    color: var(--color-white) !important;
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+.learner-menu a:hover, .learner-menu a.active {
+    background-color: var(--color-hightlight);
+    color: var(--color-black)
+}
+
+body.admin-modern-view .learner-menu .parent-menu a:hover,
+body.admin-modern-view .learner-menu a:hover,
+body.admin-modern-view .learner-menu a.active {
+    background-color: #fae887 !important;
+    color: #1c141a !important;
+    cursor: pointer;
+}
+
+/* hover — full path (0,6,2) beats the white-color rule (0,5,2) */
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item:not(.active) > a:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu-a:hover {
+    background-color: #fae887 !important;
+    border-color: #fae887 !important;
+    color: #1c141a !important;
+    box-shadow: none !important;
+}
+
+/* active/selected — full path (0,6,3) beats everything */
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item.active > a,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a.active,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item.active > a:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a.active:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu.open > a {
+    background-color: #fae887 !important;
+    border-color: #fae887 !important;
+    color: #1c141a !important;
+    box-shadow: none !important;
+}
+
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a:hover,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li.active > a,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active.open,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.open {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-bottom: 1px solid #fae887 !important;
+    border-radius: 0;
+    color: #fae887 !important;
+}
+
+/* spans/pseudo-elements inside active/hover */
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item.active > a span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .nav-item > a.active span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .parent-menu.open > a span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li.active > a span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a.active span,
+html body.admin-modern-view .learner-menu-bar .menu-container .learner-menu .child_menu li a:hover span {
+    color: #fae887 !important;
+}
+
+/* Hide the submenu by default */
+.child_menu {
+    display: none;
+    list-style-type: none;
+    padding-left: 20px; /* Indent child menu items */
+    margin: 0;
+}
+
+/* Show submenu when the parent has 'open' class */
+.parent-menu.open .child_menu {
+    display: block;
+}
+
+/* Profile Section */
+.profile {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    /*position: fixed;*/
+    margin-top: 100px;
+    background-color: var(--color-primary);
+}
+
+.profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px; /* Space between the image and text */
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column; /* Stack "Welcome" and username vertically */
+}
+
+.profile-details span {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.25;
+}
+
+.profile-details h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.25;
+}
+#imgLearnerProfile_noPic {
+    content: url("no-pic.png");
+}
+
+
+.learner-main-content {
+    margin-left: 270px; /* Match the width of the sidebar */
+    transition: margin-left 0.3s ease; /* Smooth transition */
+    padding: 20px;
+}
+
+/* Mobile Styles (Collapse Sidebar) */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show hamburger menu on mobile */
+    }
+
+    .learner-menu-bar {
+        transform: translateX(-100%); /* Hide sidebar by default in mobile */
+        z-index: 1000;
+    }
+
+    .learner-menu-bar.active {
+        transform: translateX(0); /* Show sidebar when open */
+    }
+
+    .learner-main-content {
+        margin-left: 0; /* Adjust content margin when sidebar is hidden */
+    }
+}
+
+.search-box {
+    font-size: 15px;
+    color: var(--color-black);
+    outline: none;
+    height: 46px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid var(--color-black);
+    width: 100%;
+}
+
+/** Course card*/
+.postcard {
+    box-shadow: unset !important;
+    border-radius: 20px;
+    border: 1px solid #000;
+}
+
+
+/******************************************* DATA TABLES **************************************************/
+.dataTables_wrapper .dataTables_paginate a,
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.dataTables_wrapper .dataTables_paginate .page-item .page-link {
+    margin: 1px;
+    color: var(--color-primary) !important;
+    text-decoration: none;
+    background: #d7fff3 !important;
+    border: 1px solid #4fe2ba !important;
+}
+
+.dataTables_wrapper .dataTables_paginate a:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+.dataTables_wrapper .dataTables_paginate .page-item .page-link:hover {
+    cursor: pointer;
+    color: var(--color-primary) !important;
+    background: #bff5e6 !important;
+    border-color: #3ba588 !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .page-item.active .page-link,
+.dataTables_wrapper .dataTables_paginate .page-item.active .page-link:hover,
+.dataTables_wrapper .dataTables_paginate .page-item.active .page-link:focus {
+    color: #ffffff !important;
+    background: #236251 !important;
+    border-color: #236251 !important;
+    box-shadow: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate a.disabled,
+.dataTables_wrapper .dataTables_paginate .disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+.dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link,
+.dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link:hover,
+.dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link:focus {
+    cursor: not-allowed;
+    color: #48645c !important;
+    background: #d7fff3 !important;
+    border-color: #9dcabb !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+}
